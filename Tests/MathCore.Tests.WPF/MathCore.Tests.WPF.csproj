@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MathCore.WPF" Version="0.0.47.1" />
+    <PackageReference Include="MathCore.WPF" Version="0.0.47.2" />
     <PackageReference Include="OxyPlot.Contrib.Wpf" Version="2.1.2" />
   </ItemGroup>
 
