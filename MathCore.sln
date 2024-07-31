@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarks", "Tests\Benchma
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathCore.Algorithms", "Tests\MathCore.Algorithms\MathCore.Algorithms.csproj", "{2B8FF1EE-42E8-4961-A734-1068F008D7D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathCore.Tests.WPF", "Tests\MathCore.Tests.WPF\MathCore.Tests.WPF.csproj", "{2DDA14D6-76EE-4D0A-B9DE-638778395934}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathCore.Tests.WPF", "Tests\MathCore.Tests.WPF\MathCore.Tests.WPF.csproj", "{2DDA14D6-76EE-4D0A-B9DE-638778395934}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
