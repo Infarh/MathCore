@@ -1,15 +1,14 @@
 ﻿using System.Drawing;
 using System.Globalization;
 
-using MathCore.Geolocation;
 using MathCore.Vectors;
 
 using static System.Math;
 
-namespace MathCore;
+namespace MathCore.Geolocation;
 
 /// <summary>Географическое положение</summary>
-public readonly struct GeoLocation
+public readonly struct GeoLocation : IEquatable<GeoLocation>
 {
     /// <summary>Радиус Земли в метрах</summary>
     public const double EarthRadius = 6_378_137d;
@@ -64,7 +63,7 @@ public readonly struct GeoLocation
     /// <param name="longitude">Долгота</param>
     public void Deconstruct(out double latitude, out double longitude)
     {
-        latitude  = Latitude;
+        latitude = Latitude;
         longitude = Longitude;
     }
 
@@ -83,6 +82,12 @@ public readonly struct GeoLocation
     /// <param name="Distance">Дистанция в метрах</param>
     /// <returns>Новая точка места назначения на заданном удалении и с заданным курсом</returns>
     public GeoLocation Destination(double Heading, double Distance) => GPS.DestinationPoint(this, Heading, Distance);
+
+    public override int GetHashCode() => HashBuilder.New(Latitude).Append(Longitude);
+
+    public bool Equals(GeoLocation pos) => pos.Latitude.Equals(Latitude) && pos.Longitude.Equals(Longitude);
+
+    public override bool Equals(object obj) => obj is GeoLocation pos && Equals(pos);
 
     public override string ToString()
     {
@@ -118,6 +123,10 @@ public readonly struct GeoLocation
         return result.ToString(CultureInfo.InvariantCulture);
     }
 
+    public static bool operator ==(GeoLocation left, GeoLocation right) => left.Equals(right);
+
+    public static bool operator !=(GeoLocation left, GeoLocation right) => !left.Equals(right);
+
     /// <summary>Оператор неявного приведения кортежа географических координат в структуру географического положения</summary>
     /// <param name="Point">Кортеж, содержащий широту и долготу</param>
     public static implicit operator GeoLocation((double Latitude, double Longitude) Point) => new(Point);
@@ -149,4 +158,22 @@ public readonly struct GeoLocation
     /// <summary>Оператор неявного преобразования из точки в географическое положение</summary>
     /// <param name="Point">Точка географического положения</param>
     public static implicit operator GeoLocation(PointF Point) => new(Point);
+
+    public static GeoLocationSpan operator -(GeoLocation x, GeoLocation y) => new()
+    {
+        LatitudeDelta = x.Latitude - y.Latitude,
+        LongitudeDelta = x.Longitude - y.Longitude,
+    };
+
+    public static GeoLocation operator +(GeoLocation x, GeoLocationSpan delta) => new()
+    {
+        Latitude = x.Latitude + delta.LatitudeDelta,
+        Longitude = x.Longitude + delta.LongitudeDelta,
+    };
+
+    public static GeoLocation operator -(GeoLocation x, GeoLocationSpan delta) => new()
+    {
+        Latitude = x.Latitude - delta.LatitudeDelta,
+        Longitude = x.Longitude - delta.LongitudeDelta,
+    };
 }
