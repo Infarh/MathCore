@@ -5,6 +5,8 @@ using System.Text;
 
 using MathCore;
 using MathCore.Hash;
+using MathCore.Hash.CRC;
+
 // ReSharper disable UnusedMethodReturnValue.Global
 
 // ReSharper disable UnusedType.Global
@@ -106,13 +108,42 @@ public static class FileInfoExtensions
             : throw new FileNotFoundException(Message ?? $"Файл {(FullPathInMessage ? file.FullName : file)} не найден");
     }
 
+    ///// <summary>Вычислить хеш-сумму CRC32</summary>
+    ///// <param name="file">Файл, контрольную сумму которого надо вычислить</param>
+    ///// <returns>Массив байт контрольной суммы</returns>
+    //public static uint ComputeCRC32(this FileInfo file, CRC32.Mode polynom = CRC32.Mode.Zip, uint InitialCRC32 = 0xFFFFFFFF, uint XOR = 0xFFFFFFFF)
+    //{
+    //    var cec32 = new CRC32(polynom) { State = InitialCRC32, XOR = XOR };
+    //    using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
+    //    var hash = cec32.Compute(stream);
+    //    return hash;
+    //}
+
+//    /// <summary>Вычислить хеш-сумму CRC32</summary>
+//    /// <param name="file">Файл, контрольную сумму которого надо вычислить</param>
+//    /// <returns>Массив байт контрольной суммы</returns>
+//    public static async Task<uint> ComputeCRC32Async(
+//        this FileInfo file, 
+//        CRC32.Mode polynom = CRC32.Mode.Zip, 
+//        uint InitialCRC32 = 0, 
+//        CancellationToken Cancel = default)
+//    {
+//        var cec32 = new CRC32(polynom) { State = InitialCRC32 };
+//#if NET8_0_OR_GREATER
+//        await
+//#endif
+//        using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
+//        var hash = await cec32.ComputeAsync(stream, Cancel: Cancel).ConfigureAwait(false);
+//        return hash;
+//    }
+
     /// <summary>Вычислить хеш-сумму SHA256</summary>
     /// <param name="file">Файл, контрольную сумму которого надо вычислить</param>
     /// <returns>Массив байт контрольной суммы</returns>
     public static byte[] ComputeSHA256(this FileInfo file)
     {
         using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
-        var       hash   = SHA512.Compute(stream);
+        var       hash   = SHA256.Compute(stream);
         return hash;
     }
 
@@ -120,6 +151,30 @@ public static class FileInfoExtensions
     /// <param name="file">Файл, контрольную сумму которого надо вычислить</param>
     /// <returns>Массив байт контрольной суммы</returns>
     public static async Task<byte[]> ComputeSHA256Async(this FileInfo file, CancellationToken Cancel = default)
+    {
+#if NET8_0_OR_GREATER
+        await using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
+#else
+        using var stream = file.NotNull().ThrowIfNotFound().OpenRead(); 
+#endif
+        var hash = await SHA256.ComputeAsync(stream, Cancel).ConfigureAwait(false);
+        return hash;
+    }
+
+    /// <summary>Вычислить хеш-сумму SHA512</summary>
+    /// <param name="file">Файл, контрольную сумму которого надо вычислить</param>
+    /// <returns>Массив байт контрольной суммы</returns>
+    public static byte[] ComputeSHA512(this FileInfo file)
+    {
+        using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
+        var       hash   = SHA512.Compute(stream);
+        return hash;
+    }
+
+    /// <summary>Вычислить хеш-сумму SHA512</summary>
+    /// <param name="file">Файл, контрольную сумму которого надо вычислить</param>
+    /// <returns>Массив байт контрольной суммы</returns>
+    public static async Task<byte[]> ComputeSHA512Async(this FileInfo file, CancellationToken Cancel = default)
     {
 #if NET8_0_OR_GREATER
         await using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
