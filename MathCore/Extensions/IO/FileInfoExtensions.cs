@@ -4,6 +4,7 @@ using System.IO.Compression;
 using System.Text;
 
 using MathCore;
+using MathCore.Annotations;
 using MathCore.Hash;
 using MathCore.Hash.CRC;
 
@@ -229,26 +230,28 @@ public static class FileInfoExtensions
         } while (readed == Length);
     }
 
-    public static IEnumerable<string?> ReadLines(this FileInfo file)
+    public static IEnumerable<string> ReadLines(this FileInfo file)
     {
+        file.NotNull();
         using var reader = file.NotNull().ThrowIfNotFound().OpenText();
-        while (!reader.EndOfStream)
-            yield return reader.ReadLine();
+        while (reader.ReadLine() is { } line)
+            yield return line;
     }
 
-    public static IEnumerable<string?> ReadLines(
+    public static IEnumerable<string> ReadLines(
         this FileInfo file, 
         Action<StreamReader>? initializer, 
         int BufferSize = 3 * Consts.DataLength.Bytes.MB)
     {
-        Stream stream = file.NotNull().ThrowIfNotFound().Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+        file.NotNull();
+        Stream stream = file.ThrowIfNotFound().Open(FileMode.Open, FileAccess.Read, FileShare.Read);
         if (BufferSize > 0) 
             stream = new BufferedStream(stream, BufferSize);
 
         using var reader = new StreamReader(stream);
         initializer?.Invoke(reader);
-        while (!reader.EndOfStream)
-            yield return reader.ReadLine();
+        while (reader.ReadLine() is { } line)
+            yield return line;
     }
 
     public static string? ReadAllText(this FileInfo file, bool ThrowNotExist = true)
