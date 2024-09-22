@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace MathCore.Algorithms.Matrixes;
+namespace MathCore.Algorithms.Matrices;
 
 public readonly ref struct MatrixRef(double[,] Matrix, bool Transposed = false)
 {

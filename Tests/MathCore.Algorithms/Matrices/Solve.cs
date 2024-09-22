@@ -2,7 +2,7 @@
 
 using static System.Math;
 
-namespace MathCore.Algorithms.Matrixes;
+namespace MathCore.Algorithms.Matrices;
 
 public static class Solve
 {
