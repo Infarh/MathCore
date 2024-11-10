@@ -5,18 +5,31 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
 
-var X = new double[11];
+using MathCore;
+using MathCore.Algorithms.Matrices;
 
-for (var i = 0; i < X.Length; i++)
-    X[i] = i + 1;
+double[,] MM = 
+{
+    { 1, 2, 3, },
+    { 4, 5, 6, },
+    { 7, 8, 8, },
+};
 
-var A = DoubleVector.Create(X);
+var M = Matrix.Create(MM);
+var invM = M.GetInverse(out var P);
 
-var sum = A.Sum();
+//var X = new double[11];
+
+//for (var i = 0; i < X.Length; i++)
+//    X[i] = i + 1;
+
+//var A = DoubleVector.Create(X);
+
+//var sum = A.Sum();
 
 
 Console.WriteLine("End.");
-Console.ReadLine();
+return;
 
 readonly ref struct DoubleVector(double[] array)
 {

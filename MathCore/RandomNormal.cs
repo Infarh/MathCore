@@ -19,6 +19,29 @@ public class RandomNormal : Random
 
     public RandomNormal(int Seed) : base(Seed) { }
 
+    /// <summary>
+    ///     Генерирует случайное вещественное число с нормальным распределением
+    /// </summary>
+    /// <returns>Случайное вещественное число с нормальным распределением</returns>
+    /// <remarks>
+    ///     <para>
+    ///         Алгоритм генерации нормального распределения:
+    ///         <list type="number">
+    ///             <item>
+    ///                 <description>Сгенерировать два случайных числа в интервале [-1, 1)</description>
+    ///             </item>
+    ///             <item>
+    ///                 <description>Вычислить r^2 = x^2 + y^2</description>
+    ///             </item>
+    ///             <item>
+    ///                 <description>Если r^2 &lt; 1, то сгенерировать случайное значение</description>
+    ///             </item>
+    ///             <item>
+    ///                 <description>Вернуть x * sqrt(-2 * ln(r^2) / r^2) * sigma + mu</description>
+    ///             </item>
+    ///         </list>
+    ///     </para>
+    /// </remarks>
     protected override double Sample()
     {
         var r2 = 0d;

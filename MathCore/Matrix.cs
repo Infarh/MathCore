@@ -35,8 +35,15 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
 {
     /* -------------------------------------------------------------------------------------------- */
 
+    /// <summary>Создать матрицу из двумерного массива чисел с плавающей запятой</summary>
+    /// <param name="array">Двумерный массив чисел с плавающей запятой, из которого будет создана матрица</param>
+    /// <param name="Clone">Если <c>true</c>, создаёт клон массива, в противном случае использует исходный массив</param>
+    /// <returns>Новая матрица, созданная из указанного массива</returns>
     public static Matrix Create(double[,] array, bool Clone = false) => new(array, Clone);
 
+    /// <summary>Создать матрицу из массива целых чисел</summary>
+    /// <param name="IntArray">Массив целых чисел</param>
+    /// <returns>Новая матрица, созданная из <paramref name="IntArray"/></returns>
     public static Matrix Create(int[,] IntArray)
     {
         var (n, m) = (IntArray.GetLength(0), IntArray.GetLength(1));
@@ -49,6 +56,11 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
         return new(array);
     }
 
+    /// <summary>Создать матрицу NxM, заполненную значениями, полученными с помощью указанной функции</summary>
+    /// <param name="N">Число строк</param>
+    /// <param name="M">Число столбцов</param>
+    /// <param name="Initializer">Функция, принимающая индексы <paramref name="i"/> и <paramref name="j"/>, возвращающая значение элемента матрицы с индексами <paramref name="i"/> и <paramref name="j"/></param>
+    /// <returns>Новая матрица, созданная с помощью указанной функции</returns>
     public static Matrix Create(int N, int M, Func<int, int, double> Initializer) => new(N, M, (i, j) => Initializer(i, j));
 
     /// <summary>Создать матрицу-столбец</summary><param name="data">Элементы столбца</param><returns>Матрица-столбец</returns>
@@ -77,6 +89,10 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
     [DST]
     public static Matrix GetUnitary(int N) => new(Array.GetUnitaryArrayMatrix(N));
 
+    /// <summary>Создать матрицу NxM, заполненную единицами</summary>
+    /// <param name="N">Число строк</param>
+    /// <param name="M">Число столбцов</param>
+    /// <returns>Матрица размером NxM с элементами, равными 1</returns>
     public static Matrix GetOnes(int N, int M)
     {
         var result = new double[N, M];
@@ -86,6 +102,10 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
         return new(result);
     }
 
+    /// <summary>Создать матрицу NxM, заполненную нулями</summary>
+    /// <param name="N">Число строк</param>
+    /// <param name="M">Число столбцов</param>
+    /// <returns>Матрица размером NxM с элементами, равными 0</returns>
     public static Matrix GetZeros(int N, int M) => new(N, M);
 
     /// <summary>Трансвекция матрицы</summary><param name="A">Трансвецируемая матрица</param><param name="j">Опорный столбец</param>
@@ -345,6 +365,9 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
     /// <returns></returns>
     [DST] public double[,] GetData() => _Data;
 
+    /// <summary>Деконструктор матрицы, позволяющий получить размеры матрицы</summary>
+    /// <param name="N">Число строк (первое измерение)</param>
+    /// <param name="M">Число столбцов (второе измерение)</param>
     public void Deconstruct(out int N, out int M) => (N, M) = (_N, _M);
 
     /* -------------------------------------------------------------------------------------------- */
@@ -368,8 +391,12 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
     /// <inheritdoc/>
     [DST] public string ToString(string format, IFormatProvider? provider) => _Data.ToStringFormatView(format, "\t", provider) ?? throw new InvalidOperationException();
 
+    /// <summary>Структура-оболочка для матрицы, которая обеспечивает вывод матрицы в виде строки C#-инициализации</summary>
+    /// <param name="Matrix">Матрица, которую нужно вывести</param>
     public readonly ref struct MatrixView(Matrix Matrix)
     {
+        /// <summary>Выдать строку C#-инициализации матрицы</summary>
+        /// <returns>Строка C#-инициализации матрицы</returns>
         public override string ToString()
         {
             var (n, m) = Matrix;
@@ -408,6 +435,9 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
             return result.ToString();
         }
 
+        /// <summary>Выдать строку C#-инициализации матрицы</summary>
+        /// <param name="Format">Строка формата вывода чисел</param>
+        /// <returns>Строка C#-инициализации матрицы</returns>
         public string ToString(string Format)
         {
             var (n, m) = Matrix;
@@ -445,6 +475,9 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
             return result.ToString();
         }
 
+        /// <summary>Выдать строку C#-инициализации матрицы</summary>
+        /// <param name="Provider">Механизм форматирования чисел</param>
+        /// <returns>Строка C#-инициализации матрицы</returns>
         public string ToString(IFormatProvider Provider)
         {
             var (n, m) = Matrix;
@@ -482,6 +515,10 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
             return result.ToString();
         }
 
+        /// <summary>Выдать строку C#-инициализации матрицы</summary>
+        /// <param name="Format">Строка формата вывода чисел</param>
+        /// <param name="Provider">Механизм форматирования чисел</param>
+        /// <returns>Строка C#-инициализации матрицы</returns>
         public string ToString(string Format, IFormatProvider Provider)
         {
             var (n, m) = Matrix;

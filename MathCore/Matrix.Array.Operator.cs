@@ -565,6 +565,13 @@ public partial class Matrix
                 return Y;
             }
 
+            /// <summary>Умножение матрицы на вектор</summary>
+            /// <param name="A">Матрица</param>
+            /// <param name="X">Вектор</param>
+            /// <returns>Вектор - результат умножения</returns>
+            /// <exception cref="ArgumentNullException">Если <paramref name="A"/> is <see langword="null"/></exception>
+            /// <exception cref="ArgumentNullException">Если <paramref name="X"/> is <see langword="null"/></exception>
+            /// <exception cref="ArgumentException">Если число столбцов матрицы не равно длине вектора X</exception>
             public static double[] Multiply(double[,] A, double[] X)
             {
                 if (A is null) throw new ArgumentNullException(nameof(A));
@@ -771,6 +778,14 @@ public partial class Matrix
                 return result;
             }
 
+            /// <summary>Вычисление матрицы билинейной формы X*A*X^T</summary>
+            /// <param name="x">Матрица элементов массива вектора операнда оператора билинейной формы</param>
+            /// <param name="a">Матрица элементов двумерного массива матрицы оператора билинейной формы</param>
+            /// <returns>Матрица результата вычисления билинейной формы</returns>
+            /// <exception cref="ArgumentNullException"><paramref name="x"/> is <see langword="null"/></exception>
+            /// <exception cref="ArgumentNullException"><paramref name="a"/> is <see langword="null"/></exception>
+            /// <exception cref="ArgumentException">Если матрица элементов массива <paramref name="a"/> не квадратная</exception>
+            /// <exception cref="ArgumentException">Если число столбцов матрицы элементов массива <paramref name="x"/> не равно числу строк матрицы элементов массива <paramref name="a"/></exception>
             public static double[,] BiliniarMultiplyAuto(double[,] x, double[,] a)
             {
                 if (x is null) throw new ArgumentNullException(nameof(x));
@@ -807,6 +822,15 @@ public partial class Matrix
                 return result;
             }
 
+            /// <summary>Выполнение умножения матриц A*X*A^T (Y = A*X*A^T)</summary>
+            /// <param name="A">Матрица элементов двумерного массива матрицы оператора билинейной формы</param>
+            /// <param name="X">Матрица элементов двумерного массива операнда</param>
+            /// <param name="Y">Матрица результата вычисления билинейной формы</param>
+            /// <param name="N">Число строк матрицы <paramref name="A"/></param>
+            /// <param name="M">Число столбцов матрицы <paramref name="A"/></param>
+            /// <exception cref="ArgumentNullException"><paramref name="A"/> is <see langword="null"/></exception>
+            /// <exception cref="ArgumentNullException"><paramref name="X"/> is <see langword="null"/></exception>
+            /// <exception cref="ArgumentNullException"><paramref name="Y"/> is <see langword="null"/></exception>
             private static void ExecuteAXAt(double[,] A, double[,] X, double[,] Y, int N, int M)
             {
                 for (var n = 0; n < N; n++)
@@ -828,7 +852,15 @@ public partial class Matrix
                     }
             }
 
-            /// <summary>Оператор вида Y = A * X * A^T</summary>
+            /// <summary>Выполнение умножения матриц A*X*A^T (Y = A*X*A^T)</summary>
+            /// <param name="A">Матрица элементов двумерного массива матрицы оператора билинейной формы</param>
+            /// <param name="X">Матрица элементов двумерного массива операнда</param>
+            /// <param name="Y">Матрица результата вычисления билинейной формы</param>
+            /// <exception cref="ArgumentNullException"><paramref name="A"/> is <see langword="null"/></exception>
+            /// <exception cref="ArgumentNullException"><paramref name="X"/> is <see langword="null"/></exception>
+            /// <exception cref="ArgumentNullException"><paramref name="Y"/> is <see langword="null"/></exception>
+            /// <exception cref="ArgumentException">Число столбцов матриц не совпадает</exception>
+            /// <exception cref="ArgumentException">Размерность матрицы результата не равна числу строк матрицы A</exception>
             public static void AXAt(double[,] A, double[,] X, double[,] Y)
             {
                 if (A is null) throw new ArgumentNullException(nameof(A));
@@ -847,7 +879,13 @@ public partial class Matrix
                 ExecuteAXAt(A, X, Y, N, M);
             }
 
-            /// <summary>Оператор вида Y = A * X * A^T</summary>
+            /// <summary>Вычисление билинейной формы Y = AX * XT</summary>
+            /// <param name="A">Матрица элементов двумерного массива оператора билинейной формы</param>
+            /// <param name="X">Матрица элементов двумерного массива операнда</param>
+            /// <returns>Матрица результата вычисления билинейной формы</returns>
+            /// <exception cref="ArgumentNullException"><paramref name="A"/> is <see langword="null"/></exception>
+            /// <exception cref="ArgumentNullException"><paramref name="X"/> is <see langword="null"/></exception>
+            /// <exception cref="ArgumentException">Число столбцов матриц не совпадает</exception>
             public static double[,] AXAt(double[,] A, double[,] X)
             {
                 if (A is null) throw new ArgumentNullException(nameof(A));
@@ -867,6 +905,16 @@ public partial class Matrix
                 return Y;
             }
 
+            /// <summary>Вычисление билинейной формы Xt * A * Y</summary>
+            /// <param name="X">Вектор элементов операнда</param>
+            /// <param name="A">Матрица элементов двумерного массива оператора билинейной формы</param>
+            /// <param name="Y">Вектор элементов операнда</param>
+            /// <returns>Скалярное значение - результат вычисления билинейной формы</returns>
+            /// <exception cref="ArgumentNullException"><paramref name="X"/> is <see langword="null"/></exception>
+            /// <exception cref="ArgumentNullException"><paramref name="A"/> is <see langword="null"/></exception>
+            /// <exception cref="ArgumentNullException"><paramref name="Y"/> is <see langword="null"/></exception>
+            /// <exception cref="InvalidOperationException">Число строк матрицы A не равно длине вектора X</exception>
+            /// <exception cref="InvalidOperationException">Число столбцов матрицы A не равно длине вектора Y</exception>
             public static double XtAY(double[] X, double[,] A, double[] Y)
             {
                 if (X is null) throw new ArgumentNullException(nameof(X));

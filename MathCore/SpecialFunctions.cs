@@ -12,6 +12,13 @@ public static partial class SpecialFunctions
     private const double __LogMinRealNumber = 690.77552789821368;
     private const double __LogMaxRealNumber = -690.77552789821368;
 
+    /// <summary>Вычисляет <paramref name="n"/>-ое число Фибоначчи</summary>
+    /// <param name="n">Номер числа Фибоначчи, которое нужно вычислить</param>
+    /// <returns><paramref name="n"/>-ое число Фибоначчи</returns>
+    /// <remarks>
+    ///     Формула вычисления: <c>F(n) = (phi^n - cos(πn) / phi^n) / √5</c>
+    ///     где <c>phi = (1 + √5) / 2</c> - золотое сечение.
+    /// </remarks>
     [DST]
     public static int Fibonacci(int n)
     {
@@ -21,6 +28,13 @@ public static partial class SpecialFunctions
         // ( phn - cos(pi * n) / phn ) / √5
     }
 
+    /// <summary>Вычисляет число Фибоначчи для комплексного аргумента.</summary>
+    /// <param name="z">Комплексное число, для которого вычисляется число Фибоначчи.</param>
+    /// <returns>Число Фибоначчи, округлённое до ближайшего целого.</returns>
+    /// <remarks>
+    ///     Формула вычисления: <c>F(z) = (phi^z - cos(πz) / phi^z) / √5</c>
+    ///     где <c>phi = (1 + √5) / 2</c> - золотое сечение.
+    /// </remarks>
     [DST]
     public static int Fibonacci(Complex z)
     {
@@ -36,6 +50,13 @@ public static partial class SpecialFunctions
     public static void BCRCacheClear() => __BCR.Value.Clear();
     public static IReadOnlyDictionary<(int n, int k), ulong> BCRCache => __BCR.Value;
 
+    /// <summary>Вычисление биномиального коэффициента (n, k) по рекуррентной формуле</summary>
+    /// <param name="v">Кортеж (n, k) - показатель степени бинома и индекс коэффициента соответственно.</param>
+    /// <returns>Биномиальный коэффициент (n, k).</returns>
+    /// <remarks>
+    ///     Формула вычисления: <c>C(n, k) = C(n - 1, k) + C(n - 1, k - 1)</c>
+    ///     где <c>C(n, k)</c> - биномиальный коэффициент (n, k).
+    /// </remarks>
     private static ulong BCRCalculation((int n, int k) v)
     {
         var (n, k) = v;

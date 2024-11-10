@@ -19,6 +19,10 @@ public class LinearQueue<T>(T[] Buffer)
 
     public ref T this[int i] => ref Buffer[(i + _Offset) % Length];
     
+    /// <summary>Добавляет элемент в очередь</summary>
+    /// <param name="t">Добавляемый элемент</param>
+    /// <returns>Последний элемент, который был в очереди на месте добавленного элемента</returns>
+    /// <remarks>Если очередь заполнена, то последний добавленный элемент будет заменен</remarks>
     public T Add(T t)
     {
         var offset = _Offset;
@@ -29,6 +33,7 @@ public class LinearQueue<T>(T[] Buffer)
         _AddedCount++;
         return last;
     }
+
 
     public T[] ToArray()
     {

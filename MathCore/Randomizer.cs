@@ -23,6 +23,6 @@ public class Randomizer<T> : IFactory<T>
     public T Next() => _Items[_Random.Next(_Items.Count)];
 
     T IFactory<T>.Create() => Next();
-        
+
     public static implicit operator T(Randomizer<T> Randomizer) => Randomizer.Next();
 }

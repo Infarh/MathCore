@@ -17,7 +17,7 @@ public static class Numeric
             default:
                 var lcm = 1;
 
-                foreach(var a in Numbers)
+                foreach (var a in Numbers)
                     lcm = LCM(a, lcm);
 
                 return lcm;
@@ -332,7 +332,7 @@ public static class Numeric
         x = (x & 0x3333_3333) + ((x >> 2) & 0x3333_3333);
         x = (x & 0x0F0F_0F0F) + ((x >> 4) & 0x0F0F_0F0F);
         x = (x & 0x00FF_00FF) + ((x >> 8) & 0x00FF_00FF);
-        return (int) ((x & 0x0000_FFFF) + (x >> 16));
+        return (int)((x & 0x0000_FFFF) + (x >> 16));
     }
 
     /// <summary>Подсчёт числа единичных бит</summary>
@@ -354,9 +354,9 @@ public static class Numeric
     /// <summary>Подсчёт числа единичных бит</summary>
     public static int SignedBitCount(short x)
     {
-        x = (short) ((x & 0x5555) + ((x >> 1) & 0x5555));
-        x = (short) ((x & 0x3333) + ((x >> 2) & 0x3333));
-        x = (short) ((x & 0x0F0F) + ((x >> 4) & 0x0F0F));
+        x = (short)((x & 0x5555) + ((x >> 1) & 0x5555));
+        x = (short)((x & 0x3333) + ((x >> 2) & 0x3333));
+        x = (short)((x & 0x0F0F) + ((x >> 4) & 0x0F0F));
         return (x & 0x00FF) + (x >> 8);
     }
 
@@ -393,24 +393,36 @@ public static class Numeric
 
     [Copyright("GoldNotch@habr.com", url = "https://habr.com/ru/post/522788/")]
     public static int Log2(int x) => SignedBitCount(HiBit(x) - 1);
-        
+
     public static int Log2(uint x) => SignedBitCount(HiBit(x) - 1);
-        
+
     public static int Log2(short x) => SignedBitCount(HiBit(x) - 1);
-        
+
     public static int Log2(ushort x) => SignedBitCount(HiBit(x) - 1);
-        
+
     public static int Log2(byte x) => SignedBitCount(HiBit(x) - 1);
-        
+
     public static int Log2(sbyte x) => SignedBitCount(HiBit(x) - 1);
-        
+
     public static int Log2(long x) => SignedBitCount(HiBit(x) - 1);
-        
+
     public static int Log2(ulong x) => SignedBitCount(HiBit(x) - 1);
 
+    /// <summary>
+    ///     Вычисление квадратного корня из числа
+    /// </summary>
+    /// <param name="x">Вычисляемое значение</param>
+    /// <param name="eps">Точность вычисления (по умолчанию 0.0M)</param>
+    /// <returns>Вычесленный квадратный корень</returns>
+    /// <remarks>
+    ///     Алгоритм вычисления квадратного корня основан на методе Ньютона с
+    ///     начальным приближением, равным результату Math.Sqrt. Если
+    ///     параметр eps не указан, то точность вычисления ограничена
+    ///     точностью типа decimal.
+    /// </remarks>
     private static decimal Sqrt(decimal x, decimal eps = 0.0M)
     {
-        var     current = (decimal)Math.Sqrt((double)x);
+        var current = (decimal)Math.Sqrt((double)x);
         decimal last;
         do
         {
@@ -424,6 +436,16 @@ public static class Numeric
 
     #region Radius
 
+    /// <summary>
+    ///     Вычисление радиуса (евклидова расстояния) от начала координат до точки (X, Y)
+    /// </summary>
+    /// <param name="X">Координата X</param>
+    /// <param name="Y">Координата Y</param>
+    /// <returns>Радиус (евклидово расстояние)</returns>
+    /// <remarks>
+    ///     Вычисление радиуса (евклидова расстояния) до точки (X, Y) выполняется с
+    ///     учетом избежания переполнения.
+    /// </remarks>
     public static double Radius(double X, double Y)
     {
         if (double.IsInfinity(X) || double.IsInfinity(Y))
@@ -451,6 +473,9 @@ public static class Numeric
         return y * Math.Sqrt(1d + r * r);
     }
 
+
+
+
     public static float Radius(float X, float Y)
     {
         if (float.IsInfinity(X) || float.IsInfinity(Y))
@@ -476,6 +501,14 @@ public static class Numeric
         return (float)(y * Math.Sqrt(1d + r * r));
     }
 
+    /// <summary>Вычисление радиуса (евклидова расстояния) от начала координат до точки (X, Y)</summary>
+    /// <param name="X">Координата X</param>
+    /// <param name="Y">Координата Y</param>
+    /// <returns>Радиус (евклидово расстояние)</returns>
+    /// <remarks>
+    ///     Вычисление радиуса (евклидова расстояния) до точки (X, Y) выполняется с
+    ///     учетом избежания переполнения.
+    /// </remarks>
     public static decimal Radius(decimal X, decimal Y)
     {
         // |value| == sqrt(a^2 + b^2)
@@ -500,6 +533,7 @@ public static class Numeric
 
     #endregion
 
+
     public static double Angle(double X, double Y) =>
         X == 0
             ? Y == 0
@@ -510,6 +544,7 @@ public static class Numeric
                     ? 0d
                     : Consts.pi
                 : Math.Atan2(Y, X);
+
 
     public static float Angle(float X, float Y) => (float)
         (X == 0

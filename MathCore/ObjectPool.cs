@@ -6,7 +6,6 @@ using System.Diagnostics;
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore;
-
 /// <summary>
 /// Provides a base implementation for producer-consumer collections that wrap other
 /// producer-consumer collections.

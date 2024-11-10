@@ -152,6 +152,40 @@ public class CRC32Tests
     }
 
     [TestMethod]
+    public void ForwardBackward()
+    {
+        //// Нормальная форма:
+        //crc = table[((crc >> 24) ^ *data++) & 0xFF] ^ (crc << 8);
+        //// Отраженная форма:
+        //crc = table[(crc ^ *data++) & 0xFF] ^ (crc >> 8);
+
+        const uint poly_norm = 0x04C11DB7;
+        const uint poly_ref = 0xEDB88320;
+
+        var table_0x4C11DB7_norm = Table_poly_0x4C11DB7;
+        var table_0xEDB88320_norm = Table_poly_0xEDB88320;
+        var table_0xEDB88320_norm_ref = Table_poly_0xEDB88320_ref_in_out;
+
+
+        return;
+
+        static uint CRC_Normal(uint[] table, uint crc, ReadOnlySpan<byte> bytes)
+        {
+            foreach(var b in bytes)
+                crc = table[((crc >> 24) ^ b) & 0xFF] ^ (crc << 8);
+            return crc;
+        }
+
+        static uint CRC_Ref(uint[] table, uint crc, ReadOnlySpan<byte> bytes)
+        {
+            foreach(var b in bytes)
+                crc = table[(crc ^ b) & 0xFF] ^ (crc >> 8);
+            return crc;
+        }
+
+    }
+
+    [TestMethod]
     public void TableCheck_POSIX()
     {
         // https://github.com/Michaelangel007/crc32
@@ -168,10 +202,10 @@ public class CRC32Tests
         for (var i = 0; i < actual_table.Length; i++)
             if (actual_table[i] != expected_table[i])
                 Assert.Fail($"""
-                             Значение 
-                               Actual[{i}]=0x{actual_table[i]:x8} !=
-                             Expected[{i}]=0x{expected_table[i]:x8}
-                             """);
+                     Значение 
+                       Actual[{i}]=0x{actual_table[i]:x8} !=
+                     Expected[{i}]=0x{expected_table[i]:x8}
+                     """);
     }
 
     [TestMethod]

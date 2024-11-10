@@ -185,6 +185,7 @@ public class AverageValue : ISerializable, IValue<double>, IResettable
     protected AverageValue(SerializationInfo info, StreamingContext context)
     {
         if (info is null) throw new ArgumentNullException(nameof(info));
+        
         _Value = info.GetDouble("Value");
         _N     = info.GetInt32("N");
         Length = info.GetInt32("Length");

@@ -50,26 +50,35 @@ public static partial class SpecialFunctions
         *************************************************************************/
         // ReSharper restore CommentTypo
 
+        /// <summary>Вычисляет интегралы синуса и косинуса для заданного значения x</summary>
+        /// <param name="x">Входное значение, для которого вычисляются интегралы.</param>
+        /// <param name="si">Выходное значение интеграла синуса (Si).</param>
+        /// <param name="ci">Выходное значение интеграла косинуса (Ci).</param>
+        /// <remarks>
+        /// Функция вычисляет интегралы Si(x) и Ci(x) с использованием рациональных функций
+        /// для приближения. Для x > 8 используются вспомогательные функции f(x) и g(x),
+        /// которые позволяют вычислить значения интегралов с высокой точностью.
+        /// </remarks>
         [DST]
         public static void SineCosineIntegrals(double x, out double si, out double ci)
         {
 
             int sg;
-            if(x >= 0) sg = 0;
+            if (x >= 0) sg = 0;
             else
             {
                 sg = -1;
-                x  = -x;
+                x = -x;
             }
 
-            if(Abs(x) < Eps)
+            if (Abs(x) < Eps)
             {
                 si = 0;
                 ci = -__MaxRealNumber;
                 return;
             }
 
-            if(x > 1E9)
+            if (x > 1E9)
             {
                 si = Consts.pi05 - Cos(x) / x;
                 ci = Sin(x) / x;
@@ -79,7 +88,7 @@ public static partial class SpecialFunctions
             double s;
             double c;
             double z;
-            if(x <= 4)
+            if (x <= 4)
             {
                 z = x * x;
                 var sn = -8.39167827910303881427E-11;
@@ -95,7 +104,7 @@ public static partial class SpecialFunctions
                 sd = sd * z + 9.96412122043875552487E-5;
                 sd = sd * z + 1.42085239326149893930E-2;
                 sd = sd * z + 9.99999999999999996984E-1;
-                s  = x * sn / sd;
+                s = x * sn / sd;
 
                 var cn = 2.02524002389102268789E-11;
                 cn = cn * z - 1.35249504915790756375E-8;
@@ -110,7 +119,7 @@ public static partial class SpecialFunctions
                 cd = cd * z + 3.17442024775032769882E-4;
                 cd = cd * z + 5.10028056236446052392E-2;
                 cd = cd * z + 4.00000000000000000080E0;
-                c  = z * cn / cd;
+                c = z * cn / cd;
                 si = sg == 0 ? s : -s;
                 ci = 0.57721566490153286061 + Log(x) + c;
                 return;
@@ -126,7 +135,7 @@ public static partial class SpecialFunctions
             double fn;
             double g;
             double f;
-            if(x < 8)
+            if (x < 8)
             {
                 fn = 4.23612862892216586994E0;
                 fn = fn * z + 5.45937717161812843388E0;
@@ -144,7 +153,7 @@ public static partial class SpecialFunctions
                 fd = fd * z + 7.01710668322789753610E-3;
                 fd = fd * z + 1.10034357153915731354E-4;
                 fd = fd * z + 5.48900252756255700982E-7;
-                f  = fn / (x * fd);
+                f = fn / (x * fd);
 
                 gn = 8.71001698973114191777E-2;
                 gn = gn * z + 6.11379109952219284151E-1;
@@ -163,7 +172,7 @@ public static partial class SpecialFunctions
                 gd = gd * z + 1.73221081474177119497E-4;
                 gd = gd * z + 2.02659182086343991969E-6;
                 gd = gd * z + 7.82579218933534490868E-9;
-                g  = z * gn / gd;
+                g = z * gn / gd;
             }
             else
             {
@@ -186,7 +195,7 @@ public static partial class SpecialFunctions
                 fd = fd * z + 3.21956939101046018377E-8;
                 fd = fd * z + 9.43720590350276732376E-11;
                 fd = fd * z + 9.70507110881952025725E-14;
-                f  = fn / (x * fd);
+                f = fn / (x * fd);
 
                 gn = 6.97359953443276214934E-1;
                 gn = gn * z + 3.30410979305632063225E-1;
@@ -208,10 +217,10 @@ public static partial class SpecialFunctions
                 gd = gd * z + 1.72693748966316146736E-9;
                 gd = gd * z + 3.87830166023954706752E-12;
                 gd = gd * z + 3.14040098946363335242E-15;
-                g  = z * gn / gd;
+                g = z * gn / gd;
             }
             si = Consts.pi05 - f * c - g * s;
-            if(sg != 0) si = -si;
+            if (sg != 0) si = -si;
             ci = f * s - g * c;
         }
 
@@ -259,18 +268,27 @@ public static partial class SpecialFunctions
         *************************************************************************/
         // ReSharper restore CommentTypo
 
+        /// <summary>Вычисляет гиперболические интегралы синуса и косинуса для заданного значения</summary>
+        /// <param name="x">Значение, для которого вычисляются интегралы.</param>
+        /// <param name="shi">Выходной параметр для гиперболического интеграла синуса.</param>
+        /// <param name="chi">Выходной параметр для гиперболического интеграла косинуса.</param>
+        /// <remarks>
+        /// Функция вычисляет интегралы для значений меньше 8 с использованием степенных рядов,
+        /// для значений от 8 до 88 - с использованием разложений в ряды Чебышева,
+        /// а для больших значений - приближённо как exp(x)/2x.
+        /// </remarks>
         [DST]
         public static void HyperbolicSineCosineIntegrals(double x, out double shi, out double chi)
         {
             int sg;
-            if(x >= 0) sg = 0;
+            if (x >= 0) sg = 0;
             else
             {
                 sg = -1;
-                x  = -x;
+                x = -x;
             }
 
-            if(Abs(x) < Eps)
+            if (Abs(x) < Eps)
             {
                 shi = 0;
                 chi = -__MaxRealNumber;
@@ -281,7 +299,7 @@ public static partial class SpecialFunctions
             double c;
             double s;
             double a;
-            if(x < 8)
+            if (x < 8)
             {
                 var z = x * x;
                 a = 1;
@@ -296,7 +314,7 @@ public static partial class SpecialFunctions
                     a /= k;
                     s += a / k;
                     k++;
-                } while(Abs(a / s) >= Eps);
+                } while (Abs(a / s) >= Eps);
                 s *= x;
             }
             else
@@ -304,10 +322,10 @@ public static partial class SpecialFunctions
                 double b1;
                 double b0;
                 double b2;
-                if(x < 18)
+                if (x < 18)
                 {
-                    a  = (576 / x - 52) / 10;
-                    k  = Exp(x) / x;
+                    a = (576 / x - 52) / 10;
+                    k = Exp(x) / x;
                     b0 = 1.83889230173399459482E-17;
                     b1 = 0;
                     ChebIterationShiChi(a, -9.55485532279655569575E-17, ref b0, ref b1, out _);
@@ -361,10 +379,10 @@ public static partial class SpecialFunctions
                 }
                 else
                 {
-                    if(x <= 88)
+                    if (x <= 88)
                     {
-                        a  = (6336 / x - 212) / 70;
-                        k  = Exp(x) / x;
+                        a = (6336 / x - 212) / 70;
+                        k = Exp(x) / x;
                         b0 = -1.05311574154850938805E-17;
                         b1 = 0;
                         ChebIterationShiChi(a, 2.62446095596355225821E-17, ref b0, ref b1, out _);
@@ -430,6 +448,12 @@ public static partial class SpecialFunctions
             chi = 0.57721566490153286061 + Log(x) + c;
         }
 
+        /// <summary>Выполняет одну итерацию метода Чебышёва для вычисления интегралов гиперболических синусов и косинусов</summary>
+        /// <param name="x">Аргумент функции.</param>
+        /// <param name="c">Коэффициент Чебышёва.</param>
+        /// <param name="b0">Ссылка на переменную, представляющую текущее значение b0, которое будет обновлено.</param>
+        /// <param name="b1">Ссылка на переменную, представляющую текущее значение b1, которое будет обновлено.</param>
+        /// <param name="b2">Выходной параметр, представляющий предыдущее значение b1, которое будет обновлено.</param>
         private static void ChebIterationShiChi(double x, double c, ref double b0, ref double b1, out double b2)
         {
             b2 = b1;

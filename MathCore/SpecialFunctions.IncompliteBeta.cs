@@ -147,6 +147,14 @@ public static partial class SpecialFunctions
         *************************************************************************/
         // ReSharper restore CommentTypo
 
+        /// <summary>Обратная функция не полного бета-интеграла</summary>
+        /// <param name="a">Первый параметр бета-интеграла (a &gt; 0).</param>
+        /// <param name="b">Второй параметр бета-интеграла (b &gt; 0).</param>
+        /// <param name="y">Значение, для которого ищется x, такое, что не полный бета-интеграл a, b, x равен y.</param>
+        /// <returns>Значение x, такое, что не полный бета-интеграл a, b, x равен y.</returns>
+        /// <remarks>
+        /// Метод использует интерполяцию или итерации Ньютона, чтобы найти корень уравнения incbet(a,b,x) - y = 0.
+        /// </remarks>
         [DST]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Стиль", "IDE0059:Ненужное присваивание значения", Justification = "<Ожидание>")]
         public static double IncompleteBetaInversed(double a, double b, double y)
@@ -520,6 +528,15 @@ public static partial class SpecialFunctions
         Copyright 1984, 1995, 2000 by Stephen L. Moshier
         *************************************************************************/
 
+        /// <summary>
+        /// Вычисляет приближенное значение неполного бета-интеграла с использованием разложения в непрерывную дробь.
+        /// </summary>
+        /// <param name="a">Первый параметр бета-интеграла.</param>
+        /// <param name="b">Второй параметр бета-интеграла.</param>
+        /// <param name="x">Аргумент, по которому вычисляется интеграл.</param>
+        /// <param name="big">Большое число, используемое для контроля переполнения.</param>
+        /// <param name="biginv">Обратное к большому числу, используемое для контроля переполнения.</param>
+        /// <returns>Приближенное значение неполного бета-интеграла.</returns>
         private static double IncompleteBetaFractionExpansion(double a, double b, double x, double big, double biginv)
         {
             var k1   = a;
@@ -595,14 +612,23 @@ public static partial class SpecialFunctions
             return ans;
         }
 
-
-        /*************************************************************************
+       /*************************************************************************
         Continued fraction expansion #2
         for incomplete beta integral
 
         Cephes Math Library, Release 2.8:  June, 2000
         Copyright 1984, 1995, 2000 by Stephen L. Moshier
         *************************************************************************/
+ 
+        /// <summary>
+        ///     Возвращает значение не полного бета-интеграла через фракционное разложение.
+        /// </summary>
+        /// <param name="a">Первый параметр бета-интеграла (a &gt; 0).</param>
+        /// <param name="b">Второй параметр бета-интеграла (b &gt; 0).</param>
+        /// <param name="x">Значение, для которого вычисляется не полный бета-интеграл (0 &lt;= x &lt;= 1).</param>
+        /// <param name="big">Максимальное значение, которое может быть представлено типом double.</param>
+        /// <param name="biginv">1 / <paramref name="big" />.</param>
+        /// <returns>Значение не полного бета-интеграла.</returns>
         private static double IncompleteBetaFractionExpansion2(double a, double b, double x, double big, double biginv)
         {
             var          k1     = a;
@@ -678,7 +704,6 @@ public static partial class SpecialFunctions
             return ans;
         }
 
-
         /*************************************************************************
         GetPower series for incomplete beta integral.
         Use when b*x is small and x not too close to 1.
@@ -686,6 +711,13 @@ public static partial class SpecialFunctions
         Cephes Math Library, Release 2.8:  June, 2000
         Copyright 1984, 1995, 2000 by Stephen L. Moshier
         *************************************************************************/
+
+        /// <summary>Вычисляет не полный бета-интеграл методом степенного ряда</summary>
+        /// <param name="a">Первый параметр бета-интеграла (a &gt; 0).</param>
+        /// <param name="b">Второй параметр бета-интеграла (b &gt; 0).</param>
+        /// <param name="x">Значение, для которого вычисляется не полный бета-интеграл (0 &lt;= x &lt;= 1).</param>
+        /// <param name="maxgam">Максимальное значение гамма-функции, которое может быть представлено типом double.</param>
+        /// <returns>Значение не полного бета-интеграла.</returns>
         private static double IncompleteBetaPowerSeries(double a, double b, double x, double maxgam)
         {
             var ai = 1 / a;

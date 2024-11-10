@@ -4,15 +4,19 @@ namespace MathCore;
 /// <summary>Алгоритмы для Простых чисел</summary>
 public static class PrimeNumbers
 {
+    /// <summary>Расширение списка простых чисел до нужного размера</summary>
+    /// <param name="OldSize">Текущий размер списка</param>
+    /// <returns>Новый размер - ближайшее большее простое число</returns>
+    /// <remarks>max = 2146435069</remarks>
     public static int ExpandPrime(int OldSize)
     {
         var min = 2 * OldSize;
         return (uint)min > 2146435069U && 2146435069 > OldSize ? 2146435069 : GetClosestUp(min);
     }
 
-    private static readonly int[] __First72PrimeNumbers = 
+    private static readonly int[] __First72PrimeNumbers =
     [
-        3, 7, 11, 17, 23, 29, 37, 47, 59, 71, 89, 107, 131, 163, 197, 239, 293, 
+        3, 7, 11, 17, 23, 29, 37, 47, 59, 71, 89, 107, 131, 163, 197, 239, 293,
         353, 431, 521, 631, 761, 919, 1103, 1327, 1597, 1931, 2333, 2801, 3371,
         4049, 4861, 5839, 7013, 8419, 10103, 12143, 14591, 17519, 21023, 25229,
         30293, 36353, 43627, 52361, 62851, 75431, 90523, 108631, 130363, 156437,
@@ -21,6 +25,10 @@ public static class PrimeNumbers
         4166287, 4999559, 5999471, 7199369
     ];
 
+    /// <summary>Возвращает ближайшее большее простое число</summary>
+    /// <param name="n">Значение</param>
+    /// <returns>Ближайшее большее простое число</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Если <paramref name="n"/> меньше нуля</exception>
     public static int GetClosestUp(int n)
     {
         if (n < 0)
@@ -37,6 +45,10 @@ public static class PrimeNumbers
         return n;
     }
 
+    /// <summary>Проверка - является ли число простым?</summary>
+    /// <param name="n">Проверяемое число</param>
+    /// <returns>Истина, если число простое</returns>
+    /// <remarks>Возвращает false, если n &lt;= 1</remarks>
     public static bool IsPrime(int n)
     {
         if ((n & 1) == 0)
@@ -69,11 +81,11 @@ public static class PrimeNumbers
     public static IEnumerable<int> GetNumbersTo(int n)
     {
         var result = new int[n + 1];
-        for(var i = 2; i <= n; i++)
+        for (var i = 2; i <= n; i++)
             result[i] = i;
-        for(var i = 2; i * i <= n; i++)
-            if(result[i] == i) 
-                for(var j = i * i; j <= n; j += i)
+        for (var i = 2; i * i <= n; i++)
+            if (result[i] == i)
+                for (var j = i * i; j <= n; j += i)
                     result[j] = 0;
         return result.Where(v => v != 0);
     }
@@ -129,20 +141,25 @@ public static class PrimeNumbers
             private readonly byte[] _FirstBuffer;
             private readonly byte[]? _SecondBuffer;
 
+            /// <summary>Инициализирует новый экземпляр класса LongArray, создавая буферы для хранения данных определенной длины</summary>
+            /// <param name="length">Длина массива, который необходимо создать</param>
             public LongArray(long length)
             {
                 _FirstBuffer = new byte[Math.Min(__MaxChunkLength, length)];
                 if (length > __MaxChunkLength) _SecondBuffer = new byte[length - __MaxChunkLength];
             }
 
+            /// <summary>Конструктор, который загружает массив из файла</summary>
+            /// <param name="FileName">Имя файла, из которого загружается массив</param>
+            /// <exception cref="InvalidOperationException">Если в файле недостаточно данных</exception>
             public LongArray(string FileName)
             {
-                using var file   = System.IO.File.OpenRead(FileName);
-                var       length = file.Length;
+                using var file = System.IO.File.OpenRead(FileName);
+                var length = file.Length;
                 _FirstBuffer = new byte[Math.Min(__MaxChunkLength, length)];
                 if (length > __MaxChunkLength) _SecondBuffer = new byte[length - __MaxChunkLength];
 
-                if(file.Read(_FirstBuffer, 0, _FirstBuffer.Length) != _FirstBuffer.Length)
+                if (file.Read(_FirstBuffer, 0, _FirstBuffer.Length) != _FirstBuffer.Length)
                     throw new InvalidOperationException("Недостаточно данных в файле");
 
                 if (_SecondBuffer != null)
@@ -157,13 +174,15 @@ public static class PrimeNumbers
                 get => index < __MaxChunkLength ? _FirstBuffer[index] : _SecondBuffer[index - __MaxChunkLength];
                 set
                 {
-                    if (index < __MaxChunkLength) 
+                    if (index < __MaxChunkLength)
                         _FirstBuffer[index] = value;
-                    else 
+                    else
                         _SecondBuffer[index - __MaxChunkLength] = value;
                 }
             }
 
+            /// <summary>Сохраняет массив в файл</summary>
+            /// <param name="FileName">Имя файла, в который будет сохранен массив</param>
             public void Save(string FileName)
             {
                 using var file = System.IO.File.OpenWrite(FileName);
@@ -192,14 +211,14 @@ public static class PrimeNumbers
         {
             // ensure length divides by 30
             length = (length + 29) / 30 * 30;
-            _Data  = new(length / 30);
-            for (long i = 0; i < _Data.Length; i++) 
+            _Data = new(length / 30);
+            for (long i = 0; i < _Data.Length; i++)
                 _Data[i] = byte.MaxValue;
 
             for (long i = 7; i * i < Length; i++)
             {
                 if (!IsPrime(i)) continue;
-                for (var d = i * i; d < Length; d += i) 
+                for (var d = i * i; d < Length; d += i)
                     ClearPrime(d);
             }
         }
@@ -210,6 +229,10 @@ public static class PrimeNumbers
 
         public long Length => _Data.Length * 30L;
 
+        /// <summary>Проверяет, является ли заданное число простым</summary>
+        /// <param name="n">Число, которое нужно проверить.</param>
+        /// <returns>True, если число простое, false - в противном случае.</returns>
+        /// <exception cref="ArgumentException">Если <paramref name="n"/> больше, чем длина колеса.</exception>
         public bool IsPrime(long n)
         {
             if (n >= Length) throw new ArgumentException("Number too big");
@@ -218,13 +241,15 @@ public static class PrimeNumbers
             return bit >= 0 && (_Data[n / 30] & (1 << bit)) != 0;
         }
 
+        /// <summary>Удаляет простое число из колеса</summary>
+        /// <param name="n">Простое число, которое нужно удалить.</param>
+        /// <remarks>Метод ничего не делает, если <paramref name="n"/> - не простое число.</remarks>
         private void ClearPrime(long n)
         {
             var bit = __IndexToBit[n % 30];
-            if (bit < 0) 
+            if (bit < 0)
                 return;
             _Data[n / 30] &= (byte)~(1 << bit);
         }
-
     }
 }

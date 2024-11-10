@@ -299,7 +299,6 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
 
     /* -------------------------------------------------------------------------------------------- */
 
-    /// <inheritdoc/>
     [DST]
     public override string ToString() => $"MatrixComplex[{_N}x{_M}]";
 
@@ -316,20 +315,16 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
         IFormatProvider? provider = null
     ) => _Data.ToStringFormatView(Format, Splitter, provider) ?? throw new InvalidOperationException();
 
-    /// <inheritdoc/>
     [DST] public string ToString(string format, IFormatProvider? provider) => _Data.ToStringFormatView(format, "\t", provider) ?? throw new InvalidOperationException();
 
     /* -------------------------------------------------------------------------------------------- */
 
     #region ICloneable Members
 
-    /// <inheritdoc/>
     [DST] object ICloneable.Clone() => Clone();
 
-    /// <inheritdoc/>
     [DST] Complex[,] ICloneable<Complex[,]>.Clone() => _Data.CloneObject();
 
-    /// <inheritdoc/>
     [DST] public MatrixComplex Clone() => new(_Data, true);
 
     #endregion
@@ -374,6 +369,11 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
 
     [DST] public static MatrixComplex operator /(Complex x, MatrixComplex M) => new(Divide(x, M._Data));
 
+    /// <summary>Возведение квадратной матрицы в целую степень</summary>
+    /// <param name="M">Квадратная матрица</param>
+    /// <param name="n">Степень, в которую возводится матрица. Может быть отрицательной</param>
+    /// <returns>Матрица, возведённая в степень <paramref name="n"/></returns>
+    /// <exception cref="ArgumentException">Если матрица <paramref name="M"/> не квадратная</exception>
     [DST]
     public static MatrixComplex operator ^(MatrixComplex M, int n)
     {
@@ -431,18 +431,14 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
 
     #region IEquatable Members
 
-    /// <inheritdoc/>
     [DST] public bool Equals(Complex[,]? other) => other != null && Array.AreEquals(_Data, other);
 
-    /// <inheritdoc/>
     [DST] public bool Equals(MatrixComplex? other) => other is not null && (ReferenceEquals(this, other) || Array.AreEquals(_Data, other._Data));
 
     #endregion
 
-    /// <inheritdoc/>
     [DST] public override bool Equals(object? obj) => obj != null && (ReferenceEquals(this, obj) || Equals(obj as MatrixComplex) || Equals(obj as Complex[,]));
 
-    /// <inheritdoc/>
     [DST]
     public override int GetHashCode()
     {

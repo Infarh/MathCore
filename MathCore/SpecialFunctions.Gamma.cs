@@ -9,6 +9,14 @@ public static partial class SpecialFunctions
     /// <summary>Гамма-функция</summary>
     public static class Gamma
     {
+        /// <summary>Вычисляет гамма-функцию для заданного значения x</summary>
+        /// <param name="x">Значение, для которого вычисляется гамма-функция. Может быть как положительным, так и отрицательным.</param>
+        /// <returns>Значение гамма-функции для x.</returns>
+        /// <remarks>
+        /// Если абсолютное значение x больше 33, используется метод Стирлинга для приближенного вычисления гамма-функции.
+        /// Для значений x меньше 2, функция нормализуется путем деления на x до достижения значения 2.
+        /// Для значений x больших или равных 3, функция умножается на x до достижения значения меньше 3.
+        /// </remarks>
         [DST]
         public static double G(double x)
         {
@@ -68,6 +76,10 @@ public static partial class SpecialFunctions
             return z * pp / qq;
         }
 
+        /// <summary>Вычисляет приближенное значение гамма-функции с использованием метода Стирлинга для больших значений x.</summary>
+        /// <param name="x">Значение, для которого вычисляется гамма-функция. Должно быть положительным.</param>
+        /// <returns>Приближенное значение гамма-функции для x.</returns>
+        /// <remarks>Метод Стирлинга используется для вычисления гамма-функции, так как он обеспечивает хорошую точность для больших значений x.</remarks>
         [DST]
         private static double GStir(double x)
         {
@@ -89,9 +101,18 @@ public static partial class SpecialFunctions
             return 2.50662827463100050242 * y * w;
         }
 
+        /// <summary>Вычисляет натуральный логарифм гамма-функции.</summary>
+        /// <param name="x">Значение, для которого вычисляется натуральный логарифм гамма-функции. Должно быть положительным.</param>
+        /// <returns>Приближенное значение натурального логарифма гамма-функции для x.</returns>
+        /// <remarks>Метод Стирлинга используется для вычисления гамма-функции, так как он обеспечивает хорошую точность для больших значений x.</remarks>
         [DST]
         public static double LnG(double x) => LnG(x, out _);
 
+        /// <summary>Вычисляет натуральный логарифм гамма-функции</summary>
+        /// <param name="x">Значение, для которого вычисляется натуральный логарифм гамма-функции. Должно быть положительным.</param>
+        /// <param name="sign">Знак гамма-функции.</param>
+        /// <returns>Приближенное значение натурального логарифма гамма-функции для x.</returns>
+        /// <remarks>Метод Стирлинга используется для вычисления гамма-функции, так как он обеспечивает хорошую точность для больших значений x.</remarks>
         [DST]
         public static double LnG(double x, out int sign)
         {
@@ -195,6 +216,12 @@ public static partial class SpecialFunctions
             -2.71994908488607703910e-9
         ];
 
+        /// <summary>
+        /// Вычисляет натуральный логарифм гамма-функции. Метод использует
+        /// разложение гамма-функции в рядом по 1/z.
+        /// </summary>
+        /// <param name="z">Значение, для которого вычисляется натуральный логарифм гамма-функции.</param>
+        /// <returns>Приближенное значение натурального логарифма гамма-функции для z.</returns>
         private static double Ln(in double z)
         {
             if (z < 0.5)
@@ -221,6 +248,13 @@ public static partial class SpecialFunctions
             }
         }
 
+        /// <summary>Вычисляет обратное значение к регуляризованной нижней функции гамма-распределения</summary>
+        /// <param name="a">Параметр гамма-распределения.</param>
+        /// <param name="y0">Значение, для которого вычисляется обратное значение.</param>
+        /// <returns>Обратное значение к регуляризованной нижней функции гамма-распределения.</returns>
+        /// <remarks>
+        ///     Метод использует интерполяцию или итерации Ньютона, чтобы найти корень уравнения lower_regularized(a, x) - y = 0.
+        /// </remarks>
         public static double LowerRegularizedInv(double a, double y0)
         {
             const double epsilon   = 0.000000000000001;
@@ -358,6 +392,11 @@ public static partial class SpecialFunctions
             return x;
         }
 
+        /// <summary>Вычисляет нижнюю регуляризованную гамма-функцию</summary>
+        /// <param name="a">Первый параметр гамма-функции (a &gt; 0).</param>
+        /// <param name="x">Второй параметр гамма-функции (x &gt; 0).</param>
+        /// <returns>Значение нижней регуляризованной гамма-функции.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">a или x меньше 0.</exception>
         public static double LowerRegularized(double a, double x)
         {
             const double epsilon = 0.000000000000001;

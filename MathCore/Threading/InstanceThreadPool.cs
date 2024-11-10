@@ -3,6 +3,7 @@
 #nullable enable
 namespace MathCore.Threading;
 
+/// <summary>Пул с фикисрованным поличеством потоков</summary>
 public class InstanceThreadPool : IDisposable
 {
     private readonly ThreadPriority _Priority;
@@ -14,6 +15,11 @@ public class InstanceThreadPool : IDisposable
     private readonly AutoResetEvent _ExecuteEvent = new(true);
     private readonly AutoResetEvent _WorkingEvent = new(false);
 
+    /// <summary>Инициализирует новый экземпляр класса InstanceThreadPool с заданным количеством потоков, приоритетом и именем</summary>
+    /// <param name="MaxThreadsCount">Максимальное количество потоков в пуле. Должно быть больше 0.</param>
+    /// <param name="Priority">Приоритет потоков. По умолчанию - Normal.</param>
+    /// <param name="Name">Имя пула потоков. Если не указано, используется хэш-код объекта в виде строки.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Выбрасывается, если MaxThreadsCount меньше или равно 0.</exception>
     public InstanceThreadPool(int MaxThreadsCount, ThreadPriority Priority = ThreadPriority.Normal, string? Name = null)
     {
         if (MaxThreadsCount <= 0)
@@ -25,6 +31,12 @@ public class InstanceThreadPool : IDisposable
         Initialize();
     }
 
+        /// <summary>Инициализирует потоки пула</summary>
+        /// <remarks>
+        /// Создает <see cref="_Threads.Length"/> потоков, каждый из которых
+        /// будет выполнять делегат <see cref="WorkingThread"/>, и запускает
+        /// каждый поток.
+        /// </remarks>
     private void Initialize()
     {
         for (var i = 0; i < _Threads.Length; i++)
@@ -43,6 +55,10 @@ public class InstanceThreadPool : IDisposable
 
     public void Execute(Action Work) => Execute(null, _ => Work());
 
+    /// <summary>Выполняет задание в пуле потоков</summary>
+    /// <param name="Parameter">Параметр, передаваемый в задание</param>
+    /// <param name="Work">Задание, которое должно быть выполнено</param>
+    /// <exception cref="InvalidOperationException">Выбрасывается, если пул потоков остановлен</exception>
     public void Execute(object? Parameter, Action<object?> Work)
     {
         if (!_CanWork) throw new InvalidOperationException("Попытка передать задание остановленному пулу потоков");
@@ -56,6 +72,16 @@ public class InstanceThreadPool : IDisposable
         _WorkingEvent.Set();        // разрешаем работу потоку
     }
 
+    /// <summary>Метод, выполняемый каждым потоком пула</summary>
+    /// <remarks>
+    /// Метод работает в цикле, пока <see cref="_CanWork"/> имеет значение <c>true</c>.
+    /// Метод ожидает событие <see cref="_WorkingEvent"/>, которое свидетельствует
+    /// о получении разрешения на работу потока.
+    /// Затем метод ожидает событие <see cref="_ExecuteEvent"/>, которое свидетельствует
+    /// о доступности списка заданий.
+    /// Если <see cref="_CanWork"/> имеет значение <c>false</c>, то метод
+    /// завершает свою работу.
+    /// </remarks>
     private void WorkingThread()
     {
         var thread_name = Thread.CurrentThread.Name;

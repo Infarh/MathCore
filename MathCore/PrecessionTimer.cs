@@ -19,9 +19,9 @@ public class PrecisionTimer : IDisposable
     private TimeProc _TimeProcPeriodic;
     private int _TimerId;
 
-    // Methods
     static PrecisionTimer() => TimeGetDevCaps(ref __Caps, Marshal.SizeOf(__Caps));
 
+    /// <summary>Инициализация нового экземпляра <see cref="PrecisionTimer"/></summary>
     /// <exception cref="PlatformNotSupportedException">В случае если платформа не Win32NT</exception>
     public PrecisionTimer() => Initialize();
 
@@ -119,10 +119,10 @@ public class PrecisionTimer : IDisposable
     {
         if (!disposing)
         {
-            if (IsRunning) 
+            if (IsRunning)
                 TimeKillEvent(_TimerId);
         }
-        else if (_Disposed) 
+        else if (_Disposed)
             return;
 
         _Disposed = true;
@@ -138,13 +138,13 @@ public class PrecisionTimer : IDisposable
     {
         if (Environment.OSVersion.Platform != PlatformID.Win32NT)
             throw new PlatformNotSupportedException($"Платформа {Environment.OSVersion.Platform} не поддерживается");
-        _Mode             = PrecisionTimerMode.Periodic;
-        _Period           = Capabilities.PeriodMin;
-        _Resolution       = 1;
-        IsRunning         = false;
+        _Mode = PrecisionTimerMode.Periodic;
+        _Period = Capabilities.PeriodMin;
+        _Resolution = 1;
+        IsRunning = false;
         _TimeProcPeriodic = TimerPeriodicEventCallback;
-        _TimeProcOneShot  = TimerOneShotEventCallback;
-        _TickRaiser       = OnTick;
+        _TimeProcOneShot = TimerOneShotEventCallback;
+        _TickRaiser = OnTick;
     }
 
     private void OnStarted(EventArgs e) => Started?.Invoke(this, e);
@@ -153,6 +153,11 @@ public class PrecisionTimer : IDisposable
 
     private void OnTick(EventArgs e) => Tick?.Invoke(this, e);
 
+    /// <summary>Запуск таймера</summary>
+    /// <remarks>
+    /// Метод запускает таймер. Если таймер уже запущен, то метод ничего не делает.
+    /// </remarks>
+    /// <exception cref="TimerException">Если таймер не может быть запущен</exception>
     public void Start()
     {
         DisposeCheck();
@@ -169,11 +174,15 @@ public class PrecisionTimer : IDisposable
             OnStarted(EventArgs.Empty);
     }
 
+    /// <summary>Остановка таймера</summary>
+    /// <remarks>Метод останавливает таймер. Если таймер уже остановлен, то метод ничего не делает.</remarks>
     public void Stop()
     {
         DisposeCheck();
         if (!IsRunning) return;
-        TimeKillEvent(_TimerId);
+
+        _ = TimeKillEvent(_TimerId);
+
         IsRunning = false;
         if (SynchronizingObject?.InvokeRequired == true)
             SynchronizingObject.BeginInvoke(new EventRaiser(OnStopped), new object[] { EventArgs.Empty });
@@ -189,11 +198,18 @@ public class PrecisionTimer : IDisposable
     [DllImport("winmm.dll", EntryPoint = "timeKillEvent")]
     private static extern int TimeKillEvent(int Id);
 
+    /// <summary>Обработчик события таймера, срабатывающий 1 раз</summary>
+    /// <param name="id">Идентификатор таймера</param>
+    /// <param name="msg">Сообщение</param>
+    /// <param name="user">Дополнительный параметр</param>
+    /// <param name="param1">Дополнительный параметр</param>
+    /// <param name="param2">Дополнительный параметр</param>
+    /// <remarks>Метод вызывает событие <see cref="Tick"/>, а затем останавливает таймер</remarks>
     private void TimerOneShotEventCallback(int id, int msg, int user, int param1, int param2)
     {
         if (_SynchronizingObject != null)
         {
-            _SynchronizingObject.BeginInvoke(_TickRaiser, new object[] { EventArgs.Empty });
+            _SynchronizingObject.BeginInvoke(_TickRaiser, [EventArgs.Empty]);
             Stop();
         }
         else
@@ -203,6 +219,13 @@ public class PrecisionTimer : IDisposable
         }
     }
 
+    /// <summary>Обработчик периодического события таймера</summary>
+    /// <param name="id">Идентификатор таймера</param>
+    /// <param name="msg">Сообщение</param>
+    /// <param name="user">Дополнительный параметр</param>
+    /// <param name="param1">Дополнительный параметр</param>
+    /// <param name="param2">Дополнительный параметр</param>
+    /// <remarks>Метод вызывает событие <see cref="Tick"/> для каждого периода таймера</remarks>
     private void TimerPeriodicEventCallback(int id, int msg, int user, int param1, int param2)
     {
         if (_SynchronizingObject != null)
