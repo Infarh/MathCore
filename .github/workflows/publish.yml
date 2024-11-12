@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Artifact
+      - name: Get artifact
         uses: actions/download-artifact@v4.1.8
         id: download
         with:
