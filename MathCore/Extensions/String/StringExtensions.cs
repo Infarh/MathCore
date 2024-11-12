@@ -66,13 +66,45 @@ public static class StringExtensions
     /// <summary>Перечисление строк в строке</summary>
     /// <param name="str">Исходная строка</param>
     /// <param name="SkipEmpty">Пропускать пустые строки</param>
+    /// <param name="Trim">Обрезать строки</param>
     /// <returns>Перечисление строк в строке</returns>
-    public static IEnumerable<string> EnumLines(this string str, bool SkipEmpty = false)
+    public static IEnumerable<string> EnumLines(this string str, bool SkipEmpty = false, bool Trim = false)
+    {
+        using var reader = str.CreateReader();
+        if (Trim)
+        {
+            while (reader.ReadLine() is { } line)
+                if (line.Length > 0 || !SkipEmpty)
+                    yield return line.Trim();
+        }
+        else
+            while (reader.ReadLine() is { } line)
+                if (line.Length > 0 || !SkipEmpty)
+                    yield return line;
+    }
+
+    /// <summary>Перечисление строк в строке</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="SkipEmpty">Пропускать пустые строки</param>
+    /// <returns>Перечисление строк в строке</returns>
+    public static IEnumerable<string> EnumLines(this string str, char TrimChar, bool SkipEmpty = false)
     {
         using var reader = str.CreateReader();
         while (reader.ReadLine() is { } line)
             if (line.Length > 0 || !SkipEmpty)
-                yield return line;
+                yield return line.Trim(TrimChar);
+    }
+
+    /// <summary>Перечисление строк в строке</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="SkipEmpty">Пропускать пустые строки</param>
+    /// <returns>Перечисление строк в строке</returns>
+    public static IEnumerable<string> EnumLines(this string str, bool SkipEmpty = false, params char[] TrimChars)
+    {
+        using var reader = str.CreateReader();
+        while (reader.ReadLine() is { } line)
+            if (line.Length > 0 || !SkipEmpty)
+                yield return line.Trim(TrimChars);
     }
 
     /// <summary>Перечисление строк в строке</summary>

@@ -9,6 +9,9 @@ public static partial class SpecialFunctions
     /// <summary>Эллиптические функции Якоби</summary>
     public static class EllipticJacobi
     {
+        /// <summary>Вычисляет квадрат модифицированного параметра эллиптической функции Якоби</summary>
+        /// <param name="k">Параметр эллиптической функции Якоби, где 0 <= k <= 1.</param>
+        /// <returns>Квадрат модифицированного параметра k.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static double GetKi(double k)
         {
@@ -23,6 +26,16 @@ public static partial class SpecialFunctions
 
             public double Current { get; private set; }
 
+            /// <summary>Вычисляет последовательность значений k, ki, ki' , ki'', ...</summary>
+            /// <param name="k">Параметр эллиптической функции Якоби, где 0 <= k <= 1.</param>
+            /// <remarks>
+            ///     <para>Вычисляет последовательность значений k, ki, ki', ki'', ...</para>
+            ///     <para>ki = k / (1 + Sqrt(1 - k * k))</para>
+            ///     <para>ki' = ki / (1 + Sqrt(1 - ki * ki))</para>
+            ///     <para>ki'' = ki' / (1 + Sqrt(1 - ki' * ki'))</para>
+            ///     <para>...</para>
+            ///     <para>Current = NaN до первого вызова MoveNext()</para>
+            /// </remarks>
             public KValues(double k)
             {
                 if (k < 0) throw new ArgumentOutOfRangeException(nameof(k), k, "Значение параметра k меньше 0!");
@@ -32,6 +45,13 @@ public static partial class SpecialFunctions
                 Current = double.NaN;
             }
 
+            /// <summary>Вычисляет следующее значение ki</summary>
+            /// <returns>true, если было вычислено новое значение, false, если последовательность закончилась</returns>
+            /// <remarks>
+            ///     <para>Вычисляет следующее значение ki</para>
+            ///     <para>Если параметр k == 0, то последовательность закончилась</para>
+            ///     <para>Если параметр k == 1, то последовательность закончилась</para>
+            /// </remarks>
             public bool MoveNext()
             {
                 if (Current is not double.NaN && Abs(_ki - _k) == 0) return false;
@@ -46,6 +66,17 @@ public static partial class SpecialFunctions
             public KValues GetEnumerator() => this;
         }
 
+        /// <summary>Вычисляет последовательность значений k, ki, ki', ki'', ...</summary>
+        /// <param name="k">Параметр k</param>
+        /// <returns>Последовательность значений k, ki, ki', ki'', ...</returns>
+        /// <remarks>
+        ///     <para>ki = k / (1 + Sqrt(1 - k * k))</para>
+        ///     <para>ki' = ki / (1 + Sqrt(1 - ki * ki))</para>
+        ///     <para>ki'' = ki' / (1 + Sqrt(1 - ki' * ki'))</para>
+        ///     <para>...</para>
+        ///     <para>Если параметр k == 0, то последовательность закончилась</para>
+        ///     <para>Если параметр k == 1, то последовательность закончилась</para>
+        /// </remarks>
         private static List<double> GetKValues(double k)
         {
             if (k < 0) throw new ArgumentOutOfRangeException(nameof(k), k, "Значение параметра k меньше 0!");
@@ -64,6 +95,17 @@ public static partial class SpecialFunctions
             return kk;
         }
 
+        /// <summary>Вычисляет последовательность значений k, ki, ki', ki'', ...</summary>
+        /// <param name="k">Параметр k</param>
+        /// <returns>Перечисление значений k, ki, ki', ki'', ...</returns>
+        /// <remarks>
+        ///     <para>ki = k / (1 + Sqrt(1 - k * k))</para>
+        ///     <para>ki' = ki / (1 + Sqrt(1 - ki * ki))</para>
+        ///     <para>ki'' = ki' / (1 + Sqrt(1 - ki' * ki'))</para>
+        ///     <para>...</para>
+        ///     <para>Если параметр k == 0, то последовательность закончилась</para>
+        ///     <para>Если параметр k == 1, то последовательность закончилась</para>
+        /// </remarks>
         private static IEnumerable<double> EnumKValues(double k)
         {
             if (k < 0) throw new ArgumentOutOfRangeException(nameof(k), k, "Значение параметра k меньше 0!");
@@ -78,6 +120,14 @@ public static partial class SpecialFunctions
             } while (Abs(ki - k) > 0);
         }
 
+        /// <summary>
+        ///     Вычисляет эллиптический интеграл
+        ///     <para>
+        ///         I = (pi / 2) * (1 + k1) * (1 + k2) * (1 + k3) * ...
+        ///     </para>
+        /// </summary>
+        /// <param name="kk">Перечисление значений k, ki, ki', ki'', ...</param>
+        /// <returns>Значение эллиптического интеграла</returns>
         private static double CalculateEllipticIntegral(List<double> kk)
         {
             //return kk.Aggregate(PI / 2, (K, k) => K * (1 + k));
@@ -87,6 +137,14 @@ public static partial class SpecialFunctions
             return result;
         }
 
+        /// <summary>
+        ///     Вычисляет эллиптический интеграл
+        ///     <para>
+        ///         I = (pi / 2) * (1 + k1) * (1 + k2) * (1 + k3) * ...
+        ///     </para>
+        /// </summary>
+        /// <param name="kk">Перечисление значений k, ki, ki', ki'', ...</param>
+        /// <returns>Значение эллиптического интеграла</returns>
         private static double CalculateEllipticIntegral(KValues kk)
         {
             //return kk.Aggregate(PI / 2, (K, k) => K * (1 + k));
@@ -96,6 +154,17 @@ public static partial class SpecialFunctions
             return result;
         }
 
+        /// <summary>
+        ///     Вычисляет эллиптический интеграл
+        ///     <para>
+        ///         I = (pi / 2) * (1 + k1) * (1 + k2) * (1 + k3) * ...
+        ///     </para>
+        /// </summary>
+        /// <param name="k">Параметр k</param>
+        /// <returns>Значение эллиптического интеграла</returns>
+        /// <remarks>
+        ///     <para>Метод является итерационным, количество итераций составляет примерно 14</para>
+        /// </remarks>
         private static double CalculateEllipticIntegral(double k)
         {
             var    result = Consts.pi05;
@@ -146,6 +215,30 @@ public static partial class SpecialFunctions
         /// <returns>Значение полного комплиментарного эллиптического интеграла</returns>
         public static double FullEllipticIntegralComplimentary_Recursive(double k) => FullEllipticIntegral_Recursive(Sqrt(1 - k * k));
 
+        /// <summary>
+        ///     Вычисляет значение эллиптической функции sn(u,k) по формуле:
+        ///     <para>
+        ///         sn(u,k) = sin(u * pi / 2) * (1 + k1) / (1 / w + k1 * w)
+        ///     </para>
+        ///     <para>
+        ///         где k1 = k / (1 + Sqrt(1 - k * k))
+        ///     </para>
+        ///     <para>
+        ///         w = (1 + k2) / (1 / w + k2 * w)
+        ///     </para>
+        ///     <para>
+        ///         k2 = k1 / (1 + Sqrt(1 - k1 * k1))
+        ///     </para>
+        ///     <para>
+        ///         ...
+        ///     </para>
+        ///     <para>
+        ///         до тех пор, пока ki != ki_last
+        ///     </para>
+        /// </summary>
+        /// <param name="u">Значение параметра u</param>
+        /// <param name="kk">Список значений k, ki, ki', ki'', ...</param>
+        /// <returns>Значение эллиптической функции sn(u,k)</returns>
         private static double sn_uk(double u, List<double> kk)
         {
             var w = Sin(u * Consts.pi05);
@@ -154,6 +247,30 @@ public static partial class SpecialFunctions
             return w;
         }
 
+        /// <summary>
+        ///     Вычисляет значение эллиптической функции sn(u,k) по формуле:
+        ///     <para>
+        ///         sn(u,k) = sin(u * pi / 2) * (1 + k1) / (1 / w + k1 * w)
+        ///     </para>
+        ///     <para>
+        ///         где k1 = k / (1 + Sqrt(1 - k * k))
+        ///     </para>
+        ///     <para>
+        ///         w = (1 + k2) / (1 / w + k2 * w)
+        ///     </para>
+        ///     <para>
+        ///         k2 = k1 / (1 + Sqrt(1 - k1 * k1))
+        ///     </para>
+        ///     <para>
+        ///         ...
+        ///     </para>
+        ///     <para>
+        ///         до тех пор, пока ki != ki_last
+        ///     </para>
+        /// </summary>
+        /// <param name="u">Значение параметра u</param>
+        /// <param name="kk">Список значений k, ki, ki', ki'', ...</param>
+        /// <returns>Значение эллиптической функции sn(u,k)</returns>
         private static Complex sn_uk(Complex u, List<double> kk)
         {
             var w = Complex.Trigonometry.Sin(u * Consts.pi05);
@@ -162,6 +279,30 @@ public static partial class SpecialFunctions
             return w;
         }
 
+        /// <summary>
+        ///     Вычисляет значение эллиптической функции cd(u,k) по формуле:
+        ///     <para>
+        ///         cd(u,k) = cos(u * pi / 2) * (1 + k1) / (1 / w + k1 * w)
+        ///     </para>
+        ///     <para>
+        ///         где k1 = k / (1 + Sqrt(1 - k * k))
+        ///     </para>
+        ///     <para>
+        ///         w = (1 + k2) / (1 / w + k2 * w)
+        ///     </para>
+        ///     <para>
+        ///         k2 = k1 / (1 + Sqrt(1 - k1 * k1))
+        ///     </para>
+        ///     <para>
+        ///         ...
+        ///     </para>
+        ///     <para>
+        ///         до тех пор, пока ki != ki_last
+        ///     </para>
+        /// </summary>
+        /// <param name="u">Значение параметра u</param>
+        /// <param name="kk">Список значений k, ki, ki', ki'', ...</param>
+        /// <returns>Значение эллиптической функции cd(u,k)</returns>
         private static double cd_uk(double u, List<double> kk)
         {
             var w = Cos(u * Consts.pi05);
@@ -170,6 +311,30 @@ public static partial class SpecialFunctions
             return w;
         }
 
+        /// <summary>
+        ///     Вычисляет значение эллиптической функции cd(u,k) по формуле:
+        ///     <para>
+        ///         cd(u,k) = cos(u * pi / 2) * (1 + k1) / (1 / w + k1 * w)
+        ///     </para>
+        ///     <para>
+        ///         где k1 = k / (1 + Sqrt(1 - k * k))
+        ///     </para>
+        ///     <para>
+        ///         w = (1 + k2) / (1 / w + k2 * w)
+        ///     </para>
+        ///     <para>
+        ///         k2 = k1 / (1 + Sqrt(1 - k1 * k1))
+        ///     </para>
+        ///     <para>
+        ///         ...
+        ///     </para>
+        ///     <para>
+        ///         до тех пор, пока ki != ki_last
+        ///     </para>
+        /// </summary>
+        /// <param name="u">Значение параметра u</param>
+        /// <param name="kk">Список значений k, ki, ki', ki'', ...</param>
+        /// <returns>Значение эллиптической функции cd(u,k)</returns>
         private static Complex cd_uk(Complex u, List<double> kk)
         {
             var w = Complex.Trigonometry.Cos(u * Consts.pi05);
@@ -226,6 +391,15 @@ public static partial class SpecialFunctions
             return cd_uk(z / CalculateEllipticIntegral(kk), kk);
         }
 
+        /// <summary>
+        ///     Эллиптическая функция sn (рекурсивный алгоритм)
+        /// </summary>
+        /// <param name="u">Входное значение, для которого вычисляется функция</param>
+        /// <param name="k">Параметр эллиптической функции, где 0 <= k <= 1</param>
+        /// <returns>Значение эллиптической функции sn для заданных u и k</returns>
+        /// <remarks>
+        ///     <para>Алгоритм вычисления функции sn основан на рекурсивном вычислении</para>
+        /// </remarks>
         public static double sn_uk_recursive(double u, double k)
         {
             if (k is < 0 or > 1) return double.NaN;
@@ -239,6 +413,14 @@ public static partial class SpecialFunctions
             return (1 + ki) / (1 / w + ki * w);
         }
 
+
+        /// <summary>Эллиптическая функция sn комплексного аргумента (рекурсивный алгоритм)</summary>
+        /// <param name="u">Входное значение, для которого вычисляется функция</param>
+        /// <param name="k">Параметр эллиптической функции, где 0 <= k <= 1</param>
+        /// <returns>Значение эллиптической функции sn для заданных u и k</returns>
+        /// <remarks>
+        ///     <para>Алгоритм вычисления функции sn основан на рекурсивном вычислении</para>
+        /// </remarks>
         public static Complex sn_uk_recursive(Complex u, double k)
         {
             if (k is < 0 or > 1) return double.NaN;
@@ -252,6 +434,14 @@ public static partial class SpecialFunctions
             return (1 + ki) / (1 / w + ki * w);
         }
 
+
+        /// <summary>Эллиптическая функция cd (рекурсивный алгоритм)</summary>
+        /// <param name="u">Входное значение, для которого вычисляется функция</param>
+        /// <param name="k">Параметр эллиптической функции, где 0 <= k <= 1</param>
+        /// <returns>Значение эллиптической функции cd для заданных u и k</returns>
+        /// <remarks>
+        ///     <para>Алгоритм вычисления функции cd основан на рекурсивном вычислении</para>
+        /// </remarks>
         public static double cd_uk_recursive(double u, double k)
         {
             if (k is < 0 or > 1) return double.NaN;
@@ -265,6 +455,14 @@ public static partial class SpecialFunctions
             return (1 + ki) / (1 / w + ki * w);
         }
 
+        /// <summary>Рекурсивно вычисляет значение эллиптической функции Якоби cd(u, k) для комплексного аргумента u и параметра k.</summary>
+        /// <param name="u">Комплексный аргумент функции.</param>
+        /// <param name="k">Параметр эллиптической функции Якоби, где 0 <= k <= 1.</param>
+        /// <returns>Значение эллиптической функции Якоби cd(u, k).</returns>
+        /// <remarks>
+        /// Использует рекурсивный подход для вычисления значения функции, уменьшая параметр k на каждом шаге.
+        /// Если параметр k выходит за пределы [0, 1], возвращает NaN.
+        /// </remarks>
         public static Complex cd_uk_recursive(Complex u, double k)
         {
             if (k is < 0 or > 1) return double.NaN;
@@ -278,6 +476,15 @@ public static partial class SpecialFunctions
             return (1 + ki) / (1 / w + ki * w);
         }
 
+        /// <summary>
+        /// Обратная функция эллиптической функции Якоби sn(u, k).
+        /// </summary>
+        /// <param name="sn">Значение эллиптической функции Якоби sn(u, k).</param>
+        /// <param name="k">Параметр эллиптической функции Якоби, где 0 <= k <= 1.</param>
+        /// <returns>Значение u, такое, что sn(u, k) == sn.</returns>
+        /// <remarks>
+        /// Использует рекурсивный подход для вычисления значения функции, уменьшая параметр k на каждом шаге.
+        /// </remarks>
         public static double sn_inverse(double sn, double k)
         {
             //var kk = GetKValues(k);
@@ -292,6 +499,13 @@ public static partial class SpecialFunctions
             return Asin(u) / Consts.pi05;
         }
 
+        /// <summary>Обратная функция эллиптической функции Якоби sn(u, k) для комплексного аргумента sn</summary>
+        /// <param name="sn">Комплексное значение эллиптической функции Якоби sn(u, k).</param>
+        /// <param name="k">Параметр эллиптической функции Якоби, где 0 <= k <= 1.</param>
+        /// <returns>Значение u, такое, что sn(u, k) == sn.</returns>
+        /// <remarks>
+        ///     Использует рекурсивный подход для вычисления значения функции, уменьшая параметр k на каждом шаге.
+        /// </remarks>
         public static Complex sn_inverse(Complex sn, double k)
         {
             //var kk = GetKValues(k);
@@ -306,6 +520,13 @@ public static partial class SpecialFunctions
             return Complex.Trigonometry.Asin(u) / Consts.pi05;
         }
 
+        /// <summary>Обратная функция эллиптической функции Якоби sn(u, k) для вещественного аргумента sn</summary>
+        /// <param name="sn">Значение эллиптической функции Якоби sn(u, k).</param>
+        /// <param name="k">Параметр эллиптической функции Якоби, где 0 <= k <= 1.</param>
+        /// <returns>Значение u, такое, что sn(u, k) == sn.</returns>
+        /// <remarks>
+        ///     Использует рекурсивный подход для вычисления значения функции, уменьшая параметр k на каждом шаге.
+        /// </remarks>
         public static double sn_inverse_recursive(double sn, double k)
         {
             var ki = GetKi(k);
@@ -314,6 +535,13 @@ public static partial class SpecialFunctions
                 : Asin(sn) / Consts.pi05;
         }
 
+        /// <summary>Обратная функция эллиптической функции Якоби cd(u, k) для вещественного аргумента cd</summary>
+        /// <param name="cd">Значение эллиптической функции Якоби cd(u, k).</param>
+        /// <param name="k">Параметр эллиптической функции Якоби, где 0 <= k <= 1.</param>
+        /// <returns>Значение u, такое, что cd(u, k) == cd.</returns>
+        /// <remarks>
+        ///     Использует рекурсивный подход для вычисления значения функции, уменьшая параметр k на каждом шаге.
+        /// </remarks>
         public static double cd_inverse(double cd, double k)
         {
             //var kk = GetKValues(k);
@@ -339,6 +567,13 @@ public static partial class SpecialFunctions
             return Acos(u) / Consts.pi05;
         }
 
+        /// <summary>Обратная функция эллиптической функции Якоби cd(u, k) для вещественного аргумента cd, рекурсивная версия</summary>
+        /// <param name="cd">Значение эллиптической функции Якоби cd(u, k).</param>
+        /// <param name="k">Параметр эллиптической функции Якоби, где 0 <= k <= 1.</param>
+        /// <returns>Значение u, такое, что cd(u, k) == cd.</returns>
+        /// <remarks>
+        ///     Использует рекурсивный подход для вычисления значения функции, уменьшая параметр k на каждом шаге.
+        /// </remarks>
         public static double cd_inverse_recursive(double cd, double k)
         {
             var ki = GetKi(k);
@@ -347,6 +582,16 @@ public static partial class SpecialFunctions
                 : Acos(cd) / Consts.pi05;
         }
 
+        /// <summary>
+        ///     Вычисляет эллиптическую функцию Якоби am(x, m) (amplitude) для вещественного аргумента x,
+        ///     где m - параметр эллиптической функции (0 <= m <= 1).
+        /// </summary>
+        /// <param name="x">Значение, для которого вычисляется эллиптическая функция Якоби am(x, m).</param>
+        /// <param name="m">Параметр эллиптической функции Якоби, где 0 <= m <= 1.</param>
+        /// <returns>Значение am(x, m), которое является эллиптической функцией Якоби (amplitude).</returns>
+        /// <remarks>
+        ///     Использует рекурсивный подход для вычисления значения функции, уменьшая параметр m на каждом шаге.
+        /// </remarks>
         public static double am(double x, double m)
         {
             var b = Sqrt(1 - m);
@@ -373,6 +618,10 @@ public static partial class SpecialFunctions
             return t;
         }
 
+        /// <summary>Вычисляет полный эллиптический интеграл второго рода E(m) для вещественного параметра m, где 0 <= m <= 1</summary>
+        /// <param name="m">Параметр эллиптического интеграла, где 0 <= m <= 1.</param>
+        /// <returns>Значение E(m), которое является полным эллиптическим интегралом второго рода.</returns>
+        /// <remarks>Использует рекурсивный подход для вычисления значения функции, уменьшая параметр m на каждом шаге</remarks>
         public static double E(double m)
         {
             if (m is < 0 or > 1) return double.NaN;
@@ -396,6 +645,10 @@ public static partial class SpecialFunctions
             return Consts.pi05 / a * (1 - s);
         }
 
+        /// <summary>Вычисляет полный эллиптический интеграл второго рода E(m) для комплексного параметра m</summary>
+        /// <param name="m">Комплексный параметр эллиптического интеграла</param>
+        /// <returns>Значение E(m), которое является полным эллиптическим интегралом второго рода</returns>
+        /// <remarks>Использует рекурсивный подход для вычисления значения функции, уменьшая параметр m на каждом шаге</remarks>
         public static Complex E(Complex m)
         {
             var a = Complex.Real;

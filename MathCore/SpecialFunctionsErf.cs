@@ -8,6 +8,14 @@ public static partial class SpecialFunctions
 {
     public static class Erf
     {
+        /// <summary>Обратная функция к функции ошибок</summary>
+        /// <param name="z">Аргумент</param>
+        /// <returns>Обратное значение</returns>
+        /// <remarks>
+        ///     Метод вычисляет обратное значение функции ошибок, т.е. для заданного значения
+        ///     <paramref name="z" /> вычисляет значение <c>x</c>, для которого
+        ///     <c>Erf(x) = z</c>.
+        /// </remarks>
         public static double Inv(double z)
         {
             if (z == 0.0) return 0.0;
@@ -48,6 +56,16 @@ public static partial class SpecialFunctions
         private static readonly double[] Gn = [-0.000539042911019078575891, -0.28398759004727721098e-6, 0.899465114892291446442e-6, 0.229345859265920864296e-7, 0.225561444863500149219e-9, 0.947846627503022684216e-12, 0.135880130108924861008e-14, -0.348890393399948882918e-21];
         private static readonly double[] Gd = [1, 0.0845746234001899436914, 0.00282092984726264681981, 0.468292921940894236786e-4, 0.399968812193862100054e-6, 0.161809290887904476097e-8, 0.231558608310259605225e-11];
 
+        /// <summary>Вычислить обратную функцию ошибки</summary>
+        /// <param name="p">Вероятность</param>
+        /// <param name="q">1 - p</param>
+        /// <param name="s">+1 или -1</param>
+        /// <returns>Обратная функция ошибки от p</returns>
+        /// <remarks>
+        ///     The inverse error function is defined as the value x such that
+        ///     the area under the standard normal distribution curve from negative
+        ///     infinity to x is equal to p.
+        /// </remarks>
         private static double InvImpl(double p, double q, double s)
         {
             double result;
@@ -153,6 +171,12 @@ public static partial class SpecialFunctions
             return s * result;
         }
 
+        /// <summary>
+        ///     Функция ошибок (erf) - вероятностная мера того, насколько случайное
+        ///     значение из нормального распределения отличается от его математического ожидания.
+        /// </summary>
+        /// <param name="x">Аргумент функции ошибок</param>
+        /// <returns>Значение функции ошибок</returns>
         public static double Value(double x)
         {
             // https://www.johndcook.com/blog/cpp_erf/

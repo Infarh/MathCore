@@ -78,6 +78,20 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
 
     }
 
+        /// <summary>Попытаться разобрать строку и преобразовать её в комплексное число</summary>
+        /// <param name="str">Разбираемая строка</param>
+        /// <param name="z">Число, получаемое в результате разбора строки</param>
+        /// <returns>Истина, если операция разбора строки выполнена успешно</returns>
+        /// <remarks>
+        /// <para>
+        /// Разбор строки производится по следующим правилам:
+        /// </para>
+        /// <list type="number">
+        ///     <item><description>Если строка начинается с 'i' или 'j', то она интерпретируется как мнимая часть комплексного числа</description></item>
+        ///     <item><description>Если строка заканчивается 'i' или 'j', то она интерпретируется как мнимая часть комплексного числа</description></item>
+        ///     <item><description>Если строка не содержит 'i' или 'j', то она интерпретируется как действительная часть комплексного числа</description></item>
+        /// </list>
+        /// </remarks>
     public static bool TryParse(StringPtr str, out Complex z)
     {
         var str_ptr = ClearStringPtr(str);
@@ -129,6 +143,12 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
         return true;
     }
 
+    /// <summary>Попытка преобразования строки в комплексное число</summary>
+    /// <param name="str">Преобразуемая строка</param>
+    /// <param name="provider">Информация о формате</param>
+    /// <param name="z">Комплексное число, получаемое в результате разбора строки</param>
+    /// <returns>Истина, если преобразование выполнено успешно</returns>
+    /// <exception cref="ArgumentNullException">В случае если передана пустая ссылка на строку</exception>
     public static bool TryParse([NotNullWhen(true)] string str, IFormatProvider provider, out Complex z)
     {
         // Если получили пустую строку, то это ошибка преобразования
@@ -139,6 +159,12 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
         return false;
     }
 
+        /// <summary>Попытка преобразования строки в комплексное число, учитывая информацию о формате, получаемую из провайдера</summary>
+        /// <param name="str">Преобразуемая строка</param>
+        /// <param name="provider">Информация о формате</param>
+        /// <param name="z">Комплексное число, получаемое в результате разбора строки</param>
+        /// <returns>Истина, если преобразование выполнено успешно</returns>
+        /// <exception cref="ArgumentNullException">В случае если передана пустая ссылка на строку</exception>
     public static bool TryParse(StringPtr str, IFormatProvider provider, out Complex z)
     {
         var str_ptr = ClearStringPtr(str);
@@ -318,8 +344,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     /// <summary>Комплексно-сопряжённые значения</summary>
     /// <param name="ExpPower">Показатель степени комплексно-сопряжённой пары</param>
     /// <returns>Пара комплексно-сопряжённых чисел</returns>
-    public static (Complex Z, Complex Zconj) Conjugate(double ExpPower) =>
-        Conjugate(Cos(ExpPower), Sin(ExpPower));
+    public static (Complex Z, Complex Zconj) Conjugate(double ExpPower) => Conjugate(Cos(ExpPower), Sin(ExpPower));
 
     /// <summary>Комплексно-сопряжённые значения</summary>
     /// <param name="Abs">Модуль комплексно-сопряжённой пары</param>
@@ -492,6 +517,9 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
         return $"{(re != 0 ? $"{re_str}{(im > 0 ? "+" : string.Empty)}" : string.Empty)}{(im != 0 ? im_str : string.Empty)}";
     }
 
+    /// <summary>Преобразование в строковый формат</summary>
+    /// <param name="FormatProvider">Информация о формате</param>
+    /// <returns>Строковое представление</returns>
     [DST]
     public string ToString(IFormatProvider FormatProvider)
     {

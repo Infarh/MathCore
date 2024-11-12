@@ -317,7 +317,7 @@ public partial class Matrix
             double[,] matrix,
             out int N,
             out int M,
-            [CallerArgumentExpression("matrix")] string? MatrixArgumentName = null)
+            [CallerArgumentExpression(nameof(matrix))] string? MatrixArgumentName = null)
         {
             if (matrix is null)
                 throw new ArgumentNullException(MatrixArgumentName ?? nameof(matrix));
@@ -331,7 +331,7 @@ public partial class Matrix
         /// <returns>Возвращает число строк матрицы</returns>
         /// <exception cref="ArgumentNullException">Если передана пустая ссылка на массив</exception>
         /// <exception cref="InvalidOperationException">Если матрица не является квадратной</exception>
-        public static int GetSquareLength(double[,] matrix, [CallerArgumentExpression("matrix")] string? MatrixArgumentName = null)
+        public static int GetSquareLength(double[,] matrix, [CallerArgumentExpression(nameof(matrix))] string? MatrixArgumentName = null)
         {
             if (matrix is null) throw new ArgumentNullException(MatrixArgumentName ?? nameof(matrix));
             var n = matrix.GetLength(0);
@@ -348,7 +348,7 @@ public partial class Matrix
         public static void GetRowsCount(
             double[,] matrix,
             out int N,
-            [CallerArgumentExpression("matrix")] string? MatrixArgumentName = null)
+            [CallerArgumentExpression(nameof(matrix))] string? MatrixArgumentName = null)
         {
             if (matrix is null) throw new ArgumentNullException(MatrixArgumentName ?? nameof(matrix));
 
@@ -363,7 +363,7 @@ public partial class Matrix
         public static void GetColsCount(
             double[,] matrix,
             out int M,
-            [CallerArgumentExpression("matrix")] string? MatrixArgumentName = null)
+            [CallerArgumentExpression(nameof(matrix))] string? MatrixArgumentName = null)
         {
             if (matrix is null) throw new ArgumentNullException(MatrixArgumentName ?? nameof(matrix));
 
@@ -670,23 +670,27 @@ public partial class Matrix
 
             var temp_b = b.CloneObject();
             Triangulate(ref matrix, ref temp_b, out p, out var d);
-            if (d == 0) return false;
+            if (d == 0) 
+                return false;
+
             GetColsCount(b, out var b_M);
 
             GetLength(matrix, out var N, out var M);
             for (var i0 = Math.Min(N, M) - 1; i0 >= 0; i0--)
             {
-                var m = matrix[i0, i0];
-                if (m != 1)
+                var pivot = matrix[i0, i0];
+                if (pivot != 1)
                     for (var j = 0; j < b_M; j++)
-                        temp_b[i0, j] /= m;
+                        temp_b[i0, j] /= pivot;
+
                 for (var i = i0 - 1; i >= 0; i--)
-                    if (matrix[i, i0] != 0)
-                    {
-                        var k = matrix[i, i0];
-                        matrix[i, i0] = 0d;
-                        for (var j = 0; j < b_M; j++) temp_b[i, j] -= temp_b[i0, j] * k;
-                    }
+                {
+                    var k = matrix[i, i0];
+                    if (k == 0) continue;
+                    matrix[i, i0] = 0d;
+                    for (var j = 0; j < b_M; j++)
+                        temp_b[i, j] -= temp_b[i0, j] * k;
+                }
             }
 
             if (clone_b)
@@ -852,12 +856,8 @@ public partial class Matrix
 
         /// <summary>Поменять значения местами</summary>
         /// <typeparam name="T">Тип значения</typeparam>
-        [DST] private static void Swap<T>(ref T v1, ref T v2)
-        {
-            var t = v1;
-            v1 = v2;
-            v2 = t;
-        }
+        [DST]
+        private static void Swap<T>(ref T v1, ref T v2) => (v1, v2) = (v2, v1);
 
         /// <summary>Разложение матрицы на верхне-треугольную и нижне-треугольную</summary>
         /// <remarks>
@@ -1507,14 +1507,14 @@ public partial class Matrix
                     d = -d;
                 }
 
-                var main = matrix[i0, i0]; // Ведущий элемент строки
-                d *= main;
+                var pivot = matrix[i0, i0]; // Ведущий элемент строки
+                d *= pivot;
 
                 //Нормируем строку основной матрицы по первому элементу
                 for (var i = i0 + 1; i < N; i++)
                     if (matrix[i, i0] != 0)
                     {
-                        var k = matrix[i, i0] / main;
+                        var k = matrix[i, i0] / pivot;
                         matrix[i, i0] = 0d;
                         for (var j = i0 + 1; j < M; j++)
                             matrix[i, j] -= matrix[i0, j] * k;
@@ -1795,6 +1795,11 @@ public partial class Matrix
             QRDecomposition(matrix, q, r);
         }
 
+        /// <summary>Вычисление длины гипотенузы прямоугольного треугольника с катетами a и b</summary>
+        /// <param name="a">Длина первого катета</param>
+        /// <param name="b">Длина второго катета</param>
+        /// <returns>Длина гипотенузы</returns>
+        /// <remarks>Алгоритм вычисления длины гипотенузы защищён от переполнения</remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static double PyThag(double a, double b)
         {

@@ -8,6 +8,7 @@ public static class IniFile
 {
     public record struct Value(string Category, string Name, string Data);
 
+
     public static IEnumerable<Value> Read(FileInfo file, Encoding? encoding = null)
     {
         var category = string.Empty;

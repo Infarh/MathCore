@@ -217,7 +217,7 @@ public partial class Polynom(params double[] a) : ICloneable<Polynom>, IEquatabl
         if (other is null) return false;
         if (ReferenceEquals(this, other) || ReferenceEquals(_a, other._a)) return true;
 
-        var b      = other._a;
+        var b = other._a;
         var length = _a.Length;
 
         if (length != b.Length) return false;
@@ -285,7 +285,7 @@ public partial class Polynom(params double[] a) : ICloneable<Polynom>, IEquatabl
     /// <inheritdoc />
     public override string ToString()
     {
-        var result        = new StringBuilder();
+        var result = new StringBuilder();
         var length = _a.Length;
         for (var i = 0; i <= length; i++)
         {
@@ -303,7 +303,7 @@ public partial class Polynom(params double[] a) : ICloneable<Polynom>, IEquatabl
             result.Append(a);
             switch (i)
             {
-                case 1:  result.Append("*x"); break;
+                case 1: result.Append("*x"); break;
                 default: result.Append("*x^").Append(i); break;
             }
         }
@@ -334,7 +334,7 @@ public partial class Polynom(params double[] a) : ICloneable<Polynom>, IEquatabl
             result.Append(a.ToString(Format));
             switch (i)
             {
-                case 1:  result.Append("*x"); break;
+                case 1: result.Append("*x"); break;
                 default: result.Append("*x^").Append(i); break;
             }
         }
@@ -342,6 +342,9 @@ public partial class Polynom(params double[] a) : ICloneable<Polynom>, IEquatabl
         return result.ToString();
     }
 
+    /// <summary>Строковое представление полинома</summary>
+    /// <param name="provider">Информация о формате</param>
+    /// <returns>Строковое представление полинома</returns>
     public string ToString(IFormatProvider provider)
     {
         var result = new StringBuilder();
@@ -362,7 +365,7 @@ public partial class Polynom(params double[] a) : ICloneable<Polynom>, IEquatabl
             result.Append(a.ToString(provider));
             switch (i)
             {
-                case 1:  result.Append("*x"); break;
+                case 1: result.Append("*x"); break;
                 default: result.Append("*x^").Append(i); break;
             }
         }
@@ -370,6 +373,10 @@ public partial class Polynom(params double[] a) : ICloneable<Polynom>, IEquatabl
         return result.ToString();
     }
 
+    /// <summary>Возвращает строковое представление полинома</summary>
+    /// <param name="format">Строка формата.</param>
+    /// <param name="provider">Информация о формате.</param>
+    /// <returns>Строковое представление полинома.</returns>
     public string ToString(string Format, IFormatProvider provider)
     {
         var result = new StringBuilder();
@@ -390,7 +397,7 @@ public partial class Polynom(params double[] a) : ICloneable<Polynom>, IEquatabl
             result.Append(a.ToString(Format, provider));
             switch (i)
             {
-                case 1:  result.Append("*x"); break;
+                case 1: result.Append("*x"); break;
                 default: result.Append("*x^").Append(i); break;
             }
         }

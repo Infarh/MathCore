@@ -4,12 +4,27 @@ namespace MathCore.Statistic;
 /// <summary>Распределения</summary>
 public static partial class Distributions
 {
+    /// <summary>
+    ///     Гамма-распределение.
+    ///     f(x) = (x^(k-1) * e^(-x/theta)) / (theta^k * G(k))
+    /// </summary>
+    /// <param name="k">Параметр k</param>
+    /// <param name="theta">Параметр theta</param>
+    /// <returns>Функция Гамма-распределения</returns>
     public static Func<double, double> Gamma(double k, double theta) =>
         x => x >= 0
             ? Math.Pow(x, k - 1) * Math.Exp(-x / theta) / Math.Pow(theta, k) /
             SpecialFunctions.Gamma.G(k)
             : 0;
 
+    /// <summary>
+    /// Гамма-распределение.
+    /// f(x) = (x^(k-1) * e^(-x/theta)) / (theta^k * G(k))
+    /// </summary>
+    /// <param name="k">Параметр k</param>
+    /// <param name="theta">Параметр theta</param>
+    /// <param name="x">Аргумент</param>
+    /// <returns>Значение плотности вероятности</returns>
     public static double Gamma(double k, double theta, double x) =>
         x >= 0
             ? Math.Pow(x, k - 1) * Math.Exp(-x / theta) / Math.Pow(theta, k) / SpecialFunctions.Gamma.G(k)
@@ -23,6 +38,12 @@ public static partial class Distributions
     /// <returns>Значение плотности вероятности</returns>
     public static double Hi2(int k, double x) => Gamma(k / 2d, 2, x);
 
+    /// <summary>
+    /// Генерирует функцию плотности вероятности нормального распределения Гаусса.
+    /// </summary>
+    /// <param name="sigma">Среднеквадратичное отклонение</param>
+    /// <param name="mu">Математическое ожидание</param>
+    /// <returns>Функция плотности вероятности нормального распределения</returns>
     public static Func<double, double> NormalGauss(double sigma = 1, double mu = 0) =>
         x =>
         {
@@ -30,18 +51,27 @@ public static partial class Distributions
             return Math.Exp(-0.5 * xx * xx) / (sigma * Consts.sqrt_pi2);
         };
 
+    /// <summary>Нормальное распределение (гауссово).</summary>
+    /// <param name="x">Аргумент</param>
+    /// <param name="sigma">Среднеквадратичное отклонение</param>
+    /// <param name="mu">Математическое ожидание</param>
+    /// <returns>Значение плотности вероятности</returns>
     public static double NormalGauss(double x, double sigma, double mu)
     {
         var xx = (x - mu) / sigma;
         return Math.Exp(-0.5 * xx * xx) / (sigma * Consts.sqrt_pi2);
     }
 
+    /// <summary>Функция распределения нормального распределения</summary>
+    /// <param name="x">Аргумент</param>
+    /// <param name="sigma">Среднеквадратичное отклонение</param>
+    /// <param name="mu">Математическое ожидание</param>
+    /// <returns>Значение функции распределения нормального распределения в заданной точке</returns>
     public static double NormalDistribution(double x, double sigma = 1, double mu = 0)
     {
         var z = (x - mu) / (sigma * Consts.sqrt_2);
         return 0.5 * (1 + SpecialFunctions.Erf.Value(z));
     }
-
 
     /// <summary>Равномерное распределение</summary>
     /// <param name="a">Минимальное значение</param>
@@ -80,6 +110,15 @@ public static partial class Distributions
     //private static Func<double, double> HistogramKey(double Max, double Min, double dx) =>
     //    x => (Math.Floor((Math.Min(x, Max - dx / 2) - Min) / dx) + 0.5) * dx + Min;
 
+    /// <summary>
+    ///     Вычисление критерия Пирсона для сравнения выборки с заданным распределением
+    /// </summary>
+    /// <param name="Samples">Выборка</param>
+    /// <param name="Distribution">Заданное распределение</param>
+    /// <param name="FreedomDegree">Степени свободы</param>
+    /// <param name="Average">Среднее значение выборки</param>
+    /// <param name="RestoredVariance">Восстановленное СКО</param>
+    /// <returns>Критерий Пирсона</returns>
     public static double GetPirsonsCriteria(
         this IReadOnlyCollection<double> Samples, 
         Func<double, double> Distribution, 
@@ -148,6 +187,16 @@ public static partial class Distributions
         return criteria;
     }
 
+    /// <summary>Проверяет, является ли выборка реализацией данного нормального распределения</summary>
+    /// <param name="Samples">Выборка</param>
+    /// <param name="Distribution">Нормальное распределение</param>
+    /// <param name="TrustLevel">Уровень доверия (0.95 - 95%)</param>
+    /// <returns>true, если выборка является реализацией данного нормального распределения, false - если нет</returns>
+    /// <remarks>
+    ///     Метод использует критерий Пирсона.
+    ///     Расчёт критерия Пирсона выполняется функцией <see cref="GetPirsonsCriteria"/>
+    ///     Теоретическое значение критерия Пирсона берётся из таблицы квантилей распределения Стьюдента
+    /// </remarks>
     public static bool CheckDistribution(this double[] Samples, Func<double, double> Distribution, double TrustLevel = 0.95)
     {
         var pirsons_criteria = GetPirsonsCriteria(Samples, Distribution, out var number_of_degrees_of_freedom, out _, out _);

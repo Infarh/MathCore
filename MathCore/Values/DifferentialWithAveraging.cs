@@ -18,6 +18,12 @@ public class DifferentialWithAveraging(double Tau) : IResettable, IValue<double>
 
     public void Reset() => Initialized = false;
 
+    /// <summary>Добавить значение</summary>
+    /// <param name="value">Значение</param>
+    /// <returns>Среднее значение</returns>
+    /// <remarks>
+    ///     f(t) = f(t-1) + ((x - f(t-1)) / Tau) * dt
+    /// </remarks>
     public virtual double Add(double value)
     {
         var t = DateTime.Now.TimeOfDay;
@@ -50,6 +56,11 @@ public class DifferentialWithAveraging2 : DifferentialWithAveraging
     protected double _LastV1;
     //protected double _LastVf;
 
+    /// <summary>
+    ///     f(t) = f(t-1) + ((x - f(t-1)) / Tau) * dt
+    /// </summary>
+    /// <param name="value">Значение</param>
+    /// <returns>Среднее значение</returns>
     public override double Add(double value)
     {
         var t = DateTime.Now.TimeOfDay;

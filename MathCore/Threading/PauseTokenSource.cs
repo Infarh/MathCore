@@ -1,6 +1,7 @@
 ﻿// ReSharper disable once CheckNamespace
 namespace System.Threading.Tasks;
 
+/// <summary>Система управления приостановки асинхронной операции</summary>
 [Copyright("Stephen Toub", url = "https://devblogs.microsoft.com/pfxteam/cooperatively-pausing-async-methods/")]
 public class PauseTokenSource
 {

@@ -12,7 +12,6 @@ public partial class ViewModel
         [NotNull] private readonly ViewModel _Model;
         public TimeSpan Timeout { get; set; }
 
-
         internal PropertyChangedEventsSuppressor([NotNull] ViewModel Model, TimeSpan Timeout)
         {
             _Model       = Model ?? throw new ArgumentNullException(nameof(Model));

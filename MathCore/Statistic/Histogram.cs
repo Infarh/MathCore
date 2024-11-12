@@ -108,6 +108,9 @@ public sealed class Histogram : IEnumerable<HistogramValue>
 
     public Histogram(IReadOnlyCollection<double> X) : this(X, (int)Math.Floor(1 + Math.Log(X.Count, 2))) { }
 
+    /// <summary>Инициализация гистограммы</summary>
+    /// <param name="X">Перечисление значений, для которых будет вычисляться гистограмма.</param>
+    /// <param name="IntervalsCount">Количество интервалов, на которые будет разбита гистограмма.</param>
     public Histogram(IEnumerable<double> X, int IntervalsCount)
     {
         _IntervalsCount = IntervalsCount;
@@ -162,6 +165,9 @@ public sealed class Histogram : IEnumerable<HistogramValue>
         _Normalizer = frequencies.GetIntegral(dx);
     }
 
+    /// <summary>Вычислить статистику Пирсона</summary>
+    /// <param name="Distribution">Распределение</param>
+    /// <returns>Статистика Пирсона</returns>
     public double GetPirsonsCriteria(Func<double, double> Distribution)
     {
         var x0 = _Interval.Min;
@@ -182,6 +188,10 @@ public sealed class Histogram : IEnumerable<HistogramValue>
         return stat * TotalValuesCount;
     }
 
+    /// <summary>Проверяет, является ли выборка реализацией данного нормального распределения</summary>
+    /// <param name="Distribution">Нормальное распределение</param>
+    /// <param name="alpha">Уровень доверия (0.95 - 95%)</param>
+    /// <returns>true, если выборка является реализацией данного нормального распределения, false - если нет</returns>
     public bool CheckDistribution(Func<double, double> Distribution, double alpha = 0.05)
     {
         var stat = GetPirsonsCriteria(Distribution);
@@ -189,6 +199,19 @@ public sealed class Histogram : IEnumerable<HistogramValue>
         return stat < quantile;
     }
 
+    /// <summary>Получить перечисление значений гистограммы</summary>
+    /// <returns>Перечисление значений гистограммы</returns>
+    /// <remarks>
+    ///     Метод возвращает перечисление с информацией о каждом интервале гистограммы:
+    ///     <list type="bullet">
+    ///         <item><description>Интервал</description></item>
+    ///         <item><description>Значение</description></item>
+    ///         <item><description>Нормализованное значение</description></item>
+    ///         <item><description>Количество значений в интервале</description></item>
+    ///         <item><description>Суммарное значение</description></item>
+    ///         <item><description>Количество значений в интервале</description></item>
+    ///     </list>
+    /// </remarks>
     private IEnumerable<HistogramValue> GetEnumerable()
     {
         var x0 = _Interval.Min;
@@ -218,6 +241,11 @@ public sealed class Histogram : IEnumerable<HistogramValue>
 
     public override string ToString() => string.Join(" ", GetEnumerable());
 
+    /// <summary>Выводит текстовое представление гистограммы в указанный поток</summary>
+    /// <param name="Writer">Текстовый поток для вывода данных</param>
+    /// <param name="Width">Ширина вывода (по умолчанию 50, не менее 40)</param>
+    /// <param name="PrintInfo">Флаг, указывающий выводить ли дополнительную информацию о гистограмме</param>
+    /// <exception cref="ArgumentOutOfRangeException">Выбрасывается, если ширина меньше 40</exception>
     public void Print(TextWriter Writer, int Width = 50, bool PrintInfo = true)
     {
         if (Width < 40) throw new ArgumentOutOfRangeException(nameof(Width), Width, "Ширина не должна быть меньше 40");

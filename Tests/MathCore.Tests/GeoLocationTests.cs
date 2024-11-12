@@ -1,4 +1,6 @@
-﻿namespace MathCore.Tests;
+﻿using MathCore.Geolocation;
+
+namespace MathCore.Tests;
 
 [TestClass]
 public class GeoLocationTests

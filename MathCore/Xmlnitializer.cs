@@ -26,16 +26,20 @@ public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>
     #region Правила инициализации
 
     /// <summary>Правило инициализации</summary>
-    public abstract class Rule
+    /// <remarks>Инициализация нового правила</remarks>
+    /// <param name="XPath">XPath-путь в структуре xml</param>
+    /// <param name="Expression">Выражение инициализации</param>
+    /// <param name="IsObjectLess">Правилу не нужен объект</param>
+    public abstract class Rule(string XPath, Expression<Action<TObject, string>> Expression, bool IsObjectLess = false)
     {
         /// <summary>XPath-выражение - путь в структуре xml</summary>
-        private readonly string _XPath;
+        private readonly string _XPath = XPath;
 
         /// <summary>Выражение, применяемое при обнаружении значения указанного XPath-пути</summary>
-        private readonly Expression<Action<TObject, string>> _PropertyBody;
+        private readonly Expression<Action<TObject, string>> _PropertyBody = Expression;
 
         /// <summary>Скомпилированный метод инициализации</summary>
-        public readonly Action<TObject, string> _Update;
+        public readonly Action<TObject, string> _Update = Expression.Compile();
 
         /// <summary>Выражение, применяемое при обнаружении значения указанного XPath-пути</summary>
         public Expression<Action<TObject, string>> UpdateExpression => _PropertyBody;
@@ -44,22 +48,10 @@ public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>
         public string XPath => _XPath;
 
         /// <summary>Правилу не нужен объект</summary>
-        public bool IsObjectLess { get; }
+        public bool IsObjectLess { get; } = IsObjectLess;
 
         /// <summary>Скомпилированный метод инициализации</summary>
         public Action<TObject, string> Update => _Update;
-
-        /// <summary>Инициализация нового правила</summary>
-        /// <param name="XPath">XPath-путь в структуре xml</param>
-        /// <param name="Expression">Выражение инициализации</param>
-        /// <param name="IsObjectLess">Правилу не нужен объект</param>
-        protected Rule(string XPath, Expression<Action<TObject, string>> Expression, bool IsObjectLess = false)
-        {
-            this.IsObjectLess = IsObjectLess;
-            _XPath            = XPath;
-            _PropertyBody     = Expression;
-            _Update           = Expression.Compile();
-        }
 
         /// <summary>Выполнить инициализацию</summary>
         /// <param name="obj">Инициализируемый объект</param>

@@ -2,44 +2,90 @@
 
 namespace MathCore.Hash.CRC;
 
-public class CRC32(uint Polynomial)
+// https://microsin.net/programming/arm/crc32-demystified.html
+
+public class CRC32(uint poly)
 {
     public CRC32(Mode mode = Mode.Zip) : this((uint)mode) { }
 
-    public static uint[] GetTable(uint Polynomial)
+    public static uint[] GetTableNormalBits(uint poly)
     {
         var table = new uint[__TableLength];
 
-        FillTable(table, Polynomial);
+        FillTableNormalBits(table, poly);
 
         return table;
     }
 
-    public static void FillTable(uint[] table, uint Polynomial)
+    public static uint[] GetTableReverseBits(uint poly)
+    {
+        var table = new uint[__TableLength];
+
+        FillTableReversBits(table, poly);
+
+        return table;
+    }
+
+    public static void FillTableNormalBits(uint[] table, uint poly)
+    {
+        for (uint i = 0; i < __TableLength; i++)
+        {
+            ref var crc = ref table[i];
+            crc = i;
+            //const uint mask = 0b00000000_00000000_00000000_00000001;
+            const uint mask = 0x0000_0001;
+            for (var bit = 0; bit < 8; bit++)
+                crc = (crc & mask) == 0
+                    ? crc >> 1
+                    : crc >> 1 ^ poly;
+        }
+    }
+
+    private static uint[] GenerateTable(uint poly)
+    {
+        var table = new uint[256];
+        for (var i = 0; i < table.Length; i++)
+        {
+            var val = (uint)i;
+            for (var j = 0; j < 8; j++)
+                val = (val & 0b0000_0001) == 0
+                    ? val >> 1
+                    : val >> 1 ^ poly;
+
+            table[i] = val;
+        }
+
+        return table;
+    }
+
+    public static void FillTableReversBits(uint[] table, uint poly)
     {
         for (uint i = 0; i < __TableLength; i++)
         {
             ref var crc = ref table[i];
             crc = i << 24;
-            //const uint mask = 0b10000000_00000000_00000000_00000000U;
-            const uint mask = 0x80_00_00_00U;
+            //const uint mask = 0b10000000_00000000_00000000_00000000;
+            const uint mask = 0x8000_0000;
             for (var bit = 0; bit < 8; bit++)
-                crc = (crc & mask) != 0
-                    ? crc << 1 ^ Polynomial
-                    : crc << 1;
+                crc = (crc & mask) == 0
+                    ? crc << 1
+                    : crc << 1 ^ poly;
         }
     }
 
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum Mode : uint
     {
-        P0xEDB88320 = 0xEDB88320,
-        P0x04C11DB7 = 0x04C11DB7,
+        /// <summary>Инвертированный полином относительно <see cref="P0x04C11DB7"/></summary>
+        P0xEDB88320 = 0xEDB88320, // 0b11101101_10111000_10000011_00100000,
+        /// <summary>Нормальный полином относительно <see cref="P0xEDB88320"/></summary>
+        P0x04C11DB7 = 0x04C11DB7, // 0b00000100_11000001_00011101_10110111 = x32+x26+x23+x22+x16+x12+x11+x10+x8+x7+x5+x4+x2+x1+x0
         P0x1EDC6F41 = 0x1EDC6F41,
         P0xA833982B = 0xA833982B,
         P0x814141AB = 0x814141AB,
         P0x000000AF = 0x000000AF,
 
+        ZipInv = P0x04C11DB7,
         Zip = P0xEDB88320,
         POSIX = P0x04C11DB7,
         CRC32C = P0x1EDC6F41,
@@ -49,8 +95,17 @@ public class CRC32(uint Polynomial)
     }
 
     public static uint Hash(
-        byte[] data, 
-        Mode mode = Mode.Zip, 
+        byte[] data,
+        Mode mode = Mode.Zip,
+        uint crc = 0xFFFFFFFF,
+        uint xor = 0xFFFFFFFF,
+        bool RefIn = false,
+        bool RefOut = false)
+        => Hash(data, (uint)mode, crc, xor, RefIn, RefOut);
+
+    public static uint Hash(
+        byte[] data,
+        uint poly, 
         uint crc = 0xFFFFFFFF, 
         uint xor = 0xFFFFFFFF,
         bool RefIn = false,
@@ -58,8 +113,6 @@ public class CRC32(uint Polynomial)
     {
         if (data.NotNull().Length == 0)
             throw new InvalidOperationException();
-
-        var poly = (uint)mode;
 
         if(RefIn)
             foreach (var b in data)
@@ -85,7 +138,7 @@ public class CRC32(uint Polynomial)
 
     private const int __TableLength = 256;
 
-    private readonly uint[] _Table = GetTable(Polynomial);
+    private readonly uint[] _Table = GetTableReverseBits(poly);
 
     public uint State { get; set; }
 

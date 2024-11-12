@@ -9,7 +9,7 @@ namespace MathCore;
 
 public partial class Polynom
 {
-    private static Lazy<Random> __PolynomRandom = new(LazyThreadSafetyMode.PublicationOnly);
+    private static readonly Lazy<Random> __PolynomRandom = new(LazyThreadSafetyMode.PublicationOnly);
 
     /// <summary>Операции над коэффициентами полинома, в представлении массива значений</summary>
     public static class Array
@@ -190,9 +190,7 @@ public partial class Polynom
         /// <returns>Значение полинома</returns>
         public static double GetValue(double x, IEnumerable<double> A)
         {
-            if (A is null) throw new ArgumentNullException(nameof(A));
-
-            using var a = A.GetEnumerator();
+            using var a = A.NotNull().GetEnumerator();
 
             var xx = 1d;
 
@@ -214,9 +212,7 @@ public partial class Polynom
         /// <returns>Комплексное значение полинома</returns>
         public static Complex GetValue(Complex z, IEnumerable<double> A)
         {
-            if (A is null) throw new ArgumentNullException(nameof(A));
-
-            using var a = A.GetEnumerator();
+            using var a = A.NotNull().GetEnumerator();
 
             var zz = Complex.Real;
 
@@ -238,9 +234,7 @@ public partial class Polynom
         /// <returns>Комплексное значение полинома</returns>
         public static Complex GetValue(double z, IEnumerable<Complex> A)
         {
-            if (A is null) throw new ArgumentNullException(nameof(A));
-
-            using var a = A.GetEnumerator();
+            using var a = A.NotNull().GetEnumerator();
 
             var zz = Complex.Real;
 
@@ -262,9 +256,7 @@ public partial class Polynom
         /// <returns>Комплексное значение полинома</returns>
         public static Complex GetValue(Complex z, IEnumerable<Complex> A)
         {
-            if (A is null) throw new ArgumentNullException(nameof(A));
-
-            using var a = A.GetEnumerator();
+            using var a = A.NotNull().GetEnumerator();
 
             var zz = Complex.Real;
 
@@ -334,7 +326,6 @@ public partial class Polynom
 
                     y = y * x + A[0];
                     break;
-
             }
 
             return y;
@@ -392,7 +383,6 @@ public partial class Polynom
 
                     y = y * x + A[0];
                     break;
-
             }
 
             return y;
@@ -450,7 +440,6 @@ public partial class Polynom
 
                     y = y * x + A[0];
                     break;
-
             }
 
             return y;
@@ -508,7 +497,6 @@ public partial class Polynom
 
                     y = y * x + A[0];
                     break;
-
             }
 
             return y;
@@ -794,8 +782,7 @@ public partial class Polynom
 
         public static Complex GetRootsValue(double x, params Complex[] X0)
         {
-            if (X0 is null) throw new ArgumentNullException(nameof(X0));
-            if (X0.Length == 0) return Complex.NaN;
+            if (X0.NotNull().Length == 0) return Complex.NaN;
 
             var y = x - X0[0];
             for (var i = 1; i < X0.Length; i++)
@@ -806,8 +793,7 @@ public partial class Polynom
 
         public static Complex GetRootsValue(Complex x, params double[] X0)
         {
-            if (X0 is null) throw new ArgumentNullException(nameof(X0));
-            if (X0.Length == 0) return Complex.NaN;
+            if (X0.NotNull().Length == 0) return Complex.NaN;
 
             var y = x - X0[0];
             for (var i = 1; i < X0.Length; i++)
@@ -818,8 +804,7 @@ public partial class Polynom
 
         public static Complex GetRootsValue(Complex x, params Complex[] X0)
         {
-            if (X0 is null) throw new ArgumentNullException(nameof(X0));
-            if (X0.Length == 0) return Complex.NaN;
+            if (X0.NotNull().Length == 0) return Complex.NaN;
 
             var y = x - X0[0];
             for (var i = 1; i < X0.Length; i++)
@@ -830,8 +815,7 @@ public partial class Polynom
 
         public static double GetRootsValue(double x, IEnumerable<double> X0)
         {
-            if (X0 is null) throw new ArgumentNullException(nameof(X0));
-            using var xx = X0.GetEnumerator();
+            using var xx = X0.NotNull().GetEnumerator();
             if (!xx.MoveNext())
                 return double.NaN;
 
@@ -844,8 +828,7 @@ public partial class Polynom
 
         public static Complex GetRootsValue(double x, IEnumerable<Complex> X0)
         {
-            if (X0 is null) throw new ArgumentNullException(nameof(X0));
-            using var xx = X0.GetEnumerator();
+            using var xx = X0.NotNull().GetEnumerator();
             if (!xx.MoveNext())
                 return Complex.NaN;
 
@@ -858,8 +841,7 @@ public partial class Polynom
 
         public static Complex GetRootsValue(Complex x, IEnumerable<double> X0)
         {
-            if (X0 is null) throw new ArgumentNullException(nameof(X0));
-            using var xx = X0.GetEnumerator();
+            using var xx = X0.NotNull().GetEnumerator();
             if (!xx.MoveNext())
                 return Complex.NaN;
 
@@ -872,8 +854,7 @@ public partial class Polynom
 
         public static Complex GetRootsValue(Complex x, IEnumerable<Complex> X0)
         {
-            if (X0 is null) throw new ArgumentNullException(nameof(X0));
-            using var xx = X0.GetEnumerator();
+            using var xx = X0.NotNull().GetEnumerator();
             if (!xx.MoveNext())
                 return Complex.NaN;
 
@@ -902,10 +883,7 @@ public partial class Polynom
         /// <returns>Коэффициенты при степенях</returns>
         public static double[] GetCoefficients(IEnumerable<double> Root)
         {
-            if (Root is null)
-                throw new ArgumentNullException(nameof(Root));
-
-            using var root = Root.GetEnumerator();
+            using var root = Root.NotNull().GetEnumerator();
             if (!root.MoveNext())
                 throw new ArgumentException("Длина перечисления корней полинома должна быть больше 0", nameof(Root));
 
@@ -982,10 +960,7 @@ public partial class Polynom
         /// <exception cref="ArgumentException">При <paramref name="Root"/><c>.Length</c> == 0</exception>
         public static double[] GetCoefficients(double[] Root, double[] a)
         {
-            if (Root is null)
-                throw new ArgumentNullException(nameof(Root));
-
-            if (Root.Length == 0)
+            if (Root.NotNull().Length == 0)
                 throw new ArgumentException("Длина массива корней полинома должна быть больше 0", nameof(Root));
 
             const string root_length = $"{nameof(Root)}.Length";
@@ -1115,7 +1090,7 @@ public partial class Polynom
             return a;
         }
 
-        
+
         /// <summary>Преобразовать массив корней полинома в коэффициенты при степенях</summary>
         /// <param name="Root">Корни полинома</param>
         /// <returns>Коэффициенты при степенях</returns>
@@ -1133,10 +1108,7 @@ public partial class Polynom
         /// <returns>Коэффициенты при степенях</returns>
         public static Complex[] GetCoefficients(IEnumerable<Complex> Root)
         {
-            if (Root is null)
-                throw new ArgumentNullException(nameof(Root));
-
-            using var root = Root.GetEnumerator();
+            using var root = Root.NotNull().GetEnumerator();
             if (!root.MoveNext())
                 throw new ArgumentException("Длина перечисления корней полинома должна быть больше 0", nameof(Root));
 
@@ -1213,10 +1185,7 @@ public partial class Polynom
         /// <exception cref="ArgumentException">При <paramref name="Root"/><c>.Length</c> == 0</exception>
         public static Complex[] GetCoefficients(Complex[] Root, Complex[] a)
         {
-            if (Root is null)
-                throw new ArgumentNullException(nameof(Root));
-
-            if (Root.Length == 0)
+            if (Root.NotNull().Length == 0)
                 throw new ArgumentException("Длина массива корней полинома должна быть больше 0", nameof(Root));
 
             const string root_length = $"{nameof(Root)}.Length";
@@ -1282,6 +1251,9 @@ public partial class Polynom
             return a;
         }
 
+        /// <summary>Преобразовать массив корней полинома в коэффициенты при обратных степенях, вещественная часть</summary>
+        /// <param name="Root">Корни полинома</param>
+        /// <returns>Коэффициенты при обратных степенях, вещественная часть</returns>
         public static double[] GetCoefficientsInvertedRe(params Complex[] Root)
         {
             switch (Root)
@@ -1317,6 +1289,15 @@ public partial class Polynom
             return re;
         }
 
+        /// <summary>
+        /// Преобразовать массив корней полинома в коэффициенты при обратных степенях,
+        /// возвращая отдельно массивы действительных и мнимых частей.
+        /// </summary>
+        /// <param name="Root">Массив комплексных корней полинома.</param>
+        /// <returns>Кортеж, содержащий массивы коэффициентов при обратных степенях:
+        /// действительная часть и мнимая часть.</returns>
+        /// <exception cref="ArgumentNullException">Выбрасывается, если <paramref name="Root"/> равен null.</exception>
+        /// <exception cref="ArgumentException">Выбрасывается, если длина <paramref name="Root"/> равна 0.</exception>
         public static (double[] Re, double[] Im) GetCoefficientsInvertedReIm(params Complex[] Root)
         {
             switch (Root)
@@ -1354,6 +1335,13 @@ public partial class Polynom
 
         #region Интегрирование/дифференцирование
 
+        /// <summary>Вычислить производную от полинома, заданного своими коэффициентами</summary>
+        /// <param name="p">Массив коэффициентов полинома</param>
+        /// <param name="Result">Массив для хранения результата</param>
+        /// <param name="Order">Порядок производной (по умолчанию 1)</param>
+        /// <returns>Массив, содержащий коэффициенты производной от полинома</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="p"/> or <paramref name="Result"/> is null</exception>
+        /// <exception cref="ArgumentException">Длина <paramref name="Result"/> меньше чем длина <paramref name="p"/> минус <paramref name="Order"/></exception>
         public static double[] GetDifferential(double[] p, double[] Result, int Order = 1)
         {
             if (p is null) throw new ArgumentNullException(nameof(p));
@@ -1422,6 +1410,13 @@ public partial class Polynom
             return Result;
         }
 
+        /// <summary>Получить производную полинома, заданного комплексными коэффициентами</summary>
+        /// <param name="p">Массив комплексных коэффициентов полинома</param>
+        /// <param name="Result">Массив для хранения результата</param>
+        /// <param name="Order">Порядок производной</param>
+        /// <returns>Массив <paramref name="Result"/>, содержащий производную полинома</returns>
+        /// <exception cref="ArgumentNullException">Выбрасывается, если <paramref name="p"/> или <paramref name="Result"/> равен null</exception>
+        /// <exception cref="ArgumentException">Выбрасывается, если длина <paramref name="p"/> слишком мала, или если длина <paramref name="Result"/> недостаточна для хранения результата</exception>
         public static Complex[] GetDifferential(Complex[] p, Complex[] Result, int Order = 1)
         {
             if (p is null) throw new ArgumentNullException(nameof(p));
@@ -1528,6 +1523,11 @@ public partial class Polynom
             }
         };
 
+        /// <summary>Вычислить значение производной полинома</summary>
+        /// <param name="x">Аргумент</param>
+        /// <param name="p">Массив коэффициентов полинома</param>
+        /// <param name="Order">Порядок производной. 0 - значение полинома, 1 - производная 1-го порядка, 2 - производная 2-го порядка и т.д.</param>
+        /// <returns>Значение производной полинома в точке <paramref name="x"/></returns>
         public static double GetDifferentialValue(double x, double[] p, int Order = 1)
         {
             var result = 0d;
@@ -1570,6 +1570,11 @@ public partial class Polynom
             return result;
         }
 
+        /// <summary>Вычислить производную от полинома</summary>
+        /// <param name="p">Полином</param>
+        /// <param name="Order">Порядок дифференциала. Default = 1</param>
+        /// <exception cref="ArgumentNullException"><paramref name="p"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="Order"/> is less than 0</exception>
         public static void Differential(double[] p, int Order = 1)
         {
             if (p is null)
@@ -1619,6 +1624,13 @@ public partial class Polynom
             }
         };
 
+        /// <summary>Вычисляет интеграл полинома заданного порядка</summary>
+        /// <param name="p">Массив коэффициентов полинома</param>
+        /// <param name="C">Константа интегрирования</param>
+        /// <param name="result">Массив для хранения коэффициентов интеграла</param>
+        /// <param name="Order">Кратность интегрирования</param>
+        /// <returns>Массив коэффициентов полинома - интеграла</returns>
+        /// <exception cref="ArgumentException">Если размер массива результата не соответствует ожидаемому</exception>
         public static double[] Integral(double[] p, double C, double[] result, int Order = 1)
         {
             var length = p.Length;
@@ -1646,6 +1658,13 @@ public partial class Polynom
             return result;
         }
 
+        /// <summary>Вычисляет интеграл полинома заданного порядка</summary>
+        /// <param name="p">Массив коэффициентов полинома</param>
+        /// <param name="C">Константа интегрирования</param>
+        /// <param name="result">Массив для хранения коэффициентов интеграла</param>
+        /// <param name="Order">Кратность интегрирования</param>
+        /// <returns>Массив коэффициентов полинома - интеграла</returns>
+        /// <exception cref="ArgumentException">Если размер массива результата не соответствует ожидаемому</exception>
         public static Complex[] Integral(Complex[] p, Complex C, Complex[] result, int Order = 1)
         {
             var length = p.Length;
@@ -1673,6 +1692,9 @@ public partial class Polynom
             return result;
         }
 
+        /// <summary>Вычисляет интеграл полинома заданного порядка</summary>
+        /// <param name="p">Массив коэффициентов полинома</param>
+        /// <param name="C">Константа интегрирования</param>
         public static void Integral(double[] p, double C = 0)
         {
             for (var i = p.Length - 1; i >= 1; i--)
@@ -1680,6 +1702,10 @@ public partial class Polynom
             p[0] = C;
         }
 
+        /// <summary>Вычисляет интеграл полинома заданного порядка</summary>
+        /// <param name="p">Массив коэффициентов полинома</param>
+        /// <param name="C">Константа интегрирования</param>
+        /// <remarks>Массив <paramref name="p"/> будет изменен</remarks>
         public static void Integral(Complex[] p, Complex C = default)
         {
             for (var i = p.Length - 1; i >= 1; i--)
@@ -1801,6 +1827,11 @@ public partial class Polynom
             return a;
         }
 
+        /// <summary>Возведение полинома в целую степень</summary>
+        /// <param name="p">Коэффициенты полинома</param>
+        /// <param name="Power">Степень</param>
+        /// <returns>Коэффициенты полинома, возведенного в указанную степень</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Степень должна быть больше, либо равна 0</exception>
         public static double[] Power(double[] p, int Power)
         {
             switch (Power)
@@ -1838,9 +1869,7 @@ public partial class Polynom
 
         public static double[] Add(double[] p, double x)
         {
-            if (p is null) throw new ArgumentNullException(nameof(p));
-
-            var result = new double[p.Length];
+            var result = new double[p.NotNull().Length];
             for (var i = 0; i < result.Length; i++)
                 result[i] = p[i] + x;
             return result;
@@ -1988,10 +2017,21 @@ public partial class Polynom
         return new(a);
     }
 
+    /// <summary>Случайный полином случайной степени</summary>
+    /// <param name="MaxPower">Максимальная степень полинома</param>
+    /// <param name="Ma">Математическое ожидание коэффициентов полинома</param>
+    /// <param name="Da">Дисперсия коэффициентов полинома</param>
+    /// <param name="rnd">Генератор случайных чисел</param>
+    /// <returns>Случайный полином</returns>
     public static Polynom RandomPower(int MaxPower = 5, double Ma = 0, double Da = 1, Random? rnd = null) =>
         Random((rnd ?? __PolynomRandom.Value).Next(MaxPower), Ma, Da);
 
-
+    /// <summary>Случайный полином с целыми коэффициентами</summary>
+    /// <param name="Power">Степень полинома</param>
+    /// <param name="Ma">Математическое ожидание коэффициентов полинома</param>
+    /// <param name="Da">Дисперсия коэффициентов полинома</param>
+    /// <param name="rnd">Генератор случайных чисел</param>
+    /// <returns>Случайный полином</returns>
     public static Polynom RandomWithIntCoefficients(int Power, int Ma = 0, int Da = 10, Random? rnd = null)
     {
         rnd ??= __PolynomRandom.Value;
@@ -2001,9 +2041,18 @@ public partial class Polynom
         return new(a);
     }
 
+    /// <summary>Случайный полином с целыми коэффициентами случайной степени</summary>
+    /// <param name="MaxPower">Максимальная степень полинома</param>
+    /// <param name="Ma">Математическое ожидание коэффициентов полинома</param>
+    /// <param name="Da">Дисперсия коэффициентов полинома</param>
+    /// <param name="rnd">Генератор случайных чисел</param>
+    /// <returns>Случайный полином</returns>
     public static Polynom RandomWithIntCoefficients_P(int MaxPower = 5, int Ma = 0, int Da = 10, Random? rnd = null) =>
         RandomWithIntCoefficients((rnd ?? __PolynomRandom.Value).Next(MaxPower), Ma, Da);
 
+    /// <summary>Создать полином по его коэффициентам</summary>
+    /// <param name="Coefficients">Массив коэффициентов полинома, начиная с свободного члена</param>
+    /// <returns>Полином</returns>
     public static Polynom PolynomCoefficients(params double[] Coefficients) =>
         new(Coefficients.FilterNullValuesFromEnd());
 }

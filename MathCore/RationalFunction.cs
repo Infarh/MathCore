@@ -20,6 +20,10 @@ public class RationalFunction(double[] P, double[] Q) : ICloneable
 
     public RationalFunction(Polynom P, Polynom Q) : this(P.Coefficients, Q.Coefficients) { }
 
+    /// <summary>Вычислить значение рациональной функции</summary>
+    /// <param name="x">Аргумент рациональной функции</param>
+    /// <returns>Значение рациональной функции</returns>
+    /// <exception cref="DivideByZeroException">При <paramref name="x"/> - корне знаменателя</exception>
     public double Value(double x)
     {
         var p = Polynom.Array.GetValue(x, _P);
@@ -27,12 +31,19 @@ public class RationalFunction(double[] P, double[] Q) : ICloneable
         return p / q;
     }
 
+    /// <summary>Вычислить значение рациональной функции</summary>
+    /// <param name="z">Комплексный аргумент рациональной функции</param>
+    /// <returns>Комплексное значение рациональной функции</returns>
+    /// <exception cref="DivideByZeroException">При <paramref name="z"/> - корне знаменателя</exception>
     public Complex Value(Complex z)
     {
+
         var p = Polynom.Array.GetValue(z, _P);
         var q = Polynom.Array.GetValue(z, _Q);
         return p / q;
     }
+
+
 
     public (Polynom Quotient, RationalFunction Remainder) Simplify()
     {
@@ -52,6 +63,7 @@ public class RationalFunction(double[] P, double[] Q) : ICloneable
         var q = Polynom.Array.Multiply(x._Q, y._Q);
         return new(p, q);
     }
+
 
     public static RationalFunction operator -(RationalFunction x, RationalFunction y)
     {

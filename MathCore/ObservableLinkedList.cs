@@ -25,12 +25,15 @@ public class ObservableLinkedList<T> :
 
     public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
+    /// <summary>Метод генерации события изменения коллекции</summary>
+    /// <param name="Handler">Обработчик события</param>
+    /// <param name="e">Параметры события</param>
     protected virtual void OnCollectionChanged(NotifyCollectionChangedEventHandler? Handler, NotifyCollectionChangedEventArgs e)
     {
         e.NotNull();
         if (Handler is null) return;
         var invocation_list = Handler.GetInvocationList();
-        var args            = new object[] { this, e };
+        var args = new object[] { this, e };
         foreach (var d in invocation_list)
         {
             var o = d.Target;
@@ -51,6 +54,15 @@ public class ObservableLinkedList<T> :
     protected virtual void OnCollectionChanged(NotifyCollectionChangedAction action = NotifyCollectionChangedAction.Reset) => OnCollectionChanged(new NotifyCollectionChangedEventArgs(action));
     protected virtual void OnCollectionChanged(T NewValue, int index) => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, NewValue, index));
     protected virtual void OnCollectionChanged(T OldValue, T NewValue, int index) => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, NewValue, OldValue, index));
+
+    /// <summary>
+    /// Метод генерации события изменения коллекции
+    /// </summary>
+    /// <param name="e">Параметры события</param>
+    /// <remarks>
+    /// Метод генерирует событие <see cref="CollectionChanged"/> с указанными параметрами,
+    /// а также события свойства <see cref="Count"/> и <see cref="this[int]"/>.
+    /// </remarks>
     protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
     {
         OnCollectionChanged(CollectionChanged, e);
@@ -98,7 +110,7 @@ public class ObservableLinkedList<T> :
         get => NodeAt(index).Value;
         set
         {
-            var node      = NodeAt(index);
+            var node = NodeAt(index);
             var old_value = node.Value;
             node.Value = value;
             OnCollectionChanged(old_value, value, index);
@@ -141,6 +153,10 @@ public class ObservableLinkedList<T> :
         if (ReferenceEquals(node, _List.Last)) OnPropertyChanged(nameof(Last));
     }
 
+    /// <summary>Добавить новый элемент перед указанным элементом</summary>
+    /// <param name="node">Элемент, перед которым надо добавить значение</param>
+    /// <param name="value">Добавляемое значение</param>
+    /// <returns>Новый элемент списка</returns>
     public LinkedListNode<T> AddBefore(LinkedListNode<T> node, T value)
     {
         var result = _List.AddBefore(node, value);
@@ -149,6 +165,13 @@ public class ObservableLinkedList<T> :
         return result;
     }
 
+    /// <summary>Добавить новый узел перед указанным узлом</summary>
+    /// <param name="node">Узел, перед которым надо добавить новый узел</param>
+    /// <param name="NewNode">Добавляемый узел</param>
+    /// <remarks>
+    /// Метод генерирует событие <see cref="CollectionChanged"/>,
+    /// а также события свойства <see cref="First"/>, если новый узел добавлен перед первым узлом.
+    /// </remarks>
     public void AddBefore(LinkedListNode<T> node, LinkedListNode<T> NewNode)
     {
         _List.AddBefore(node, NewNode);
@@ -156,6 +179,13 @@ public class ObservableLinkedList<T> :
         if (ReferenceEquals(node, _List.First)) OnPropertyChanged(nameof(First));
     }
 
+    /// <summary>Добавить новый элемент в начало списка</summary>
+    /// <param name="value">Добавляемое значение</param>
+    /// <returns>Новый элемент списка</returns>
+    /// <remarks>
+    /// Метод генерирует событие <see cref="CollectionChanged"/>,
+    /// а также событие свойства <see cref="First"/>.
+    /// </remarks>
     public LinkedListNode<T> AddFirst(T value)
     {
         var result = _List.AddFirst(value);
@@ -164,6 +194,12 @@ public class ObservableLinkedList<T> :
         return result;
     }
 
+    /// <summary>Добавить новый узел в начало списка</summary>
+    /// <param name="node">Добавляемый узел</param>
+    /// <remarks>
+    /// Метод генерирует событие <see cref="CollectionChanged"/>,
+    /// а также событие свойства <see cref="First"/>.
+    /// </remarks>
     public void AddFirst(LinkedListNode<T> node)
     {
         _List.AddFirst(node);
@@ -171,6 +207,13 @@ public class ObservableLinkedList<T> :
         OnPropertyChanged(nameof(First));
     }
 
+    /// <summary>Добавить новый элемент в конец списка</summary>
+    /// <param name="value">Добавляемое значение</param>
+    /// <returns>Новый элемент списка</returns>
+    /// <remarks>
+    /// Метод генерирует событие <see cref="CollectionChanged"/>,
+    /// а также событие свойства <see cref="Last"/>.
+    /// </remarks>
     public LinkedListNode<T> AddLast(T value)
     {
         var result = _List.AddLast(value);
@@ -179,6 +222,12 @@ public class ObservableLinkedList<T> :
         return result;
     }
 
+    /// <summary>Добавить новый узел в конец списка</summary>
+    /// <param name="node">Добавляемый узел</param>
+    /// <remarks>
+    /// Метод генерирует событие <see cref="CollectionChanged"/>,
+    /// а также событие свойства <see cref="Last"/>.
+    /// </remarks>
     public void AddLast(LinkedListNode<T> node)
     {
         _List.AddLast(node);
@@ -186,6 +235,11 @@ public class ObservableLinkedList<T> :
         OnPropertyChanged(nameof(Last));
     }
 
+    /// <summary>Очистка списка</summary>
+    /// <remarks>
+    /// Метод генерирует событие <see cref="CollectionChanged"/>,
+    /// а также события свойств <see cref="First"/> и <see cref="Last"/>.
+    /// </remarks>
     public void Clear()
     {
         _List.Clear();
@@ -194,6 +248,9 @@ public class ObservableLinkedList<T> :
         OnPropertyChanged(nameof(Last));
     }
 
+    /// <summary>Определение индекса заданного узла</summary>
+    /// <param name="node">Искомый узел</param>
+    /// <returns>Индекс заданного узла, если он найден, либо -1</returns>
     public int IndexOf(LinkedListNode<T> node)
     {
         var root = _List.First;
@@ -202,6 +259,9 @@ public class ObservableLinkedList<T> :
         return -1;
     }
 
+    /// <summary>Определение индекса заданного значения</summary>
+    /// <param name="value">Искомое значение</param>
+    /// <returns>Индекс заданного значения, если он найден, либо -1</returns>
     public int IndexOf(T? value)
     {
         var node = _List.First;
@@ -210,6 +270,10 @@ public class ObservableLinkedList<T> :
         return -1;
     }
 
+    /// <summary>Определение индекса заданного значения и получение соответствующего узла</summary>
+    /// <param name="value">Искомое значение</param>
+    /// <param name="node">Узел, содержащий искомое значение, если найдено; иначе null</param>
+    /// <returns>Индекс заданного значения, если он найден, либо -1</returns>
     public int IndexOf(T value, out LinkedListNode<T>? node)
     {
         node = _List.First;
@@ -219,6 +283,12 @@ public class ObservableLinkedList<T> :
         return -1;
     }
 
+    /// <summary>Получение узла по индексу</summary>
+    /// <param name="index">Индекс узла</param>
+    /// <returns>Узел по заданному индексу, если он существует, иначе null</returns>
+    /// <remarks>
+    /// Метод работает за O(n / 2), т.е. за половину от времени, которое потребовалось бы для прохода списка от начала до конца.
+    /// </remarks>
     public LinkedListNode<T>? NodeAt(int index)
     {
         var count = Count;
@@ -249,44 +319,78 @@ public class ObservableLinkedList<T> :
 
     public LinkedListNode<T>? FindLast(T value) => _List.FindLast(value);
 
+    /// <summary>Удалить элемент из списка</summary>
+    /// <param name="value">Удаляемый элемент</param>
+    /// <returns>Истина - элемент удален, ложь - элемент не найден</returns>
+    /// <remarks>
+    /// Генерирует событие <see cref="CollectionChanged"/> и события свойств <see cref="First"/> и <see cref="Last"/>,
+    /// если соответствующие узлы изменяются.
+    /// </remarks>
     public bool Remove(T? value)
     {
-        var index    = IndexOf(value, out var node);
+        var index = IndexOf(value, out var node);
         var is_first = ReferenceEquals(_List.First, node);
-        var is_last  = ReferenceEquals(_List.Last, node);
+        var is_last = ReferenceEquals(_List.Last, node);
+
         if (!_List.Remove(value)) return false;
+
         OnCollectionItemRemoved(value, index);
+
         if (is_first) OnPropertyChanged(nameof(First));
         if (is_last) OnPropertyChanged(nameof(Last));
+
         return true;
     }
 
+    /// <summary>Удаляет узел из списка</summary>
+    /// <param name="node">Удаляемый узел</param>
+    /// <remarks>
+    /// Генерирует событие <see cref="CollectionChanged"/> и события свойств <see cref="First"/> и <see cref="Last"/>,
+    /// если соответствующие узлы изменяются.
+    /// </remarks>
     public void Remove(LinkedListNode<T> node)
     {
-        var index    = IndexOf(node.NotNull());
+        var index = IndexOf(node.NotNull());
         var is_first = ReferenceEquals(_List.First, node);
-        var is_last  = ReferenceEquals(_List.Last, node);
+        var is_last = ReferenceEquals(_List.Last, node);
+
         _List.Remove(node);
+
         OnCollectionItemRemoved(node.Value, index);
+
         if (is_first) OnPropertyChanged(nameof(First));
         if (is_last) OnPropertyChanged(nameof(Last));
     }
 
+    /// <summary>Удаляет первый элемент из списка</summary>
+    /// <remarks>
+    /// Если список пуст, метод ничего не делает. Генерирует событие <see cref="CollectionChanged"/>
+    /// и обновляет свойство <see cref="First"/>.
+    /// </remarks>
     public void RemoveFirst()
     {
         if (_List.Count == 0) return;
+
         var item = _List.First.Value;
         _List.RemoveFirst();
+
         OnCollectionItemRemoved(item, 0);
         OnPropertyChanged(nameof(First));
     }
 
+    /// <summary>Удаляет последний узел из списка</summary>
+    /// <remarks>
+    /// Если список пуст, метод ничего не делает. Генерирует событие <see cref="CollectionChanged"/>
+    /// и обновляет свойство <see cref="Last"/>.
+    /// </remarks>
     public void RemoveLast()
     {
         var count = _List.Count;
         if (count == 0) return;
+
         var item = _List.First.Value;
         _List.RemoveLast();
+        
         OnCollectionItemRemoved(item, count);
         OnPropertyChanged(nameof(Last));
     }
@@ -303,13 +407,11 @@ public class ObservableLinkedList<T> :
 
     #endregion
 
-    /// <inheritdoc />
 #pragma warning disable SYSLIB0051
-    public void GetObjectData(SerializationInfo info, StreamingContext context) => _List.GetObjectData(info, context); 
+    void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context) => _List.GetObjectData(info, context);
 #pragma warning restore SYSLIB0051
 
-    /// <inheritdoc />
-    public void OnDeserialization(object sender) => _List.OnDeserialization(sender);
+    void IDeserializationCallback.OnDeserialization(object? sender) => _List.OnDeserialization(sender);
 
     public void Insert(int index, T? item) => AddAfter(NodeAt(index), item);
 

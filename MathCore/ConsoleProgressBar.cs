@@ -49,6 +49,15 @@ public class ConsoleProgressBar : IDisposable, IProgress<double>
 
     public TimeSpan AnimationTimeout { get; init; } = TimeSpan.FromMilliseconds(100);
 
+    /// <summary>
+    /// Инициализирует новый экземпляр <see cref="ConsoleProgressBar"/> с заданным количеством блоков.
+    /// </summary>
+    /// <param name="BlockCount">Количество блоков в индикаторе прогресса. По умолчанию 20.</param>
+    /// <remarks>
+    /// Индикатор прогресса предназначен только для временного отображения в консольном окне.
+    /// Если вывод консоли перенаправлен в файл, индикатор прогресса не отображается, чтобы избежать
+    /// засорения файла ненужными данными.
+    /// </remarks>
     public ConsoleProgressBar(int BlockCount = 20)
     {
         _CursorLeft = Console.CursorLeft;
@@ -65,6 +74,16 @@ public class ConsoleProgressBar : IDisposable, IProgress<double>
 
     public void Report(double value) => Interlocked.Exchange(ref _CurrentProgress, Math.Max(0, Math.Min(1, value)));
 
+    /// <summary>Обработчик события таймера</summary>
+    /// <remarks>
+    ///     Обработчик события таймера, который обновляет текст индикатора прогресса.
+    ///     Метод формирует строку, состоящую из заполненных и незаполненных
+    ///     блоков, а также из анимационного символа. Затем он обновляет текст
+    ///     индикатора прогресса, используя строку, сформированную на предыдущем шаге.
+    ///     Если текст индикатора прогресса не изменился, то обработчик таймера
+    ///     не обновляет текст индикатора прогресса.
+    /// </remarks>
+    /// <param name="state">Объект, передаваемый в обработчик события таймера</param>
     private void TimerHandler(object state)
     {
         lock (_Timer)
@@ -98,6 +117,13 @@ public class ConsoleProgressBar : IDisposable, IProgress<double>
         }
     }
 
+    /// <summary>Обновляет текст индикатора прогресса в консоли</summary>
+    /// <param name="text">Новый текст, который требуется отобразить.</param>
+    /// <remarks>
+    /// Функция сравнивает текущий текст с новым, вычисляя общую часть. 
+    /// В случае, если новый текст короче предыдущего, удаляет излишние символы.
+    /// Затем обновляет позицию курсора в консоли, чтобы корректно отобразить новый текст.
+    /// </remarks>
     private void UpdateText(string text)
     {
         // Get length of common portion

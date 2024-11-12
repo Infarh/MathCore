@@ -9,6 +9,19 @@ public static partial class SpecialFunctions
     //[Copyright("1984, 1987, 1989, 2000 by Stephen L. Moshier")]
     public static class Bessel
     {
+        /// <summary>Возвращает полином Бесселя <paramref name="N" />-ого порядка</summary>
+        /// <param name="N">Порядок полинома</param>
+        /// <returns>Полином Бесселя <paramref name="N" />-ого порядка</returns>
+        /// <remarks>
+        ///     <para>
+        ///         Формула вычисления:
+        ///         <c>y_n(x) = sum ( k = 0 to n ) [ (n + k)! / (n - k)! * k! ] * x^k</c>
+        ///     </para>
+        ///     <para>
+        ///         <c>y_n(x) = x^n + (n + 1) * x^(n - 1) + ... + (n + 1) * x + 1</c>
+        ///     </para>
+        ///     <para> </para>
+        /// </remarks>
         public static Polynom Polynom(int N)
         {
             if (N == 0) throw new ArgumentOutOfRangeException(nameof(N), 0, "Порядок полинома не должен быть равен 0");
@@ -38,6 +51,23 @@ public static partial class SpecialFunctions
             return new(a);
         }
 
+        /// <summary>
+        ///     Вычисляет коэффициенты P и Q для использования в <see cref="BesselJ0Asymptote"/> и <see cref="BesselJ1Asymptote"/>.
+        /// </summary>
+        /// <param name="x">Аргумент, для которого вычисляются P и Q.</param>
+        /// <param name="P">Вычисленный коэффициент P.</param>
+        /// <param name="Q">Вычисленный коэффициент Q.</param>
+        /// <remarks>
+        ///     <para>
+        ///         P и Q вычисляются как рациональные функции от x, полученные из асимптотических разложений для J0 и J1.
+        ///     </para>
+        ///     <para>
+        ///         <c>P(x) = 1 - 4/x^2 + 16/x^4 - ...</c>
+        ///     </para>
+        ///     <para>
+        ///         <c>Q(x) = 2/x + 8/x^3 - 32/x^5 + ...</c>
+        ///     </para>
+        /// </remarks>
         private static void BesselAsymptote0(double x, out double P, out double Q)
         {
             var x2 = 64 / (x * x);
@@ -73,6 +103,18 @@ public static partial class SpecialFunctions
             Q  = 8 * p3 / q3 / x;
         }
 
+        /// <summary>Вычисляет асимптотические значения <c>P(x)</c> и <c>Q(x)</c> для <c>x &gt;&gt; 0</c></summary>
+        /// <param name="x">Аргумент (должен быть положительным).</param>
+        /// <param name="P">Выходной параметр, содержащий значение <c>P(x)</c>.</param>
+        /// <param name="Q">Выходной параметр, содержащий значение <c>Q(x)</c>.</param>
+        /// <remarks>
+        ///     <para>
+        ///         <c>P(x) = 1/x + 8/x^3 - 32/x^5 + ...</c>
+        ///     </para>
+        ///     <para>
+        ///         <c>Q(x) = 2/x - 8/x^3 + 32/x^5 + ...</c>
+        ///     </para>
+        /// </remarks>
         private static void BesselAsymptote1(double x, out double P, out double Q)
         {
             var x2 = 64 / (x * x);
@@ -112,6 +154,12 @@ public static partial class SpecialFunctions
 
         private static void BesselMFirstCheb(double c, ref double b0, ref double b1, ref double b2) { b0 = c; b1 = 0; b2 = 0; }
 
+        /// <summary>Выполняет одну итерацию метода Чебышева для вычисления функции <c>BesselMn(x, n)</c></summary>
+        /// <param name="x">Аргумент функции.</param>
+        /// <param name="c">Коэффициент Чебышева.</param>
+        /// <param name="b0">Ссылка на переменную, представляющую текущее значение <c>b0</c>, которое будет обновлено.</param>
+        /// <param name="b1">Ссылка на переменную, представляющую текущее значение <c>b1</c>, которое будет обновлено.</param>
+        /// <param name="b2">Выходной параметр, представляющий предыдущее значение <c>b1</c>, которое будет обновлено.</param>
         private static void BesselMnExtCheb(double x, double c, ref double b0, ref double b1, ref double b2)
         {
             b2 = b1;
@@ -120,6 +168,7 @@ public static partial class SpecialFunctions
         }
 
         private static void BesselM1FirstCheb(double c, ref double b0, ref double b1, ref double b2) { b0 = c; b1 = 0; b2 = 0; }
+
 
         private static void BesselM1NextCheb(double x, double c, ref double b0, ref double b1, ref double b2)
         {

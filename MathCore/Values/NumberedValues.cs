@@ -5,6 +5,11 @@ using System.Collections;
 
 namespace MathCore.Values;
 
+/// <summary>Массив значений в привязке их к сетке времени</summary>
+/// <typeparam name="TValue">Тип значений</typeparam>
+/// <param name="Dt">Шаг сетки времени (дискретизацции)</param>
+/// <param name="Values">Массив значений</param>
+/// <param name="T0">Начальное смещение сетки времени</param>
 public class NumberedValues<TValue>(double Dt, TValue[] Values, double T0 = 0)
     : IEnumerable<KeyValuePair<double, TValue>>
 {
@@ -21,6 +26,14 @@ public class NumberedValues<TValue>(double Dt, TValue[] Values, double T0 = 0)
 
     public NumberedValues(double dt, IEnumerable<TValue> Values, double t0 = 0) : this(dt, Values.ToArray(), t0) { }
 
+    /// <summary>Возвращает индекс значения, соответствующего времени <paramref name="t"/></summary>
+    /// <param name="t">Время</param>
+    /// <returns>Индекс значения</returns>
+    /// <remarks>
+    ///     Функция возвращает ближайший индекс, не превышающий указанное время.
+    ///     Если <paramref name="t"/> меньше <see cref="T0"/>, то возвращается 0.
+    ///     Если <paramref name="t"/> больше или равно <see cref="T"/>, то возвращается <see cref="Count"/> - 1.
+    /// </remarks>
     public int IndexOf(double t)
     {
         var i = (int)Math.Round((t - T0) / dt);

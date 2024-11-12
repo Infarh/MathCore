@@ -42,6 +42,14 @@ public static partial class SpecialFunctions
                 return s * 1.1283791670955125738961589031 * x * p / q;
             }
 
+            /// <summary>Конформное нормальное распределение</summary>
+            /// <remarks>
+            ///     Конформное нормальное распределение - это функция, которая
+            ///     монотонно возрастает от 0 до 1 на протяжении всего интервала
+            ///     от -бесконечности до +бесконечности.
+            /// </remarks>
+            /// <param name="x">Аргумент функции нормального распределения</param>
+            /// <returns>Значение нормального распределения</returns>
             [DST]
             public static double ErrorFunctionConform(double x)
             {
@@ -71,12 +79,35 @@ public static partial class SpecialFunctions
                 return Exp(-(x * x)) * p / q;
             }
 
+            /// <summary>Функция нормального (гауссовского) распределения</summary>
+            /// <remarks>
+            ///     Функция нормального (гауссовского) распределения - это
+            ///     функция, которая монотонно возрастает от 0 до 1 на протяжении
+            ///     всего интервала от -бесконечности до +бесконечности.
+            /// </remarks>
+            /// <param name="x">Аргумент функции нормального распределения</param>
+            /// <returns>Значение нормального распределения</returns>
             [DST]
             public static double NormalDistribution(double x) => .5 * (ErrorFunction(x / 1.41421356237309504880) + 1);
 
+            /// <summary>Обратная функция ошибки</summary>
+            /// <param name="e">Значение функции ошибки</param>
+            /// <returns>Аргумент, для которого функция ошибки возвращает <paramref name="e" /></returns>
+            /// <remarks>
+            ///     Метод вычисляет значение аргумента, для которого функция ошибки
+            ///     принимает заданное значение <paramref name="e" />.
+            /// </remarks>
             [DST]
             public static double ErrorFunctionInversed(double e) => NormalDistributionInversed(.5 * (e + 1)) / Consts.sqrt_2;
 
+            /// <summary>Вычисляет аргумент, для которого нормальное распределение принимает заданное значение</summary>
+            /// <param name="y0">Значение нормального распределения (0 &lt; y0 &lt; 1)</param>
+            /// <returns>Аргумент, для которого нормальное распределение возвращает <paramref name="y0" /></returns>
+            /// <remarks>
+            ///     Метод вычисляет значение аргумента для обратной функции нормального распределения,
+            ///     используя различные аппроксимации для значений <paramref name="y0"/> в зависимости
+            ///     от диапазона, чтобы обеспечить точность и эффективность вычислений.
+            /// </remarks>
             [DST]
             public static double NormalDistributionInversed(double y0)
             {
@@ -174,8 +205,19 @@ public static partial class SpecialFunctions
             }
         }
 
+        /// <summary>Распределение Стьюдента</summary>
         public static class Student
         {
+            /// <summary>Вычисляет распределение Стьюдента</summary>
+            /// <param name="k">Степень свободы</param>
+            /// <param name="t">Аргумент функции</param>
+            /// <returns>Значение функции распределения Стьюдента</returns>
+            /// <remarks>
+            ///     Метод вычисляет значение функции распределения Стьюдента
+            ///     для заданного значения <paramref name="t" /> и степени свободы <paramref name="k"/>.
+            ///     Функция вычисляется по разным алгоритмам, в зависимости от значения <paramref name="t" />,
+            ///     чтобы обеспечить точность и эффективность вычислений.
+            /// </remarks>
             [DST]
             public static double StudentDistribution(int k, double t)
             {
@@ -226,6 +268,15 @@ public static partial class SpecialFunctions
                 return .5 + .5 * (t < 0 ? -p : p);
             }
 
+        /// <summary>Вычисляет аргумент, для которого распределение Стьюдента принимает заданное значение</summary>
+        /// <param name="k">Количество степеней свободы (k &gt; 0)</param>
+        /// <param name="p">Значение распределения Стьюдента (0 &lt; p &lt; 1)</param>
+        /// <returns>Аргумент, для которого распределение Стьюдента возвращает <paramref name="p"/></returns>
+        /// <remarks>
+        ///     Метод вычисляет значение аргумента для обратной функции распределения Стьюдента,
+        ///     используя различные аппроксимации для значений <paramref name="p"/> в зависимости
+        ///     от диапазона, чтобы обеспечить точность и эффективность вычислений.
+        /// </remarks>
             [DST]
             public static double StudentDistributionInversed(int k, double p)
             {

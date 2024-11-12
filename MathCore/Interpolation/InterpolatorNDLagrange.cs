@@ -209,9 +209,9 @@ public sealed class InterpolatorNDLagrange
 
     private double Projection(IReadOnlyList<double> X0, double[] Xi, double[] Xj)
     {
-        var prod = 0d;
-        var len0 = 0d;
-        var leni = 0d;
+        var proj = 0d;
+        var len_0 = 0d;
+        var len_i = 0d;
         for (var n = 0; n < _ArgsCount; n++)
         {
             var x0 = (X0[n] - _Min[n]) / _Range[n];
@@ -221,15 +221,15 @@ public sealed class InterpolatorNDLagrange
             var dx0 = x0 - xj;
             var dxi = xi - xj;
 
-            prod += dx0 * dxi;
-            len0 += dx0 * dx0;
-            leni += dxi * dxi;
+            proj += dx0 * dxi;
+            len_0 += dx0 * dx0;
+            len_i += dxi * dxi;
         }
 
-        if (prod == 0)
+        if (proj == 0)
             return 0;
 
-        var p = prod / (len0 * leni).Sqrt();
+        var p = proj / (len_0 * len_i).Sqrt();
         //var p_1 = prod * (len0 * leni).SqrtInvFast3();
 
         return p;

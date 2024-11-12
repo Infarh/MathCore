@@ -35,13 +35,13 @@ public class SelectableCollection<T> : ICollection<T>, INotifyPropertyChanged, I
 
     #endregion
 
-    #region SelectedItem : T - Выбранный элемент
+    #region SelectedItem : T? - Выбранный элемент
 
     /// <summary>Выбранный элемент</summary>
-    private T _SelectedItem;
+    private T? _SelectedItem;
 
     /// <summary>Выбранный элемент</summary>
-    public T SelectedItem
+    public T? SelectedItem
     {
         get => _SelectedItem;
         set

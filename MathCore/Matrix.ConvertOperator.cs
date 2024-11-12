@@ -37,6 +37,8 @@ public partial class Matrix
         return new(int_data);
     }
 
+    /// <summary>Округление элементов матрицы до ближайшего большего целого</summary>
+    /// <returns>Матрица с округленными элементами</returns>
     [NotNull]
     public MatrixInt Ceiling()
     {
@@ -47,6 +49,8 @@ public partial class Matrix
         return new(int_data);
     } 
 
+    /// <summary>Округление элементов матрицы до ближайшего меньшего целого</summary>
+    /// <returns>Матрица с округленными элементами</returns>
     [NotNull]
     public MatrixInt Floor()
     {
@@ -57,6 +61,8 @@ public partial class Matrix
         return new(int_data);
     }
 
+    /// <summary>Округление элементов матрицы до ближайшего целого</summary>
+    /// <returns>Матрица с округленными элементами</returns>
     [NotNull]
     public MatrixInt Round()
     {
@@ -67,6 +73,9 @@ public partial class Matrix
         return new(int_data);
     }
 
+    /// <summary>Округление элементов матрицы до указанного количества знаков после запятой</summary>
+    /// <param name="Digits">Количество знаков после запятой</param>
+    /// <returns>Матрица с округленными элементами</returns>
     [NotNull]
     public MatrixInt Round(int Digits)
     {
@@ -77,6 +86,10 @@ public partial class Matrix
         return new(int_data);
     }
 
+    /// <summary>Округление элементов матрицы до указанного количества знаков после запятой</summary>
+    /// <param name="Digits">Количество знаков после запятой</param>
+    /// <param name="Rounding">Стиль округления</param>
+    /// <returns>Матрица с округленными элементами</returns>
     [NotNull]
     public MatrixInt Round(int Digits, MidpointRounding Rounding)
     {
