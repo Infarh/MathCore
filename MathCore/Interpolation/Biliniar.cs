@@ -3,47 +3,54 @@ namespace MathCore.Interpolation;
 
 public class Biliniar : Interpolator
 {
-    private static double Surface(
-        double x, double y,
-        double x1, double y1, double z1,
-        double x2, double y2, double z2, 
-        double x3, double y3, double z3)
-    {
-        var dx21 = x2 - x1;
-        var dx31 = x3 - x1;
+    //private static double Surface(
+    //    double x, double y,
+    //    double x1, double y1, double z1,
+    //    double x2, double y2, double z2, 
+    //    double x3, double y3, double z3)
+    //{
+    //    var dx21 = x2 - x1;
+    //    var dx31 = x3 - x1;
 
-        var dy21 = y2 - y1;
-        var dy31 = y3 - y1;
+    //    var dy21 = y2 - y1;
+    //    var dy31 = y3 - y1;
 
-        var dz21 = z2 - z1;
-        var dz31 = z3 - z1;
+    //    var dz21 = z2 - z1;
+    //    var dz31 = z3 - z1;
 
-        // (x - x1) * (dy21 * dz31 - dz21 * dy31) +
-        // (y - y1) * (dz21 * dx31 - dx21 * dz31) +
-        // (z - z1) * (dx21 * dy31 - dy21 * dx31) = 0
+    //    // (x - x1) * (dy21 * dz31 - dz21 * dy31) +
+    //    // (y - y1) * (dz21 * dx31 - dx21 * dz31) +
+    //    // (z - z1) * (dx21 * dy31 - dy21 * dx31) = 0
 
-        // (z - z1) * (dx21 * dy31 - dy21 * dx31) =
-        // (x - x1) * (dz21 * dy31 - dy21 * dz31) +
-        // (y - y1) * (dx21 * dz31 - dz21 * dx31)
+    //    // (z - z1) * (dx21 * dy31 - dy21 * dx31) =
+    //    // (x - x1) * (dz21 * dy31 - dy21 * dz31) +
+    //    // (y - y1) * (dx21 * dz31 - dz21 * dx31)
 
-        // (z - z1) = (
-        // (x - x1) * (dz21 * dy31 - dy21 * dz31) +
-        // (y - y1) * (dx21 * dz31 - dz21 * dx31)
-        // ) / (dx21 * dy31 - dy21 * dx31)
+    //    // (z - z1) = (
+    //    // (x - x1) * (dz21 * dy31 - dy21 * dz31) +
+    //    // (y - y1) * (dx21 * dz31 - dz21 * dx31)
+    //    // ) / (dx21 * dy31 - dy21 * dx31)
 
-        // z = (
-        // (x - x1) * (dz21 * dy31 - dy21 * dz31) +
-        // (y - y1) * (dx21 * dz31 - dz21 * dx31)
-        // ) / (dx21 * dy31 - dy21 * dx31) +
-        // z1
+    //    // z = (
+    //    // (x - x1) * (dz21 * dy31 - dy21 * dz31) +
+    //    // (y - y1) * (dx21 * dz31 - dz21 * dx31)
+    //    // ) / (dx21 * dy31 - dy21 * dx31) +
+    //    // z1
 
-        return (
-            (x - x1) * (dz21 * dy31 - dy21 * dz31) + 
-            (y - y1) * (dx21 * dz31 - dz21 * dx31)
-            ) / (dx21 * dy31 - dy21 * dx31) 
-            + z1;
-    }
+    //    return (
+    //        (x - x1) * (dz21 * dy31 - dy21 * dz31) + 
+    //        (y - y1) * (dx21 * dz31 - dz21 * dx31)
+    //        ) / (dx21 * dy31 - dy21 * dx31) 
+    //        + z1;
+    //}
 
+    /// <summary>Билинейная интерполяция значения Z для заданных координат X и Y.</summary>
+    /// <param name="x">Координата X точки, для которой необходимо рассчитать значение Z.</param>
+    /// <param name="y">Координата Y точки, для которой необходимо рассчитать значение Z.</param>
+    /// <param name="X">Массив координат X узлов.</param>
+    /// <param name="Y">Массив координат Y узлов.</param>
+    /// <param name="Z">Массив значений Z в узлах.</param>
+    /// <returns>Интерполированное значение Z для заданных координат X и Y.</returns>
     public static double Interpolate(double x, double y, double[] X, double[] Y, double[,] Z)
     {
         var i = Array.BinarySearch(X, x);

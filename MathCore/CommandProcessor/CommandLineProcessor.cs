@@ -166,7 +166,7 @@ public class CommandLineProcessor
 
     /// <summary>Обработать команду</summary>
     /// <param name="CommandLine">Командная строка</param>
-    public IEnumerable<ProcessorCommand> Process(params string[] CommandLine)
+    public IEnumerable<ProcessorCommand> Process(params IEnumerable<string> CommandLine)
     {
         var commands = CommandLine.SelectMany(str => str.Split(CommandSplitter))
            .Select(s => s.ClearSystemSymbolsAtBeginAndEnd())

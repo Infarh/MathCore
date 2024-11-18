@@ -17,17 +17,17 @@ public static class FList
     /// <returns>Возвращает новый экземпляр списка, содержащий указанный элемент</returns>
     public static FList<T> New<T>(T item) => FList<T>.New(item, FList<T>.Empty);
 
-    /// <summary>Создать новый список, содержащий указанные элементы</summary>
+    /// <summary>Создать новый список, содержащий указанное перечисление элементов</summary>
     /// <typeparam name="T">Тип элементов списка</typeparam>
-    /// <param name="items">Элементы, добавляемые в список</param>
-    /// <returns>Возвращает новый список, содержащий указанные элементы</returns>
-    public static FList<T> New<T>(params T[] items) => New((IEnumerable<T>)items);
+    /// <param name="items">Перечисление элементов, на основе которых необходимо создать новый список</param>
+    /// <returns>Возвращает новый список, содержащий элементы из указанного перечисления</returns>
+    public static FList<T> New<T>(T[] items) => FList<T>.New(items);
 
     /// <summary>Создать новый список, содержащий указанное перечисление элементов</summary>
     /// <typeparam name="T">Тип элементов списка</typeparam>
     /// <param name="items">Перечисление элементов, на основе которых необходимо создать новый список</param>
     /// <returns>Возвращает новый список, содержащий элементы из указанного перечисления</returns>
-    public static FList<T> New<T>(IEnumerable<T> items) => FList<T>.New(items);
+    public static FList<T> New<T>(params IEnumerable<T> items) => FList<T>.New(items);
 }
 
 /// <summary>Функциональный список</summary>

@@ -14,6 +14,13 @@ public static class IListExtensions
     /// <param name="Items">Список элементов, на основе которого надо создать генератор</param>
     /// <param name="Random">Датчик случайных чисел</param>
     /// <returns>Генератор случайного значения из элементов списка</returns>
+    public static RandomizerReadOnly<T> GetRandomizer<T>(this IReadOnlyList<T> Items, Random? Random = null) => new(Items, Random);
+
+    /// <summary>Создать генератор случных элементов</summary>
+    /// <typeparam name="T">Тип элементов списка</typeparam>
+    /// <param name="Items">Список элементов, на основе которого надо создать генератор</param>
+    /// <param name="Random">Датчик случайных чисел</param>
+    /// <returns>Генератор случайного значения из элементов списка</returns>
     public static Randomizer<T> GetRandomizer<T>(this IList<T> Items, Random? Random = null) => new(Items, Random);
 
     /// <summary>Ссылка на список пуста, либо список не содержит элементов</summary>

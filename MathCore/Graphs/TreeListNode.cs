@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#nullable enable
+using System.Collections;
 
 using MathCore.Annotations;
 // ReSharper disable MemberCanBePrivate.Global
@@ -146,16 +147,16 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
     }
 
     [CanBeNull]
-    public TreeListNode<TValue> this[[CanBeNull] params int[] index]
+    public TreeListNode<TValue> this[[CanBeNull] params IReadOnlyList<int>? index]
     {
         get
         {
-            if (index is null || index.Length == 1 && index[0] == 0) return this;
+            if (index is null || index.Count == 1 && index[0] == 0) return this;
             var result = this;
-            for (var i = 0; result != null && i < index.Length; i++)
+            for (var i = 0; result != null && i < index.Count; i++)
             {
                 result = result[index[i]];
-                if (i < index.Length - 1)
+                if (i < index.Count - 1)
                     result = result?.Child;
             }
             return result;

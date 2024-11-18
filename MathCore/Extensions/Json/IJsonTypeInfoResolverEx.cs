@@ -31,10 +31,10 @@ public static class IJsonTypeInfoResolverEx
     public static IJsonTypeInfoResolver WithAddedModifier(
         this IJsonTypeInfoResolver resolver,
         Action<JsonTypeInfo> modifier,
-        params Type[] Types) =>
+        params IReadOnlyList<Type> Types) =>
         resolver.WithAddedModifier(t =>
         {
-            if (Types.Length == 0)
+            if (Types.Count == 0)
                 modifier(t);
             else
                 foreach (var type in Types)
@@ -57,14 +57,14 @@ public static class IJsonTypeInfoResolverEx
     public static IJsonTypeInfoResolver RemoveProperty(
         this IJsonTypeInfoResolver resolver,
         string PropertyName,
-        params Type[] Types) =>
+        params IReadOnlyList<Type> Types) =>
         resolver.WithAddedModifier(t => t.Properties.Remove(t.Properties.First(p => p.Name.Equals(PropertyName, StringComparison.Ordinal))), Types);
 
     public static IJsonTypeInfoResolver RemoveProperty(
         this IJsonTypeInfoResolver resolver,
         string PropertyName,
         StringComparison comparison,
-        params Type[] Types) =>
+        params IReadOnlyList<Type> Types) =>
         resolver.WithAddedModifier(t => t.Properties.Remove(t.Properties.First(p => p.Name.Equals(PropertyName, comparison))), Types);
 
     public static IJsonTypeInfoResolver OnDeserialized<T>(this IJsonTypeInfoResolver resolver, Action<T> OnDeserialized) =>

@@ -4,6 +4,7 @@ using MathCore.Vectors;
 
 namespace MathCore.Geolocation;
 
+/// <summary>Структура, представляющая географическое положение с координатами широты и долготы</summary>
 public readonly struct GeoLocationSpan : IEquatable<GeoLocationSpan>
 {
     /// <summary>Смещение по широте в градусах</summary>

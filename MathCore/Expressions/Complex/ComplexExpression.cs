@@ -113,7 +113,7 @@ public abstract class ComplexExpression
     [NotNull] protected abstract Expression GetIm();
 
     [NotNull, PublicAPI]
-    public Expression<TDelegate> Lambda<TDelegate>(params ParameterExpression[] Parameters)
+    public Expression<TDelegate> Lambda<TDelegate>(params IEnumerable<ParameterExpression> Parameters)
     {
         var t_complex   = typeof(MathCore.Complex);
         var constructor = t_complex.GetConstructor([typeof(double), typeof(double)]);

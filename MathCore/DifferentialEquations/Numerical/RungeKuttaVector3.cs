@@ -363,9 +363,9 @@ public class RungeKuttaVector3
 
         var k1 = f(t, y);
 
-        static Vector3D[] GetY(Vector3D[] Y, IReadOnlyList<Vector3D> YY, double dt, int M, params (Vector3D[] K, double k)[] kk)
+        static Vector3D[] GetY(Vector3D[] Y, IReadOnlyList<Vector3D> YY, double dt, int M, params IReadOnlyList<(Vector3D[] K, double k)> kk)
         {
-            for (int i = 0, mm = kk.Length; i < M; i++)
+            for (int i = 0, mm = kk.Count; i < M; i++)
             {
                 Vector3D yy = default;
                 for (var j = 0; j < mm; j++)
@@ -405,9 +405,9 @@ public class RungeKuttaVector3
                 (k4, 49 / 176d),
                 (k5, -5103 / 18656d)));
 
-        static Vector3D[] GetV(Vector3D[] Y, int M, params (Vector3D[] K, double k)[] kk)
+        static Vector3D[] GetV(Vector3D[] Y, int M, params IReadOnlyList<(Vector3D[] K, double k)> kk)
         {
-            for (int i = 0, mm = kk.Length; i < M; i++)
+            for (int i = 0, mm = kk.Count; i < M; i++)
             {
                 Vector3D y = default;
                 for (var j = 0; j < mm; j++)

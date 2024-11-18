@@ -26,16 +26,16 @@ public static class RandomExtensions
     /// <summary>Создать генератор случных элементов</summary>
     /// <typeparam name="T">Тип элементов списка</typeparam>
     /// <param name="Random">Датчик случайных чисел</param>
-    /// <param name="Items">Список элементов, на основе которого надо создать генератор</param>
+    /// <param name="Items">Элементы, на основе которых надо создать генератор</param>
     /// <returns>Генератор случайного значения из элементов списка</returns>
-    public static Randomizer<T> GetRandomizer<T>(this Random Random, IList<T> Items) => new(Items, Random);
+    public static Randomizer<T> GetRandomizer<T>(this Random Random, params IList<T> Items) => new(Items, Random);
 
     /// <summary>Создать генератор случных элементов</summary>
     /// <typeparam name="T">Тип элементов списка</typeparam>
     /// <param name="Random">Датчик случайных чисел</param>
     /// <param name="Items">Элементы, на основе которых надо создать генератор</param>
     /// <returns>Генератор случайного значения из элементов списка</returns>
-    public static Randomizer<T> GetRandomizer<T>(this Random Random, params T[] Items) => new(Items, Random);
+    public static RandomizerReadOnly<T> GetRandomizer<T>(this Random Random, params IReadOnlyList<T> Items) => new(Items, Random);
 
     /// <summary>Случайный элемент из указанного набора вариантов (ссылка на элемент)</summary>
     /// <typeparam name="T">Тип элементов</typeparam>
@@ -109,9 +109,9 @@ public static class RandomExtensions
     /// <param name="rnd">Датчик случайных чисел</param>
     /// <param name="Intervals">Интервал</param>
     /// <returns>Массив случайных чисел с равномерным распределением</returns>
-    public static double[] NextUniform(this Random rnd, params Interval[] Intervals)
+    public static double[] NextUniform(this Random rnd, params IReadOnlyList<Interval> Intervals)
     {
-        var count = Intervals.Length;
+        var count = Intervals.Count;
         var result = new double[count];
         for (var i = 0; i < count; i++)
             result[i] = rnd.NextUniform(Intervals[i].Length, Intervals[i].Middle);
@@ -385,9 +385,7 @@ public static class RandomExtensions
         return [.. result];
     }
 
-    public static T Next<T>(this Random rnd, params T[] items) => items[rnd.Next(items.Length)];
-
-    public static T Next<T>(this Random rnd, IReadOnlyList<T> list) => list[rnd.Next(list.Count)];
+    public static T Next<T>(this Random rnd, params IReadOnlyList<T> items) => items[rnd.Next(items.Count)];
 
     /// <summary>Случайных элемент из перечисленных вариантов</summary>
     /// <typeparam name="T">Тип вариантов выбора</typeparam>
@@ -395,12 +393,12 @@ public static class RandomExtensions
     /// <param name="count">Количество результатов выбора</param>
     /// <param name="variants">Перечисление вариантов выбора</param>
     /// <returns>Последовательность случайных вариантов</returns>
-    public static IEnumerable<T?> Next<T>(this Random rnd, int count, params T?[] variants)
+    public static IEnumerable<T?> Next<T>(this Random rnd, int count, params IReadOnlyList<T?> variants)
     {
         if (rnd is null) throw new ArgumentNullException(nameof(rnd));
         if (variants is null) throw new ArgumentNullException(nameof(variants));
 
-        var variants_count = variants.Length;
+        var variants_count = variants.Count;
         for (var i = 0; i < count; i++)
             yield return variants[rnd.Next(0, variants_count)];
     }

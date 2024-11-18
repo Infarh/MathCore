@@ -363,9 +363,9 @@ public class RungeKuttaVector2
 
         var k1 = f(t, y);
 
-        static Vector2D[] GetY(Vector2D[] Y, IReadOnlyList<Vector2D> YY, double dt, int M, params (Vector2D[] K, double k)[] kk)
+        static Vector2D[] GetY(Vector2D[] Y, IReadOnlyList<Vector2D> YY, double dt, int M, params IReadOnlyList<(Vector2D[] K, double k)> kk)
         {
-            for (int i = 0, mm = kk.Length; i < M; i++)
+            for (int i = 0, mm = kk.Count; i < M; i++)
             {
                 Vector2D yy = default;
                 for (var j = 0; j < mm; j++)
@@ -405,9 +405,9 @@ public class RungeKuttaVector2
                 (k4, 49 / 176d),
                 (k5, -5103 / 18656d)));
 
-        static Vector2D[] GetV(Vector2D[] Y, int M, params (Vector2D[] K, double k)[] kk)
+        static Vector2D[] GetV(Vector2D[] Y, int M, params IReadOnlyList<(Vector2D[] K, double k)> kk)
         {
-            for (int i = 0, mm = kk.Length; i < M; i++)
+            for (int i = 0, mm = kk.Count; i < M; i++)
             {
                 Vector2D y = default;
                 for (var j = 0; j < mm; j++)

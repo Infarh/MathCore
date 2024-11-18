@@ -16,16 +16,13 @@ public static class DelegateExtensions
     #region Expressions
 
     public static MCEx GetCallExpression(this Delegate d, Ex arg) => d.Method.GetCallExpression(arg);
-    public static MCEx GetCallExpression(this Delegate d, IEnumerable<Ex> arg) => d.Method.GetCallExpression(arg);
-    public static MCEx GetCallExpression(this Delegate d, params Ex[] arg) => d.Method.GetCallExpression(arg);
+    public static MCEx GetCallExpression(this Delegate d, params IEnumerable<Ex> arg) => d.Method.GetCallExpression(arg);
 
     public static MCEx GetCallExpression(this MethodInfo d, Ex arg) => Ex.Call(d, arg);
-    public static MCEx GetCallExpression(this MethodInfo d, IEnumerable<Ex> arg) => Ex.Call(d, arg);
-    public static MCEx GetCallExpression(this MethodInfo d, params Ex[] arg) => Ex.Call(d, arg);
-    public static MCEx GetCallExpression(this MethodInfo d, Ex instance, params Ex[] arg) => Ex.Call(instance, d, arg);
+    public static MCEx GetCallExpression(this MethodInfo d, params IEnumerable<Ex> arg) => Ex.Call(d, arg);
+    public static MCEx GetCallExpression(this MethodInfo d, Ex instance, params IEnumerable<Ex> arg) => Ex.Call(instance, d, arg);
 
-    public static InvocationExpression GetInvokeExpression(this Delegate d, IEnumerable<Ex> arg) => d.ToExpression().GetInvoke(arg);
-    public static InvocationExpression GetInvokeExpression(this Delegate d, params Ex[] arg) => d.ToExpression().GetInvoke(arg);
+    public static InvocationExpression GetInvokeExpression(this Delegate d, params IEnumerable<Ex> arg) => d.ToExpression().GetInvoke(arg);
 
     #endregion
 

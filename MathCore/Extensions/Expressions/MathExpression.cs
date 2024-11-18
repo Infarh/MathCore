@@ -28,6 +28,6 @@ public static class MathExpression
     public static MethodCallExpression Sqrt(Expression x) => ((Func<double, double>)Math.Sqrt).GetCallExpression(x);
     public static BinaryExpression SqrtPower(Expression x) => x.Power(1.ToExpression().Divide(2));
     public static BinaryExpression SqrtPower(Expression x, Expression y) => x.Power(1.ToExpression().Divide(y));
-    public static MethodCallExpression F(Delegate f, params Expression[] args) => f.GetCallExpression(args);
-    public static MethodCallExpression F(Func<double, double> f, params Expression[] args) => f.GetCallExpression(args);
+    public static MethodCallExpression F(Delegate f, params IEnumerable<Expression> args) => f.GetCallExpression(args);
+    public static MethodCallExpression F(Func<double, double> f, params IEnumerable<Expression> args) => f.GetCallExpression(args);
 }

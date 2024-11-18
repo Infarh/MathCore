@@ -325,12 +325,15 @@ public static class GPS
         var sin_lat1 = Sin(latitude1);
         var sin_lat2 = Sin(latitude2);
 
-        var angular_distance                         = 2 * Asin(Sqrt(sin_d_lat05 * sin_d_lat05 + cos_lat1 * cos_lat2 * sin_d_lon05 * sin_d_lon05));
-        var sin_angular_distance                     = Sin(angular_distance);
-        var cos_angular_distance                     = Cos(angular_distance);
-        var init_heading                             = Acos((sin_lat2 - sin_lat1 * Cos(angular_distance)) / (sin_angular_distance * cos_lat1));
-        if (double.IsNaN(init_heading)) init_heading = 0;
-        var final_heading                            = Acos((sin_lat1 - sin_lat2 * Cos(angular_distance)) / (sin_angular_distance * cos_lat2));
+        var angular_distance     = 2 * Asin(Sqrt(sin_d_lat05 * sin_d_lat05 + cos_lat1 * cos_lat2 * sin_d_lon05 * sin_d_lon05));
+        var sin_angular_distance = Sin(angular_distance);
+        var cos_angular_distance = Cos(angular_distance);
+        var init_heading         = Acos((sin_lat2 - sin_lat1 * Cos(angular_distance)) / (sin_angular_distance * cos_lat1));
+
+        if (double.IsNaN(init_heading)) 
+            init_heading = 0;
+
+        var final_heading = Acos((sin_lat1 - sin_lat2 * Cos(angular_distance)) / (sin_angular_distance * cos_lat2));
 
         double th12, th21;
         if (d_lon > 0)
