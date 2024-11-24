@@ -1,32 +1,22 @@
-﻿#nullable enable
+﻿#if NET5_0_OR_GREATER
 
-// ReSharper disable InconsistentNaming
-// ReSharper disable UnusedMember.Global
-// ReSharper disable UnusedMember.Local
-// ReSharper disable LoopCanBeConvertedToQuery
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable UnusedMethodReturnValue.Global
-
+#nullable enable
 namespace MathCore;
 
-public partial class Matrix
+public partial class Matrix<T>
 {
     public partial class Array
     {
-        /// <summary>Создает матрицу Z-преобразования заданного порядка.</summary>
-        /// <param name="Order">Порядок матрицы Z-преобразования.</param>
-        /// <returns>Матрица Z-преобразования указанного порядка.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">Если <paramref name="Order"/> меньше 1.</exception>
-        public static double[,] CrateZTransformMatrixArray(int Order)
+        public static T[,] CrateZTransformMatrixArray(int Order)
         {
             if (Order < 1) throw new ArgumentOutOfRangeException(nameof(Order), Order, "Порядок должен быть больше 0");
 
-            var result = new double[Order, Order];
-            result[0, 0] = 1;
+            var result = new T[Order, Order];
+            result[0, 0] = T.One;
 
             for (var j = 1; j < Order; j++)
             {
-                result[0, j] = 1;
+                result[0, j] = T.One;
 
                 for (var i = 1; i < Order; i++)
                     result[i, j] = result[i, j - 1] + result[i - 1, j - 1];
@@ -40,11 +30,7 @@ public partial class Matrix
         }
     }
 
-    /// <summary>Создать матрицу Z-преобразования заданного порядка</summary>
-    /// <param name="Order">Порядок матрицы Z-преобразования</param>
-    /// <returns>Матрица Z-преобразования указанного порядка</returns>
-    /// <exception cref="ArgumentOutOfRangeException">Если <paramref name="Order"/> меньше 1</exception>
-    public static Matrix GetZTransformMatrix(int Order)
+    public static Matrix<T> GetZTransformMatrix(int Order)
     {
         if (Order < 1) throw new ArgumentOutOfRangeException(nameof(Order), Order, "Порядок должен быть больше 0");
 
@@ -58,9 +44,9 @@ public partial class Matrix
     /// <param name="Up">Верхняя диагональ</param>
     /// <param name="RightPart">Правая часть системы уравнений</param>
     /// <param name="Result">Вектор результата</param>
-    public static void TridiagonalAlgorithm(double[] Down, double[] Middle, double[] Up, double[] RightPart, ref double[]? Result)
+    public static void TridiagonalAlgorithm(T[] Down, T[] Middle, T[] Up, T[] RightPart, ref T[]? Result)
     {
-        Result ??= new double[Middle.Length];
+        Result ??= new T[Middle.Length];
         TridiagonalAlgorithm(Down, Middle, Up, RightPart, Result);
     }
 
@@ -69,9 +55,9 @@ public partial class Matrix
     /// <param name="Middle">Главная диагональ</param>
     /// <param name="Up">Верхняя диагональ</param>
     /// <param name="RightPart">Правая часть системы уравнений</param>
-    public static double[] TridiagonalAlgorithm(double[] Down, double[] Middle, double[] Up, double[] RightPart)
+    public static T[] TridiagonalAlgorithm(T[] Down, T[] Middle, T[] Up, T[] RightPart)
     {
-        double[] result = null!;
+        T[] result = null!;
         TridiagonalAlgorithm(Down, Middle, Up, RightPart, ref result);
         return result;
     }
@@ -82,7 +68,7 @@ public partial class Matrix
     /// <param name="Up">Верхняя диагональ</param>
     /// <param name="RightPart">Правая часть системы уравнений</param>
 #if !NET8_0_OR_GREATER
-    public static void TridiagonalAlgorithm(double[] Down, double[] Middle, double[] Up, double[] RightPart, double[] Result)
+    public static void TridiagonalAlgorithm(T[] Down, T[] Middle, T[] Up, T[] RightPart, T[] Result)
     {
         if (Down.Length != Middle.Length - 1)
             throw new ArgumentException(
@@ -100,7 +86,7 @@ public partial class Matrix
 
         RightPart.CopyTo(Result, 0);
 
-        var up = (double[])Up.Clone();
+        var up = (T[])Up.Clone();
 
         up[0] /= Middle[0];
         Result[0] = RightPart[0] / Middle[0];
@@ -117,7 +103,7 @@ public partial class Matrix
             Result[n] -= up[n] * Result[n + 1];
     }
 #else
-    public static void TridiagonalAlgorithm(double[] Down, double[] Middle, double[] Up, double[] RightPart, double[] Result)
+    public static void TridiagonalAlgorithm(T[] Down, T[] Middle, T[] Up, T[] RightPart, T[] Result)
     {
         if (Down.Length != Middle.Length - 1)
             throw new ArgumentException(
@@ -139,11 +125,8 @@ public partial class Matrix
         var n = Down.Length;
 
         RightPart.AsSpan().CopyTo(Result);
-        const int mas_stackalloc_len = 256;
-        double[]? pool_array = null;
-        var up = n <= mas_stackalloc_len
-            ? stackalloc double[n] 
-            : (pool_array = System.Buffers.ArrayPool<double>.Shared.Rent(n)).AsSpan(0, n);
+        var pool_array = System.Buffers.ArrayPool<T>.Shared.Rent(n);
+        var up = pool_array.AsSpan(0, n);
 
         try
         {
@@ -160,55 +143,37 @@ public partial class Matrix
 
             Result[n] = (Result[n] - Down[n - 1] * Result[n - 1]) / (Middle[n] - Down[n - 1] * up[n - 1]);
 
-            while(n-- > 0)
+            while (n-- > 0)
                 Result[n] -= up[n] * Result[n + 1];
         }
         finally
         {
-            if (pool_array != null)
-                System.Buffers.ArrayPool<double>.Shared.Return(pool_array);
+            System.Buffers.ArrayPool<T>.Shared.Return(pool_array);
         }
     }
 #endif
 
-    /// <summary>SVD-разложение</summary>
-    /// <param name="matrix">Разлагаемая матрица</param>
-    /// <param name="u">Матрица левых сингулярных векторов</param>
-    /// <param name="s">Вектор собственных чисел</param>
-    /// <param name="v">Матрица правых сингулярных векторов</param>
-    /// <exception cref="ArgumentNullException">matrix is <see langword="null"/></exception>
-    /// <exception cref="InvalidOperationException">Метод не сошёлся за 30 итераций</exception>
-    // ReSharper disable once FunctionComplexityOverflow
-    // ReSharper disable once CyclomaticComplexity
-    public void SVD(out Matrix U, out double[] s, out Matrix V)
+    /// <summary>SVD-разложение матрицы</summary>
+    /// <param name="U"></param>
+    /// <param name="w"></param>
+    /// <param name="V"></param>
+    public void SVD(out Matrix<T> U, out T[] w, out Matrix<T> V)
     {
-        Array.SVD(_Data, out var u, out s, out var v);
+        Array.SVD(_Data, out var u, out w, out var v);
         U = new(u);
         V = new(v);
     }
 
-    /// <summary>SVD-разложение</summary>
-    /// <param name="matrix">Разлагаемая матрица</param>
-    /// <param name="u">Матрица левых сингулярных векторов</param>
-    /// <param name="w">Вектор собственных чисел</param>
-    /// <param name="v">Матрица правых сингулярных векторов</param>
-    /// <exception cref="ArgumentNullException">matrix is <see langword="null"/></exception>
-    /// <exception cref="InvalidOperationException">Метод не сошёлся за 30 итераций</exception>
-    public void SVD(out Matrix U, out Matrix S, out Matrix V)
+    /// <summary>Вычисляет сингулярное разложение (SVD) текущей матрицы.</summary>
+    /// <param name="U">Левые сингулярные векторы матрицы.</param>
+    /// <param name="S">Сингулярные значения матрицы.</param>
+    /// <param name="V">Правые сингулярные векторы матрицы.</param>
+    public void SVD(out Matrix<T> U, out Matrix<T> S, out Matrix<T> V)
     {
-        SVD(out U, out double[] s, out V);
-        S = Diagonal(s);
-    }
-
-    public (Matrix U, double[] s, Matrix V) SVD()
-    {
-        Array.SVD(_Data, out var u, out var s, out var v);
-        return (new(u), s, new(v));
-    }
-
-    public (Matrix Q, Matrix R) QR()
-    {
-        Array.QRDecomposition(_Data, out var q, out var r);
-        return (new(q), new(r));
+        SVD(out U, out T[] w, out V);
+        S = CreateDiagonal(w);
     }
 }
+
+
+#endif

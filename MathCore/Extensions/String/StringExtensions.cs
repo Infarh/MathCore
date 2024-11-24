@@ -225,6 +225,10 @@ public static class StringExtensions
 
     public static string JoinStrings(this IEnumerable<string> strings, string separator) => string.Join(separator, strings);
 
+#if NET5_0_OR_GREATER
+    public static string JoinStrings(this IEnumerable<string> strings, char separator) => string.Join(separator, strings);
+#endif
+
     public static byte[] ComputeSHA256(this string text, Encoding? encoding = null) => (encoding ?? Encoding.Default).GetBytes(text).ComputeSHA256();
 
     public static byte[] ComputeMD5(this string text, Encoding? encoding = null) => (encoding ?? Encoding.Default).GetBytes(text).ComputeMD5();

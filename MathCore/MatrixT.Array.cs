@@ -1,25 +1,27 @@
-﻿#nullable enable
+﻿#if NET5_0_OR_GREATER
+
+#nullable enable
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 // ReSharper disable InconsistentNaming
 
 namespace MathCore;
 
-public partial class Matrix
+public partial class Matrix<T>
 {
-    public partial class Array
+    public static partial class Array
     {
-        /// <summary>Преобразовать двумерный массив элементов матрицы в массив массивов-столбцов</summary>
+        /// <summary>Преобразовать двумерный массив элементов матрицы в массивов-столбцов</summary>
         /// <param name="matrix">Двумерный массив элементов матрицы</param>
         /// <returns>Массив столбцов</returns>
         /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-        public static double[][] MatrixToColsArray(double[,] matrix)
+        public static T[][] MatrixToColsArray(T[,] matrix)
         {
             GetLength(matrix, out var N, out var M);
-            var result = new double[M][];
+            var result = new T[M][];
             for (var j = 0; j < M; j++)
             {
-                var col = new double[N];
+                var col = new T[N];
                 for (var i = 0; i < N; i++) col[i] = matrix[i, j];
                 result[j] = col;
             }
@@ -27,18 +29,18 @@ public partial class Matrix
             return result;
         }
 
-        /// <summary>Преобразовать двумерный массив элементов матрицы в массив массивов-строк</summary>
+        /// <summary>Преобразовать двумерный массив элементов матрицы в массивов-строк</summary>
         /// <param name="matrix">Двумерный массив элементов матрицы</param>
         /// <returns>Массив строк</returns>
         /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-        public static double[][] MatrixToRowsArray(double[,] matrix)
+        public static T[][] MatrixToRowsArray(T[,] matrix)
         {
             GetLength(matrix, out var N, out var M);
-            var result = new double[N][];
+            var result = new T[N][];
             for (var i = 0; i < N; i++)
             {
-                var row = new double[M];
-                for (var j = 0; j < M; j++) 
+                var row = new T[M];
+                for (var j = 0; j < M; j++)
                     row[j] = matrix[i, j];
 
                 result[i] = row;
@@ -47,34 +49,30 @@ public partial class Matrix
             return result;
         }
 
-        /// <summary>Создать двумерный массив массив матрицы из массива столбцов</summary>
+        /// <summary>Создать двумерный массив матрицы из массива столбцов</summary>
         /// <param name="cols">Массив столбцов матрицы</param>
         /// <returns>Двумерный массив элементов матрицы</returns>
         /// <exception cref="ArgumentNullException"><paramref name="cols"/> is <see langword="null"/></exception>
-        public static double[,] ColsArrayToMatrix(params double[][] cols)
+        public static T[,] ColsArrayToMatrix(params T[][] cols)
         {
-            if (cols is null) throw new ArgumentNullException(nameof(cols));
-
-            var M = cols.Length;
+            var M = cols.NotNull().Length;
             var N = cols[0].Length;
-            var result = new double[N, M];
+            var result = new T[N, M];
             for (var i = 0; i < N; i++)
                 for (var j = 0; j < M; j++)
                     result[i, j] = cols[j][i];
             return result;
         }
 
-        /// <summary>Создать двумерный массив массив матрицы из массива строк</summary>
+        /// <summary>Создать двумерный массив матрицы из массива строк</summary>
         /// <param name="rows">Массив строк матрицы</param>
         /// <returns>Двумерный массив элементов матрицы</returns>
         /// <exception cref="ArgumentNullException"><paramref name="rows"/> is <see langword="null"/></exception>
-        public static double[,] RowsArrayToMatrix(params double[][] rows)
+        public static T[,] RowsArrayToMatrix(params T[][] rows)
         {
-            if (rows is null) throw new ArgumentNullException(nameof(rows));
-
-            var N = rows.Length;
+            var N = rows.NotNull().Length;
             var M = rows[0].Length;
-            var result = new double[N, M];
+            var result = new T[N, M];
             for (var i = 0; i < N; i++)
                 for (var j = 0; j < M; j++)
                     result[i, j] = rows[i][j];
@@ -87,12 +85,10 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentException">Матрица не содержит элементов, или если матрица не квадратная</exception>
         [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
-        public static bool IsMatrixSingular(double[,] matrix)
+        public static bool IsMatrixSingular(T[,] matrix)
         {
-            if (matrix is null) throw new ArgumentNullException(nameof(matrix));
-            if (matrix.Length == 0) throw new ArgumentException("Матрица не содержит элементов", nameof(matrix));
+            if (matrix.NotNull().Length == 0) throw new ArgumentException("Матрица не содержит элементов", nameof(matrix));
             if (matrix.GetLength(0) != matrix.GetLength(1)) throw new ArgumentException("Матрица не квадратная", nameof(matrix));
-
 
             return Rank(matrix) != matrix.GetLength(0);
         }
@@ -102,10 +98,9 @@ public partial class Matrix
         /// <returns>Ранг матрицы</returns>
         /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentException">Матрица не содержит элементов</exception>
-        public static int Rank(double[,] matrix)
+        public static int Rank(T[,] matrix)
         {
-            if (matrix is null) throw new ArgumentNullException(nameof(matrix));
-            if (matrix.GetLength(0) == 0 || matrix.GetLength(1) == 0) throw new ArgumentException("Матрица не содержит элементов", nameof(matrix));
+            if (matrix.NotNull().GetLength(0) == 0 || matrix.GetLength(1) == 0) throw new ArgumentException("Матрица не содержит элементов", nameof(matrix));
 
             GetTriangle(matrix, out var rank, out _);
             return rank;
@@ -116,13 +111,12 @@ public partial class Matrix
         /// <returns>Двумерный массив, содержащий на главной диагонали элементы диагональной матрицы</returns>
         /// <exception cref="ArgumentNullException"><paramref name="elements"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentException">Массив не содержит элементов</exception>
-        public static double[,] CreateDiagonal(params double[] elements)
+        public static T[,] CreateDiagonal(params T[] elements)
         {
-            if (elements is null) throw new ArgumentNullException(nameof(elements));
-            if (elements.Length == 0) throw new ArgumentException("Массив не содержит элементов", nameof(elements));
+            if (elements.NotNull().Length == 0) throw new ArgumentException("Массив не содержит элементов", nameof(elements));
 
             var N = elements.Length;
-            var result = new double[N, N];
+            var result = new T[N, N];
             for (var i = 0; i < N; i++) result[i, i] = elements[i];
             return result;
         }
@@ -132,13 +126,12 @@ public partial class Matrix
         /// <returns>Массив элементов тени матрицы</returns>
         /// <exception cref="ArgumentException">Массив не содержит элементов</exception>
         /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-        public static double[] GetMatrixShadow(double[,] matrix)
+        public static T[] GetMatrixShadow(T[,] matrix)
         {
-            if (matrix is null) throw new ArgumentNullException(nameof(matrix));
-            if (matrix.GetLength(0) == 0 || matrix.GetLength(1) == 0) throw new ArgumentException("Массив не содержит элементов", nameof(matrix));
+            if (matrix.NotNull().GetLength(0) == 0 || matrix.GetLength(1) == 0) throw new ArgumentException("Массив не содержит элементов", nameof(matrix));
 
             GetLength(matrix, out var N, out var M);
-            var result = new double[Math.Min(M, N)];
+            var result = new T[Math.Min(M, N)];
             for (var i = 0; i < result.Length; i++) result[i] = matrix[i, i];
             return result;
         }
@@ -148,10 +141,9 @@ public partial class Matrix
         /// <returns>Перечисление элементов тени матрицы</returns>
         /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentException">Массив не содержит элементов</exception>
-        public static IEnumerable<double> EnumerateMatrixShadow(double[,] matrix)
+        public static IEnumerable<T> EnumerateMatrixShadow(T[,] matrix)
         {
-            if (matrix is null) throw new ArgumentNullException(nameof(matrix));
-            if (matrix.GetLength(0) == 0 || matrix.GetLength(1) == 0) throw new ArgumentException("Массив не содержит элементов", nameof(matrix));
+            if (matrix.NotNull().GetLength(0) == 0 || matrix.GetLength(1) == 0) throw new ArgumentException("Массив не содержит элементов", nameof(matrix));
 
             GetLength(matrix, out var N, out var M);
             for (int i = 0, length = Math.Min(M, N); i < length; i++) yield return matrix[i, i];
@@ -164,7 +156,7 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException"><paramref name="p"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentException">Матрица перестановок не квадратная</exception>
         /// <exception cref="ArgumentException">Число строк матрицы не равно числу столбцов матрицы перестановок</exception>
-        public static void Permutation_Left(double[,] matrix, double[,] p)
+        public static void Permutation_Left(T[,] matrix, T[,] p)
         {
             if (matrix is null) throw new ArgumentNullException(nameof(matrix));
             if (p is null) throw new ArgumentNullException(nameof(p));
@@ -176,10 +168,10 @@ public partial class Matrix
             var m = matrix.CloneObject();
             // ReSharper disable CompareOfFloatsByEqualityOperator
             for (var i = 0; i < N; i++)
-                if ((int)p[i, i] != 1)
+                if (p[i, i] != T.One)
                 {
                     var j = 0;
-                    while (j < N && (int)p[i, j] != 1) j++;
+                    while (j < N && p[i, j] != T.One) j++;
                     if (j == N) continue;
                     if (p[i, j] != p[j, i])
                         throw new InvalidOperationException($"Ошибка в матрице перестановок: элемент p[{i},{j}] не соответствует элементу p[{j},{i}]");
@@ -198,7 +190,7 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException"><paramref name="p"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentException">Матрица перестановок не квадратная</exception>
         /// <exception cref="ArgumentException">Число строк матрицы не равно числу столбцов матрицы перестановок</exception>
-        public static void Permutation_Right(double[,] matrix, double[,] p)
+        public static void Permutation_Right(T[,] matrix, T[,] p)
         {
             if (matrix is null) throw new ArgumentNullException(nameof(matrix));
             if (p is null) throw new ArgumentNullException(nameof(p));
@@ -209,12 +201,12 @@ public partial class Matrix
             if (N == 1) return;
             var m = matrix.CloneObject();
             for (var i = 0; i < N; i++)
-                if ((int)p[i, i] != 1)
+                if (p[i, i] != T.One)
                 {
                     var j = 0;
-                    while (j < N && (int)p[i, j] != 1) j++;
+                    while (j < N && p[i, j] != T.One) j++;
                     if (j == N) continue;
-                    if (!p[i, j].Equals(p[j, i]))
+                    if (p[i, j] != p[j, i])
                         throw new InvalidOperationException($"Ошибка в матрице перестановок: элемент p[{i},{j}] не соответствует элементу p[{j},{i}]");
                     if (j >= i) continue;
                     m.SwapCols(i, j);
@@ -228,15 +220,15 @@ public partial class Matrix
         /// <param name="p">Матрица перестановок (строк)</param>
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="p"/></exception>
-        private static void Permutation_Left_Internal(double[,] matrix, double[,] p)
+        private static void Permutation_Left_Internal(T[,] matrix, T[,] p)
         {
             GetRowsCount(p, out var N);
             if (N == 1) return;
             for (var i = 0; i < N; i++)
-                if ((int)p[i, i] != 1)
+                if (p[i, i] != T.One)
                 {
                     var j = 0;
-                    while (j < N && (int)p[i, j] != 1) j++;
+                    while (j < N && p[i, j] != T.One) j++;
                     if (j == N || j >= i) continue;
                     matrix.SwapRows(i, j);
                 }
@@ -247,15 +239,15 @@ public partial class Matrix
         /// <param name="p">Матрица перестановок (столбцов)</param>
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="p"/></exception>
-        private static void Permutation_Right_Internal(double[,] matrix, double[,] p)
+        private static void Permutation_Right_Internal(T[,] matrix, T[,] p)
         {
             GetRowsCount(p, out var N);
             if (N == 1) return;
             for (var i = 0; i < N; i++)
-                if ((int)p[i, i] != 1)
+                if (p[i, i] != T.One)
                 {
                     var j = 0;
-                    while (j < N && (int)p[i, j] != 1) j++;
+                    while (j < N && p[i, j] != T.One) j++;
                     if (j == N || j >= i) continue;
                     matrix.SwapCols(i, j);
                 }
@@ -266,9 +258,9 @@ public partial class Matrix
         /// <param name="M">Число столбцов</param>
         /// <param name="Creator">Функция, принимающая номер строки и номер столбца и возвращающая значение элемента матрицы</param>
         /// <returns>Массив элементов матрицы</returns>
-        public static double[,] CreateMatrix(int N, int M, Func<int, int, double> Creator)
+        public static T[,] CreateMatrix(int N, int M, Func<int, int, T> Creator)
         {
-            var result = new double[N, M];
+            var result = new T[N, M];
             for (var n = 0; n < N; n++)
                 for (var m = 0; m < M; m++)
                     result[n, m] = Creator(n, m);
@@ -280,14 +272,12 @@ public partial class Matrix
         /// <returns>Двумерный массив элементов матрицы столбца</returns>
         /// <exception cref="ArgumentNullException">Если массив <paramref name="data"/> не определён</exception>
         /// <exception cref="ArgumentException">Если массив <paramref name="data"/> имеет длину 0</exception>
-        public static double[,] CreateColArray(params double[] data)
+        public static T[,] CreateColArray(params T[] data)
         {
-            if (data is null)
-                throw new ArgumentNullException(nameof(data));
-            if (data.Length == 0)
+            if (data.NotNull().Length == 0)
                 throw new ArgumentException("Длина массива должна быть больше 0", nameof(data));
 
-            var result = new double[data.Length, 1];
+            var result = new T[data.Length, 1];
             for (var i = 0; i < data.Length; i++) result[i, 0] = data[i];
             return result;
         }
@@ -297,12 +287,11 @@ public partial class Matrix
         /// <returns>Двумерный массив элементов матрицы строки</returns>
         /// <exception cref="ArgumentNullException">Если массив <paramref name="data"/> не определён</exception>
         /// <exception cref="ArgumentException">Если массив <paramref name="data"/> имеет длину 0</exception>
-        public static double[,] CreateRowArray(params double[] data)
+        public static T[,] CreateRowArray(params T[] data)
         {
-            if (data is null) throw new ArgumentNullException(nameof(data));
-            if (data.Length == 0) throw new ArgumentException("Длина массива должна быть больше 0", nameof(data));
+            if (data.NotNull().Length == 0) throw new ArgumentException("Длина массива должна быть больше 0", nameof(data));
 
-            var result = new double[1, data.Length];
+            var result = new T[1, data.Length];
             for (var j = 0; j < data.Length; j++) result[0, j] = data[j];
             return result;
         }
@@ -314,7 +303,7 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
         [DST]
         public static void GetLength(
-            double[,] matrix,
+            T[,] matrix,
             out int N,
             out int M,
             [CallerArgumentExpression(nameof(matrix))] string? MatrixArgumentName = null)
@@ -326,22 +315,12 @@ public partial class Matrix
             M = matrix.GetLength(1);
         }
 
-        public static (int N, int M) GetLength(
-            double[,] matrix,
-            [CallerArgumentExpression(nameof(matrix))] string? MatrixArgumentName = null)
-        {
-            if (matrix is null)
-                throw new ArgumentNullException(MatrixArgumentName ?? nameof(matrix));
-
-            return (matrix.GetLength(0), matrix.GetLength(1));
-        }
-
         /// <summary>Определение размера квадратной матрицы</summary>
         /// <param name="matrix">Квадратная матрица, размер которой надо определить</param>
         /// <returns>Возвращает число строк матрицы</returns>
         /// <exception cref="ArgumentNullException">Если передана пустая ссылка на массив</exception>
         /// <exception cref="InvalidOperationException">Если матрица не является квадратной</exception>
-        public static int GetSquareLength(double[,] matrix, [CallerArgumentExpression(nameof(matrix))] string? MatrixArgumentName = null)
+        public static int GetSquareLength(T[,] matrix, [CallerArgumentExpression(nameof(matrix))] string? MatrixArgumentName = null)
         {
             if (matrix is null) throw new ArgumentNullException(MatrixArgumentName ?? nameof(matrix));
             var n = matrix.GetLength(0);
@@ -356,7 +335,7 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
         [DST]
         public static void GetRowsCount(
-            double[,] matrix,
+            T[,] matrix,
             out int N,
             [CallerArgumentExpression(nameof(matrix))] string? MatrixArgumentName = null)
         {
@@ -371,7 +350,7 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
         [DST]
         public static void GetColsCount(
-            double[,] matrix,
+            T[,] matrix,
             out int M,
             [CallerArgumentExpression(nameof(matrix))] string? MatrixArgumentName = null)
         {
@@ -385,23 +364,14 @@ public partial class Matrix
         /// <returns>Квадратный двумерный массив размерности NxN с 1 на главной диагонали</returns>
         /// <exception cref="ArgumentOutOfRangeException">В случае если размерность матрицы <paramref name="N"/> меньше 1</exception>
         [DST]
-        public static double[,] GetUnitaryArrayMatrix(int N)
+        public static T[,] GetUnitaryArrayMatrix(int N)
         {
             if (N < 1) throw new ArgumentOutOfRangeException(nameof(N), "Размерность матрицы должна быть больше 0");
 
-            var result = new double[N, N];
+            var result = new T[N, N];
             for (var i = 0; i < N; i++)
-                result[i, i] = 1;
+                result[i, i] = T.One;
             return result;
-        }
-
-        /// <summary>Инициализирует матрицу как единичную</summary>
-        public static void InitializeIdentity(double[,] matrix)
-        {
-            var size = matrix.GetLength(0);
-            for (var i = 0; i < size; i++)
-                for (var j = 0; j < size; j++)
-                    matrix[i, j] = (i == j) ? 1.0 : 0.0;
         }
 
         /// <summary>Получить единичную матрицу размерности NxN</summary>
@@ -410,14 +380,14 @@ public partial class Matrix
         /// <exception cref="ArgumentException">В случае если матрица <paramref name="matrix"/> не квадратная</exception>
         /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
         [DST]
-        public static void InitializeUnitaryMatrix(double[,] matrix)
+        public static void InitializeUnitaryMatrix(T[,] matrix)
         {
             GetLength(matrix, out var N, out var M);
             if (N != M) throw new ArgumentException("Матрица не квадратная", nameof(matrix));
 
             for (var i = 0; i < N; i++)
                 for (var j = 0; j < M; j++)
-                    matrix[i, j] = i == j ? 1 : 0;
+                    matrix[i, j] = i == j ? T.One : T.Zero;
         }
 
         /// <summary>Трансвекция матрицы</summary>
@@ -427,7 +397,7 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="A"/></exception>
         /// <exception cref="ArgumentException">В случае если матрица <paramref name="A"/> не квадратная</exception>
         /// <exception cref="ArgumentException">В случае если опорная строка <paramref name="i0"/> матрицы <paramref name="A"/> &lt; 0 и &gt; числа строк матрицы</exception>
-        public static double[,] GetTransvection(double[,] A, int i0)
+        public static T[,] GetTransvection(T[,] A, int i0)
         {
             GetRowsCount(A, out var N);
             if (N != A.GetLength(1)) throw new ArgumentException("Трансвекция неквадратной матрицы невозможна", nameof(A));
@@ -436,7 +406,7 @@ public partial class Matrix
             var result = GetUnitaryArrayMatrix(N);
             for (var i = 0; i < N; i++)
                 result[i, i0] = i == i0
-                    ? 1 / A[i0, i0]
+                    ? T.One / A[i0, i0]
                     : -A[i, i0] / A[i0, i0];
             return result;
         }
@@ -450,7 +420,7 @@ public partial class Matrix
         /// <exception cref="ArgumentException">В случае если матрица <paramref name="A"/> не квадратная</exception>
         /// <exception cref="ArgumentException">В случае если опорный столбец <paramref name="j0"/> матрицы <paramref name="A"/> меньше 0 или больше числа столбцов матрицы</exception>
         /// <exception cref="ArgumentException">В случае если размер матрицы <paramref name="result"/> не совпадает с размером матрицы <paramref name="A"/></exception>
-        public static void Transvection(double[,] A, int j0, double[,] result)
+        public static void Transvection(T[,] A, int j0, T[,] result)
         {
             if (result is null) throw new ArgumentNullException(nameof(result));
 
@@ -463,7 +433,7 @@ public partial class Matrix
             InitializeUnitaryMatrix(result);
             for (var i = 0; i < N; i++)
                 result[i, j0] = i == j0
-                    ? 1 / A[j0, j0]
+                    ? T.One / A[j0, j0]
                     : -A[i, j0] / A[j0, j0];
         }
 
@@ -474,12 +444,12 @@ public partial class Matrix
         /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер столбца <paramref name="j"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа столбцов матрицы</exception>
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
         [DST]
-        public static double[,] GetCol(double[,] matrix, int j)
+        public static T[,] GetCol(T[,] matrix, int j)
         {
             GetRowsCount(matrix, out var N);
             if (j < 0 || j >= N) throw new ArgumentOutOfRangeException(nameof(j), j, "Указанный номер столбца матрицы выходит за границы массива");
 
-            var result = new double[N, 1];
+            var result = new T[N, 1];
             for (var i = 0; i < N; i++)
                 result[i, 0] = matrix[i, j];
             return result;
@@ -492,12 +462,12 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
         /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер столбца <paramref name="j"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа столбцов матрицы</exception>
         [DST]
-        public static double[] GetCol_Array(double[,] matrix, int j)
+        public static T[] GetCol_Array(T[,] matrix, int j)
         {
             GetRowsCount(matrix, out var N);
             if (j < 0 || j >= N) throw new ArgumentOutOfRangeException(nameof(j), j, "Указанный номер столбца матрицы выходит за границы массива");
 
-            var result = new double[N];
+            var result = new T[N];
             for (var i = 0; i < N; i++)
                 result[i] = matrix[i, j];
             return result;
@@ -512,7 +482,7 @@ public partial class Matrix
         /// <exception cref="ArgumentException">В случае если размер массива <paramref name="result"/> не соответствует числу строк матрицы</exception>
         /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер столбца <paramref name="j"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа столбцов матрицы</exception>
         [DST]
-        public static void GetCol_Array(double[,] matrix, int j, double[] result)
+        public static void GetCol_Array(T[,] matrix, int j, T[] result)
         {
             GetRowsCount(matrix, out var N);
 
@@ -531,13 +501,13 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер строки <paramref name="i"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа строк матрицы</exception>
         [DST]
-        public static double[,] GetRow(double[,] matrix, int i)
+        public static T[,] GetRow(T[,] matrix, int i)
         {
             GetColsCount(matrix, out var M);
 
             if (i < 0 || i >= M) throw new ArgumentOutOfRangeException(nameof(i), i, "Указанный номер строки матрицы выходит за границы массива");
 
-            var result = new double[1, M];
+            var result = new T[1, M];
             for (var j = 0; j < M; j++)
                 result[0, j] = matrix[i, j];
             return result;
@@ -550,13 +520,13 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер строки <paramref name="i"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа строк матрицы</exception>
         [DST]
-        public static double[] GetRow_Array(double[,] matrix, int i)
+        public static T[] GetRow_Array(T[,] matrix, int i)
         {
             GetColsCount(matrix, out var M);
 
             if (i < 0 || i >= M) throw new ArgumentOutOfRangeException(nameof(i), i, "Указанный номер строки матрицы выходит за границы массива");
 
-            var result = new double[M];
+            var result = new T[M];
             for (var j = 0; j < M; j++)
                 result[j] = matrix[i, j];
             return result;
@@ -571,7 +541,7 @@ public partial class Matrix
         /// <exception cref="ArgumentException">В случае если размер массива <paramref name="result"/> не соответствует числу столбцов матрицы</exception>
         /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер строки <paramref name="i"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа строк матрицы</exception>
         [DST]
-        public static void GetRow_Array(double[,] matrix, int i, double[] result)
+        public static void GetRow_Array(T[,] matrix, int i, T[] result)
         {
             GetColsCount(matrix, out var M);
 
@@ -589,7 +559,7 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         /// <exception cref="ArgumentException">В случае если матрица <paramref name="matrix"/> не квадратная</exception>
         /// <exception cref="InvalidOperationException">Невозможно найти обратную матрицу для вырожденной матрицы</exception>
-        public static double[,] Inverse(double[,] matrix)
+        public static T[,] Inverse(T[,] matrix)
         {
             var result = Inverse(matrix, out var p);
             Permutation_Left_Internal(result, p);
@@ -604,7 +574,7 @@ public partial class Matrix
         /// <exception cref="ArgumentException">В случае если матрица <paramref name="matrix"/> не квадратная</exception>
         /// <exception cref="InvalidOperationException">Невозможно найти обратную матрицу для вырожденной матрицы</exception>
         /// <exception cref="ArgumentOutOfRangeException">Размерность массива 0х0</exception>
-        public static double[,] Inverse(double[,] matrix, out double[,] p)
+        public static T[,] Inverse(T[,] matrix, out T[,] p)
         {
             GetLength(matrix, out var N, out var M);
 
@@ -623,7 +593,7 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="result"/> не задана</exception>
         /// <exception cref="ArgumentException">В случае если матрица <paramref name="matrix"/> не квадратная</exception>
-        public static void Inverse(double[,] matrix, double[,] result)
+        public static void Inverse(T[,] matrix, T[,] result)
         {
             if (matrix is null) throw new ArgumentNullException(nameof(matrix));
             if (matrix.GetLength(0) != matrix.GetLength(1)) throw new ArgumentException("Матрица не квадратная", nameof(matrix));
@@ -646,7 +616,7 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException"><paramref name="matrix"/> == <see langword="null"/></exception>
         /// <exception cref="ArgumentException">В случае если матрица системы <paramref name="matrix"/> не квадратная</exception>
         /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
-        public static double[,] GetSolve(double[,] matrix, double[,] b, out double[,] p)
+        public static T[,] GetSolve(T[,] matrix, T[,] b, out T[,] p)
         {
             var x = b;
             return TrySolve(matrix, ref x, out p, true)
@@ -663,7 +633,7 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException"><paramref name="matrix"/> == <see langword="null"/></exception>
         /// <exception cref="ArgumentException">В случае если матрица системы <paramref name="matrix"/> не квадратная</exception>
         /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
-        public static void Solve(double[,] matrix, ref double[,] b, out double[,] p, bool clone_b = false)
+        public static void Solve(T[,] matrix, ref T[,] b, out T[,] p, bool clone_b = false)
         {
             if (!TrySolve(matrix, ref b, out p, clone_b))
                 throw new InvalidOperationException("Невозможно найти обратную матрицу для вырожденной матрицы");
@@ -679,7 +649,7 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException"><paramref name="b"/> == <see langword="null"/></exception>
         /// <exception cref="ArgumentException">В случае если матрица системы <paramref name="matrix"/> не квадратная</exception>
         /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
-        public static bool TrySolve(double[,] matrix, ref double[,] b, out double[,] p, bool clone_b = false)
+        public static bool TrySolve(T[,] matrix, ref T[,] b, out T[,] p, bool clone_b = false)
         {
             if (matrix is null) throw new ArgumentNullException(nameof(matrix));
             if (b is null) throw new ArgumentNullException(nameof(b));
@@ -689,7 +659,7 @@ public partial class Matrix
 
             var temp_b = b.CloneObject();
             Triangulate(ref matrix, ref temp_b, out p, out var d);
-            if (d == 0) 
+            if (d == T.Zero)
                 return false;
 
             GetColsCount(b, out var b_M);
@@ -698,15 +668,15 @@ public partial class Matrix
             for (var i0 = Math.Min(N, M) - 1; i0 >= 0; i0--)
             {
                 var pivot = matrix[i0, i0];
-                if (pivot != 1)
+                if (pivot != T.One)
                     for (var j = 0; j < b_M; j++)
                         temp_b[i0, j] /= pivot;
 
                 for (var i = i0 - 1; i >= 0; i--)
                 {
                     var k = matrix[i, i0];
-                    if (k == 0) continue;
-                    matrix[i, i0] = 0d;
+                    if (T.IsZero(k)) continue;
+                    matrix[i, i0] = T.Zero;
                     for (var j = 0; j < b_M; j++)
                         temp_b[i, j] -= temp_b[i0, j] * k;
                 }
@@ -723,10 +693,10 @@ public partial class Matrix
         /// <returns>Транспонированная матрица</returns>
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         [DST]
-        public static double[,] Transpose(double[,] matrix)
+        public static T[,] Transpose(T[,] matrix)
         {
             GetLength(matrix, out var N, out var M);
-            var result = new double[M, N];
+            var result = new T[M, N];
             for (var i = 0; i < N; i++)
                 for (var j = 0; j < M; j++)
                     result[j, i] = matrix[i, j];
@@ -739,7 +709,7 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="result"/> не задана</exception>
         [DST]
-        public static void Transpose(double[,] matrix, double[,] result)
+        public static void Transpose(T[,] matrix, T[,] result)
         {
             GetLength(matrix, out var N, out var M);
             if (result is null) throw new ArgumentNullException(nameof(result));
@@ -761,7 +731,7 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         /// <exception cref="ArgumentOutOfRangeException">В случае если номер строки <paramref name="n"/> меньше 0, или больше, либо равен числу строк матрицы <paramref name="matrix"/></exception>
         /// <exception cref="ArgumentOutOfRangeException">В случае если номер столбца <paramref name="m"/> меньше 0, или больше, либо равен числу столбцов матрицы <paramref name="matrix"/></exception>
-        public static double GetAdjunct(double[,] matrix, int n, int m)
+        public static T GetAdjunct(T[,] matrix, int n, int m)
         {
             if (matrix is null) throw new ArgumentNullException(nameof(matrix));
             if (n < 0 || n >= matrix.GetLength(0))
@@ -781,7 +751,7 @@ public partial class Matrix
         /// <param name="N">Число строк</param>
         /// <param name="M">Число столбцов</param>
         /// <param name="result">Минор матрицы</param>
-        private static void CopyMinor(double[,] matrix, int n, int m, int N, int M, double[,] result)
+        private static void CopyMinor(T[,] matrix, int n, int m, int N, int M, T[,] result)
         {
             var i0 = 0;
             for (var i = 0; i < N; i++)
@@ -799,17 +769,17 @@ public partial class Matrix
         /// <param name="matrix">Массив элементов матрицы</param>
         /// <param name="n">Номер строки</param>
         /// <param name="m">Номер столбца</param>
-        /// <returns>Минор элемента матрицы [n,m]</returns>
+        /// <returns>Минор элемента матрицы [n, m]</returns>
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         /// <exception cref="ArgumentOutOfRangeException">В случае если номер строки <paramref name="n"/> меньше 0, или больше, либо равен числу строк матрицы <paramref name="matrix"/></exception>
         /// <exception cref="ArgumentOutOfRangeException">В случае если номер столбца <paramref name="m"/> меньше 0, или больше, либо равен числу столбцов матрицы <paramref name="matrix"/></exception>
-        public static double[,] GetMinor(double[,] matrix, int n, int m)
+        public static T[,] GetMinor(T[,] matrix, int n, int m)
         {
             GetLength(matrix, out var N, out var M);
             if (n < 0 || n >= N) throw new ArgumentOutOfRangeException(nameof(n), n, "Указанный номер строки вышел за пределы границ массива");
             if (m < 0 || m >= M) throw new ArgumentOutOfRangeException(nameof(m), m, "Указанный номер столбца вышел за пределы границ массива");
 
-            var result = new double[N - 1, M - 1];
+            var result = new T[N - 1, M - 1];
             CopyMinor(matrix, n, m, N, M, result);
             return result;
         }
@@ -824,7 +794,7 @@ public partial class Matrix
         /// <exception cref="ArgumentOutOfRangeException">В случае если номер столбца <paramref name="m"/> меньше 0, или больше, либо равен числу столбцов матрицы <paramref name="matrix"/></exception>
         /// <exception cref="ArgumentException">В случае если число строк матрицы результата <paramref name="result"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         /// <exception cref="ArgumentException">В случае если число столбцов матрицы результата <paramref name="result"/> не равно числу столбцов исходной матрицы <paramref name="matrix"/></exception>
-        public static void GetMinor(double[,] matrix, int n, int m, double[,] result)
+        public static void GetMinor(T[,] matrix, int n, int m, T[,] result)
         {
             if (result is null) throw new ArgumentNullException(nameof(result));
 
@@ -846,7 +816,7 @@ public partial class Matrix
         /// <returns>Определитель матрицы</returns>
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         /// <exception cref="ArgumentException">В случае если матрица <paramref name="matrix"/> не квадратная</exception>
-        public static double GetDeterminant(double[,] matrix)
+        public static T GetDeterminant(T[,] matrix)
         {
             if (matrix is null) throw new ArgumentNullException(nameof(matrix));
             if (matrix.GetLength(0) != matrix.GetLength(1)) throw new ArgumentException("Матрица не квадратная", nameof(matrix));
@@ -855,7 +825,7 @@ public partial class Matrix
 
             switch (N)
             {
-                case 0: return double.NaN;
+                case 0: throw new InvalidOperationException("Матрица не задана");
                 case 1: return matrix[0, 0];
                 case 2:
                     return matrix[0, 0] * matrix[1, 1]
@@ -874,9 +844,9 @@ public partial class Matrix
         }
 
         /// <summary>Поменять значения местами</summary>
-        /// <typeparam name="T">Тип значения</typeparam>
+        /// <typeparam name="TValue">Тип значения</typeparam>
         [DST]
-        private static void Swap<T>(ref T v1, ref T v2) => (v1, v2) = (v2, v1);
+        private static void Swap<TValue>(ref TValue v1, ref TValue v2) => (v1, v2) = (v2, v1);
 
         /// <summary>Разложение матрицы на верхне-треугольную и нижне-треугольную</summary>
         /// <remarks>
@@ -893,29 +863,29 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
         /// <exception cref="ArgumentOutOfRangeException">В случае если размерность матрицы <paramref name="matrix"/> меньше 1</exception>
         public static bool GetLUPDecomposition(
-            double[,] matrix,
-            out double[,] l,
-            out double[,] u,
-            out double[,] p,
-            out double d
+            T[,] matrix,
+            out T[,] l,
+            out T[,] u,
+            out T[,] p,
+            out T d
         )
         {
             GetRowsCount(matrix, out var N);
 
             l = GetUnitaryArrayMatrix(N); // L - изначально единичная матрица
             u = matrix.CloneObject(); // U - изначально клон исходной матрицы
-            d = 1d; // Начальное значение определителя матрицы - единичный элемент относительно операции умножения
+            d = T.One; // Начальное значение определителя матрицы - единичный элемент относительно операции умножения
 
             var p_index = new int[N];
             for (var i = 0; i < N; i++) p_index[i] = i; // Создаём вектор коммутации
 
             for (var j = 0; j < N; j++)
             {
-                var max = 0d;
+                var max = T.Zero;
                 var max_index = -1;
                 for (var i = j; i < N; i++) // Ищем строку с максимальным ведущим элементом
                 {
-                    var abs = Math.Abs(u[i, j]); // Ищем элемент в строке, максимальный по модулю
+                    var abs = T.Abs(u[i, j]); // Ищем элемент в строке, максимальный по модулю
                     if (abs <= max) continue;
                     max = abs;
                     max_index = i;
@@ -926,7 +896,7 @@ public partial class Matrix
                     l = null; // Очищаем выходные переменные
                     u = null;
                     p = null;
-                    d = 0d; // Приравниваем определитель к нулю
+                    d = T.Zero; // Приравниваем определитель к нулю
                     return false; // Возвращаем ложь - операция не может быть выполнена
                 }
 
@@ -942,8 +912,8 @@ public partial class Matrix
                 for (var i = j + 1; i < N; i++) // Для всех строк ниже текущей
                 {
                     l[i, j] = u[i, j] / main; // Проводим операции над присоединённой матрицей
-                    for (var k = 0; k <= j; k++) u[i, k] = 0d; // Очищаем начало очередной строки
-                    if (l[i, j] == 0) continue; // Если очередной ведущий элемент строки уже ноль, то пропускаем её
+                    for (var k = 0; k <= j; k++) u[i, k] = T.Zero; // Очищаем начало очередной строки
+                    if (T.IsZero(l[i, j])) continue; // Если очередной ведущий элемент строки уже ноль, то пропускаем её
                     for (var k = j + 1; k < N; k++) // Вычитаем из элементов строки ...
                         u[i, k] -= l[i, j] * u[j, k];
                 }
@@ -966,21 +936,21 @@ public partial class Matrix
         /// <returns>Истина, если процедура декомпозиции прошла успешно. Ложь, если матрица вырождена</returns>
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
         /// <exception cref="ArgumentOutOfRangeException">В случае если размерность матрицы N меньше 1</exception>
-        public static bool GetLUDecomposition(double[,] matrix, out double[,] l, out double[,] u, out double d)
+        public static bool GetLUDecomposition(T[,] matrix, out T[,] l, out T[,] u, out T d)
         {
             GetRowsCount(matrix, out var N);
 
             l = GetUnitaryArrayMatrix(N);
             u = matrix.CloneObject();
-            d = 1d;
+            d = T.One;
 
             for (var j = 0; j < N; j++)
             {
-                if (u[j, j] == 0)
+                if (T.IsZero(u[j, j]))
                 {
                     l = null;
                     u = null;
-                    d = 0d;
+                    d = T.Zero;
                     return false;
                 }
 
@@ -989,8 +959,8 @@ public partial class Matrix
                 for (var i = j + 1; i < N; i++)
                 {
                     l[i, j] = u[i, j] / main;
-                    for (var k = 0; k <= j; k++) u[i, k] = 0d;
-                    if (l[i, j] == 0) continue;
+                    for (var k = 0; k <= j; k++) u[i, k] = T.Zero;
+                    if (T.IsZero(l[i, j])) continue;
                     for (var k = j + 1; k < N; k++) u[i, k] -= l[i, j] * u[j, k];
                 }
             }
@@ -1012,17 +982,17 @@ public partial class Matrix
         /// <exception cref="ArgumentException">Матрица не квадратная</exception>
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
         public static bool GetLUPDecomposition(
-            double[,] matrix,
-            out double[,] c,
-            out double[,] p,
-            out double d)
+            T[,] matrix,
+            out T[,] c,
+            out T[,] p,
+            out T d)
         {
             GetRowsCount(matrix, out var N);
             if (N != matrix.GetLength(1))
                 throw new ArgumentException("Матрица не квадратная", nameof(matrix));
 
             c = matrix.CloneObject();
-            d = 1d;
+            d = T.One;
 
             var p_index = new int[N];
             for (var i = 0; i < N; i++) p_index[i] = i;
@@ -1030,11 +1000,11 @@ public partial class Matrix
             for (var j = 0; j < N; j++)
             {
                 //поиск опорного элемента
-                var max = 0d;
+                var max = T.Zero;
                 var max_index = -1;
                 for (var i = j; i < N; i++)
                 {
-                    var abs = Math.Abs(c[i, j]);
+                    var abs = T.Abs(c[i, j]);
                     if (abs <= max) continue;
                     max = abs;
                     max_index = i;
@@ -1044,7 +1014,7 @@ public partial class Matrix
                 {
                     p = null;
                     c = null;
-                    d = 0d;
+                    d = T.Zero;
                     return false;
                 }
 
@@ -1060,7 +1030,7 @@ public partial class Matrix
                 for (var i = j + 1; i < N; i++)
                 {
                     c[i, j] /= main;
-                    if (c[i, j] == 0) continue;
+                    if (T.IsZero(c[i, j])) continue;
                     for (var k = j + 1; k < N; k++) c[i, k] -= c[i, j] * c[j, k];
                 }
             }
@@ -1076,23 +1046,23 @@ public partial class Matrix
         /// <returns>Истина, если процедура выполнена успешно</returns>
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
         /// <exception cref="ArgumentException">Матрица не квадратная</exception>
-        public static bool GetLUPDecomposition(double[,] matrix, out double[,] c, out double d)
+        public static bool GetLUPDecomposition(T[,] matrix, out T[,] c, out T d)
         {
             GetRowsCount(matrix, out var N);
             if (N != matrix.GetLength(1))
                 throw new ArgumentException("Матрица не квадратная", nameof(matrix));
 
             c = matrix.CloneObject();
-            d = 1d;
+            d = T.One;
 
             for (var j = 0; j < N; j++)
             {
                 //поиск опорного элемента
-                var max = 0d;
+                var max = T.Zero;
                 var max_index = -1;
                 for (var i = j; i < N; i++)
                 {
-                    var abs = Math.Abs(c[i, j]);
+                    var abs = T.Abs(c[i, j]);
                     if (abs <= max) continue;
                     max = abs;
                     max_index = i;
@@ -1101,7 +1071,7 @@ public partial class Matrix
                 if (max_index < 0)
                 {
                     c = null;
-                    d = 0d;
+                    d = T.Zero;
                     return false;
                 }
 
@@ -1116,7 +1086,7 @@ public partial class Matrix
                 for (var i = j + 1; i < N; i++)
                 {
                     c[i, j] /= main;
-                    if (c[i, j] == 0) continue;
+                    if (T.IsZero(c[i, j])) continue;
                     for (var k = j + 1; k < N; k++) c[i, k] -= c[i, j] * c[j, k];
                 }
             }
@@ -1130,7 +1100,7 @@ public partial class Matrix
         /// <returns>Истина, если разложение выполнено успешно</returns>
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
         /// <exception cref="ArgumentException">Матрица не квадратная</exception>
-        public static bool GetLUDecomposition(double[,] matrix, out double[,] c)
+        public static bool GetLUDecomposition(T[,] matrix, out T[,] c)
         {
             GetRowsCount(matrix, out var N);
             if (N != matrix.GetLength(1))
@@ -1140,7 +1110,7 @@ public partial class Matrix
 
             for (var j = 0; j < N; j++)
             {
-                if (c[j, j] == 0)
+                if (T.IsZero(c[j, j]))
                 {
                     c = null;
                     return false;
@@ -1149,7 +1119,7 @@ public partial class Matrix
                 for (var i = j + 1; i < N; i++)
                 {
                     c[i, j] /= c[j, j];
-                    if (c[i, j] == 0) continue;
+                    if (T.IsZero(c[i, j])) continue;
                     for (var k = j + 1; k < N; k++) c[i, k] -= c[i, j] * c[j, k];
                 }
             }
@@ -1161,12 +1131,12 @@ public partial class Matrix
         /// <param name="indexes">Массив индексов элементов столбцов</param>
         /// <returns>Матрица перестановок</returns>
         // ReSharper disable once SuggestBaseTypeForParameter
-        private static double[,] CreatePermutationMatrix(int[] indexes)
+        private static T[,] CreatePermutationMatrix(int[] indexes)
         {
             var N = indexes.Length;
-            var P = new double[N, N];
+            var P = new T[N, N];
             for (var i = 0; i < N; i++)
-                P[i, indexes[i]] = 1;
+                P[i, indexes[i]] = T.One;
             return P;
         }
 
@@ -1177,7 +1147,7 @@ public partial class Matrix
         /// <param name="d">Определитель матрицы</param>
         /// <returns>Треугольная матрица</returns>
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
-        public static double[,] GetTriangle(double[,] matrix, out double[,] p, out int rank, out double d)
+        public static T[,] GetTriangle(T[,] matrix, out T[,] p, out int rank, out T d)
         {
             if (matrix is null) throw new ArgumentNullException(nameof(matrix));
 
@@ -1192,7 +1162,7 @@ public partial class Matrix
         /// <param name="d">Определитель матрицы</param>
         /// <returns>Треугольная матрица</returns>
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
-        public static double[,] GetTriangle(double[,] matrix, out int rank, out double d)
+        public static T[,] GetTriangle(T[,] matrix, out int rank, out T d)
         {
             if (matrix is null) throw new ArgumentNullException(nameof(matrix));
 
@@ -1210,7 +1180,7 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
         /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
-        public static double[,] GetTriangle(double[,] matrix, double[,] b, out int rank, out double d)
+        public static T[,] GetTriangle(T[,] matrix, T[,] b, out int rank, out T d)
         {
             if (matrix is null) throw new ArgumentNullException(nameof(matrix));
             if (b is null) throw new ArgumentNullException(nameof(b));
@@ -1231,12 +1201,12 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
         /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
-        public static double[,] GetTriangle(
-            double[,] matrix,
-            ref double[,] b,
-            out double[,] p,
+        public static T[,] GetTriangle(
+            T[,] matrix,
+            ref T[,] b,
+            out T[,] p,
             out int rank,
-            out double d,
+            out T d,
             bool clone_b = true
         )
         {
@@ -1250,10 +1220,10 @@ public partial class Matrix
         /// <param name="d">Определитель матрицы (произведение диагональных элементов)</param>
         /// <returns>Ранг матрицы (число ненулевых строк)</returns>
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
-        public static int Triangulate(double[,] matrix, out double[,] p, out double d)
+        public static int Triangulate(T[,] matrix, out T[,] p, out T d)
         {
             GetLength(matrix, out var N, out var M);
-            d = 1d;
+            d = T.One;
 
             var p_index = new int[N];
             for (var i = 0; i < N; i++)
@@ -1262,18 +1232,18 @@ public partial class Matrix
             var N1 = Math.Min(N, M);
             for (var i0 = 0; i0 < N1; i0++)
             {
-                if (matrix[i0, i0] == 0)
+                if (T.IsZero(matrix[i0, i0]))
                 {
                     var nonzero_index = i0 + 1;
-                    while (nonzero_index < N && matrix[nonzero_index, i0] == 0) nonzero_index++;
+                    while (nonzero_index < N && T.IsZero(matrix[nonzero_index, i0])) nonzero_index++;
                     if (nonzero_index == N)
                     {
                         p = CreatePermutationMatrix(p_index);
                         for (var i = i0; i < N; i++)
                             for (var j = i0; j < M; j++)
-                                matrix[i, j] = 0d;
+                                matrix[i, j] = T.Zero;
 
-                        d = 0d;
+                        d = T.Zero;
                         return i0;
                     }
 
@@ -1287,10 +1257,10 @@ public partial class Matrix
 
                 //Нормируем строку основной матрицы по первому элементу
                 for (var i = i0 + 1; i < N; i++)
-                    if (matrix[i, i0] != 0)
+                    if (!T.IsZero(matrix[i, i0]))
                     {
                         var k = matrix[i, i0] / main;
-                        matrix[i, i0] = 0d;
+                        matrix[i, i0] = T.Zero;
 
                         for (var j = i0 + 1; j < M; j++)
                             matrix[i, j] -= matrix[i0, j] * k;
@@ -1306,21 +1276,21 @@ public partial class Matrix
         /// <param name="d">Определитель матрицы (произведение диагональных элементов)</param>
         /// <returns>Ранг матрицы (число ненулевых строк)</returns>
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
-        public static int Triangulate(double[,] matrix, out double d)
+        public static int Triangulate(T[,] matrix, out T d)
         {
             GetLength(matrix, out var N, out var M);
-            d = 1d;
+            d = T.One;
             var rank = Math.Min(N, M);
 
             for (var i0 = 0; i0 < rank; i0++)
             {
-                if (matrix[i0, i0] == 0)
+                if (T.IsZero(matrix[i0, i0]))
                 {
-                    var max = 0d;
+                    var max = T.Zero;
                     var max_index = -1;
                     for (var i1 = i0 + 1; i1 < N; i1++)
                     {
-                        var abs = Math.Abs(matrix[i1, i0]);
+                        var abs = T.Abs(matrix[i1, i0]);
                         if (abs > max)
                         {
                             max = abs;
@@ -1332,8 +1302,8 @@ public partial class Matrix
                     {
                         for (var i = i0; i < N; i++)
                             for (var j = i0; j < M; j++)
-                                matrix[i, j] = 0d;
-                        d = 0d;
+                                matrix[i, j] = T.Zero;
+                        d = T.Zero;
                         return i0;
                     }
 
@@ -1346,10 +1316,10 @@ public partial class Matrix
 
                 //Нормируем строку основной матрицы по первому элементу
                 for (var i = i0 + 1; i < N; i++)
-                    if (matrix[i, i0] != 0)
+                    if (!T.IsZero(matrix[i, i0]))
                     {
                         var k = matrix[i, i0] / main;
-                        matrix[i, i0] = 0d;
+                        matrix[i, i0] = T.Zero;
                         for (var j = i0 + 1; j < M; j++)
                             matrix[i, j] -= matrix[i0, j] * k;
                     }
@@ -1366,27 +1336,27 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
         /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
-        public static int Triangulate(double[,] matrix, double[,] b, out double d)
+        public static int Triangulate(T[,] matrix, T[,] b, out T d)
         {
             GetLength(matrix, out var N, out var M);
             if (b is null) throw new ArgumentNullException(nameof(b));
             GetLength(b, out var B_N, out var B_M);
             if (B_N != N) throw new ArgumentException("Число строк присоединённой матрицы не равно числу строк исходной матрицы");
 
-            d = 1d;
+            d = T.One;
             var rank = Math.Min(N, M);
             for (var i0 = 0; i0 < rank; i0++)
             {
-                if (matrix[i0, i0] == 0)
+                if (T.IsZero(matrix[i0, i0]))
                 {
-                    var max = 0d;
+                    var max = T.Zero;
                     var max_index = -1;
                     for (var i1 = i0 + 1; i1 < N; i1++)
                     {
-                        var abs = Math.Abs(matrix[i1, i0]);
+                        var abs = T.Abs(matrix[i1, i0]);
                         if (abs <= max) continue;
 
-                        max       = abs;
+                        max = abs;
                         max_index = i1;
                     }
 
@@ -1394,11 +1364,11 @@ public partial class Matrix
                     {
                         for (var i = i0; i < N; i++)
                         {
-                            for (var j = i0; j < M; j++) matrix[i, j] = 0d;
-                            for (var j = 0; j < B_M; j++) b[i, j] = 0d;
+                            for (var j = i0; j < M; j++) matrix[i, j] = T.Zero;
+                            for (var j = 0; j < B_M; j++) b[i, j] = T.Zero;
                         }
 
-                        d = 0d;
+                        d = T.Zero;
                         return i0;
                     }
 
@@ -1411,10 +1381,10 @@ public partial class Matrix
                 d *= pivot;
                 //Нормируем строку основной матрицы по первому элементу
                 for (var i = i0 + 1; i < N; i++)
-                    if (matrix[i, i0] != 0)
+                    if (!T.IsZero(matrix[i, i0]))
                     {
                         var k = matrix[i, i0] / pivot;
-                        matrix[i, i0] = 0d;
+                        matrix[i, i0] = T.Zero;
 
                         for (var j = i0 + 1; j < M; j++)
                             matrix[i, j] -= matrix[i0, j] * k;
@@ -1428,7 +1398,7 @@ public partial class Matrix
 
             for (var i = rank; i < N; i++)
                 for (var j = 0; j < B_M; j++)
-                    b[i, j] = 0d;
+                    b[i, j] = T.Zero;
             return rank;
         }
 
@@ -1441,7 +1411,7 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
         /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
-        public static int Triangulate(ref double[,] matrix, double[,] b, out double d, bool clone = true)
+        public static int Triangulate(ref T[,] matrix, T[,] b, out T d, bool clone = true)
         {
             GetRowsCount(matrix, out var N);
             if (b is null) throw new ArgumentNullException(nameof(b));
@@ -1465,10 +1435,10 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
         /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         public static int Triangulate(
-            ref double[,] matrix,
-            ref double[,] b,
-            out double[,] p,
-            out double d,
+            ref T[,] matrix,
+            ref T[,] b,
+            out T[,] p,
+            out T d,
             bool clone_matrix = true,
             bool clone_b = true
         )
@@ -1483,7 +1453,7 @@ public partial class Matrix
             if (clone_b)
                 b = b.CloneObject();
 
-            d = 1d;
+            d = T.One;
             var p_index = new int[N];
             for (var i = 0; i < N; i++)
                 p_index[i] = i;
@@ -1491,13 +1461,13 @@ public partial class Matrix
             var N1 = Math.Min(N, M);
             for (var i0 = 0; i0 < N1; i0++)
             {
-                if (matrix[i0, i0] == 0)
+                if (T.IsZero(matrix[i0, i0]))
                 {
-                    var max = 0d;
+                    var max = T.Zero;
                     var max_index = -1;
                     for (var i1 = i0 + 1; i1 < N; i1++)
                     {
-                        var abs = Math.Abs(matrix[i1, i0]);
+                        var abs = T.Abs(matrix[i1, i0]);
                         if (abs > max)
                         {
                             max = abs;
@@ -1511,12 +1481,12 @@ public partial class Matrix
                         for (var i = i0; i < N; i++)
                         {
                             for (var j = i0; j < M; j++)
-                                matrix[i, j] = 0d;
+                                matrix[i, j] = T.Zero;
                             for (var j = 0; j < B_M; j++)
-                                b[i, j] = 0d;
+                                b[i, j] = T.Zero;
                         }
 
-                        d = 0d;
+                        d = T.Zero;
                         return i0;
                     }
 
@@ -1531,10 +1501,10 @@ public partial class Matrix
 
                 //Нормируем строку основной матрицы по первому элементу
                 for (var i = i0 + 1; i < N; i++)
-                    if (matrix[i, i0] != 0)
+                    if (!T.IsZero(matrix[i, i0]))
                     {
                         var k = matrix[i, i0] / pivot;
-                        matrix[i, i0] = 0d;
+                        matrix[i, i0] = T.Zero;
                         for (var j = i0 + 1; j < M; j++)
                             matrix[i, j] -= matrix[i0, j] * k;
                         for (var j = 0; j < B_M; j++)
@@ -1546,7 +1516,8 @@ public partial class Matrix
             if (N1 >= N) return N1;
             for (var i = N1; i < N; i++)
                 for (var j = 0; j < B_M; j++)
-                    b[i, j] = 0d;
+                    b[i, j] = T.Zero;
+
             return N1;
         }
 
@@ -1555,7 +1526,7 @@ public partial class Matrix
         /// <param name="B">Второй массив</param>
         /// <returns>Истина, если оба массивы не определены, либо если оба массивы - один и тот же массив, либо если элементы массивов идентичны</returns>
         /// <exception cref="ArgumentNullException">matrix is <see langword="null"/></exception>
-        public static bool AreEquals(double[,]? A, double[,]? B)
+        public static bool AreEquals(T[,]? A, T[,]? B)
         {
             if (ReferenceEquals(A, B)) return true;
             if (B is null || A is null) return false;
@@ -1567,6 +1538,7 @@ public partial class Matrix
                 for (var j = 0; j < M; j++)
                     if (!A[i, j].Equals(B[i, j]))
                         return false;
+
             return true;
         }
 
@@ -1576,18 +1548,18 @@ public partial class Matrix
         /// <param name="eps">Точность сравнения</param>
         /// <returns>Истина, если оба массивы не определены, либо если оба массивы - один и тот же массив, либо если элементы массивов идентичны</returns>
         /// <exception cref="ArgumentNullException">matrix is <see langword="null"/></exception>
-        public static bool AreEquals(double[,]? A, double[,]? B, double eps)
+        public static bool AreEquals(T[,]? A, T[,]? B, T eps)
         {
             if (ReferenceEquals(A, B)) return true;
             if (B is null || A is null) return false;
 
             GetLength(A, out var N, out var M);
-            if (N != B.GetLength(0) || M != B.GetLength(1)) 
+            if (N != B.GetLength(0) || M != B.GetLength(1))
                 return false;
 
             for (var i = 0; i < N; i++)
                 for (var j = 0; j < M; j++)
-                    if (Math.Abs(A[i, j] - B[i, j]) > eps)
+                    if (T.Abs(A[i, j] - B[i, j]) > eps)
                         return false;
 
             return true;
@@ -1597,15 +1569,15 @@ public partial class Matrix
         /// <param name="matrix">Массив элементов матрицы</param>
         /// <returns>Максимальная из сумм абсолютных значений элементов строк</returns>
         /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-        public static double GetMaxRowAbsSum(double[,] matrix)
+        public static T GetMaxRowAbsSum(T[,] matrix)
         {
             GetLength(matrix, out var N, out var M);
-            var max = 0d;
+            var max = T.Zero;
             for (var i = 0; i < N; i++)
             {
-                var row_sum = 0d;
+                var row_sum = T.Zero;
                 for (var j = 0; j < M; j++)
-                    row_sum += Math.Abs(matrix[i, j]);
+                    row_sum += T.Abs(matrix[i, j]);
                 if (row_sum > max)
                     max = row_sum;
             }
@@ -1617,15 +1589,15 @@ public partial class Matrix
         /// <param name="matrix">Массив элементов матрицы</param>
         /// <returns>Максимальная из сумм абсолютных значений элементов столбцов</returns>
         /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-        public static double GetMaxColAbsSum(double[,] matrix)
+        public static T GetMaxColAbsSum(T[,] matrix)
         {
             GetLength(matrix, out var N, out var M);
-            var max = 0d;
+            var max = T.Zero;
             for (var j = 0; j < M; j++)
             {
-                var col_sum = 0d;
+                var col_sum = T.Zero;
                 for (var i = 0; i < N; i++)
-                    col_sum += Math.Abs(matrix[i, j]);
+                    col_sum += T.Abs(matrix[i, j]);
 
                 if (col_sum > max)
                     max = col_sum;
@@ -1638,22 +1610,22 @@ public partial class Matrix
         /// <param name="matrix">Массив элементов матрицы</param>
         /// <returns>Среднеквадратичное значение элементов матрицы</returns>
         /// <exception cref="ArgumentNullException">matrix is <see langword="null"/></exception>
-        public static double GetRMS(double[,] matrix)
+        public static T GetRMS(T[,] matrix)
         {
             GetLength(matrix, out var N, out var M);
 
-            var s = 0d;
+            var s = T.Zero;
             for (var i = 0; i < N; i++)
                 for (var j = 0; j < M; j++)
                     s += matrix[i, j] * matrix[i, j];
 
-            return Math.Sqrt(s);
+            return T.Sqrt(s);
         }
 
         /// <summary>Квадрат числа</summary>
         /// <param name="x">Значение, квадрат которого требуется получить</param>
         /// <returns>Квадрат указанного числа</returns>
-        private static double Sqr(double x) => x * x;
+        private static T Sqr(T x) => x * x;
 
         /// <summary>Метод проверки сходимости метода Метод Гаусса — Зейделя</summary>
         /// <remarks>Метод меняет местами матрицы решения текущего и прошлого шагов, если метод Гаусса — Зейделя не сошёлся на текущем шаге</remarks>
@@ -1664,14 +1636,14 @@ public partial class Matrix
         /// <param name="M">Число столбцов матрицы решения</param>
         /// <returns>Истина, если метод сошёлся Метод Гаусса — Зейделя</returns>
         private static bool GaussSeidelConverge(
-            ref double[,] new_x,
-            ref double[,] last_x,
-            [GreaterOrEqual(double.Epsilon)] double eps,
+            ref T[,] new_x,
+            ref T[,] last_x,
+            T eps,
             int N,
             int M
         )
         {
-            var sum = 0d;
+            var sum = T.Zero;
             for (var i = 0; i < N; i++)
                 for (var j = 0; j < M; j++)
                     sum += Sqr(new_x[i, j] - last_x[i, j]);
@@ -1696,12 +1668,12 @@ public partial class Matrix
         /// <exception cref="ArgumentException">Число строк массива неизвестных не совпадает с числом строк матрицы системы</exception>
         /// <exception cref="ArgumentException">Число строк массива правой части СЛАУ не совпадает с числом строк матрицы системы</exception>
         /// <exception cref="ArgumentException">Число столбцов массива правых частей не совпадает с числом столбцов массива неизвестных</exception>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="eps"/> &lt;= <see cref="double"/>.<see cref="double.Epsilon"/></exception> Solve
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="eps"/> &lt;= <see cref="T"/>.<see cref="T.Epsilon"/></exception> Solve
         public static void GaussSeidelSolve(
-            double[,] matrix,
-            double[,] x,
-            double[,] b,
-            [GreaterOrEqual(double.Epsilon)] double eps = double.Epsilon
+            T[,] matrix,
+            T[,] x,
+            T[,] b,
+            T eps
         )
         {
             if (matrix is null) throw new ArgumentNullException(nameof(matrix));
@@ -1709,7 +1681,7 @@ public partial class Matrix
             if (matrix.GetLength(0) != matrix.GetLength(1)) throw new ArgumentException("Матрица системы не квадратная", nameof(matrix));
             if (x is null) throw new ArgumentNullException(nameof(x));
             if (b is null) throw new ArgumentNullException(nameof(b));
-            if (eps < double.Epsilon) throw new ArgumentOutOfRangeException(nameof(eps), eps, "Точность должна быть больше 0");
+            if (eps <= T.Zero) throw new ArgumentOutOfRangeException(nameof(eps), eps, "Точность должна быть больше 0");
             if (x.GetLength(0) != matrix.GetLength(0))
                 throw new ArgumentException("Число строк массива неизвестных не совпадает с числом строк матрицы системы", nameof(x));
             if (b.GetLength(0) != matrix.GetLength(0))
@@ -1726,7 +1698,7 @@ public partial class Matrix
                 for (var j_x = 0; j_x < x_M; j_x++)
                     for (var i = 0; i < N; i++)
                     {
-                        var d = 0d;
+                        var d = T.Zero;
                         for (var j = 0; j < i; j++)
                             d += matrix[i, j] * x1[j, j_x];
                         for (var j = i + 1; j < N; j++)
@@ -1746,7 +1718,7 @@ public partial class Matrix
         /// <param name="r">Верхне-треугольная матрица - должна быть передана квадратная матрица nxn != null</param>
         /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentException">Матрица не содержит элементов</exception>
-        public static void QRDecomposition(double[,] matrix, double[,] q, double[,] r)
+        public static void QRDecomposition(T[,] matrix, T[,] q, T[,] r)
         {
             if (matrix is null) throw new ArgumentNullException(nameof(matrix));
             if (matrix.Length == 0) throw new ArgumentException("Матрица не содержит элементов", nameof(matrix));
@@ -1758,11 +1730,11 @@ public partial class Matrix
             // По столбцам матрицы matrix (j - номер обрабатываемого столбца)
             for (var j = 0; j < M; j++)
             {
-                double n;
+                T n;
                 // По предыдущим столбцам матрицы u (j - номер обрабатываемого столбца)
                 for (var k = 0; k < j; k++)
                 {
-                    var s = default(double);
+                    var s = default(T);
                     n = default; // скалярное произведение столбца на самого себя
                     // Вычисление скалярного произведения v*u и квадрата длины u
                     for (var i = 0; i < N; i++)
@@ -1782,7 +1754,7 @@ public partial class Matrix
                 n = default;
                 for (var i = 0; i < N; i++)
                     n += u[i, j] * u[i, j];
-                n = Math.Sqrt(n);
+                n = T.Sqrt(n);
                 for (var i = 0; i < N; i++)
                     q[i, j] = u[i, j] / n;
             }
@@ -1790,7 +1762,7 @@ public partial class Matrix
             for (var i = 0; i < N; i++) // Произведение qT*matrix
                 for (var j = i; j < M; j++)
                 {
-                    var s = default(double);
+                    var s = default(T);
                     for (var k = 0; k < N; k++)
                         s += q[k, i] * matrix[k, j];
                     r[i, j] = s;
@@ -1803,14 +1775,14 @@ public partial class Matrix
         /// <param name="r">Верхне-треугольная матрица - создаётся квадратная матрица nxn != null</param>
         /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentException">Матрица не содержит элементов</exception>
-        public static void QRDecomposition(double[,] matrix, out double[,] q, out double[,] r)
+        public static void QRDecomposition(T[,] matrix, out T[,] q, out T[,] r)
         {
             if (matrix is null) throw new ArgumentNullException(nameof(matrix));
             if (matrix.Length == 0) throw new ArgumentException("Матрица не содержит элементов", nameof(matrix));
 
             GetLength(matrix, out var N, out var M);
-            q = new double[N, M];
-            r = new double[N, M];
+            q = new T[N, M];
+            r = new T[N, M];
             QRDecomposition(matrix, q, r);
         }
 
@@ -1820,476 +1792,354 @@ public partial class Matrix
         /// <returns>Длина гипотенузы</returns>
         /// <remarks>Алгоритм вычисления длины гипотенузы защищён от переполнения</remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static double PyThag(double a, double b)
+        private static T PyThag(T a, T b)
         {
-            var abs_a = Math.Abs(a);
-            var abs_b = Math.Abs(b);
-            return abs_a > abs_b ? abs_a * Math.Sqrt(1d + Sqr(abs_b / abs_a)) :
-                abs_b == 0 ? 0d : abs_b * Math.Sqrt(1d + Sqr(abs_a / abs_b));
+            var abs_a = T.Abs(a);
+            var abs_b = T.Abs(b);
+            return abs_a > abs_b
+                ? abs_a * T.Sqrt(T.One + Sqr(abs_b / abs_a))
+                : T.IsZero(abs_b)
+                    ? T.Zero
+                    : abs_b * T.Sqrt(T.One + Sqr(abs_a / abs_b));
         }
 
-        /// <summary>Возвращает значение числа с сохранением знака другого числа</summary>
-        /// <param name="a">Число, абсолютное значение которого будет возвращено.</param>
-        /// <param name="b">Число, знак которого будет сохранен.</param>
-        /// <returns>Абсолютное значение числа <paramref name="a"/>, сохраняющее знак числа <paramref name="b"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static double Sign(double a, double b) => b >= 0d ? Math.Abs(a) : -Math.Abs(a);
+        private static T Sign(T a, T b) => b >= T.Zero ? T.Abs(a) : -T.Abs(a);
 
-        ///// <summary>SVD-разложение</summary>
-        ///// <param name="matrix">Разлагаемая матрица</param>
-        ///// <param name="U">Матрица левых сингулярных векторов</param>
-        ///// <param name="Sigma">Вектор собственных чисел</param>
-        ///// <param name="V">Матрица правых сингулярных векторов</param>
-        ///// <exception cref="ArgumentNullException">matrix is <see langword="null"/></exception>
-        ///// <exception cref="InvalidOperationException">Метод не сошёлся за 30 итераций</exception>
-        //// ReSharper disable once FunctionComplexityOverflow
-        //// ReSharper disable once CyclomaticComplexity
-        //public static void SVD(double[,] matrix, out double[,] U, out double[] Sigma, out double[,] V)
-        //{
-        //    GetLength(matrix, out var N, out var M);
-
-        //    if (M > N)
-        //    {
-        //        SVD(Transpose(matrix), out V, out Sigma, out U);
-        //        return;
-        //    }
-
-        //    U = matrix.CloneObject();
-        //    Sigma = new double[Math.Min(N, M)];
-        //    V = new double[Sigma.Length, Sigma.Length];
-
-        //    var a_norm = 0d;
-        //    var scale = 0d;
-        //    var g = 0d;
-
-        //    var rv1 = new double[M];
-        //    /* Householder reduction to bidiagonal form */
-        //    for (var i = 0; i < M; i++)
-        //    {
-        //        var l = i + 1;
-        //        rv1[i] = scale * g;
-        //        g = scale = 0d;
-        //        if (i < N)
-        //        {
-        //            for (var k = i; k < N; k++)
-        //                scale += Math.Abs(U[k, i]);
-        //            if (scale != 0)
-        //            {
-        //                var s0 = 0d;
-        //                for (var k = i; k < N; k++)
-        //                {
-        //                    U[k, i] /= scale;
-        //                    s0 += U[k, i] * U[k, i];
-        //                }
-
-        //                var f = U[i, i];
-        //                g = -Sign(Math.Sqrt(s0), f);
-        //                var h = f * g - s0;
-        //                U[i, i] = f - g;
-        //                for (var j = l; j < M; j++)
-        //                {
-        //                    s0 = 0d;
-        //                    for (var k = i; k < N; k++)
-        //                        s0 += U[k, i] * U[k, j];
-        //                    f = s0 / h;
-        //                    for (var k = i; k < N; k++)
-        //                        U[k, j] += f * U[k, i];
-        //                }
-
-        //                for (var k = i; k < N; k++)
-        //                    U[k, i] *= scale;
-        //            }
-        //        }
-
-        //        Sigma[i] = scale * g;
-        //        g = scale = 0d;
-        //        if (i < N && i != M) // i != M-1 ?
-        //        {
-        //            for (var k = l; k < M; k++)
-        //                scale += Math.Abs(U[i, k]);
-        //            if (scale != 0)
-        //            {
-        //                var s0 = 0d;
-        //                for (var k = l; k < M; k++)
-        //                {
-        //                    U[i, k] /= scale;
-        //                    s0 += U[i, k] * U[i, k];
-        //                }
-
-        //                var f = U[i, l];
-        //                g = -Sign(Math.Sqrt(s0), f);
-        //                var h = f * g - s0;
-        //                U[i, l] = f - g;
-        //                for (var k = l; k < M; k++)
-        //                    rv1[k] = U[i, k] / h;
-        //                for (var j = l; j < N; j++)
-        //                {
-        //                    s0 = 0d;
-        //                    for (var k = l; k < M; k++)
-        //                        s0 += U[j, k] * U[i, k];
-        //                    for (var k = l; k < M; k++)
-        //                        U[j, k] += s0 * rv1[k];
-        //                }
-
-        //                for (var k = l; k < M; k++)
-        //                    U[i, k] *= scale;
-        //            }
-        //        }
-
-        //        a_norm = Math.Max(a_norm, Math.Abs(Sigma[i]) + Math.Abs(rv1[i]));
-        //    }
-
-        //    /* Accumulation of right-hand transformations. */
-        //    for (var i = M - 1; i >= 0; i--)
-        //    {
-        //        var l = i + 1;
-        //        if (i < M - 1)
-        //        {
-        //            if (g != 0)
-        //            {
-        //                /* Double division to avoid possible underflow. */
-        //                for (var j = l; j < M; j++)
-        //                    V[j, i] = U[i, j] / U[i, l] / g;
-        //                for (var j = l; j < M; j++)
-        //                {
-        //                    var s0 = 0d;
-        //                    for (var k = l; k < M; k++)
-        //                        s0 += U[i, k] * V[k, j];
-        //                    for (var k = l; k < M; k++)
-        //                        V[k, j] += s0 * V[k, i];
-        //                }
-        //            }
-
-        //            for (var j = l; j < M; j++)
-        //                V[i, j] = V[j, i] = 0d;
-        //        }
-
-        //        V[i, i] = 1d;
-        //        g = rv1[i];
-        //    }
-
-        //    /* Accumulation of left-hand transformations. */
-        //    for (var i = Math.Min(N, M) - 1; i >= 0; i--)
-        //    {
-        //        var l = i + 1;
-        //        g = Sigma[i];
-        //        for (var j = l; j < M; j++)
-        //            U[i, j] = 0d;
-        //        if (g != 0)
-        //        {
-        //            g = 1d / g;
-        //            for (var j = l; j < M; j++)
-        //            {
-        //                var s0 = 0d;
-        //                for (var k = l; k < N; k++)
-        //                    s0 += U[k, i] * U[k, j];
-        //                var f = s0 / U[i, i] * g;
-        //                for (var k = i; k < N; k++)
-        //                    U[k, j] += f * U[k, i];
-        //            }
-
-        //            for (var j = i; j < N; j++)
-        //                U[j, i] *= g;
-        //        }
-        //        else
-        //            for (var j = i; j < N; j++)
-        //                U[j, i] = 0d;
-
-        //        U[i, i]++;
-        //    }
-
-        //    /* Diagonalization of the bidiagonal form. */
-        //    for (var k = M; k >= 1; k--)
-        //        for (var its = 1; its <= 30; its++)
-        //        {
-        //            int l;
-        //            var flag = true;
-        //            var nm = 0;
-        //            /* Test for splitting. */
-        //            for (l = k; l >= 1; l--)
-        //            {
-        //                nm = l - 1;
-        //                /* Note that rv1[0] is always zero. */
-        //                if ((Math.Abs(rv1[l - 1]) + a_norm).Equals(a_norm))
-        //                {
-        //                    flag = false;
-        //                    break;
-        //                }
-
-        //                if ((Math.Abs(Sigma[nm - 1]) + a_norm).Equals(a_norm))
-        //                    break;
-        //            }
-
-        //            double c;
-        //            double y;
-        //            double z;
-        //            double s0;
-        //            double f;
-        //            double h;
-        //            if (flag)
-        //            {
-        //                c = 0d; /* Cancellation of rv1[l-1], if l > 1. */
-        //                s0 = 1d;
-        //                for (var i = l; i <= k; i++)
-        //                {
-        //                    f = s0 * rv1[i - 1];
-        //                    rv1[i - 1] = c * rv1[i - 1];
-        //                    if ((Math.Abs(f) + a_norm).Equals(a_norm))
-        //                        break;
-        //                    g = Sigma[i - 1];
-        //                    h = PyThag(f, g);
-        //                    Sigma[i - 1] = h;
-        //                    h = 1d / h;
-        //                    c = g * h;
-        //                    s0 = -f * h;
-        //                    for (var j = 0; j < N; j++)
-        //                    {
-        //                        y = U[j, nm - 1];
-        //                        z = U[j, i - 1];
-        //                        U[j, nm - 1] = y * c + z * s0;
-        //                        U[j, i - 1] = z * c - y * s0;
-        //                    }
-        //                }
-        //            }
-
-        //            z = Sigma[k - 1];
-        //            /* Convergence. */
-        //            if (l == k)
-        //            {
-        //                /* Singular value is made nonnegative. */
-        //                if (z < 0d)
-        //                {
-        //                    Sigma[k - 1] = -z;
-        //                    for (var j = 0; j < M; j++)
-        //                        V[j, k - 1] = -V[j, k - 1];
-        //                }
-
-        //                break;
-        //            }
-
-        //            if (its == 30)
-        //                throw new InvalidOperationException("Метод не сошёлся за 30 итераций");
-        //            var x = Sigma[l - 1];
-        //            nm = k - 1;
-        //            y = Sigma[nm - 1];
-        //            g = rv1[nm - 1];
-        //            h = rv1[k - 1];
-        //            f = ((y - z) * (y + z) + (g - h) * (g + h)) / (2 * h * y);
-        //            g = PyThag(f, 1d);
-        //            f = ((x - z) * (x + z) + h * (y / (f + Sign(g, f)) - h)) / x;
-        //            c = 1d;
-        //            s0 = 1d;
-        //            /* Next QR transformation: */
-        //            for (var j0 = l - 1; j0 < nm; j0++)
-        //            {
-        //                var i = j0 + 1;
-        //                g = rv1[i];
-        //                y = Sigma[i];
-        //                h = s0 * g;
-        //                g = c * g;
-        //                z = PyThag(f, h);
-        //                rv1[j0] = z;
-        //                c = f / z;
-        //                s0 = h / z;
-        //                f = x * c + g * s0;
-        //                g = g * c - x * s0;
-        //                h = y * s0;
-        //                y *= c;
-        //                for (var j = 0; j < M; j++)
-        //                {
-        //                    x = V[j, j0];
-        //                    z = V[j, i];
-        //                    V[j, j0] = x * c + z * s0;
-        //                    V[j, i] = z * c - x * s0;
-        //                }
-
-        //                z = PyThag(f, h);
-        //                Sigma[j0] = z;
-        //                /* Rotation can be arbitrary if z = 0. */
-        //                if (z != 0)
-        //                {
-        //                    z = 1 / z;
-        //                    c = f * z;
-        //                    s0 = h * z;
-        //                }
-
-        //                f = c * g + s0 * y;
-        //                x = c * y - s0 * g;
-        //                for (var j = 0; j < N; j++)
-        //                {
-        //                    y = U[j, j0];
-        //                    z = U[j, i];
-        //                    U[j, j0] = y * c + z * s0;
-        //                    U[j, i] = z * c - y * s0;
-        //                }
-        //            }
-
-        //            rv1[l - 1] = 0d;
-        //            rv1[k - 1] = f;
-        //            Sigma[k - 1] = x;
-        //        }
-
-        //    M = Sigma.Length;
-        //    if (M <= 2) return;
-        //    var is_correct = true;
-        //    for (var i = 0; i < M - 1 && is_correct; i++)
-        //        if (Sigma[i] < Sigma[i + 1])
-        //            is_correct = false;
-        //    if (is_correct) return;
-
-        //    var M05 = (M - 1) >> 1;
-        //    double t;
-        //    for (var i = 1; i <= M05; i++)
-        //    {
-        //        t = Sigma[i];
-        //        Sigma[i] = Sigma[M - i];
-        //        Sigma[M - i] = t;
-        //    }
-
-        //    GetLength(U, out N, out M);
-        //    M05 = (M - 1) >> 1;
-        //    for (var i = 0; i < N; i++)
-        //        for (var j = 1; j <= M05; j++)
-        //        {
-        //            t = U[i, j];
-        //            U[i, j] = U[i, M - j];
-        //            U[i, M - j] = t;
-        //        }
-
-        //    GetLength(V, out N, out M);
-        //    M05 = (M - 1) >> 1;
-        //    for (var i = 0; i < N; i++)
-        //        for (var j = 1; j <= M05; j++)
-        //        {
-        //            t = V[i, j];
-        //            V[i, j] = V[i, M - j];
-        //            V[i, M - j] = t;
-        //        }
-        //}
-
-        /// <summary>
-        /// Выполняет SVD-разложение матрицы A на U, Σ и V.
-        /// </summary>
-        public static void SVD(double[,] A, out double[,] U, out double[] s, out double[,] V)
+        /// <summary>SVD-разложение</summary>
+        /// <param name="matrix">Разлагаемая матрица</param>
+        /// <param name="u">Матрица левых сингулярных векторов</param>
+        /// <param name="w">Вектор собственных чисел</param>
+        /// <param name="v">Матрица правых сингулярных векторов</param>
+        /// <exception cref="ArgumentNullException">matrix is <see langword="null"/></exception>
+        /// <exception cref="InvalidOperationException">Метод не сошёлся за 30 итераций</exception>
+        // ReSharper disable once FunctionComplexityOverflow
+        // ReSharper disable once CyclomaticComplexity
+        public static void SVD(T[,] matrix, out T[,] u, out T[] w, out T[,] v)
         {
-            var m = A.GetLength(0);
-            var n = A.GetLength(1);
-            U = new double[m, m]; // Ортогональная матрица U
-            V = new double[n, n]; // Ортогональная матрица V
-            s = new double[Math.Min(m, n)]; // Сингулярные значения
+            GetLength(matrix, out var N, out var M);
 
-            // Копируем A в рабочий массив B для минимизации выделений памяти
-            var B = (double[,])A.Clone();
-
-            InitializeIdentity(U);
-            InitializeIdentity(V);
-
-            // Итерационный метод вращений Якоби
-            for (var sweep = 0; sweep < 100; sweep++) // Максимум 100 итераций
+            if (M > N)
             {
-                var converged = true;
+                SVD(Transpose(matrix), out v, out w, out u);
+                return;
+            }
 
-                for (var p = 0; p < n - 1; p++)
-                    for (var q = p + 1; q < n; q++)
+            u = matrix.CloneObject();
+            w = new T[Math.Min(N, M)];
+            v = new T[w.Length, w.Length];
+
+            var a_norm = T.Zero;
+            var scale = T.Zero;
+            var g = T.Zero;
+
+            var rv1 = new T[M];
+            /* Householder reduction to bidiagonal form */
+            for (var i = 0; i < M; i++)
+            {
+                var l = i + 1;
+                rv1[i] = scale * g;
+                g = scale = T.Zero;
+                if (i < N)
+                {
+                    for (var k = i; k < N; k++)
+                        scale += T.Abs(u[k, i]);
+                    if (!T.IsZero(scale))
                     {
-                        if (ComputeRotation(B, p, q) is not { c: not double.NaN, s: not double.NaN } rotation) 
-                            continue;
+                        var s = T.Zero;
+                        for (var k = i; k < N; k++)
+                        {
+                            u[k, i] /= scale;
+                            s += u[k, i] * u[k, i];
+                        }
 
-                        ApplyRotation(B, rotation, p, q);
-                        UpdateOrthogonalMatrix(V, rotation, p, q);
-                        converged = false;
+                        var f = u[i, i];
+                        g = -Sign(T.Sqrt(s), f);
+                        var h = f * g - s;
+                        u[i, i] = f - g;
+                        for (var j = l; j < M; j++)
+                        {
+                            s = T.Zero;
+                            for (var k = i; k < N; k++)
+                                s += u[k, i] * u[k, j];
+                            f = s / h;
+                            for (var k = i; k < N; k++)
+                                u[k, j] += f * u[k, i];
+                        }
+
+                        for (var k = i; k < N; k++)
+                            u[k, i] *= scale;
+                    }
+                }
+
+                w[i] = scale * g;
+                g = scale = T.Zero;
+                if (i < N && i != M) // i != M-1 ?
+                {
+                    for (var k = l; k < M; k++)
+                        scale += T.Abs(u[i, k]);
+                    if (!T.IsZero(scale))
+                    {
+                        var s = T.Zero;
+                        for (var k = l; k < M; k++)
+                        {
+                            u[i, k] /= scale;
+                            s += u[i, k] * u[i, k];
+                        }
+
+                        var f = u[i, l];
+                        g = -Sign(T.Sqrt(s), f);
+                        var h = f * g - s;
+                        u[i, l] = f - g;
+                        for (var k = l; k < M; k++)
+                            rv1[k] = u[i, k] / h;
+                        for (var j = l; j < N; j++)
+                        {
+                            s = T.Zero;
+                            for (var k = l; k < M; k++)
+                                s += u[j, k] * u[i, k];
+                            for (var k = l; k < M; k++)
+                                u[j, k] += s * rv1[k];
+                        }
+
+                        for (var k = l; k < M; k++)
+                            u[i, k] *= scale;
+                    }
+                }
+
+                a_norm = T.Max(a_norm, T.Abs(w[i]) + T.Abs(rv1[i]));
+            }
+
+            /* Accumulation of right-hand transformations. */
+            for (var i = M - 1; i >= 0; i--)
+            {
+                var l = i + 1;
+                if (i < M - 1)
+                {
+                    if (!T.IsZero(g))
+                    {
+                        /* Double division to avoid possible underflow. */
+                        for (var j = l; j < M; j++)
+                            v[j, i] = u[i, j] / u[i, l] / g;
+                        for (var j = l; j < M; j++)
+                        {
+                            var s = T.Zero;
+                            for (var k = l; k < M; k++)
+                                s += u[i, k] * v[k, j];
+                            for (var k = l; k < M; k++)
+                                v[k, j] += s * v[k, i];
+                        }
                     }
 
-                if (converged) // Если вращений больше не нужно, выходим
-                    break;
+                    for (var j = l; j < M; j++)
+                        v[i, j] = v[j, i] = T.Zero;
+                }
+
+                v[i, i] = T.One;
+                g = rv1[i];
             }
 
-            // Заполняем сингулярные значения и нормализуем столбцы
-            for (var i = 0; i < s.Length; i++)
+            /* Accumulation of left-hand transformations. */
+            for (var i = Math.Min(N, M) - 1; i >= 0; i--)
             {
-                s[i] = Math.Sqrt(SumColumnSquares(B, i));
-                NormalizeColumn(B, i);
+                var l = i + 1;
+                g = w[i];
+                for (var j = l; j < M; j++)
+                    u[i, j] = T.Zero;
+                if (!T.IsZero(g))
+                {
+                    g = T.One / g;
+                    for (var j = l; j < M; j++)
+                    {
+                        var s = T.Zero;
+                        for (var k = l; k < N; k++)
+                            s += u[k, i] * u[k, j];
+                        var f = s / u[i, i] * g;
+                        for (var k = i; k < N; k++)
+                            u[k, j] += f * u[k, i];
+                    }
+
+                    for (var j = i; j < N; j++)
+                        u[j, i] *= g;
+                }
+                else
+                    for (var j = i; j < N; j++)
+                        u[j, i] = T.Zero;
+
+                u[i, i]++;
             }
 
-            // Копируем ортогонализованные столбцы B в U
-            for (var i = 0; i < m; i++)
-                for (var j = 0; j < n; j++)
-                    U[i, j] = B[i, j];
-        }
+            /* Diagonalization of the bidiagonal form. */
+            for (var k = M; k >= 1; k--)
+                for (var its = 1; its <= 30; its++)
+                {
+                    int l;
+                    var flag = true;
+                    var nm = 0;
+                    /* Test for splitting. */
+                    for (l = k; l >= 1; l--)
+                    {
+                        nm = l - 1;
+                        /* Note that rv1[0] is always zero. */
+                        if ((T.Abs(rv1[l - 1]) + a_norm).Equals(a_norm))
+                        {
+                            flag = false;
+                            break;
+                        }
 
-        /// <summary>
-        /// Вычисляет параметры вращения (синус и косинус) для вращения Якоби.
-        /// </summary>
-        private static (double c, double s) ComputeRotation(double[,] B, int p, int q)
-        {
-            var b_pp = B[p, p];
-            var b_qq = B[q, q];
-            var b_pq = B[p, q];
+                        if ((T.Abs(w[nm - 1]) + a_norm).Equals(a_norm))
+                            break;
+                    }
 
-            if (Math.Abs(b_pq) < 1e-10)
-                return (double.NaN, double.NaN); // Если элемент уже мал, вращение не требуется
+                    T c;
+                    T y;
+                    T z;
+                    T s;
+                    T f;
+                    T h;
+                    if (flag)
+                    {
+                        c = T.Zero; /* Cancellation of rv1[l-1], if l > 1. */
+                        s = T.One;
+                        for (var i = l; i <= k; i++)
+                        {
+                            f = s * rv1[i - 1];
+                            rv1[i - 1] = c * rv1[i - 1];
+                            if ((T.Abs(f) + a_norm).Equals(a_norm))
+                                break;
+                            g = w[i - 1];
+                            h = PyThag(f, g);
+                            w[i - 1] = h;
+                            h = T.One / h;
+                            c = g * h;
+                            s = -f * h;
+                            for (var j = 0; j < N; j++)
+                            {
+                                y = u[j, nm - 1];
+                                z = u[j, i - 1];
+                                u[j, nm - 1] = y * c + z * s;
+                                u[j, i - 1] = z * c - y * s;
+                            }
+                        }
+                    }
 
-            var tau = (b_qq - b_pp) / (2.0 * b_pq);
-            var t = Math.Sign(tau) / (Math.Abs(tau) + Math.Sqrt(1.0 + tau * tau));
-            var c = 1.0 / Math.Sqrt(1.0 + t * t);
-            var s = t * c;
+                    z = w[k - 1];
+                    /* Convergence. */
+                    if (l == k)
+                    {
+                        /* Singular value is made nonnegative. */
+                        if (z < T.Zero)
+                        {
+                            w[k - 1] = -z;
+                            for (var j = 0; j < M; j++)
+                                v[j, k - 1] = -v[j, k - 1];
+                        }
 
-            return (c, s);
-        }
+                        break;
+                    }
 
-        /// <summary>Применяет вращение к матрице B</summary>
-        private static void ApplyRotation(double[,] B, (double c, double s) rotation, int p, int q)
-        {
-            var (c, s) = rotation;
-            var size = B.GetLength(0);
+                    if (its == 30)
+                        throw new InvalidOperationException("Метод не сошёлся за 30 итераций");
 
-            for (var i = 0; i < size; i++)
+                    var x = w[l - 1];
+                    nm = k - 1;
+                    y = w[nm - 1];
+                    g = rv1[nm - 1];
+                    h = rv1[k - 1];
+                    f = ((y - z) * (y + z) + (g - h) * (g + h)) / ((h + h) * y);
+                    g = PyThag(f, T.One);
+                    f = ((x - z) * (x + z) + h * (y / (f + Sign(g, f)) - h)) / x;
+                    c = T.One;
+                    s = T.One;
+                    /* Next QR transformation: */
+                    for (var j0 = l - 1; j0 < nm; j0++)
+                    {
+                        var i = j0 + 1;
+                        g = rv1[i];
+                        y = w[i];
+                        h = s * g;
+                        g = c * g;
+                        z = PyThag(f, h);
+                        rv1[j0] = z;
+                        c = f / z;
+                        s = h / z;
+                        f = x * c + g * s;
+                        g = g * c - x * s;
+                        h = y * s;
+                        y *= c;
+                        for (var j = 0; j < M; j++)
+                        {
+                            x = v[j, j0];
+                            z = v[j, i];
+                            v[j, j0] = x * c + z * s;
+                            v[j, i] = z * c - x * s;
+                        }
+
+                        z = PyThag(f, h);
+                        w[j0] = z;
+                        /* Rotation can be arbitrary if z = 0. */
+                        if (!T.IsZero(z))
+                        {
+                            z = T.One / z;
+                            c = f * z;
+                            s = h * z;
+                        }
+
+                        f = c * g + s * y;
+                        x = c * y - s * g;
+                        for (var j = 0; j < N; j++)
+                        {
+                            y = u[j, j0];
+                            z = u[j, i];
+                            u[j, j0] = y * c + z * s;
+                            u[j, i] = z * c - y * s;
+                        }
+                    }
+
+                    rv1[l - 1] = T.Zero;
+                    rv1[k - 1] = f;
+                    w[k - 1] = x;
+                }
+
+            M = w.Length;
+            if (M <= 2) return;
+            var is_correct = true;
+            for (var i = 0; i < M - 1 && is_correct; i++)
+                if (w[i] < w[i + 1])
+                    is_correct = false;
+            if (is_correct) return;
+
+            var M05 = (M - 1) >> 1;
+            T t;
+            for (var i = 1; i <= M05; i++)
             {
-                var b_ip = B[i, p];
-                var b_iq = B[i, q];
-
-                B[i, p] = c * b_ip - s * b_iq;
-                B[i, q] = s * b_ip + c * b_iq;
+                t = w[i];
+                w[i] = w[M - i];
+                w[M - i] = t;
             }
-        }
 
-        /// <summary>Обновляет ортогональную матрицу V после вращения</summary>
-        private static void UpdateOrthogonalMatrix(double[,] V, (double c, double s) rotation, int p, int q)
-        {
-            var (c, s) = rotation;
-            var size = V.GetLength(0);
+            GetLength(u, out N, out M);
+            M05 = (M - 1) >> 1;
+            for (var i = 0; i < N; i++)
+                for (var j = 1; j <= M05; j++)
+                {
+                    t = u[i, j];
+                    u[i, j] = u[i, M - j];
+                    u[i, M - j] = t;
+                }
 
-            for (var i = 0; i < size; i++)
-            {
-                var v_ip = V[i, p];
-                var v_iq = V[i, q];
-
-                V[i, p] = c * v_ip - s * v_iq;
-                V[i, q] = s * v_ip + c * v_iq;
-            }
-        }
-
-        /// <summary>Вычисляет сумму квадратов элементов столбца</summary>
-        private static double SumColumnSquares(double[,] B, int column)
-        {
-            var size = B.GetLength(0);
-
-            var s = 0.0;
-            for (var i = 0; i < size; i++)
-                s += B[i, column].Pow2();
-
-            return s;
-        }
-
-        /// <summary>Нормализует столбец матрицы</summary>
-        private static void NormalizeColumn(double[,] B, int column)
-        {
-            var row_sum_2 = SumColumnSquares(B, column);
-            var norm = Math.Sqrt(row_sum_2);
-
-            var size = B.GetLength(0);
-            for (var i = 0; i < size; i++)
-                B[i, column] /= norm;
+            GetLength(v, out N, out M);
+            M05 = (M - 1) >> 1;
+            for (var i = 0; i < N; i++)
+                for (var j = 1; j <= M05; j++)
+                {
+                    t = v[i, j];
+                    v[i, j] = v[i, M - j];
+                    v[i, M - j] = t;
+                }
         }
     }
 }
+
+
+#endif

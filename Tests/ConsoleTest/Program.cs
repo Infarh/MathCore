@@ -1,69 +1,28 @@
 
-using System.IO.Compression;
-using System.IO.Hashing;
+using System.Formats.Asn1;
 
-using MathCore.Hash.CRC;
+var (m, n) = (4, 2);
+Matrix A = new((m, n), 2, 1, 1, 3, 4, 2, 3, 4);
 
-const string data_file_name = "data.file";
-const string zip_file_name = $"{data_file_name}.zip";
+var (q, r) = A.QR();
+var s = new double[Math.Min(n, m)];
+for (var i = 0; i < s.Length; i++)
+    s[i] = r[i, i];
 
-using (var file = File.CreateText(data_file_name))
-    for(var i = 0; i < 1000; i++)
-        file.WriteLine("Hello World!!!");
+Console.WriteLine($"A = \r\n{A:f0}");
+Console.WriteLine();
 
-File.Delete(zip_file_name);
-using (var zip = ZipFile.Open(zip_file_name, ZipArchiveMode.Create))
-{
-    var entry = zip.CreateEntry(data_file_name, CompressionLevel.SmallestSize);
-    using var entry_stream = entry.Open();
-    using var file = File.OpenRead(data_file_name);
-    file.CopyTo(entry_stream);
-}
+Console.WriteLine($"q = \r\n{q:+0.0000;-0.0000}");
+Console.WriteLine();
+Console.WriteLine($"s = {s.Select(v => v.ToString("f4")).JoinStrings(", ")}");
+Console.WriteLine();
+//Console.WriteLine($"V = \r\n{V:f4}");
+Console.WriteLine();
 
-string zip_crc;
-using (var zip = ZipFile.Open(zip_file_name, ZipArchiveMode.Read))
-{
-    var entry = zip.GetEntry(data_file_name);
-    zip_crc = entry.Crc32.ToString("X8");
-}
+//var A1 = U * Matrix.Diagonal(s) * V;
 
-//var data_file = new FileInfo(data_file_name);
-//var data = File.ReadAllBytes(data_file_name);
-//var ccc = CRC32.Hash(data).ToString("X8");
-//var cc1 = BitConverter.ToUInt32(Crc32.Hash(data)).ToString("X8");
-
-var data1 = "Hello World!"u8.ToArray();
-
-var zz = new Crc32();
-
-var cc3 = Crc32.HashToUInt32(data1).ToString("b32");
-
-//var q = CRC32.Hash(data1, poly: 0x77073096).ToString("b32");
-
-var tabls = CRC32.GetTableReverseBits(0x77073096);
-
-var q = Crc32.HashToUInt32("123456789"u8).ToString("X8");
-
-for (var i = 0u; i < 256; i++)
-{
-    if(i % 8 == 0) Console.WriteLine();
-
-    //var poly = CRC32.Table(i, 0x77073096);
-    var poly = tabls[i];
-    Console.Write($"0x{poly:X8} ");
-}
-
-var ccrc32 = new CRC32(0x77073096)
-{
-    State = 0xFFFFFFFF,
-    XOR = 0xFFFFFFFF,
-};
-var cc4 = ccrc32.Compute(data1).ToString("b32");
-//const uint expected_crc = 0x7AC1161F;
-
-
-//var crc32 = data_file.ComputeCRC32().ToString("X8");
-//var crc322 = data_file.ComputeCRC32().ToString("X8");
+//Console.WriteLine($"A1 = \r\n{A1:f4}");
+//Console.WriteLine();
 
 Console.WriteLine("End.");
 return;

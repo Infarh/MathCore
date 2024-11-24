@@ -264,6 +264,15 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
 
     /// <summary>Логарифм комплексного числа по действительному аргументу</summary>
     /// <param name="z">Комплексное число</param>
+    /// <returns>Логарифм комплексного числа по действительному основанию</returns>
+    public static Complex Log(Complex z) => new
+    (
+        Re: 0.5 * Math.Log(z._Re * z._Re + z._Im * z._Im),
+        Im: z.Arg
+    );
+
+    /// <summary>Логарифм комплексного числа по действительному аргументу</summary>
+    /// <param name="z">Комплексное число</param>
     /// <param name="b">Действительное основание логарифма</param>
     /// <returns>Логарифм комплексного числа по действительному основанию</returns>
     public static Complex Log(Complex z, double b) => new
