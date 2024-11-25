@@ -101,7 +101,7 @@ internal static class MatrixTST
         {
             if (uneeded == 0) // No left singular vectors to be computed
             {
-                rmatrixqr(a, ref tau);
+                rmatrixqr(a, out tau);
 
                 for (i = 0; i < n; i++)
                     for (j = 0; j < i; j++)
@@ -115,7 +115,7 @@ internal static class MatrixTST
             }
 
             // Left singular vectors (may be full matrix U) to be computed
-            rmatrixqr(a, ref tau);
+            rmatrixqr(a, out tau);
             rmatrixqrunpackq(a, m, n, tau, ncu, ref u);
 
             for (i = 0; i < n; i++)
@@ -137,7 +137,7 @@ internal static class MatrixTST
             // Large U. Transforming intermediate matrix T2
             work = new double[Math.Max(m, n) + 1];
 
-            rmatrixbdunpackq(a, n, n, tauq, n, ref t2);
+            rmatrixbdunpackq(a, n, n, tauq, n, out t2);
             copymatrix(u, 0, m - 1, 0, n - 1, ref a, 0, m - 1, 0, n - 1);
             inplacetranspose(ref t2, 0, n - 1, 0, n - 1, ref work);
 
@@ -160,7 +160,7 @@ internal static class MatrixTST
                         a[i, j] = 0;
 
                 rmatrixbd(a, m, m, ref tauq, ref taup);
-                rmatrixbdunpackq(a, m, m, tauq, ncu, ref u);
+                rmatrixbdunpackq(a, m, m, tauq, ncu, out u);
                 rmatrixbdunpackdiagonals(a, m, m, out isupper, out w, out e);
 
                 work = new double[m + 1];
@@ -180,7 +180,7 @@ internal static class MatrixTST
                     a[i, j] = 0;
 
             rmatrixbd(a, m, m, ref tauq, ref taup);
-            rmatrixbdunpackq(a, m, m, tauq, ncu, ref u);
+            rmatrixbdunpackq(a, m, m, tauq, ncu, out u);
             rmatrixbdunpackdiagonals(a, m, m, out isupper, out w, out e);
             work = new double[Math.Max(m, n) + 1];
             inplacetranspose(ref u, 0, nru - 1, 0, ncu - 1, ref work);
@@ -203,7 +203,7 @@ internal static class MatrixTST
         if (m <= n) // We can use inplace transposition of U to get rid of columnwise operations
         {
             rmatrixbd(a, m, n, ref tauq, ref taup);
-            rmatrixbdunpackq(a, m, n, tauq, ncu, ref u);
+            rmatrixbdunpackq(a, m, n, tauq, ncu, out u);
             rmatrixbdunpackpt(a, m, n, taup, nrvt, out vt);
             rmatrixbdunpackdiagonals(a, m, n, out isupper, out w, out e);
             work = new double[m + 1];
@@ -215,7 +215,7 @@ internal static class MatrixTST
 
         // Simple bidiagonal reduction
         rmatrixbd(a, m, n, ref tauq, ref taup);
-        rmatrixbdunpackq(a, m, n, tauq, ncu, ref u);
+        rmatrixbdunpackq(a, m, n, tauq, ncu, out u);
         rmatrixbdunpackpt(a, m, n, taup, nrvt, out vt);
         rmatrixbdunpackdiagonals(a, m, n, out isupper, out w, out e);
         if (additionalmemory < 2 || uneeded == 0)
@@ -841,7 +841,7 @@ internal static class MatrixTST
                 //
                 // 2 by 2 block, handle separately
                 //
-                svdv2x2(d[m - 1], e[m - 1], d[m], ref sigmn, ref sigmx, ref sinr, ref cosr, ref sinl, ref cosl);
+                svdv2x2(d[m - 1], e[m - 1], d[m], out sigmn, out sigmx, out sinr, out cosr, out sinl, out cosl);
                 d[m - 1] = sigmx;
                 e[m - 1] = 0;
                 d[m] = sigmn;
@@ -1074,8 +1074,7 @@ internal static class MatrixTST
             }
             else
             {
-                double f;
-                double g;
+                double f, g;
                 // Use nonzero shift
                 if (idir == 1)
                 {
@@ -1146,9 +1145,9 @@ internal static class MatrixTST
                             e[i - 2] = cosl * e[i - 2];
                         }
 
-                        work0[i - ll] = cosr;
+                        work0[i - ll] = +cosr;
                         work1[i - ll] = -sinr;
-                        work2[i - ll] = cosl;
+                        work2[i - ll] = +cosl;
                         work3[i - ll] = -sinl;
                     }
                     e[ll] = f;
@@ -1248,7 +1247,7 @@ internal static class MatrixTST
         return result;
     }
 
-    private static void svdv2x2(double f, double g, double h, ref double ssmin, ref double ssmax, ref double snr, ref double csr, ref double snl, ref double csl)
+    private static void svdv2x2(double f, double g, double h, out double ssmin, out double ssmax, out double snr, out double csr, out double snl, out double csl)
     {
         ssmin = 0;
         ssmax = 0;
@@ -1529,10 +1528,7 @@ internal static class MatrixTST
                     for (i_ = n1; i_ <= n2; i_++)
                         a[jp1, i_] = work[i_];
                 }
-            else
-                //
-                // Special case: N1=N2
-                //
+            else // Special case: N1==N2
                 for (j = m1; j < m2; j++)
                 {
                     ctemp = c[j - m1 + 1];
@@ -1573,10 +1569,7 @@ internal static class MatrixTST
                     for (i_ = n1; i_ <= n2; i_++)
                         a[jp1, i_] = work[i_];
                 }
-            else
-                //
-                // Special case: N1=N2
-                //
+            else // Special case: N1==N2
                 for (j = m2 - 1; j >= m1; j--)
                 {
                     ctemp = c[j - m1 + 1];
@@ -1592,19 +1585,9 @@ internal static class MatrixTST
         }
     }
 
-    private static void rmatrixtranspose(
-        int m,
-        int n,
-        double[,] a,
-        int ia,
-        int ja,
-        double[,] b,
-        int ib,
-        int jb)
+    private static void rmatrixtranspose(int m, int n, double[,] a, int ia, int ja, double[,] b, int ib, int jb)
     {
-        var s1 = 0;
-        var s2 = 0;
-
+        int s1, s2;
         if (m <= 2 * 32 && n <= 2 * 32)
             for (var i = 0; i < m; i++) // base case
             {
@@ -1824,62 +1807,50 @@ internal static class MatrixTST
         }
     }
 
-    public static void rmatrixbdunpackq(double[,] qp,
-        int m,
-        int n,
-        double[] tauq,
-        int qcolumns,
-        ref double[,] q)
+    private static void rmatrixbdunpackq(double[,] qp, int m, int n, double[] tauq, int qcolumns, out double[,] q)
     {
-        q = new double[0, 0];
-
         //alglib.ap.assert(qcolumns <= m, "RMatrixBDUnpackQ: QColumns>M!");
         //alglib.ap.assert(qcolumns >= 0, "RMatrixBDUnpackQ: QColumns<0!");
-        if (m == 0 || n == 0 || qcolumns == 0) 
-            return;
 
-        // prepare Q
+        if (m == 0 || n == 0 || qcolumns == 0)
+        {
+            q = new double[0, 0];
+            return;
+        }
+
         q = new double[m, qcolumns];
         for (var i = 0; i < m; i++)
             for (var j = 0; j < qcolumns; j++)
                 q[i, j] = i == j ? 1 : 0;
 
-        //
-        // Calculate
-        //
         rmatrixbdmultiplybyq(qp, m, n, tauq, q, m, qcolumns, false, false);
     }
 
-    public static void rmatrixbdmultiplybyq(double[,] qp,
-            int m,
-            int n,
-            double[] tauq,
-            double[,] z,
-            int zrows,
-            int zcolumns,
-            bool fromtheright,
-            bool dotranspose)
+    private static void rmatrixbdmultiplybyq(double[,] qp,
+        int m,
+        int n,
+        double[] tauq,
+        double[,] z,
+        int zrows,
+        int zcolumns,
+        bool fromtheright,
+        bool dotranspose)
     {
-        int i;
-        double[] v = [];
-        double[] work = [];
-        double[] dummy = [];
-        int i_;
-        int i1_;
-
         if (m <= 0 || n <= 0 || zrows <= 0 || zcolumns <= 0) 
             return;
 
         //alglib.ap.assert(fromtheright && zcolumns == m || !fromtheright && zrows == m, "RMatrixBDMultiplyByQ: incorrect Z size!");
+
+        double[] dummy = [];
+
         var mx = Math.Max(m, n);
         mx = Math.Max(mx, zrows);
         mx = Math.Max(mx, zcolumns);
-        v = new double[mx + 1];
-        work = new double[mx + 1];
 
-        int i1;
-        int i2;
-        int istep;
+        var v = new double[mx + 1];
+        var work = new double[mx + 1];
+
+        int i, i_, i1_, i1, i2, istep;
         if (m >= n)
         {
             if (fromtheright)
@@ -1914,6 +1885,7 @@ internal static class MatrixTST
                     applyreflectionfromtheright(z, tauq[i], v, 0, zrows - 1, i, m - 1, ref work);
                 else
                     applyreflectionfromtheleft(z, tauq[i], v, i, m - 1, 0, zcolumns - 1, ref work);
+
                 i += istep;
             }
             while (i != i2 + istep);
@@ -1961,26 +1933,28 @@ internal static class MatrixTST
         }
     }
 
-    public static void rmatrixbd(double[,] a, int m, int n, ref double[] tauq, ref double[] taup)
+    private static void rmatrixbd(double[,] a, int m, int n, ref double[] tauq, ref double[] taup)
     {
-        tauq = [];
-        taup = [];
-
-        if (n <= 0 || m <= 0) 
+        if (n <= 0 || m <= 0)
+        {
+            tauq = [];
+            taup = [];
             return;
+        }
 
         var maxmn = Math.Max(m, n);
         var work = new double[maxmn + 1];
         var t = new double[maxmn + 1];
         int i;
+
         if (m >= n)
         {
             tauq = new double[n];
             taup = new double[n];
             for (i = 0; i < n; i++)
             {
-                tauq[i] = 0.0;
-                taup[i] = 0.0;
+                tauq[i] = 0;
+                taup[i] = 0;
             }
         }
         else
@@ -1989,8 +1963,8 @@ internal static class MatrixTST
             taup = new double[m];
             for (i = 0; i < m; i++)
             {
-                tauq[i] = 0.0;
-                taup[i] = 0.0;
+                tauq[i] = 0;
+                taup[i] = 0;
             }
         }
 
@@ -2074,7 +2048,7 @@ internal static class MatrixTST
             }
     }
 
-    public static void rmatrixqr(double[,] a, ref double[] tau)
+    private static void rmatrixqr(double[,] a, out double[] tau)
     {
         var m = a.GetLength(0);
         var n = a.GetLength(1);
@@ -2153,13 +2127,14 @@ internal static class MatrixTST
         }
     }
 
-    private static void rmatrixblockreflector(ref double[,] a,
-            ref double[] tau,
-            bool columnwisea,
-            int lengtha,
-            int blocksize,
-            ref double[,] t,
-            ref double[] work)
+    private static void rmatrixblockreflector(
+        ref double[,] a,
+        ref double[] tau,
+        bool columnwisea,
+        int lengtha,
+        int blocksize,
+        ref double[,] t,
+        ref double[] work)
     {
         // fill beginning of new column with zeros,
         // load 1.0 in the first non-zero element
@@ -2228,7 +2203,25 @@ internal static class MatrixTST
         }
     }
 
-    public static void rmatrixgemm(int m,
+    private static void rmatrixgemm(
+        int m, int n, int k,
+        double alpha, double[,] a,
+        int ia, int ja, int optypea,
+        double[,] b,
+        int ib, int jb, int optypeb,
+        double beta, double[,] c,
+        int ic, int jc)
+    {
+        //alglib.ap.assert(optypea == 0 || optypea == 1, "RMatrixGEMM: incorrect OpTypeA (must be 0 or 1)");
+        //alglib.ap.assert(optypeb == 0 || optypeb == 1, "RMatrixGEMM: incorrect OpTypeB (must be 0 or 1)");
+        //alglib.ap.assert(ic + m <= alglib.ap.rows(c), "RMatrixGEMM: incorect size of output matrix C");
+        //alglib.ap.assert(jc + n <= alglib.ap.cols(c), "RMatrixGEMM: incorect size of output matrix C");
+
+        rmatrixgemmrec(m, n, k, alpha, a, ia, ja, optypea, b, ib, jb, optypeb, beta, c, ic, jc);
+    }
+
+    private static void rmatrixgemmrec(
+        int m,
         int n,
         int k,
         double alpha,
@@ -2245,31 +2238,6 @@ internal static class MatrixTST
         int ic,
         int jc)
     {
-        //alglib.ap.assert(optypea == 0 || optypea == 1, "RMatrixGEMM: incorrect OpTypeA (must be 0 or 1)");
-        //alglib.ap.assert(optypeb == 0 || optypeb == 1, "RMatrixGEMM: incorrect OpTypeB (must be 0 or 1)");
-        //alglib.ap.assert(ic + m <= alglib.ap.rows(c), "RMatrixGEMM: incorect size of output matrix C");
-        //alglib.ap.assert(jc + n <= alglib.ap.cols(c), "RMatrixGEMM: incorect size of output matrix C");
-
-        rmatrixgemmrec(m, n, k, alpha, a, ia, ja, optypea, b, ib, jb, optypeb, beta, c, ic, jc);
-    }
-
-    private static void rmatrixgemmrec(int m,
-            int n,
-            int k,
-            double alpha,
-            double[,] a,
-            int ia,
-            int ja,
-            int optypea,
-            double[,] b,
-            int ib,
-            int jb,
-            int optypeb,
-            double beta,
-            double[,] c,
-            int ic,
-            int jc)
-    {
         var s1 = 0;
         var s2 = 0;
 
@@ -2277,7 +2245,8 @@ internal static class MatrixTST
         var tsb = matrixtilesizeb();
 
         var tscur = tsb;
-        if (imax3(m, n, k) <= tsb) tscur = tsa;
+        if (imax3(m, n, k) <= tsb) 
+            tscur = tsa;
 
         //alglib.ap.assert(tscur >= 1, "RMatrixGEMMRec: integrity check failed");
 
@@ -2304,6 +2273,7 @@ internal static class MatrixTST
             }
             return;
         }
+
         if (n >= m && n >= k)
         {
             // A*B = A*(B1 B2)
@@ -2330,16 +2300,19 @@ internal static class MatrixTST
             rmatrixgemmrec(m, n, s1, alpha, a, ia, ja, optypea, b, ib, jb, optypeb, beta, c, ic, jc);
             rmatrixgemmrec(m, n, s2, alpha, a, ia, ja + s1, optypea, b, ib + s1, jb, optypeb, 1.0, c, ic, jc);
         }
+        
         if (optypea == 0 && optypeb != 0)
         {
             rmatrixgemmrec(m, n, s1, alpha, a, ia, ja, optypea, b, ib, jb, optypeb, beta, c, ic, jc);
             rmatrixgemmrec(m, n, s2, alpha, a, ia, ja + s1, optypea, b, ib, jb + s1, optypeb, 1.0, c, ic, jc);
         }
+        
         if (optypea != 0 && optypeb == 0)
         {
             rmatrixgemmrec(m, n, s1, alpha, a, ia, ja, optypea, b, ib, jb, optypeb, beta, c, ic, jc);
             rmatrixgemmrec(m, n, s2, alpha, a, ia + s1, ja, optypea, b, ib + s1, jb, optypeb, 1.0, c, ic, jc);
         }
+
         if (optypea != 0 && optypeb != 0)
         {
             rmatrixgemmrec(m, n, s1, alpha, a, ia, ja, optypea, b, ib, jb, optypeb, beta, c, ic, jc);
@@ -2347,7 +2320,7 @@ internal static class MatrixTST
         }
     }
 
-    public static void tiledsplit(int tasksize, int tilesize, ref int task0, ref int task1)
+    private static void tiledsplit(int tasksize, int tilesize, ref int task0, ref int task1)
     {
         //task0 = 0;
         //task1 = 0;
@@ -2371,24 +2344,25 @@ internal static class MatrixTST
         return tasksize % chunksize != 0 ? tasksize / chunksize + 1 : tasksize / chunksize;
     }
 
-    public static int idivup(int a, int b) => a % b > 0 ? a / b + 1 : a / b;
+    private static int idivup(int a, int b) => a % b > 0 ? a / b + 1 : a / b;
 
-    public static void rmatrixgemmk(int m,
-            int n,
-            int k,
-            double alpha,
-            double[,] a,
-            int ia,
-            int ja,
-            int optypea,
-            double[,] b,
-            int ib,
-            int jb,
-            int optypeb,
-            double beta,
-            double[,] c,
-            int ic,
-            int jc)
+    private static void rmatrixgemmk(
+        int m,
+        int n,
+        int k,
+        double alpha,
+        double[,] a,
+        int ia,
+        int ja,
+        int optypea,
+        double[,] b,
+        int ib,
+        int jb,
+        int optypeb,
+        double beta,
+        double[,] c,
+        int ic,
+        int jc)
     {
         // if matrix size is zero
         if (m == 0 || n == 0)
@@ -2397,7 +2371,8 @@ internal static class MatrixTST
         // if K=0 or Alpha=0, then C=Beta*C
         if (k == 0 || alpha == 0)
         {
-            if (beta == 1) return;
+            if (beta == 1) 
+                return;
 
             int i, j;
             if (beta != 0)
@@ -2419,33 +2394,38 @@ internal static class MatrixTST
         //       functions significantly slows down internal loop of the algorithm.
         if (optypea == 0 && optypeb == 0)
             rmatrixgemmk44v00(m, n, k, alpha, a, ia, ja, b, ib, jb, beta, c, ic, jc);
+
         if (optypea == 0 && optypeb != 0)
             rmatrixgemmk44v01(m, n, k, alpha, a, ia, ja, b, ib, jb, beta, c, ic, jc);
+
         if (optypea != 0 && optypeb == 0)
             rmatrixgemmk44v10(m, n, k, alpha, a, ia, ja, b, ib, jb, beta, c, ic, jc);
+
         if (optypea != 0 && optypeb != 0)
             rmatrixgemmk44v11(m, n, k, alpha, a, ia, ja, b, ib, jb, beta, c, ic, jc);
     }
 
-    public static void rmatrixgemmk44v00(int m,
-            int n,
-            int k,
-            double alpha,
-            double[,] a,
-            int ia,
-            int ja,
-            double[,] b,
-            int ib,
-            int jb,
-            double beta,
-            double[,] c,
-            int ic,
-            int jc)
+    private static void rmatrixgemmk44v00(
+        int m,
+        int n,
+        int k,
+        double alpha,
+        double[,] a,
+        int ia,
+        int ja,
+        double[,] b,
+        int ib,
+        int jb,
+        double beta,
+        double[,] c,
+        int ic,
+        int jc)
     {
         //alglib.ap.assert(alpha != 0, "RMatrixGEMMK44V00: internal error (Alpha=0)");
 
         // if matrix size is zero
-        if (m == 0 || n == 0) return;
+        if (m == 0 || n == 0) 
+            return;
 
         // A*B
         var i = 0;
@@ -2467,23 +2447,28 @@ internal static class MatrixTST
                     var idxa2 = ia + i + 2;
                     var idxa3 = ia + i + 3;
                     var offsa = ja;
+
                     var idxb0 = jb + j + 0;
                     var idxb1 = jb + j + 1;
                     var idxb2 = jb + j + 2;
                     var idxb3 = jb + j + 3;
                     var offsb = ib;
+
                     var v00 = 0.0;
                     var v01 = 0.0;
                     var v02 = 0.0;
                     var v03 = 0.0;
+
                     var v10 = 0.0;
                     var v11 = 0.0;
                     var v12 = 0.0;
                     var v13 = 0.0;
+
                     var v20 = 0.0;
                     var v21 = 0.0;
                     var v22 = 0.0;
                     var v23 = 0.0;
+
                     var v30 = 0.0;
                     var v31 = 0.0;
                     var v32 = 0.0;
@@ -2496,18 +2481,23 @@ internal static class MatrixTST
                         var a1 = a[idxa1, offsa];
                         var b0 = b[offsb, idxb0];
                         var b1 = b[offsb, idxb1];
+
                         v00 += a0 * b0;
                         v01 += a0 * b1;
                         v10 += a1 * b0;
                         v11 += a1 * b1;
+
                         var a2 = a[idxa2, offsa];
                         var a3 = a[idxa3, offsa];
+
                         v20 += a2 * b0;
                         v21 += a2 * b1;
                         v30 += a3 * b0;
                         v31 += a3 * b1;
+
                         var b2 = b[offsb, idxb2];
                         var b3 = b[offsb, idxb3];
+
                         v22 += a2 * b2;
                         v23 += a2 * b3;
                         v32 += a3 * b2;
@@ -2516,23 +2506,28 @@ internal static class MatrixTST
                         v03 += a0 * b3;
                         v12 += a1 * b2;
                         v13 += a1 * b3;
-                        offsa += 1;
-                        offsb += 1;
+
+                        offsa++;
+                        offsb++;
                     }
+
                     if (beta == 0)
                     {
                         c[ic + i + 0, jc + j + 0] = alpha * v00;
                         c[ic + i + 0, jc + j + 1] = alpha * v01;
                         c[ic + i + 0, jc + j + 2] = alpha * v02;
                         c[ic + i + 0, jc + j + 3] = alpha * v03;
+
                         c[ic + i + 1, jc + j + 0] = alpha * v10;
                         c[ic + i + 1, jc + j + 1] = alpha * v11;
                         c[ic + i + 1, jc + j + 2] = alpha * v12;
                         c[ic + i + 1, jc + j + 3] = alpha * v13;
+
                         c[ic + i + 2, jc + j + 0] = alpha * v20;
                         c[ic + i + 2, jc + j + 1] = alpha * v21;
                         c[ic + i + 2, jc + j + 2] = alpha * v22;
                         c[ic + i + 2, jc + j + 3] = alpha * v23;
+
                         c[ic + i + 3, jc + j + 0] = alpha * v30;
                         c[ic + i + 3, jc + j + 1] = alpha * v31;
                         c[ic + i + 3, jc + j + 2] = alpha * v32;
@@ -2544,14 +2539,17 @@ internal static class MatrixTST
                         c[ic + i + 0, jc + j + 1] = beta * c[ic + i + 0, jc + j + 1] + alpha * v01;
                         c[ic + i + 0, jc + j + 2] = beta * c[ic + i + 0, jc + j + 2] + alpha * v02;
                         c[ic + i + 0, jc + j + 3] = beta * c[ic + i + 0, jc + j + 3] + alpha * v03;
+
                         c[ic + i + 1, jc + j + 0] = beta * c[ic + i + 1, jc + j + 0] + alpha * v10;
                         c[ic + i + 1, jc + j + 1] = beta * c[ic + i + 1, jc + j + 1] + alpha * v11;
                         c[ic + i + 1, jc + j + 2] = beta * c[ic + i + 1, jc + j + 2] + alpha * v12;
                         c[ic + i + 1, jc + j + 3] = beta * c[ic + i + 1, jc + j + 3] + alpha * v13;
+
                         c[ic + i + 2, jc + j + 0] = beta * c[ic + i + 2, jc + j + 0] + alpha * v20;
                         c[ic + i + 2, jc + j + 1] = beta * c[ic + i + 2, jc + j + 1] + alpha * v21;
                         c[ic + i + 2, jc + j + 2] = beta * c[ic + i + 2, jc + j + 2] + alpha * v22;
                         c[ic + i + 2, jc + j + 3] = beta * c[ic + i + 2, jc + j + 3] + alpha * v23;
+
                         c[ic + i + 3, jc + j + 0] = beta * c[ic + i + 3, jc + j + 0] + alpha * v30;
                         c[ic + i + 3, jc + j + 1] = beta * c[ic + i + 3, jc + j + 1] + alpha * v31;
                         c[ic + i + 3, jc + j + 2] = beta * c[ic + i + 3, jc + j + 2] + alpha * v32;
@@ -2561,14 +2559,12 @@ internal static class MatrixTST
                 else
                 {
                     // Determine submatrix [I0..I1]x[J0..J1] to process
-                    var i0 = i;
                     var i1 = Math.Min(i + 3, m - 1);
-                    var j0 = j;
                     var j1 = Math.Min(j + 3, n - 1);
 
                     // Process submatrix
-                    for (var ik = i0; ik <= i1; ik++)
-                        for (var jk = j0; jk <= j1; jk++)
+                    for (var ik = i; ik <= i1; ik++)
+                        for (var jk = j; jk <= j1; jk++)
                         {
                             double v;
                             if (k == 0 || alpha == 0)
@@ -2576,7 +2572,7 @@ internal static class MatrixTST
                             else
                             {
                                 var i1_ = ib - ja;
-                                v = 0.0;
+                                v = 0;
                                 for (var i_ = ja; i_ <= ja + k - 1; i_++) 
                                     v += a[ia + ik, i_] * b[i_ + i1_, jb + jk];
                             }
@@ -2592,7 +2588,8 @@ internal static class MatrixTST
         }
     }
 
-    public static void rmatrixgemmk44v01(int m,
+    private static void rmatrixgemmk44v01(
+        int m,
         int n,
         int k,
         double alpha,
@@ -2633,45 +2630,56 @@ internal static class MatrixTST
                     var idxa2 = ia + i + 2;
                     var idxa3 = ia + i + 3;
                     var offsa = ja;
+
                     var idxb0 = ib + j + 0;
                     var idxb1 = ib + j + 1;
                     var idxb2 = ib + j + 2;
                     var idxb3 = ib + j + 3;
                     var offsb = jb;
+
                     var v00 = 0.0;
                     var v01 = 0.0;
                     var v02 = 0.0;
                     var v03 = 0.0;
+
                     var v10 = 0.0;
                     var v11 = 0.0;
                     var v12 = 0.0;
                     var v13 = 0.0;
+
                     var v20 = 0.0;
                     var v21 = 0.0;
                     var v22 = 0.0;
                     var v23 = 0.0;
+
                     var v30 = 0.0;
                     var v31 = 0.0;
                     var v32 = 0.0;
                     var v33 = 0.0;
+
                     for (var t = 0; t < k; t++)
                     {
                         var a0 = a[idxa0, offsa];
                         var a1 = a[idxa1, offsa];
                         var b0 = b[idxb0, offsb];
                         var b1 = b[idxb1, offsb];
+
                         v00 += a0 * b0;
                         v01 += a0 * b1;
                         v10 += a1 * b0;
                         v11 += a1 * b1;
+
                         var a2 = a[idxa2, offsa];
                         var a3 = a[idxa3, offsa];
+
                         v20 += a2 * b0;
                         v21 += a2 * b1;
                         v30 += a3 * b0;
                         v31 += a3 * b1;
+
                         var b2 = b[idxb2, offsb];
                         var b3 = b[idxb3, offsb];
+
                         v22 += a2 * b2;
                         v23 += a2 * b3;
                         v32 += a3 * b2;
@@ -2680,23 +2688,28 @@ internal static class MatrixTST
                         v03 += a0 * b3;
                         v12 += a1 * b2;
                         v13 += a1 * b3;
-                        offsa += 1;
-                        offsb += 1;
+
+                        offsa++;
+                        offsb++;
                     }
+
                     if (beta == 0)
                     {
                         c[ic + i + 0, jc + j + 0] = alpha * v00;
                         c[ic + i + 0, jc + j + 1] = alpha * v01;
                         c[ic + i + 0, jc + j + 2] = alpha * v02;
                         c[ic + i + 0, jc + j + 3] = alpha * v03;
+
                         c[ic + i + 1, jc + j + 0] = alpha * v10;
                         c[ic + i + 1, jc + j + 1] = alpha * v11;
                         c[ic + i + 1, jc + j + 2] = alpha * v12;
                         c[ic + i + 1, jc + j + 3] = alpha * v13;
+
                         c[ic + i + 2, jc + j + 0] = alpha * v20;
                         c[ic + i + 2, jc + j + 1] = alpha * v21;
                         c[ic + i + 2, jc + j + 2] = alpha * v22;
                         c[ic + i + 2, jc + j + 3] = alpha * v23;
+
                         c[ic + i + 3, jc + j + 0] = alpha * v30;
                         c[ic + i + 3, jc + j + 1] = alpha * v31;
                         c[ic + i + 3, jc + j + 2] = alpha * v32;
@@ -2708,14 +2721,17 @@ internal static class MatrixTST
                         c[ic + i + 0, jc + j + 1] = beta * c[ic + i + 0, jc + j + 1] + alpha * v01;
                         c[ic + i + 0, jc + j + 2] = beta * c[ic + i + 0, jc + j + 2] + alpha * v02;
                         c[ic + i + 0, jc + j + 3] = beta * c[ic + i + 0, jc + j + 3] + alpha * v03;
+
                         c[ic + i + 1, jc + j + 0] = beta * c[ic + i + 1, jc + j + 0] + alpha * v10;
                         c[ic + i + 1, jc + j + 1] = beta * c[ic + i + 1, jc + j + 1] + alpha * v11;
                         c[ic + i + 1, jc + j + 2] = beta * c[ic + i + 1, jc + j + 2] + alpha * v12;
                         c[ic + i + 1, jc + j + 3] = beta * c[ic + i + 1, jc + j + 3] + alpha * v13;
+
                         c[ic + i + 2, jc + j + 0] = beta * c[ic + i + 2, jc + j + 0] + alpha * v20;
                         c[ic + i + 2, jc + j + 1] = beta * c[ic + i + 2, jc + j + 1] + alpha * v21;
                         c[ic + i + 2, jc + j + 2] = beta * c[ic + i + 2, jc + j + 2] + alpha * v22;
                         c[ic + i + 2, jc + j + 3] = beta * c[ic + i + 2, jc + j + 3] + alpha * v23;
+
                         c[ic + i + 3, jc + j + 0] = beta * c[ic + i + 3, jc + j + 0] + alpha * v30;
                         c[ic + i + 3, jc + j + 1] = beta * c[ic + i + 3, jc + j + 1] + alpha * v31;
                         c[ic + i + 3, jc + j + 2] = beta * c[ic + i + 3, jc + j + 2] + alpha * v32;
@@ -2724,19 +2740,13 @@ internal static class MatrixTST
                 }
                 else
                 {
-                    //
                     // Determine submatrix [I0..I1]x[J0..J1] to process
-                    //
-                    var i0 = i;
                     var i1 = Math.Min(i + 3, m - 1);
-                    var j0 = j;
                     var j1 = Math.Min(j + 3, n - 1);
 
-                    //
                     // Process submatrix
-                    //
-                    for (var ik = i0; ik <= i1; ik++)
-                        for (var jk = j0; jk <= j1; jk++)
+                    for (var ik = i; ik <= i1; ik++)
+                        for (var jk = j; jk <= j1; jk++)
                         {
                             double v;
                             if (k == 0 || alpha == 0)
@@ -2747,6 +2757,7 @@ internal static class MatrixTST
                                 v = 0.0;
                                 for (var i_ = ja; i_ <= ja + k - 1; i_++) v += a[ia + ik, i_] * b[ib + jk, i_ + i1_];
                             }
+
                             if (beta == 0)
                                 c[ic + ik, jc + jk] = alpha * v;
                             else
@@ -2759,7 +2770,8 @@ internal static class MatrixTST
         }
     }
 
-    public static void rmatrixgemmk44v10(int m,
+    private static void rmatrixgemmk44v10(
+        int m,
         int n,
         int k,
         double alpha,
