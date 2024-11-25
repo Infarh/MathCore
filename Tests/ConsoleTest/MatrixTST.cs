@@ -35,8 +35,7 @@ internal static class MatrixTST
             int additionalmemory, // = 2
             ref double[] w,
             ref double[,] u,
-            ref double[,] vt,
-            alglib.xparams _params)
+            ref double[,] vt)
     {
         var m = a.GetLength(0);
         var n = a.GetLength(1);
@@ -114,13 +113,13 @@ internal static class MatrixTST
                 rmatrixbd(a, n, n, ref tauq, ref taup);
                 rmatrixbdunpackpt(a, n, n, taup, nrvt, ref vt);
                 rmatrixbdunpackdiagonals(a, n, n, ref isupper, ref w, ref e);
-                result = bdsvd.rmatrixbdsvd(w, e, n, isupper, false, u, 0, a, 0, vt, ncvt, _params);
+                result = rmatrixbdsvd(w, e, n, isupper, false, u, 0, a, 0, vt, ncvt);
                 return result;
             }
 
             // Left singular vectors (may be full matrix U) to be computed
-            ortfac.rmatrixqr(a, m, n, ref tau, _params);
-            ortfac.rmatrixqrunpackq(a, m, n, tau, ncu, ref u, _params);
+            rmatrixqr(a, ref tau);
+            rmatrixqrunpackq(a, m, n, tau, ncu, ref u);
 
             for (i = 0; i < n; i++)
                 for (j = 0; j < i; j++) 
@@ -132,8 +131,8 @@ internal static class MatrixTST
 
             if (additionalmemory < 1) // No additional memory can be used
             {
-                ortfac.rmatrixbdmultiplybyq(a, n, n, tauq, u, m, n, true, false, _params);
-                result = bdsvd.rmatrixbdsvd(w, e, n, isupper, false, u, m, a, 0, vt, ncvt, _params);
+                rmatrixbdmultiplybyq(a, n, n, tauq, u, m, n, true, false);
+                result = rmatrixbdsvd(w, e, n, isupper, false, u, m, a, 0, vt, ncvt);
                 return result;
 
             }
@@ -141,13 +140,13 @@ internal static class MatrixTST
             // Large U. Transforming intermediate matrix T2
             work = new double[Math.Max(m, n) + 1];
 
-            ortfac.rmatrixbdunpackq(a, n, n, tauq, n, ref t2, _params);
-            blas.copymatrix(u, 0, m - 1, 0, n - 1, ref a, 0, m - 1, 0, n - 1, _params);
-            blas.inplacetranspose(ref t2, 0, n - 1, 0, n - 1, ref work, _params);
+            rmatrixbdunpackq(a, n, n, tauq, n, ref t2);
+            copymatrix(u, 0, m - 1, 0, n - 1, ref a, 0, m - 1, 0, n - 1);
+            inplacetranspose(ref t2, 0, n - 1, 0, n - 1, ref work);
 
-            result = bdsvd.rmatrixbdsvd(w, e, n, isupper, false, u, 0, t2, n, vt, ncvt, _params);
+            result = rmatrixbdsvd(w, e, n, isupper, false, u, 0, t2, n, vt, ncvt);
 
-            ablas.rmatrixgemm(m, n, n, 1.0, a, 0, 0, 0, t2, 0, 0, 1, 0.0, u, 0, 0, _params);
+            rmatrixgemm(m, n, n, 1.0, a, 0, 0, 0, t2, 0, 0, 1, 0.0, u, 0, 0);
 
             return result;
         }
@@ -157,7 +156,7 @@ internal static class MatrixTST
         {
             if (vtneeded == 0) // No right singular vectors to be computed
             {
-                ortfac.rmatrixlq(a, m, n, ref tau, _params);
+                rmatrixlq(a, m, n, ref tau);
 
                 for (i = 0; i < m; i++)
                     for (j = i + 1; j < m; j++)
@@ -168,16 +167,16 @@ internal static class MatrixTST
                 rmatrixbdunpackdiagonals(a, m, m, ref isupper, ref w, ref e);
 
                 work = new double[m + 1];
-                blas.inplacetranspose(ref u, 0, nru - 1, 0, ncu - 1, ref work, _params);
-                result = bdsvd.rmatrixbdsvd(w, e, m, isupper, false, a, 0, u, nru, vt, 0, _params);
-                blas.inplacetranspose(ref u, 0, nru - 1, 0, ncu - 1, ref work, _params);
+                inplacetranspose(ref u, 0, nru - 1, 0, ncu - 1, ref work);
+                result = rmatrixbdsvd(w, e, m, isupper, false, a, 0, u, nru, vt, 0);
+                inplacetranspose(ref u, 0, nru - 1, 0, ncu - 1, ref work);
 
                 return result;
             }
 
             // Right singular vectors (may be full matrix VT) to be computed
-            ortfac.rmatrixlq(a, m, n, ref tau, _params);
-            ortfac.rmatrixlqunpackq(a, m, n, tau, nrvt, ref vt, _params);
+            rmatrixlq(a, m, n, ref tau);
+            rmatrixlqunpackq(a, m, n, tau, nrvt, ref vt);
 
             for (i = 0; i < m; i++)
                 for (j = i + 1; j < m; j++) 
@@ -187,20 +186,20 @@ internal static class MatrixTST
             rmatrixbdunpackq(a, m, m, tauq, ncu, ref u);
             rmatrixbdunpackdiagonals(a, m, m, ref isupper, ref w, ref e);
             work = new double[Math.Max(m, n) + 1];
-            blas.inplacetranspose(ref u, 0, nru - 1, 0, ncu - 1, ref work, _params);
+            inplacetranspose(ref u, 0, nru - 1, 0, ncu - 1, ref work);
             if (additionalmemory < 1) // No additional memory available
             {
-                ortfac.rmatrixbdmultiplybyp(a, m, m, taup, vt, m, n, false, true, _params);
-                result = bdsvd.rmatrixbdsvd(w, e, m, isupper, false, a, 0, u, nru, vt, n, _params);
+                rmatrixbdmultiplybyp(a, m, m, taup, vt, m, n, false, true);
+                result = rmatrixbdsvd(w, e, m, isupper, false, a, 0, u, nru, vt, n);
             }
             else // Large VT. Transforming intermediate matrix T2
             {
-                ortfac.rmatrixbdunpackpt(a, m, m, taup, m, ref t2, _params);
-                result = bdsvd.rmatrixbdsvd(w, e, m, isupper, false, a, 0, u, nru, t2, m, _params);
-                blas.copymatrix(vt, 0, m - 1, 0, n - 1, ref a, 0, m - 1, 0, n - 1, _params);
-                ablas.rmatrixgemm(m, n, m, 1.0, t2, 0, 0, 0, a, 0, 0, 0, 0.0, vt, 0, 0, _params);
+                rmatrixbdunpackpt(a, m, m, taup, m, ref t2);
+                result = rmatrixbdsvd(w, e, m, isupper, false, a, 0, u, nru, t2, m);
+                copymatrix(vt, 0, m - 1, 0, n - 1, ref a, 0, m - 1, 0, n - 1);
+                rmatrixgemm(m, n, m, 1.0, t2, 0, 0, 0, a, 0, 0, 0, 0.0, vt, 0, 0);
             }
-            blas.inplacetranspose(ref u, 0, nru - 1, 0, ncu - 1, ref work, _params);
+            inplacetranspose(ref u, 0, nru - 1, 0, ncu - 1, ref work);
             return result;
         }
 
@@ -211,9 +210,9 @@ internal static class MatrixTST
             rmatrixbdunpackpt(a, m, n, taup, nrvt, ref vt);
             rmatrixbdunpackdiagonals(a, m, n, ref isupper, ref w, ref e);
             work = new double[m + 1];
-            blas.inplacetranspose(ref u, 0, nru - 1, 0, ncu - 1, ref work, _params);
-            result = bdsvd.rmatrixbdsvd(w, e, minmn, isupper, false, a, 0, u, nru, vt, ncvt, _params);
-            blas.inplacetranspose(ref u, 0, nru - 1, 0, ncu - 1, ref work, _params);
+            inplacetranspose(ref u, 0, nru - 1, 0, ncu - 1, ref work);
+            result = rmatrixbdsvd(w, e, minmn, isupper, false, a, 0, u, nru, vt, ncvt);
+            inplacetranspose(ref u, 0, nru - 1, 0, ncu - 1, ref work);
             return result;
         }
 
@@ -225,25 +224,1777 @@ internal static class MatrixTST
         if (additionalmemory < 2 || uneeded == 0)
         {
             // We cant use additional memory or there is no need in such operations
-            result = bdsvd.rmatrixbdsvd(w, e, minmn, isupper, false, u, nru, a, 0, vt, ncvt, _params);
+            result = rmatrixbdsvd(w, e, minmn, isupper, false, u, nru, a, 0, vt, ncvt);
             return result;
         }
 
         // We can use additional memory
         t2 = new double[minmn - 1 + 1, m - 1 + 1];
-        blas.copyandtranspose(u, 0, m - 1, 0, minmn - 1, ref t2, 0, minmn - 1, 0, m - 1, _params);
-        result = bdsvd.rmatrixbdsvd(w, e, minmn, isupper, false, u, 0, t2, m, vt, ncvt, _params);
-        blas.copyandtranspose(t2, 0, minmn - 1, 0, m - 1, ref u, 0, m - 1, 0, minmn - 1, _params);
+        copyandtranspose(u, 0, m - 1, 0, minmn - 1, ref t2, 0, minmn - 1, 0, m - 1);
+        result = rmatrixbdsvd(w, e, minmn, isupper, false, u, 0, t2, m, vt, ncvt);
+        copyandtranspose(t2, 0, minmn - 1, 0, m - 1, ref u, 0, m - 1, 0, minmn - 1);
 
         return result;
     }
 
-    public static void rmatrixbdunpackdiagonals(double[,] b,
+    public static void rmatrixqrunpackq(double[,] a,
+            int m,
+            int n,
+            double[] tau,
+            int qcolumns,
+            ref double[,] q)
+    {
+        double[] work = new double[0];
+        double[] t = new double[0];
+        double[] taubuf = new double[0];
+        int minmn = 0;
+        int refcnt = 0;
+        double[,] tmpa = new double[0, 0];
+        double[,] tmpt = new double[0, 0];
+        double[,] tmpr = new double[0, 0];
+        int blockstart = 0;
+        int blocksize = 0;
+        int rowscount = 0;
+        int i = 0;
+        int j = 0;
+        int ts = 0;
+        int i_ = 0;
+        int i1_ = 0;
+
+        q = new double[0, 0];
+
+        //alglib.ap.assert(qcolumns <= m, "UnpackQFromQR: QColumns>M!");
+        if ((m <= 0 || n <= 0) || qcolumns <= 0)
+        {
+            return;
+        }
+
+        //
+        // init
+        //
+        ts = matrixtilesizeb();
+        minmn = Math.Min(m, n);
+        refcnt = Math.Min(minmn, qcolumns);
+        q = new double[m, qcolumns];
+        for (i = 0; i <= m - 1; i++)
+        {
+            for (j = 0; j <= qcolumns - 1; j++)
+            {
+                if (i == j)
+                {
+                    q[i, j] = 1;
+                }
+                else
+                {
+                    q[i, j] = 0;
+                }
+            }
+        }
+        work = new double[Math.Max(m, qcolumns) + 1];
+        t = new double[Math.Max(m, qcolumns) + 1];
+        taubuf = new double[minmn];
+        tmpa = new double[m, ts];
+        tmpt = new double[ts, 2 * ts];
+        tmpr = new double[2 * ts, qcolumns];
+
+        //
+        // Blocked code
+        //
+        blockstart = ts * (refcnt / ts);
+        blocksize = refcnt - blockstart;
+        while (blockstart >= 0)
+        {
+            rowscount = m - blockstart;
+            if (blocksize > 0)
+            {
+
+                //
+                // Copy current block
+                //
+                rmatrixcopy(rowscount, blocksize, a, blockstart, blockstart, tmpa, 0, 0);
+                i1_ = (blockstart) - (0);
+                for (i_ = 0; i_ <= blocksize - 1; i_++)
+                {
+                    taubuf[i_] = tau[i_ + i1_];
+                }
+
+                //
+                // Update, choose between:
+                // a) Level 2 algorithm (when the rest of the matrix is small enough)
+                // b) blocked algorithm, see algorithm 5 from  'A storage efficient WY
+                //    representation for products of Householder transformations',
+                //    by R. Schreiber and C. Van Loan.
+                //
+                if (qcolumns >= 2 * ts)
+                {
+
+                    //
+                    // Prepare block reflector
+                    //
+                    rmatrixblockreflector(ref tmpa, ref taubuf, true, rowscount, blocksize, ref tmpt, ref work);
+
+                    //
+                    // Multiply matrix by Q.
+                    //
+                    // Q  = E + Y*T*Y'  = E + TmpA*TmpT*TmpA'
+                    //
+                    rmatrixgemm(blocksize, qcolumns, rowscount, 1.0, tmpa, 0, 0, 1, q, blockstart, 0, 0, 0.0, tmpr, 0, 0);
+                    rmatrixgemm(blocksize, qcolumns, blocksize, 1.0, tmpt, 0, 0, 0, tmpr, 0, 0, 0, 0.0, tmpr, blocksize, 0);
+                    rmatrixgemm(rowscount, qcolumns, blocksize, 1.0, tmpa, 0, 0, 0, tmpr, blocksize, 0, 0, 1.0, q, blockstart, 0);
+                }
+                else
+                {
+
+                    //
+                    // Level 2 algorithm
+                    //
+                    for (i = blocksize - 1; i >= 0; i--)
+                    {
+                        i1_ = (i) - (1);
+                        for (i_ = 1; i_ <= rowscount - i; i_++)
+                        {
+                            t[i_] = tmpa[i_ + i1_, i];
+                        }
+                        t[1] = 1;
+                        applyreflectionfromtheleft(q, taubuf[i], t, blockstart + i, m - 1, 0, qcolumns - 1, ref work);
+                    }
+                }
+            }
+
+            //
+            // Advance
+            //
+            blockstart = blockstart - ts;
+            blocksize = ts;
+        }
+    }
+
+    private static void rmatrixlq(double[,] a,
+            int m,
+            int n,
+            ref double[] tau)
+    {
+        double[] work = new double[0];
+        double[] t = new double[0];
+        double[] taubuf = new double[0];
+        int minmn = 0;
+        double[,] tmpa = new double[0, 0];
+        double[,] tmpt = new double[0, 0];
+        double[,] tmpr = new double[0, 0];
+        int blockstart = 0;
+        int blocksize = 0;
+        int columnscount = 0;
+        int i = 0;
+        int ts = 0;
+        int i_ = 0;
+        int i1_ = 0;
+
+        tau = new double[0];
+
+        if (m <= 0 || n <= 0)
+        {
+            return;
+        }
+        minmn = Math.Min(m, n);
+        ts = matrixtilesizeb();
+        work = new double[Math.Max(m, n) + 1];
+        t = new double[Math.Max(m, n) + 1];
+        tau = new double[minmn];
+        taubuf = new double[minmn];
+        tmpa = new double[ts, n];
+        tmpt = new double[ts, 2 * ts];
+        tmpr = new double[m, 2 * ts];
+
+        //
+        // Blocked code
+        //
+        blockstart = 0;
+        while (blockstart != minmn)
+        {
+
+            //
+            // Determine block size
+            //
+            blocksize = minmn - blockstart;
+            if (blocksize > ts)
+            {
+                blocksize = ts;
+            }
+            columnscount = n - blockstart;
+
+            //
+            // LQ decomposition of submatrix.
+            // Matrix is copied to temporary storage to solve
+            // some TLB issues arising from non-contiguous memory
+            // access pattern.
+            //
+            rmatrixcopy(blocksize, columnscount, a, blockstart, blockstart, tmpa, 0, 0);
+            rmatrixlqbasecase(ref tmpa, blocksize, columnscount, ref work, ref t, ref taubuf);
+            rmatrixcopy(blocksize, columnscount, tmpa, 0, 0, a, blockstart, blockstart);
+            i1_ = (0) - (blockstart);
+            for (i_ = blockstart; i_ <= blockstart + blocksize - 1; i_++)
+            {
+                tau[i_] = taubuf[i_ + i1_];
+            }
+
+            //
+            // Update the rest, choose between:
+            // a) Level 2 algorithm (when the rest of the matrix is small enough)
+            // b) blocked algorithm, see algorithm 5 from  'A storage efficient WY
+            //    representation for products of Householder transformations',
+            //    by R. Schreiber and C. Van Loan.
+            //
+            if (blockstart + blocksize <= m - 1)
+            {
+                if (m - blockstart - blocksize >= 2 * ts)
+                {
+
+                    //
+                    // Prepare block reflector
+                    //
+                    rmatrixblockreflector(ref tmpa, ref taubuf, false, columnscount, blocksize, ref tmpt, ref work);
+
+                    //
+                    // Multiply the rest of A by Q.
+                    //
+                    // Q  = E + Y*T*Y'  = E + TmpA'*TmpT*TmpA
+                    //
+                    rmatrixgemm(m - blockstart - blocksize, blocksize, columnscount, 1.0, a, blockstart + blocksize, blockstart, 0, tmpa, 0, 0, 1, 0.0, tmpr, 0, 0);
+                    rmatrixgemm(m - blockstart - blocksize, blocksize, blocksize, 1.0, tmpr, 0, 0, 0, tmpt, 0, 0, 0, 0.0, tmpr, 0, blocksize);
+                    rmatrixgemm(m - blockstart - blocksize, columnscount, blocksize, 1.0, tmpr, 0, blocksize, 0, tmpa, 0, 0, 0, 1.0, a, blockstart + blocksize, blockstart);
+                }
+                else
+                {
+
+                    //
+                    // Level 2 algorithm
+                    //
+                    for (i = 0; i <= blocksize - 1; i++)
+                    {
+                        i1_ = (i) - (1);
+                        for (i_ = 1; i_ <= columnscount - i; i_++)
+                        {
+                            t[i_] = tmpa[i, i_ + i1_];
+                        }
+                        t[1] = 1;
+                        applyreflectionfromtheright(a, taubuf[i], t, blockstart + blocksize, m - 1, blockstart + i, n - 1, ref work);
+                    }
+                }
+            }
+
+            //
+            // Advance
+            //
+            blockstart = blockstart + blocksize;
+        }
+    }
+
+    private static void rmatrixlqbasecase(ref double[,] a,
         int m,
         int n,
-        ref bool isupper,
-        ref double[] d,
-        ref double[] e)
+        ref double[] work,
+        ref double[] t,
+        ref double[] tau)
+    {
+        int i = 0;
+        int k = 0;
+        double tmp = 0;
+        int i_ = 0;
+        int i1_ = 0;
+
+        k = Math.Min(m, n);
+        for (i = 0; i <= k - 1; i++)
+        {
+
+            //
+            // Generate elementary reflector H(i) to annihilate A(i,i+1:n-1)
+            //
+            i1_ = (i) - (1);
+            for (i_ = 1; i_ <= n - i; i_++)
+            {
+                t[i_] = a[i, i_ + i1_];
+            }
+            generatereflection(ref t, n - i, out tmp);
+            tau[i] = tmp;
+            i1_ = (1) - (i);
+            for (i_ = i; i_ <= n - 1; i_++)
+            {
+                a[i, i_] = t[i_ + i1_];
+            }
+            t[1] = 1;
+            if (i < n)
+            {
+
+                //
+                // Apply H(i) to A(i+1:m,i:n) from the right
+                //
+                applyreflectionfromtheright(a, tau[i], t, i + 1, m - 1, i, n - 1, ref work);
+            }
+        }
+    }
+
+    public static void rmatrixlqunpackq(double[,] a,
+            int m,
+            int n,
+            double[] tau,
+            int qrows,
+            ref double[,] q)
+    {
+        double[] work = new double[0];
+        double[] t = new double[0];
+        double[] taubuf = new double[0];
+        int minmn = 0;
+        int refcnt = 0;
+        double[,] tmpa = new double[0, 0];
+        double[,] tmpt = new double[0, 0];
+        double[,] tmpr = new double[0, 0];
+        int blockstart = 0;
+        int blocksize = 0;
+        int columnscount = 0;
+        int i = 0;
+        int j = 0;
+        int ts = 0;
+        int i_ = 0;
+        int i1_ = 0;
+
+        q = new double[0, 0];
+
+        //alglib.ap.assert(qrows <= n, "RMatrixLQUnpackQ: QRows>N!");
+        if ((m <= 0 || n <= 0) || qrows <= 0)
+        {
+            return;
+        }
+
+        //
+        // init
+        //
+        ts = matrixtilesizeb();
+        minmn = Math.Min(m, n);
+        refcnt = Math.Min(minmn, qrows);
+        work = new double[Math.Max(m, n) + 1];
+        t = new double[Math.Max(m, n) + 1];
+        taubuf = new double[minmn];
+        tmpa = new double[ts, n];
+        tmpt = new double[ts, 2 * ts];
+        tmpr = new double[qrows, 2 * ts];
+        q = new double[qrows, n];
+        for (i = 0; i <= qrows - 1; i++)
+        {
+            for (j = 0; j <= n - 1; j++)
+            {
+                if (i == j)
+                {
+                    q[i, j] = 1;
+                }
+                else
+                {
+                    q[i, j] = 0;
+                }
+            }
+        }
+
+        //
+        // Blocked code
+        //
+        blockstart = ts * (refcnt / ts);
+        blocksize = refcnt - blockstart;
+        while (blockstart >= 0)
+        {
+            columnscount = n - blockstart;
+            if (blocksize > 0)
+            {
+
+                //
+                // Copy submatrix
+                //
+                rmatrixcopy(blocksize, columnscount, a, blockstart, blockstart, tmpa, 0, 0);
+                i1_ = (blockstart) - (0);
+                for (i_ = 0; i_ <= blocksize - 1; i_++)
+                {
+                    taubuf[i_] = tau[i_ + i1_];
+                }
+
+                //
+                // Update matrix, choose between:
+                // a) Level 2 algorithm (when the rest of the matrix is small enough)
+                // b) blocked algorithm, see algorithm 5 from  'A storage efficient WY
+                //    representation for products of Householder transformations',
+                //    by R. Schreiber and C. Van Loan.
+                //
+                if (qrows >= 2 * ts)
+                {
+
+                    //
+                    // Prepare block reflector
+                    //
+                    rmatrixblockreflector(ref tmpa, ref taubuf, false, columnscount, blocksize, ref tmpt, ref work);
+
+                    //
+                    // Multiply the rest of A by Q'.
+                    //
+                    // Q'  = E + Y*T'*Y'  = E + TmpA'*TmpT'*TmpA
+                    //
+                    rmatrixgemm(qrows, blocksize, columnscount, 1.0, q, 0, blockstart, 0, tmpa, 0, 0, 1, 0.0, tmpr, 0, 0);
+                    rmatrixgemm(qrows, blocksize, blocksize, 1.0, tmpr, 0, 0, 0, tmpt, 0, 0, 1, 0.0, tmpr, 0, blocksize);
+                    rmatrixgemm(qrows, columnscount, blocksize, 1.0, tmpr, 0, blocksize, 0, tmpa, 0, 0, 0, 1.0, q, 0, blockstart);
+                }
+                else
+                {
+
+                    //
+                    // Level 2 algorithm
+                    //
+                    for (i = blocksize - 1; i >= 0; i--)
+                    {
+                        i1_ = (i) - (1);
+                        for (i_ = 1; i_ <= columnscount - i; i_++)
+                        {
+                            t[i_] = tmpa[i, i_ + i1_];
+                        }
+                        t[1] = 1;
+                        applyreflectionfromtheright(q, taubuf[i], t, 0, qrows - 1, blockstart + i, n - 1, ref work);
+                    }
+                }
+            }
+
+            //
+            // Advance
+            //
+            blockstart = blockstart - ts;
+            blocksize = ts;
+        }
+    }
+
+    private static void copymatrix(double[,] a,
+        int is1,
+        int is2,
+        int js1,
+        int js2,
+        ref double[,] b,
+        int id1,
+        int id2,
+        int jd1,
+        int jd2)
+    {
+        int isrc = 0;
+        int idst = 0;
+        int i_ = 0;
+        int i1_ = 0;
+
+        if (is1 > is2 || js1 > js2)
+        {
+            return;
+        }
+        //alglib.ap.assert(is2 - is1 == id2 - id1, "CopyMatrix: different sizes!");
+        //alglib.ap.assert(js2 - js1 == jd2 - jd1, "CopyMatrix: different sizes!");
+        for (isrc = is1; isrc <= is2; isrc++)
+        {
+            idst = isrc - is1 + id1;
+            i1_ = (js1) - (jd1);
+            for (i_ = jd1; i_ <= jd2; i_++)
+            {
+                b[idst, i_] = a[isrc, i_ + i1_];
+            }
+        }
+    }
+
+    public static void inplacetranspose(ref double[,] a, int i1, int i2, int j1, int j2, ref double[] work)
+    {
+        int i = 0;
+        int j = 0;
+        int ips = 0;
+        int jps = 0;
+        int l = 0;
+        int i_ = 0;
+        int i1_ = 0;
+
+        if (i1 > i2 || j1 > j2)
+        {
+            return;
+        }
+        //alglib.ap.assert(i1 - i2 == j1 - j2, "InplaceTranspose error: incorrect array size!");
+        for (i = i1; i <= i2 - 1; i++)
+        {
+            j = j1 + i - i1;
+            ips = i + 1;
+            jps = j1 + ips - i1;
+            l = i2 - i;
+            i1_ = (ips) - (1);
+            for (i_ = 1; i_ <= l; i_++)
+            {
+                work[i_] = a[i_ + i1_, j];
+            }
+            i1_ = (jps) - (ips);
+            for (i_ = ips; i_ <= i2; i_++)
+            {
+                a[i_, j] = a[i, i_ + i1_];
+            }
+            i1_ = (1) - (jps);
+            for (i_ = jps; i_ <= j2; i_++)
+            {
+                a[i, i_] = work[i_ + i1_];
+            }
+        }
+    }
+
+    public static void copyandtranspose(double[,] a,
+        int is1,
+        int is2,
+        int js1,
+        int js2,
+        ref double[,] b,
+        int id1,
+        int id2,
+        int jd1,
+        int jd2)
+    {
+        int isrc = 0;
+        int jdst = 0;
+        int i_ = 0;
+        int i1_ = 0;
+
+        if (is1 > is2 || js1 > js2)
+        {
+            return;
+        }
+        //alglib.ap.assert(is2 - is1 == jd2 - jd1, "CopyAndTranspose: different sizes!");
+        //alglib.ap.assert(js2 - js1 == id2 - id1, "CopyAndTranspose: different sizes!");
+        for (isrc = is1; isrc <= is2; isrc++)
+        {
+            jdst = isrc - is1 + jd1;
+            i1_ = (js1) - (id1);
+            for (i_ = id1; i_ <= id2; i_++)
+            {
+                b[i_, jdst] = a[isrc, i_ + i1_];
+            }
+        }
+    }
+
+    private static bool rmatrixbdsvd(double[] d,
+        double[] e,
+        int n,
+        bool isupper,
+        bool isfractionalaccuracyrequired,
+        double[,] u,
+        int nru,
+        double[,] c,
+        int ncc,
+        double[,] vt,
+        int ncvt)
+    {
+        var en = new double[0];
+        var d1 = new double[0];
+        var e1 = new double[0];
+        var i_ = 0;
+
+        e = (double[])e.Clone();
+
+        var result = false;
+
+        //
+        // Try to use MKL
+        //
+        en = new double[n];
+        for (var i = 0; i <= n - 2; i++) en[i] = e[i];
+        en[n - 1] = 0.0;
+
+        //
+        // Use ALGLIB code
+        //
+        d1 = new double[n + 1];
+        var i1_ = 0 - 1;
+        for (i_ = 1; i_ <= n; i_++) d1[i_] = d[i_ + i1_];
+        if (n > 1)
+        {
+            e1 = new double[n - 1 + 1];
+            i1_ = 0 - 1;
+            for (i_ = 1; i_ <= n - 1; i_++) e1[i_] = e[i_ + i1_];
+        }
+        result = bidiagonalsvddecompositioninternal(d1, e1, n, isupper, isfractionalaccuracyrequired, u, 0, nru, c, 0, ncc, vt, 0, ncvt);
+        i1_ = 1 - 0;
+        for (i_ = 0; i_ <= n - 1; i_++) d[i_] = d1[i_ + i1_];
+        return result;
+    }
+
+    private static bool bidiagonalsvddecompositioninternal(double[] d,
+            double[] e,
+            int n,
+            bool isupper,
+            bool isfractionalaccuracyrequired,
+            double[,] uu,
+            int ustart,
+            int nru,
+            double[,] c,
+            int cstart,
+            int ncc,
+            double[,] vt,
+            int vstart,
+            int ncvt)
+    {
+        var i = 0;
+        var j = 0;
+        var lll = 0;
+        double cosl = 0;
+        double cosr = 0;
+        double cs = 0;
+        double f = 0;
+        double g = 0;
+        double h = 0;
+        double mu = 0;
+        double oldcs = 0;
+        double r = 0;
+        double shift = 0;
+        double sigmn = 0;
+        double sigmx = 0;
+        double sinl = 0;
+        double sinr = 0;
+        double sll = 0;
+        double smin = 0;
+        double sn = 0;
+        double thresh = 0;
+        var work0 = new double[0];
+        var work1 = new double[0];
+        var work2 = new double[0];
+        var work3 = new double[0];
+        var iterflag = new bool();
+        var utemp = new double[0];
+        var vttemp = new double[0];
+        var ctemp = new double[0];
+        var etemp = new double[0];
+        var ut = new double[0, 0];
+        double tmp = 0;
+        var mm1 = 0;
+        var mm0 = 0;
+        var i_ = 0;
+
+        e = (double[])e.Clone();
+
+        var result = true;
+        if (n == 0) return result;
+        if (n == 1)
+        {
+            if (d[1] < 0)
+            {
+                d[1] = -d[1];
+                if (ncvt > 0)
+                    for (i_ = vstart; i_ <= vstart + ncvt - 1; i_++)
+                        vt[vstart, i_] = -1 * vt[vstart, i_];
+            }
+            return result;
+        }
+
+        //
+        // these initializers are not really necessary,
+        // but without them compiler complains about uninitialized locals
+        //
+        var ll = 0;
+        double oldsn = 0;
+
+        //
+        // init
+        //
+        work0 = new double[n - 1 + 1];
+        work1 = new double[n - 1 + 1];
+        work2 = new double[n - 1 + 1];
+        work3 = new double[n - 1 + 1];
+        var uend = ustart + Math.Max(nru - 1, 0);
+        var vend = vstart + Math.Max(ncvt - 1, 0);
+        var cend = cstart + Math.Max(ncc - 1, 0);
+        utemp = new double[uend + 1];
+        vttemp = new double[vend + 1];
+        ctemp = new double[cend + 1];
+        var maxitr = 12;
+        var fwddir = true;
+        if (nru > 0)
+        {
+            ut = new double[ustart + n, ustart + nru];
+            rmatrixtranspose(nru, n, uu, ustart, ustart, ut, ustart, ustart);
+        }
+
+        //
+        // resize E from N-1 to N
+        //
+        etemp = new double[n + 1];
+        for (i = 1; i <= n - 1; i++) etemp[i] = e[i];
+        e = new double[n + 1];
+        for (i = 1; i <= n - 1; i++) e[i] = etemp[i];
+        e[n] = 0;
+        var idir = 0;
+
+        //
+        // Get machine constants
+        //
+        var eps = math.machineepsilon;
+        var unfl = math.minrealnumber;
+
+        //
+        // If matrix lower bidiagonal, rotate to be upper bidiagonal
+        // by applying Givens rotations on the left
+        //
+        if (!isupper)
+        {
+            for (i = 1; i <= n - 1; i++)
+            {
+                generaterotation(d[i], e[i], ref cs, ref sn, ref r);
+                d[i] = r;
+                e[i] = sn * d[i + 1];
+                d[i + 1] = cs * d[i + 1];
+                work0[i] = cs;
+                work1[i] = sn;
+            }
+
+            //
+            // Update singular vectors if desired
+            //
+            if (nru > 0) applyrotationsfromtheleft(fwddir, 1 + ustart - 1, n + ustart - 1, ustart, uend, work0, work1, ut, utemp);
+            if (ncc > 0) applyrotationsfromtheleft(fwddir, 1 + cstart - 1, n + cstart - 1, cstart, cend, work0, work1, c, ctemp);
+        }
+
+        //
+        // Compute singular values to relative accuracy TOL
+        // (By setting TOL to be negative, algorithm will compute
+        // singular values to absolute accuracy ABS(TOL)*norm(input matrix))
+        //
+        var tolmul = Math.Max(10, Math.Min(100, Math.Pow(eps, -0.125)));
+        var tol = tolmul * eps;
+
+        //
+        // Compute approximate maximum, minimum singular values
+        //
+        double smax = 0;
+        for (i = 1; i <= n; i++) smax = Math.Max(smax, Math.Abs(d[i]));
+        for (i = 1; i <= n - 1; i++) smax = Math.Max(smax, Math.Abs(e[i]));
+        double sminl = 0;
+        if (tol >= 0)
+        {
+            //
+            // Relative accuracy desired
+            //
+            var sminoa = Math.Abs(d[1]);
+            if (sminoa != 0)
+            {
+                mu = sminoa;
+                for (i = 2; i <= n; i++)
+                {
+                    mu = Math.Abs(d[i]) * (mu / (mu + Math.Abs(e[i - 1])));
+                    sminoa = Math.Min(sminoa, mu);
+                    if (sminoa == 0) break;
+                }
+            }
+            sminoa /= Math.Sqrt(n);
+            thresh = Math.Max(tol * sminoa, maxitr * n * n * unfl);
+        }
+        else
+            //
+            // Absolute accuracy desired
+            //
+            thresh = Math.Max(Math.Abs(tol) * smax, maxitr * n * n * unfl);
+
+        //
+        // Prepare for main iteration loop for the singular values
+        // (MAXIT is the maximum number of passes through the inner
+        // loop permitted before nonconvergence signalled.)
+        //
+        var maxit = maxitr * n * n;
+        var iter = 0;
+        var oldll = -1;
+        var oldm = -1;
+
+        //
+        // M points to last element of unconverged part of matrix
+        //
+        var m = n;
+
+        //
+        // Begin main iteration loop
+        //
+        while (true)
+        {
+
+            //
+            // Check for convergence or exceeding iteration count
+            //
+            if (m <= 1) break;
+            if (iter > maxit)
+            {
+                result = false;
+                return result;
+            }
+
+            //
+            // Find diagonal block of matrix to work on
+            //
+            if (tol < 0 && Math.Abs(d[m]) <= thresh) d[m] = 0;
+            smax = Math.Abs(d[m]);
+            smin = smax;
+            var matrixsplitflag = false;
+            for (lll = 1; lll <= m - 1; lll++)
+            {
+                ll = m - lll;
+                var abss = Math.Abs(d[ll]);
+                var abse = Math.Abs(e[ll]);
+                if (tol < 0 && abss <= thresh) d[ll] = 0;
+                if (abse <= thresh)
+                {
+                    matrixsplitflag = true;
+                    break;
+                }
+                smin = Math.Min(smin, abss);
+                smax = Math.Max(smax, Math.Max(abss, abse));
+            }
+            if (!matrixsplitflag)
+                ll = 0;
+            else
+            {
+
+                //
+                // Matrix splits since E(LL) = 0
+                //
+                e[ll] = 0;
+                if (ll == m - 1)
+                {
+
+                    //
+                    // Convergence of bottom singular value, return to top of loop
+                    //
+                    m -= 1;
+                    continue;
+                }
+            }
+            ll += 1;
+
+            //
+            // E(LL) through E(M-1) are nonzero, E(LL-1) is zero
+            //
+            if (ll == m - 1)
+            {
+
+                //
+                // 2 by 2 block, handle separately
+                //
+                svdv2x2(d[m - 1], e[m - 1], d[m], ref sigmn, ref sigmx, ref sinr, ref cosr, ref sinl, ref cosl);
+                d[m - 1] = sigmx;
+                e[m - 1] = 0;
+                d[m] = sigmn;
+
+                //
+                // Compute singular vectors, if desired
+                //
+                if (ncvt > 0)
+                {
+                    mm0 = m + (vstart - 1);
+                    mm1 = m - 1 + (vstart - 1);
+                    for (i_ = vstart; i_ <= vend; i_++) vttemp[i_] = cosr * vt[mm1, i_];
+                    for (i_ = vstart; i_ <= vend; i_++) vttemp[i_] += sinr * vt[mm0, i_];
+                    for (i_ = vstart; i_ <= vend; i_++) vt[mm0, i_] = cosr * vt[mm0, i_];
+                    for (i_ = vstart; i_ <= vend; i_++) vt[mm0, i_] -= sinr * vt[mm1, i_];
+                    for (i_ = vstart; i_ <= vend; i_++) vt[mm1, i_] = vttemp[i_];
+                }
+                if (nru > 0)
+                {
+                    mm0 = m + ustart - 1;
+                    mm1 = m - 1 + ustart - 1;
+                    for (i_ = ustart; i_ <= uend; i_++) utemp[i_] = cosl * ut[mm1, i_];
+                    for (i_ = ustart; i_ <= uend; i_++) utemp[i_] += sinl * ut[mm0, i_];
+                    for (i_ = ustart; i_ <= uend; i_++) ut[mm0, i_] = cosl * ut[mm0, i_];
+                    for (i_ = ustart; i_ <= uend; i_++) ut[mm0, i_] -= sinl * ut[mm1, i_];
+                    for (i_ = ustart; i_ <= uend; i_++) ut[mm1, i_] = utemp[i_];
+                }
+                if (ncc > 0)
+                {
+                    mm0 = m + cstart - 1;
+                    mm1 = m - 1 + cstart - 1;
+                    for (i_ = cstart; i_ <= cend; i_++) ctemp[i_] = cosl * c[mm1, i_];
+                    for (i_ = cstart; i_ <= cend; i_++) ctemp[i_] += sinl * c[mm0, i_];
+                    for (i_ = cstart; i_ <= cend; i_++) c[mm0, i_] = cosl * c[mm0, i_];
+                    for (i_ = cstart; i_ <= cend; i_++) c[mm0, i_] -= sinl * c[mm1, i_];
+                    for (i_ = cstart; i_ <= cend; i_++) c[mm1, i_] = ctemp[i_];
+                }
+                m -= 2;
+                continue;
+            }
+
+            //
+            // If working on new submatrix, choose shift direction
+            // (from larger end diagonal element towards smaller)
+            //
+            // Previously was
+            //     "if (LL>OLDM) or (M<OLDLL) then"
+            // fixed thanks to Michael Rolle < m@rolle.name >
+            // Very strange that LAPACK still contains it.
+            //
+            var bchangedir = false;
+            if (idir == 1 && Math.Abs(d[ll]) < 1.0E-3 * Math.Abs(d[m])) bchangedir = true;
+            if (idir == 2 && Math.Abs(d[m]) < 1.0E-3 * Math.Abs(d[ll])) bchangedir = true;
+            if (ll != oldll || m != oldm || bchangedir)
+            {
+                if (Math.Abs(d[ll]) >= Math.Abs(d[m]))
+                    //
+                    // Chase bulge from top (big end) to bottom (small end)
+                    //
+                    idir = 1;
+                else
+                    //
+                    // Chase bulge from bottom (big end) to top (small end)
+                    //
+                    idir = 2;
+            }
+
+            //
+            // Apply convergence tests
+            //
+            if (idir == 1)
+            {
+
+                //
+                // Run convergence test in forward direction
+                // First apply standard test to bottom of matrix
+                //
+                if (Math.Abs(e[m - 1]) <= Math.Abs(tol) * Math.Abs(d[m]) || tol < 0 && Math.Abs(e[m - 1]) <= thresh)
+                {
+                    e[m - 1] = 0;
+                    continue;
+                }
+                if (tol >= 0)
+                {
+
+                    //
+                    // If relative accuracy desired,
+                    // apply convergence criterion forward
+                    //
+                    mu = Math.Abs(d[ll]);
+                    sminl = mu;
+                    iterflag = false;
+                    for (lll = ll; lll <= m - 1; lll++)
+                    {
+                        if (Math.Abs(e[lll]) <= tol * mu)
+                        {
+                            e[lll] = 0;
+                            iterflag = true;
+                            break;
+                        }
+                        mu = Math.Abs(d[lll + 1]) * (mu / (mu + Math.Abs(e[lll])));
+                        sminl = Math.Min(sminl, mu);
+                    }
+                    if (iterflag) continue;
+                }
+            }
+            else
+            {
+
+                //
+                // Run convergence test in backward direction
+                // First apply standard test to top of matrix
+                //
+                if (Math.Abs(e[ll]) <= Math.Abs(tol) * Math.Abs(d[ll]) || tol < 0 && Math.Abs(e[ll]) <= thresh)
+                {
+                    e[ll] = 0;
+                    continue;
+                }
+                if (tol >= 0)
+                {
+
+                    //
+                    // If relative accuracy desired,
+                    // apply convergence criterion backward
+                    //
+                    mu = Math.Abs(d[m]);
+                    sminl = mu;
+                    iterflag = false;
+                    for (lll = m - 1; lll >= ll; lll--)
+                    {
+                        if (Math.Abs(e[lll]) <= tol * mu)
+                        {
+                            e[lll] = 0;
+                            iterflag = true;
+                            break;
+                        }
+                        mu = Math.Abs(d[lll]) * (mu / (mu + Math.Abs(e[lll])));
+                        sminl = Math.Min(sminl, mu);
+                    }
+                    if (iterflag) continue;
+                }
+            }
+            oldll = ll;
+            oldm = m;
+
+            //
+            // Compute shift.  First, test if shifting would ruin relative
+            // accuracy, and if so set the shift to zero.
+            //
+            if (tol >= 0 && n * tol * (sminl / smax) <= Math.Max(eps, 0.01 * tol))
+                //
+                // Use a zero shift to avoid loss of relative accuracy
+                //
+                shift = 0;
+            else
+            {
+
+                //
+                // Compute the shift from 2-by-2 block at end of matrix
+                //
+                if (idir == 1)
+                {
+                    sll = Math.Abs(d[ll]);
+                    svd2x2(d[m - 1], e[m - 1], d[m], ref shift, ref r);
+                }
+                else
+                {
+                    sll = Math.Abs(d[m]);
+                    svd2x2(d[ll], e[ll], d[ll + 1], ref shift, ref r);
+                }
+
+                //
+                // Test if shift negligible, and if so set to zero
+                //
+                if (sll > 0)
+                    if (math.sqr(shift / sll) < eps)
+                        shift = 0;
+            }
+
+            //
+            // Increment iteration count
+            //
+            iter = iter + m - ll;
+
+            //
+            // If SHIFT = 0, do simplified QR iteration
+            //
+            if (shift == 0)
+            {
+                if (idir == 1)
+                {
+
+                    //
+                    // Chase bulge from top to bottom
+                    // Save cosines and sines for later singular vector updates
+                    //
+                    cs = 1;
+                    oldcs = 1;
+                    for (i = ll; i <= m - 1; i++)
+                    {
+                        generaterotation(d[i] * cs, e[i], ref cs, ref sn, ref r);
+                        if (i > ll) e[i - 1] = oldsn * r;
+                        generaterotation(oldcs * r, d[i + 1] * sn, ref oldcs, ref oldsn, ref tmp);
+                        d[i] = tmp;
+                        work0[i - ll + 1] = cs;
+                        work1[i - ll + 1] = sn;
+                        work2[i - ll + 1] = oldcs;
+                        work3[i - ll + 1] = oldsn;
+                    }
+                    h = d[m] * cs;
+                    d[m] = h * oldcs;
+                    e[m - 1] = h * oldsn;
+
+                    //
+                    // Update singular vectors
+                    //
+                    if (ncvt > 0) applyrotationsfromtheleft(fwddir, ll + vstart - 1, m + vstart - 1, vstart, vend, work0, work1, vt, vttemp);
+                    if (nru > 0) applyrotationsfromtheleft(fwddir, ll + ustart - 1, m + ustart - 1, ustart, uend, work2, work3, ut, utemp);
+                    if (ncc > 0) applyrotationsfromtheleft(fwddir, ll + cstart - 1, m + cstart - 1, cstart, cend, work2, work3, c, ctemp);
+
+                    //
+                    // Test convergence
+                    //
+                    if (Math.Abs(e[m - 1]) <= thresh) e[m - 1] = 0;
+                }
+                else
+                {
+
+                    //
+                    // Chase bulge from bottom to top
+                    // Save cosines and sines for later singular vector updates
+                    //
+                    cs = 1;
+                    oldcs = 1;
+                    for (i = m; i >= ll + 1; i--)
+                    {
+                        generaterotation(d[i] * cs, e[i - 1], ref cs, ref sn, ref r);
+                        if (i < m) e[i] = oldsn * r;
+                        generaterotation(oldcs * r, d[i - 1] * sn, ref oldcs, ref oldsn, ref tmp);
+                        d[i] = tmp;
+                        work0[i - ll] = cs;
+                        work1[i - ll] = -sn;
+                        work2[i - ll] = oldcs;
+                        work3[i - ll] = -oldsn;
+                    }
+                    h = d[ll] * cs;
+                    d[ll] = h * oldcs;
+                    e[ll] = h * oldsn;
+
+                    //
+                    // Update singular vectors
+                    //
+                    if (ncvt > 0) applyrotationsfromtheleft(!fwddir, ll + vstart - 1, m + vstart - 1, vstart, vend, work2, work3, vt, vttemp);
+                    if (nru > 0) applyrotationsfromtheleft(!fwddir, ll + ustart - 1, m + ustart - 1, ustart, uend, work0, work1, ut, utemp);
+                    if (ncc > 0) applyrotationsfromtheleft(!fwddir, ll + cstart - 1, m + cstart - 1, cstart, cend, work0, work1, c, ctemp);
+
+                    //
+                    // Test convergence
+                    //
+                    if (Math.Abs(e[ll]) <= thresh) e[ll] = 0;
+                }
+            }
+            else
+            {
+
+                //
+                // Use nonzero shift
+                //
+                if (idir == 1)
+                {
+
+                    //
+                    // Chase bulge from top to bottom
+                    // Save cosines and sines for later singular vector updates
+                    //
+                    f = (Math.Abs(d[ll]) - shift) * (extsignbdsqr(1, d[ll]) + shift / d[ll]);
+                    g = e[ll];
+                    for (i = ll; i <= m - 1; i++)
+                    {
+                        generaterotation(f, g, ref cosr, ref sinr, ref r);
+                        if (i > ll) e[i - 1] = r;
+                        f = cosr * d[i] + sinr * e[i];
+                        e[i] = cosr * e[i] - sinr * d[i];
+                        g = sinr * d[i + 1];
+                        d[i + 1] = cosr * d[i + 1];
+                        generaterotation(f, g, ref cosl, ref sinl, ref r);
+                        d[i] = r;
+                        f = cosl * e[i] + sinl * d[i + 1];
+                        d[i + 1] = cosl * d[i + 1] - sinl * e[i];
+                        if (i < m - 1)
+                        {
+                            g = sinl * e[i + 1];
+                            e[i + 1] = cosl * e[i + 1];
+                        }
+                        work0[i - ll + 1] = cosr;
+                        work1[i - ll + 1] = sinr;
+                        work2[i - ll + 1] = cosl;
+                        work3[i - ll + 1] = sinl;
+                    }
+                    e[m - 1] = f;
+
+                    //
+                    // Update singular vectors
+                    //
+                    if (ncvt > 0) applyrotationsfromtheleft(fwddir, ll + vstart - 1, m + vstart - 1, vstart, vend, work0, work1, vt, vttemp);
+                    if (nru > 0) applyrotationsfromtheleft(fwddir, ll + ustart - 1, m + ustart - 1, ustart, uend, work2, work3, ut, utemp);
+                    if (ncc > 0) applyrotationsfromtheleft(fwddir, ll + cstart - 1, m + cstart - 1, cstart, cend, work2, work3, c, ctemp);
+
+                    // Test convergence
+                    if (Math.Abs(e[m - 1]) <= thresh) e[m - 1] = 0;
+                }
+                else
+                {
+
+                    //
+                    // Chase bulge from bottom to top
+                    // Save cosines and sines for later singular vector updates
+                    //
+                    f = (Math.Abs(d[m]) - shift) * (extsignbdsqr(1, d[m]) + shift / d[m]);
+                    g = e[m - 1];
+                    for (i = m; i >= ll + 1; i--)
+                    {
+                        generaterotation(f, g, ref cosr, ref sinr, ref r);
+                        if (i < m) e[i] = r;
+                        f = cosr * d[i] + sinr * e[i - 1];
+                        e[i - 1] = cosr * e[i - 1] - sinr * d[i];
+                        g = sinr * d[i - 1];
+                        d[i - 1] = cosr * d[i - 1];
+                        generaterotation(f, g, ref cosl, ref sinl, ref r);
+                        d[i] = r;
+                        f = cosl * e[i - 1] + sinl * d[i - 1];
+                        d[i - 1] = cosl * d[i - 1] - sinl * e[i - 1];
+                        if (i > ll + 1)
+                        {
+                            g = sinl * e[i - 2];
+                            e[i - 2] = cosl * e[i - 2];
+                        }
+                        work0[i - ll] = cosr;
+                        work1[i - ll] = -sinr;
+                        work2[i - ll] = cosl;
+                        work3[i - ll] = -sinl;
+                    }
+                    e[ll] = f;
+
+                    //
+                    // Test convergence
+                    //
+                    if (Math.Abs(e[ll]) <= thresh) e[ll] = 0;
+
+                    //
+                    // Update singular vectors if desired
+                    //
+                    if (ncvt > 0) applyrotationsfromtheleft(!fwddir, ll + vstart - 1, m + vstart - 1, vstart, vend, work2, work3, vt, vttemp);
+                    if (nru > 0) applyrotationsfromtheleft(!fwddir, ll + ustart - 1, m + ustart - 1, ustart, uend, work0, work1, ut, utemp);
+                    if (ncc > 0) applyrotationsfromtheleft(!fwddir, ll + cstart - 1, m + cstart - 1, cstart, cend, work0, work1, c, ctemp);
+                }
+            }
+
+            // QR iteration finished, go back and check convergence
+            continue;
+        }
+
+        //
+        // All singular values converged, so make them positive
+        //
+        for (i = 1; i <= n; i++)
+            if (d[i] < 0)
+            {
+                d[i] = -d[i];
+
+                // Change sign of singular vectors, if desired
+                if (ncvt > 0)
+                    for (i_ = vstart; i_ <= vend; i_++)
+                        vt[i + vstart - 1, i_] = -1 * vt[i + vstart - 1, i_];
+            }
+
+        // Sort the singular values into decreasing order (insertion sort on
+        // singular values, but only one transposition per singular vector)
+        for (i = 1; i <= n - 1; i++)
+        {
+            // Scan for smallest D(I)
+            var isub = 1;
+            smin = d[1];
+            for (j = 2; j <= n + 1 - i; j++)
+                if (d[j] <= smin)
+                {
+                    isub = j;
+                    smin = d[j];
+                }
+
+            if (isub != n + 1 - i)
+            {
+                // Swap singular values and vectors
+                d[isub] = d[n + 1 - i];
+                d[n + 1 - i] = smin;
+                if (ncvt > 0)
+                {
+                    j = n + 1 - i;
+                    for (i_ = vstart; i_ <= vend; i_++) vttemp[i_] = vt[isub + vstart - 1, i_];
+                    for (i_ = vstart; i_ <= vend; i_++) vt[isub + vstart - 1, i_] = vt[j + vstart - 1, i_];
+                    for (i_ = vstart; i_ <= vend; i_++) vt[j + vstart - 1, i_] = vttemp[i_];
+                }
+
+                if (nru > 0)
+                {
+                    j = n + 1 - i;
+                    for (i_ = ustart; i_ <= uend; i_++) utemp[i_] = ut[isub + ustart - 1, i_];
+                    for (i_ = ustart; i_ <= uend; i_++) ut[isub + ustart - 1, i_] = ut[j + ustart - 1, i_];
+                    for (i_ = ustart; i_ <= uend; i_++) ut[j + ustart - 1, i_] = utemp[i_];
+                }
+
+                if (ncc > 0)
+                {
+                    j = n + 1 - i;
+                    for (i_ = cstart; i_ <= cend; i_++) ctemp[i_] = c[isub + cstart - 1, i_];
+                    for (i_ = cstart; i_ <= cend; i_++) c[isub + cstart - 1, i_] = c[j + cstart - 1, i_];
+                    for (i_ = cstart; i_ <= cend; i_++) c[j + cstart - 1, i_] = ctemp[i_];
+                }
+            }
+        }
+
+        // Copy U back from temporary storage
+        if (nru > 0) rmatrixtranspose(n, nru, ut, ustart, ustart, uu, ustart, ustart);
+        return result;
+    }
+
+    private static void svdv2x2(double f, double g, double h, ref double ssmin, ref double ssmax, ref double snr, ref double csr, ref double snl, ref double csl)
+    {
+        bool gasmal = new bool();
+        bool swp = new bool();
+        int pmax = 0;
+        double a = 0;
+        double clt = 0;
+        double crt = 0;
+        double d = 0;
+        double fa = 0;
+        double ft = 0;
+        double ga = 0;
+        double gt = 0;
+        double ha = 0;
+        double ht = 0;
+        double l = 0;
+        double m = 0;
+        double mm = 0;
+        double r = 0;
+        double s = 0;
+        double slt = 0;
+        double srt = 0;
+        double t = 0;
+        double temp = 0;
+        double tsign = 0;
+        double tt = 0;
+        double v = 0;
+
+        ssmin = 0;
+        ssmax = 0;
+        snr = 0;
+        csr = 0;
+        snl = 0;
+        csl = 0;
+
+        ft = f;
+        fa = Math.Abs(ft);
+        ht = h;
+        ha = Math.Abs(h);
+
+        //
+        // these initializers are not really necessary,
+        // but without them compiler complains about uninitialized locals
+        //
+        clt = 0;
+        crt = 0;
+        slt = 0;
+        srt = 0;
+        tsign = 0;
+
+        //
+        // PMAX points to the maximum absolute element of matrix
+        //  PMAX = 1 if F largest in absolute values
+        //  PMAX = 2 if G largest in absolute values
+        //  PMAX = 3 if H largest in absolute values
+        //
+        pmax = 1;
+        swp = (double)(ha) > (double)(fa);
+        if (swp)
+        {
+
+            //
+            // Now FA .ge. HA
+            //
+            pmax = 3;
+            temp = ft;
+            ft = ht;
+            ht = temp;
+            temp = fa;
+            fa = ha;
+            ha = temp;
+        }
+        gt = g;
+        ga = Math.Abs(gt);
+        if ((double)(ga) == (double)(0))
+        {
+
+            //
+            // Diagonal matrix
+            //
+            ssmin = ha;
+            ssmax = fa;
+            clt = 1;
+            crt = 1;
+            slt = 0;
+            srt = 0;
+        }
+        else
+        {
+            gasmal = true;
+            if ((double)(ga) > (double)(fa))
+            {
+                pmax = 2;
+                if ((double)(fa / ga) < (double)(math.machineepsilon))
+                {
+
+                    //
+                    // Case of very large GA
+                    //
+                    gasmal = false;
+                    ssmax = ga;
+                    if ((double)(ha) > (double)(1))
+                    {
+                        v = ga / ha;
+                        ssmin = fa / v;
+                    }
+                    else
+                    {
+                        v = fa / ga;
+                        ssmin = v * ha;
+                    }
+                    clt = 1;
+                    slt = ht / gt;
+                    srt = 1;
+                    crt = ft / gt;
+                }
+            }
+            if (gasmal)
+            {
+
+                //
+                // Normal case
+                //
+                d = fa - ha;
+                if ((double)(d) == (double)(fa))
+                {
+                    l = 1;
+                }
+                else
+                {
+                    l = d / fa;
+                }
+                m = gt / ft;
+                t = 2 - l;
+                mm = m * m;
+                tt = t * t;
+                s = Math.Sqrt(tt + mm);
+                if ((double)(l) == (double)(0))
+                {
+                    r = Math.Abs(m);
+                }
+                else
+                {
+                    r = Math.Sqrt(l * l + mm);
+                }
+                a = 0.5 * (s + r);
+                ssmin = ha / a;
+                ssmax = fa * a;
+                if ((double)(mm) == (double)(0))
+                {
+
+                    //
+                    // Note that M is very tiny
+                    //
+                    if ((double)(l) == (double)(0))
+                    {
+                        t = extsignbdsqr(2, ft) * extsignbdsqr(1, gt);
+                    }
+                    else
+                    {
+                        t = gt / extsignbdsqr(d, ft) + m / t;
+                    }
+                }
+                else
+                {
+                    t = (m / (s + t) + m / (r + l)) * (1 + a);
+                }
+                l = Math.Sqrt(t * t + 4);
+                crt = 2 / l;
+                srt = t / l;
+                clt = (crt + srt * m) / a;
+                v = ht / ft;
+                slt = v * srt / a;
+            }
+        }
+        if (swp)
+        {
+            csl = srt;
+            snl = crt;
+            csr = slt;
+            snr = clt;
+        }
+        else
+        {
+            csl = clt;
+            snl = slt;
+            csr = crt;
+            snr = srt;
+        }
+
+        //
+        // Correct signs of SSMAX and SSMIN
+        //
+        if (pmax == 1)
+        {
+            tsign = extsignbdsqr(1, csr) * extsignbdsqr(1, csl) * extsignbdsqr(1, f);
+        }
+        if (pmax == 2)
+        {
+            tsign = extsignbdsqr(1, snr) * extsignbdsqr(1, csl) * extsignbdsqr(1, g);
+        }
+        if (pmax == 3)
+        {
+            tsign = extsignbdsqr(1, snr) * extsignbdsqr(1, snl) * extsignbdsqr(1, h);
+        }
+        ssmax = extsignbdsqr(ssmax, tsign);
+        ssmin = extsignbdsqr(ssmin, tsign * extsignbdsqr(1, f) * extsignbdsqr(1, h));
+    }
+
+    private static void svd2x2(double f, double g, double h, ref double ssmin, ref double ssmax)
+    {
+        double aas = 0;
+        double at = 0;
+        double au = 0;
+        double c = 0;
+        double fa = 0;
+        double fhmn = 0;
+        double fhmx = 0;
+        double ga = 0;
+        double ha = 0;
+
+        ssmin = 0;
+        ssmax = 0;
+
+        fa = Math.Abs(f);
+        ga = Math.Abs(g);
+        ha = Math.Abs(h);
+        fhmn = Math.Min(fa, ha);
+        fhmx = Math.Max(fa, ha);
+        if ((double)(fhmn) == (double)(0))
+        {
+            ssmin = 0;
+            if ((double)(fhmx) == (double)(0))
+            {
+                ssmax = ga;
+            }
+            else
+            {
+                ssmax = Math.Max(fhmx, ga) * Math.Sqrt(1 + math.sqr(Math.Min(fhmx, ga) / Math.Max(fhmx, ga)));
+            }
+        }
+        else
+        {
+            if ((double)(ga) < (double)(fhmx))
+            {
+                aas = 1 + fhmn / fhmx;
+                at = (fhmx - fhmn) / fhmx;
+                au = math.sqr(ga / fhmx);
+                c = 2 / (Math.Sqrt(aas * aas + au) + Math.Sqrt(at * at + au));
+                ssmin = fhmn * c;
+                ssmax = fhmx / c;
+            }
+            else
+            {
+                au = fhmx / ga;
+                if ((double)(au) == (double)(0))
+                {
+
+                    //
+                    // Avoid possible harmful underflow if exponent range
+                    // asymmetric (true SSMIN may not underflow even if
+                    // AU underflows)
+                    //
+                    ssmin = fhmn * fhmx / ga;
+                    ssmax = ga;
+                }
+                else
+                {
+                    aas = 1 + fhmn / fhmx;
+                    at = (fhmx - fhmn) / fhmx;
+                    c = 1 / (Math.Sqrt(1 + math.sqr(aas * au)) + Math.Sqrt(1 + math.sqr(at * au)));
+                    ssmin = fhmn * c * au;
+                    ssmin = ssmin + ssmin;
+                    ssmax = ga / (c + c);
+                }
+            }
+        }
+    }
+
+    private static void generaterotation(double f, double g, ref double cs, ref double sn, ref double r)
+    {
+        double f1 = 0;
+        double g1 = 0;
+
+        cs = 0;
+        sn = 0;
+        r = 0;
+
+        if (g == 0)
+        {
+            cs = 1;
+            sn = 0;
+            r = f;
+        }
+        else if (f == 0)
+        {
+            cs = 0;
+            sn = 1;
+            r = g;
+        }
+        else
+        {
+            f1 = f;
+            g1 = g;
+            if (Math.Abs(f1) > Math.Abs(g1))
+                r = Math.Abs(f1) * Math.Sqrt(1 + math.sqr(g1 / f1));
+            else
+                r = Math.Abs(g1) * Math.Sqrt(1 + math.sqr(f1 / g1));
+
+            cs = f1 / r;
+            sn = g1 / r;
+            if (Math.Abs(f) <= Math.Abs(g) || cs >= 0) return;
+            cs = -cs;
+            sn = -sn;
+            r = -r;
+        }
+    }
+
+    private static double extsignbdsqr(double a, double b) => b >= 0 ? Math.Abs(a) : -Math.Abs(a);
+
+    private static void applyrotationsfromtheleft(bool isforward,
+            int m1,
+            int m2,
+            int n1,
+            int n2,
+            double[] c,
+            double[] s,
+            double[,] a,
+            double[] work)
+    {
+        int j = 0;
+        int jp1 = 0;
+        double ctemp = 0;
+        double stemp = 0;
+        double temp = 0;
+        int i_ = 0;
+
+        if (m1 > m2 || n1 > n2) return;
+
+        //
+        // Form  P * A
+        //
+        if (isforward)
+        {
+            if (n1 != n2)
+                //
+                // Common case: N1<>N2
+                //
+                for (j = m1; j <= m2 - 1; j++)
+                {
+                    ctemp = c[j - m1 + 1];
+                    stemp = s[j - m1 + 1];
+                    if (ctemp != 1 || stemp != 0)
+                    {
+                        jp1 = j + 1;
+                        for (i_ = n1; i_ <= n2; i_++) work[i_] = ctemp * a[jp1, i_];
+                        for (i_ = n1; i_ <= n2; i_++) work[i_] = work[i_] - stemp * a[j, i_];
+                        for (i_ = n1; i_ <= n2; i_++) a[j, i_] = ctemp * a[j, i_];
+                        for (i_ = n1; i_ <= n2; i_++) a[j, i_] = a[j, i_] + stemp * a[jp1, i_];
+                        for (i_ = n1; i_ <= n2; i_++) a[jp1, i_] = work[i_];
+                    }
+                }
+            else
+                //
+                // Special case: N1=N2
+                //
+                for (j = m1; j <= m2 - 1; j++)
+                {
+                    ctemp = c[j - m1 + 1];
+                    stemp = s[j - m1 + 1];
+                    if (ctemp != 1 || stemp != 0)
+                    {
+                        temp = a[j + 1, n1];
+                        a[j + 1, n1] = ctemp * temp - stemp * a[j, n1];
+                        a[j, n1] = stemp * temp + ctemp * a[j, n1];
+                    }
+                }
+        }
+        else
+        {
+            if (n1 != n2)
+                //
+                // Common case: N1<>N2
+                //
+                for (j = m2 - 1; j >= m1; j--)
+                {
+                    ctemp = c[j - m1 + 1];
+                    stemp = s[j - m1 + 1];
+                    if (ctemp != 1 || stemp != 0)
+                    {
+                        jp1 = j + 1;
+                        for (i_ = n1; i_ <= n2; i_++) work[i_] = ctemp * a[jp1, i_];
+                        for (i_ = n1; i_ <= n2; i_++) work[i_] = work[i_] - stemp * a[j, i_];
+                        for (i_ = n1; i_ <= n2; i_++) a[j, i_] = ctemp * a[j, i_];
+                        for (i_ = n1; i_ <= n2; i_++) a[j, i_] = a[j, i_] + stemp * a[jp1, i_];
+                        for (i_ = n1; i_ <= n2; i_++) a[jp1, i_] = work[i_];
+                    }
+                }
+            else
+                //
+                // Special case: N1=N2
+                //
+                for (j = m2 - 1; j >= m1; j--)
+                {
+                    ctemp = c[j - m1 + 1];
+                    stemp = s[j - m1 + 1];
+                    if (ctemp != 1 || stemp != 0)
+                    {
+                        temp = a[j + 1, n1];
+                        a[j + 1, n1] = ctemp * temp - stemp * a[j, n1];
+                        a[j, n1] = stemp * temp + ctemp * a[j, n1];
+                    }
+                }
+        }
+    }
+
+    private static void rmatrixtranspose(int m,
+        int n,
+        double[,] a,
+        int ia,
+        int ja,
+        double[,] b,
+        int ib,
+        int jb)
+    {
+        var s1 = 0;
+        var s2 = 0;
+
+        if (m <= 2 * 32 && n <= 2 * 32)
+            for (var i = 0; i <= m - 1; i++) // base case
+            {
+                var i1_ = ja - ib;
+                for (var i_ = ib; i_ <= ib + n - 1; i_++) b[i_, jb + i] = a[ia + i, i_ + i1_];
+            }
+        else
+        {
+
+            //
+            // Cache-oblivious recursion
+            //
+            if (m > n)
+            {
+                ablassplitlength(a, m, ref s1, ref s2);
+                rmatrixtranspose(s1, n, a, ia, ja, b, ib, jb);
+                rmatrixtranspose(s2, n, a, ia + s1, ja, b, ib, jb + s1);
+            }
+            else
+            {
+                ablassplitlength(a, n, ref s1, ref s2);
+                rmatrixtranspose(m, s1, a, ia, ja, b, ib, jb);
+                rmatrixtranspose(m, s2, a, ia, ja + s1, b, ib + s1, jb);
+            }
+        }
+    }
+
+    private static void ablassplitlength(double[,] a, int n, ref int n1, ref int n2)
+    {
+        n1 = 0;
+        n2 = 0;
+
+        if (n > 32)
+            ablasinternalsplitlength(n, 32, ref n1, ref n2);
+        else
+            ablasinternalsplitlength(n, 8, ref n1, ref n2);
+    }
+
+    private static void ablasinternalsplitlength(int n, int nb, ref int n1, ref int n2)
+    {
+        n1 = 0;
+        n2 = 0;
+
+        if (n <= nb)
+        {
+            // Block size, no further splitting
+            n1 = n;
+            n2 = 0;
+        }
+        else if (n % nb != 0) // Greater than block size
+        {
+            // Split remainder
+            n2 = n % nb;
+            n1 = n - n2;
+        }
+        else
+        {
+            // Split on block boundaries
+            n2 = n / 2;
+            n1 = n - n2;
+            if (n1 % nb == 0) return;
+            var r = nb - n1 % nb;
+            n1 += r;
+            n2 -= r;
+        }
+    }
+
+    private static void rmatrixbdunpackdiagonals(double[,] b, int m, int n, ref bool isupper, ref double[] d, ref double[] e)
     {
         int i;
 
@@ -279,12 +2030,7 @@ internal static class MatrixTST
         }
     }
 
-    public static void rmatrixbdunpackpt(double[,] qp,
-        int m,
-        int n,
-        double[] taup,
-        int ptrows,
-        ref double[,] pt)
+    private static void rmatrixbdunpackpt(double[,] qp, int m, int n, double[] taup, int ptrows, ref double[,] pt)
     {
         pt = new double[0, 0];
 
@@ -310,7 +2056,7 @@ internal static class MatrixTST
         rmatrixbdmultiplybyp(qp, m, n, taup, pt, ptrows, n, true, true);
     }
 
-    public static void rmatrixbdmultiplybyp(double[,] qp,
+    private static void rmatrixbdmultiplybyp(double[,] qp,
            int m,
            int n,
            double[] taup,
