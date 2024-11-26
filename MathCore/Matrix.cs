@@ -66,12 +66,12 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
     /// <summary>Создать матрицу-столбец</summary><param name="data">Элементы столбца</param><returns>Матрица-столбец</returns>
     /// <exception cref="ArgumentNullException">Если массив <paramref name="data"/> не определён</exception>
     /// <exception cref="ArgumentException">Если массив <paramref name="data"/> имеет длину 0</exception>
-    public static Matrix CreateCol(params double[] data) => new(Array.CreateColArray(data));
+    public static Matrix Col(params double[] data) => new(Array.CreateColArray(data));
 
     /// <summary>Создать матрицу-строку</summary><param name="data">Элементы строки</param><returns>Матрица-строка</returns>
     /// <exception cref="ArgumentNullException">Если массив <paramref name="data"/> не определён</exception>
     /// <exception cref="ArgumentException">Если массив <paramref name="data"/> имеет длину 0</exception>
-    public static Matrix CreateRow(params double[] data) => new(Array.CreateRowArray(data));
+    public static Matrix Row(params double[] data) => new(Array.CreateRowArray(data));
 
     /// <summary>Создать диагональную матрицу</summary><param name="elements">Элементы диагональной матрицы</param>
     /// <returns>Диагональная матрица</returns>

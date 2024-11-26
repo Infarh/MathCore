@@ -46,7 +46,7 @@ var A2 = Vt.T * Matrix.Diagonal(s.ToArray(x => 1/x)) * U.T;
 Console.WriteLine($"A2 = \r\n{A2:+0.0000;-0.0000}");
 Console.WriteLine();
 
-var B = Matrix.CreateCol(5, 6, 11, 12);
+var B = Matrix.Col(5, 6, 11, 12);
 var x0 = A2 * B;
 
 Console.WriteLine($"x0 = \r\n{x0:+0.0000;-0.0000}");
