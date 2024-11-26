@@ -32,7 +32,6 @@ internal static class MatrixTST
     /// if VTNeeded=1, VT contains right singular vectors (first min(M,N) rows of matrix V^T). Array whose indexes range within [0..min(M,N)-1, 0..N-1].
     /// if VTNeeded=2, VT contains matrix V^T wholly. Array whose indexes range within [0..N-1, 0..N-1].
     /// </param>
-    /// <param name="_params"></param>
     /// <returns></returns>
     public static bool SVD(
         double[,] a,
@@ -45,9 +44,6 @@ internal static class MatrixTST
     {
         var m = a.GetLength(0);
         var n = a.GetLength(1);
-
-        bool is_upper;
-        int i, j;
 
         a = (double[,])a.Clone();
 
@@ -63,11 +59,6 @@ internal static class MatrixTST
         if (VtNeeded is < 0 or > 2) throw new ArgumentException("SVDDecomposition: wrong parameters!");
         if (AdditionalMemory is < 0 or > 2) throw new ArgumentException("SVDDecomposition: wrong parameters!");
 
-        double[] tau_q = [];
-        double[] tau_p = [];
-        double[] tau = [];
-
-        bool result;
         var min_mn = Math.Min(m, n);
         s = new double[min_mn + 1];
         var nc_u = 0;
@@ -113,6 +104,16 @@ internal static class MatrixTST
         double[] e;
         double[] work;
         double[,] t2;
+        double[] tau;
+        double[] tau_p;
+
+        double[] tau_q;
+
+        bool result;
+
+        bool is_upper;
+        int i;
+        int j;
         // M much larger than N
         if (m > 1.6 * n) // Use bidiagonal reduction with QR-decomposition
         {
@@ -124,7 +125,7 @@ internal static class MatrixTST
                     for (j = 0; j < i; j++)
                         a[i, j] = 0;
 
-                MatrixBD(a, n, n, ref tau_q, ref tau_p);
+                MatrixBD(a, n, n, out tau_q, out tau_p);
                 MatrixBDUnpackPT(a, n, n, tau_p, nr_vt, out vt);
                 MatrixBDUnpackDiagonals(a, n, n, out is_upper, out s, out e);
                 result = MatrixBDSVD(s, e, n, is_upper, u, 0, a, 0, vt, nc_vt);
@@ -139,7 +140,7 @@ internal static class MatrixTST
                 for (j = 0; j < i; j++)
                     a[i, j] = 0;
 
-            MatrixBD(a, n, n, ref tau_q, ref tau_p);
+            MatrixBD(a, n, n, out tau_q, out tau_p);
             MatrixBDUnpackPT(a, n, n, tau_p, nr_vt, out vt);
             MatrixBDUnpackDiagonals(a, n, n, out is_upper, out s, out e);
 
@@ -170,13 +171,13 @@ internal static class MatrixTST
         {
             if (VtNeeded == 0) // No right singular vectors to be computed
             {
-                MatrixLQ(a, m, n, ref tau);
+                MatrixLQ(a, m, n, out tau);
 
                 for (i = 0; i < m; i++)
                     for (j = i + 1; j < m; j++)
                         a[i, j] = 0;
 
-                MatrixBD(a, m, m, ref tau_q, ref tau_p);
+                MatrixBD(a, m, m, out tau_q, out tau_p);
                 MatrixBDUnpackQ(a, m, m, tau_q, nc_u, out u);
                 MatrixBDUnpackDiagonals(a, m, m, out is_upper, out s, out e);
 
@@ -189,14 +190,14 @@ internal static class MatrixTST
             }
 
             // Right singular vectors (may be full matrix VT) to be computed
-            MatrixLQ(a, m, n, ref tau);
+            MatrixLQ(a, m, n, out tau);
             MatrixLQUnpackQ(a, m, n, tau, nr_vt, ref vt);
 
             for (i = 0; i < m; i++)
                 for (j = i + 1; j < m; j++)
                     a[i, j] = 0;
 
-            MatrixBD(a, m, m, ref tau_q, ref tau_p);
+            MatrixBD(a, m, m, out tau_q, out tau_p);
             MatrixBDUnpackQ(a, m, m, tau_q, nc_u, out u);
             MatrixBDUnpackDiagonals(a, m, m, out is_upper, out s, out e);
             work = new double[Math.Max(m, n) + 1];
@@ -219,7 +220,7 @@ internal static class MatrixTST
 
         if (m <= n) // We can use inplace transposition of U to get rid of columnwise operations
         {
-            MatrixBD(a, m, n, ref tau_q, ref tau_p);
+            MatrixBD(a, m, n, out tau_q, out tau_p);
             MatrixBDUnpackQ(a, m, n, tau_q, nc_u, out u);
             MatrixBDUnpackPT(a, m, n, tau_p, nr_vt, out vt);
             MatrixBDUnpackDiagonals(a, m, n, out is_upper, out s, out e);
@@ -231,7 +232,7 @@ internal static class MatrixTST
         }
 
         // Simple bidiagonal reduction
-        MatrixBD(a, m, n, ref tau_q, ref tau_p);
+        MatrixBD(a, m, n, out tau_q, out tau_p);
         MatrixBDUnpackQ(a, m, n, tau_q, nc_u, out u);
         MatrixBDUnpackPT(a, m, n, tau_p, nr_vt, out vt);
         MatrixBDUnpackDiagonals(a, m, n, out is_upper, out s, out e);
@@ -275,19 +276,19 @@ internal static class MatrixTST
         var tmp_t = new double[MatrixTileSizeB, 2 * MatrixTileSizeB];
         var tmp_r = new double[2 * MatrixTileSizeB, QColumns];
 
-        var blockstart = MatrixTileSizeB * (ref_cnt / MatrixTileSizeB);
-        var blocksize = ref_cnt - blockstart;
-        while (blockstart >= 0)
+        var block_start = MatrixTileSizeB * (ref_cnt / MatrixTileSizeB);
+        var block_size = ref_cnt - block_start;
+        while (block_start >= 0)
         {
-            var rowscount = m - blockstart;
-            if (blocksize > 0)
+            var rows_count = m - block_start;
+            if (block_size > 0)
             {
                 // Copy current block
-                MatrixCopy(rowscount, blocksize, a, blockstart, blockstart, tmp_a, 0, 0);
+                MatrixCopy(rows_count, block_size, a, block_start, block_start, tmp_a, 0, 0);
 
-                var i1 = blockstart - 0;
+                var i1 = block_start - 0;
                 int j;
-                for (j = 0; j < blocksize; j++) 
+                for (j = 0; j < block_size; j++) 
                     tau_buf[j] = Tau[j + i1];
 
                 // Обновление, выберите между:
@@ -298,34 +299,33 @@ internal static class MatrixTST
                 if (QColumns >= 2 * MatrixTileSizeB)
                 {
                     // Prepare block reflector
-                    MatrixBlockReflector(ref tmp_a, ref tau_buf, true, rowscount, blocksize, ref tmp_t, ref work);
+                    MatrixBlockReflector(ref tmp_a, ref tau_buf, true, rows_count, block_size, ref tmp_t, ref work);
 
                     // Multiply matrix by Q.
                     // Q  = E + Y*T*Y'  = E + TmpA*TmpT*TmpA'
-                    MatrixGEMM(blocksize, QColumns, rowscount, 1, tmp_a, 0, 0, 1, q, blockstart, 0, 0, 0, tmp_r, 0, 0);
-                    MatrixGEMM(blocksize, QColumns, blocksize, 1, tmp_t, 0, 0, 0, tmp_r, 0, 0, 0, 0, tmp_r, blocksize, 0);
-                    MatrixGEMM(rowscount, QColumns, blocksize, 1, tmp_a, 0, 0, 0, tmp_r, blocksize, 0, 0, 1, q, blockstart, 0);
+                    MatrixGEMM(block_size, QColumns, rows_count, 1, tmp_a, 0, 0, 1, q, block_start, 0, 0, 0, tmp_r, 0, 0);
+                    MatrixGEMM(block_size, QColumns, block_size, 1, tmp_t, 0, 0, 0, tmp_r, 0, 0, 0, 0, tmp_r, block_size, 0);
+                    MatrixGEMM(rows_count, QColumns, block_size, 1, tmp_a, 0, 0, 0, tmp_r, block_size, 0, 0, 1, q, block_start, 0);
                 }
                 else
                     // Level 2 algorithm
-                    for (i = blocksize - 1; i >= 0; i--)
+                    for (i = block_size - 1; i >= 0; i--)
                     {
                         i1 = i - 1;
-                        for (j = 1; j <= rowscount - i; j++)
+                        for (j = 1; j <= rows_count - i; j++)
                             t[j] = tmp_a[j + i1, i];
                         t[1] = 1;
-                        ApplyReflectionFromTheLeft(q, tau_buf[i], t, blockstart + i, m - 1, 0, QColumns - 1, ref work);
+                        ApplyReflectionFromTheLeft(q, tau_buf[i], t, block_start + i, m - 1, 0, QColumns - 1, ref work);
                     }
             }
 
-            blockstart -= MatrixTileSizeB;
-            blocksize = MatrixTileSizeB;
+            block_start -= MatrixTileSizeB;
+            block_size = MatrixTileSizeB;
         }
     }
 
-    private static void MatrixLQ(double[,] a, int m, int n, ref double[] Tau)
+    private static void MatrixLQ(double[,] a, int m, int n, out double[] Tau)
     {
-
         if (m <= 0 || n <= 0)
         {
             Tau = [];
@@ -355,7 +355,7 @@ internal static class MatrixTST
             // some TLB issues arising from non-contiguous memory
             // access pattern.
             MatrixCopy(block_size, columns_count, a, block_start, block_start, tmp_a, 0, 0);
-            rmatrixlqbasecase(ref tmp_a, block_size, columns_count, ref work, ref t, ref tau_buf);
+            MatrixLQBaseCase(ref tmp_a, block_size, columns_count, ref work, ref t, ref tau_buf);
             MatrixCopy(block_size, columns_count, tmp_a, 0, 0, a, block_start, block_start);
             var i1 = 0 - block_start;
             int k;
@@ -392,7 +392,7 @@ internal static class MatrixTST
         }
     }
 
-    private static void rmatrixlqbasecase(ref double[,] a, int m, int n, ref double[] work, ref double[] t, ref double[] tau)
+    private static void MatrixLQBaseCase(ref double[,] a, int m, int n, ref double[] work, ref double[] t, ref double[] tau)
     {
         var k = Math.Min(m, n);
         for (var i = 0; i < k; i++)
@@ -581,10 +581,10 @@ internal static class MatrixTST
         var e1 = Array.Empty<double>();
         e = (double[])e.Clone();
 
-        var en = new double[n];
-        for (var i = 0; i <= n - 2; i++)
-            en[i] = e[i];
-        en[n - 1] = 0;
+        //var en = new double[n];
+        //for (var i = 0; i <= n - 2; i++)
+        //    en[i] = e[i];
+        //en[n - 1] = 0;
 
         var d1 = new double[n + 1];
         var i1_ = 0 - 1;
@@ -626,14 +626,9 @@ internal static class MatrixTST
         double cos_l = 0;
         double cos_r = 0;
         double cs = 0;
-        double r = 0;
-        double shift = 0;
-        double sin_l = 0;
-        double sin_r = 0;
-        double sn = 0;
+        double r;
+        double sn;
         var ut = EmptyDoubleArray;
-        double tmp = 0;
-        //double s_min_l;
         e = (double[])e.Clone();
 
         var result = true;
@@ -694,7 +689,7 @@ internal static class MatrixTST
         {
             for (i = 1; i < n; i++)
             {
-                GenerateRotation(d[i], e[i], ref cs, ref sn, ref r);
+                GenerateRotation(d[i], e[i], ref cs, out sn, out r);
                 d[i] = r;
                 e[i] = sn * d[i + 1];
                 d[i + 1] = cs * d[i + 1];
@@ -713,8 +708,8 @@ internal static class MatrixTST
         // Compute singular values to relative accuracy TOL
         // (By setting TOL to be negative, algorithm will compute
         // singular values to absolute accuracy ABS(TOL)*norm(input matrix))
-        var tolmul = Math.Max(10, Math.Min(100, Math.Pow(__Epsilon, -0.125)));
-        var tol = tolmul * __Epsilon;
+        var tolmul = Math.Max(10, Math.Min(100, Math.Pow(Epsilon, -0.125)));
+        var tol = tolmul * Epsilon;
 
         // Compute approximate maximum, minimum singular values
         var s_max = 0d;
@@ -743,10 +738,10 @@ internal static class MatrixTST
             }
 
             s_min_oa /= Math.Sqrt(n);
-            thresh = Math.Max(tol * s_min_oa, max_itration * n * n * __MinRealValue);
+            thresh = Math.Max(tol * s_min_oa, max_itration * n * n * MinRealValue);
         }
         else // Absolute accuracy desired
-            thresh = Math.Max(Math.Abs(tol) * s_max, max_itration * n * n * __MinRealValue);
+            thresh = Math.Max(Math.Abs(tol) * s_max, max_itration * n * n * MinRealValue);
 
         // Prepare for main iteration loop for the singular values
         // (MAXIT is the maximum number of passes through the inner
@@ -812,6 +807,8 @@ internal static class MatrixTST
             ll += 1;
 
             // E(LL) through E(M-1) are nonzero, E(LL-1) is zero
+            double sin_r;
+            double sin_l;
             if (ll == m - 1)
             {
                 // 2 by 2 block, handle separately
@@ -948,7 +945,8 @@ internal static class MatrixTST
 
             // Compute shift.  First, test if shifting would ruin relative
             // accuracy, and if so set the shift to zero.
-            if (tol >= 0 && n * tol * (s_min_l / s_max) <= Math.Max(__Epsilon, 0.01 * tol))
+            double shift;
+            if (tol >= 0 && n * tol * (s_min_l / s_max) <= Math.Max(Epsilon, 0.01 * tol))
                 shift = 0; // Use a zero shift to avoid loss of relative accuracy
             else
             {
@@ -957,16 +955,16 @@ internal static class MatrixTST
                 if (i_dir == 1)
                 {
                     sll = Math.Abs(d[ll]);
-                    SVD2x2(d[m - 1], e[m - 1], d[m], ref shift, ref r);
+                    SVD2x2(d[m - 1], e[m - 1], d[m], out shift, out r);
                 }
                 else
                 {
                     sll = Math.Abs(d[m]);
-                    SVD2x2(d[ll], e[ll], d[ll + 1], ref shift, ref r);
+                    SVD2x2(d[ll], e[ll], d[ll + 1], out shift, out r);
                 }
 
                 if (sll > 0) // Test if shift negligible, and if so set to zero
-                    if ((shift / sll).Pow2() < __Epsilon)
+                    if ((shift / sll).Pow2() < Epsilon)
                         shift = 0;
             }
 
@@ -977,18 +975,19 @@ internal static class MatrixTST
                 double h;
                 cs = 1;
                 double oldcs = 1;
+                double tmp;
                 if (i_dir == 1)
                 {
                     // Chase bulge from top to bottom
                     // Save cosines and sines for later singular vector updates
                     for (i = ll; i < m; i++)
                     {
-                        GenerateRotation(d[i] * cs, e[i], ref cs, ref sn, ref r);
+                        GenerateRotation(d[i] * cs, e[i], ref cs, out sn, out r);
 
                         if (i > ll)
                             e[i - 1] = old_sn * r;
 
-                        GenerateRotation(oldcs * r, d[i + 1] * sn, ref oldcs, ref old_sn, ref tmp);
+                        GenerateRotation(oldcs * r, d[i + 1] * sn, ref oldcs, out old_sn, out tmp);
 
                         d[i] = tmp;
                         work_0[i - ll + 1] = cs;
@@ -1021,12 +1020,12 @@ internal static class MatrixTST
                     // Save cosines and sines for later singular vector updates
                     for (i = m; i >= ll + 1; i--)
                     {
-                        GenerateRotation(d[i] * cs, e[i - 1], ref cs, ref sn, ref r);
+                        GenerateRotation(d[i] * cs, e[i - 1], ref cs, out sn, out r);
 
                         if (i < m)
                             e[i] = old_sn * r;
 
-                        GenerateRotation(oldcs * r, d[i - 1] * sn, ref oldcs, ref old_sn, ref tmp);
+                        GenerateRotation(oldcs * r, d[i - 1] * sn, ref oldcs, out old_sn, out tmp);
 
                         d[i] = tmp;
                         work_0[i - ll] = cs;
@@ -1064,7 +1063,7 @@ internal static class MatrixTST
                     g = e[ll];
                     for (i = ll; i < m; i++)
                     {
-                        GenerateRotation(f, g, ref cos_r, ref sin_r, ref r);
+                        GenerateRotation(f, g, ref cos_r, out sin_r, out r);
 
                         if (i > ll)
                             e[i - 1] = r;
@@ -1074,7 +1073,7 @@ internal static class MatrixTST
                         g = sin_r * d[i + 1];
                         d[i + 1] = cos_r * d[i + 1];
 
-                        GenerateRotation(f, g, ref cos_l, ref sin_l, ref r);
+                        GenerateRotation(f, g, ref cos_l, out sin_l, out r);
                         
                         d[i] = r;
                         f = cos_l * e[i] + sin_l * d[i + 1];
@@ -1115,7 +1114,7 @@ internal static class MatrixTST
 
                     for (i = m; i >= ll + 1; i--)
                     {
-                        GenerateRotation(f, g, ref cos_r, ref sin_r, ref r);
+                        GenerateRotation(f, g, ref cos_r, out sin_r, out r);
                         if (i < m)
                             e[i] = r;
 
@@ -1124,7 +1123,7 @@ internal static class MatrixTST
                         g = sin_r * d[i - 1];
                         d[i - 1] = cos_r * d[i - 1];
 
-                        GenerateRotation(f, g, ref cos_l, ref sin_l, ref r);
+                        GenerateRotation(f, g, ref cos_l, out sin_l, out r);
 
                         d[i] = r;
                         f = cos_l * e[i - 1] + sin_l * d[i - 1];
@@ -1290,7 +1289,7 @@ internal static class MatrixTST
             if (ga > fa)
             {
                 p_max = 2;
-                if (fa / ga < __Epsilon)
+                if (fa / ga < Epsilon)
                 {
                     // Case of very large GA
                     gasmal = false;
@@ -1365,7 +1364,7 @@ internal static class MatrixTST
         ss_min = ExtSignBDSqr(ss_min, t_sign * ExtSignBDSqr(1, f) * ExtSignBDSqr(1, h));
     }
 
-    private static void SVD2x2(double f, double g, double h, ref double ss_min, ref double ss_max)
+    private static void SVD2x2(double f, double g, double h, out double ss_min, out double ss_max)
     {
         var f_abs = Math.Abs(f);
         var g_abs = Math.Abs(g);
@@ -1416,7 +1415,7 @@ internal static class MatrixTST
         }
     }
 
-    private static void GenerateRotation(double f, double g, ref double cs, ref double sn, ref double r)
+    private static void GenerateRotation(double f, double g, ref double cs, out double sn, out double r)
     {
         if (g == 0)
             (cs, sn, r) = (1, 0, f);
@@ -1569,16 +1568,13 @@ internal static class MatrixTST
 
     private static void AbLasspLitLength(double[,] a, int n, out int n1, out int n2)
     {
-        n1 = 0;
-        n2 = 0;
-
         if (n > 32)
-            AbLasInternalSplitLength(n, 32, ref n1, ref n2);
+            AbLasInternalSplitLength(n, 32, out n1, out n2);
         else
-            AbLasInternalSplitLength(n, 8, ref n1, ref n2);
+            AbLasInternalSplitLength(n, 8, out n1, out n2);
     }
 
-    private static void AbLasInternalSplitLength(int n, int nb, ref int n1, ref int n2)
+    private static void AbLasInternalSplitLength(int n, int nb, out int n1, out int n2)
     {
         if (n <= nb) // Block size, no further splitting
         {
@@ -1885,7 +1881,7 @@ internal static class MatrixTST
         }
     }
 
-    private static void MatrixBD(double[,] a, int m, int n, ref double[] TauQ, ref double[] TauP)
+    private static void MatrixBD(double[,] a, int m, int n, out double[] TauQ, out double[] TauP)
     {
         if (n <= 0 || m <= 0)
         {
@@ -2190,9 +2186,6 @@ internal static class MatrixTST
         int ic,
         int jc)
     {
-        var s1 = 0;
-        var s2 = 0;
-
         var tscur = MatrixTileSizeB;
         if (Max3(m, n, k) <= MatrixTileSizeB)
             tscur = MatrixTileSizeA;
@@ -2205,11 +2198,13 @@ internal static class MatrixTST
             return;
         }
 
+        int s2;
+        int s1;
         // Recursive algorithm: split on M or N
         if (m >= n && m >= k)
         {
             // A*B = (A1 A2)^T*B
-            TiledSplit(m, tscur, ref s1, ref s2);
+            TiledSplit(m, tscur, out s1, out s2);
             if (PptyPeA == 0)
             {
                 MatrixGEMMRec(s2, n, k, alpha, a, ia + s1, ja, PptyPeA, b, ib, jb, OptyPeB, beta, c, ic + s1, jc);
@@ -2226,7 +2221,7 @@ internal static class MatrixTST
         if (n >= m && n >= k)
         {
             // A*B = A*(B1 B2)
-            TiledSplit(n, tscur, ref s1, ref s2);
+            TiledSplit(n, tscur, out s1, out s2);
             if (OptyPeB == 0)
             {
                 MatrixGEMMRec(m, s2, k, alpha, a, ia, ja, PptyPeA, b, ib, jb + s1, OptyPeB, beta, c, ic, jc + s1);
@@ -2243,7 +2238,7 @@ internal static class MatrixTST
         // Recursive algorithm: split on K
 
         // A*B = (A1 A2)*(B1 B2)^T
-        TiledSplit(k, tscur, ref s1, ref s2);
+        TiledSplit(k, tscur, out s1, out s2);
         if (PptyPeA == 0 && OptyPeB == 0)
         {
             MatrixGEMMRec(m, n, s1, alpha, a, ia, ja, PptyPeA, b, ib, jb, OptyPeB, beta, c, ic, jc);
@@ -2269,7 +2264,7 @@ internal static class MatrixTST
         }
     }
 
-    private static void TiledSplit(int TaskSize, int TileSize, ref int Task0, ref int Task1)
+    private static void TiledSplit(int TaskSize, int TileSize, out int Task0, out int Task1)
     {
         //Task0 = 0;
         //Task1 = 0;
@@ -2303,11 +2298,11 @@ internal static class MatrixTST
         double[,] a,
         int ia,
         int ja,
-        int optypea,
+        int OptyPeA,
         double[,] b,
         int ib,
         int jb,
-        int optypeb,
+        int OptyPeB,
         double beta,
         double[,] c,
         int ic,
@@ -2341,16 +2336,16 @@ internal static class MatrixTST
         // NOTE: specialized code was moved to separate function because of strange
         //       issues with instructions cache on some systems; Having too long
         //       functions significantly slows down internal loop of the algorithm.
-        if (optypea == 0 && optypeb == 0)
+        if (OptyPeA == 0 && OptyPeB == 0)
             MatrixGEMMk44v00(m, n, k, alpha, a, ia, ja, b, ib, jb, beta, c, ic, jc);
 
-        if (optypea == 0 && optypeb != 0)
+        if (OptyPeA == 0 && OptyPeB != 0)
             MatrixGEMM44v01(m, n, k, alpha, a, ia, ja, b, ib, jb, beta, c, ic, jc);
 
-        if (optypea != 0 && optypeb == 0)
+        if (OptyPeA != 0 && OptyPeB == 0)
             MatrixGEMMk44v10(m, n, k, alpha, a, ia, ja, b, ib, jb, beta, c, ic, jc);
 
-        if (optypea != 0 && optypeb != 0)
+        if (OptyPeA != 0 && OptyPeB != 0)
             MatrixGEMMk44v11(m, n, k, alpha, a, ia, ja, b, ib, jb, beta, c, ic, jc);
     }
 
@@ -2395,13 +2390,13 @@ internal static class MatrixTST
                     var idxa1 = ia + i + 1;
                     var idxa2 = ia + i + 2;
                     var idxa3 = ia + i + 3;
-                    var offsa = ja;
+                    var offs_a = ja;
 
                     var idxb0 = jb + j + 0;
                     var idxb1 = jb + j + 1;
                     var idxb2 = jb + j + 2;
                     var idxb3 = jb + j + 3;
-                    var offsb = ib;
+                    var offs_b = ib;
 
                     var v00 = 0.0;
                     var v01 = 0.0;
@@ -2426,26 +2421,26 @@ internal static class MatrixTST
                     // Different variants of internal loop
                     for (var t = 0; t < k; t++)
                     {
-                        var a0 = a[idxa0, offsa];
-                        var a1 = a[idxa1, offsa];
-                        var b0 = b[offsb, idxb0];
-                        var b1 = b[offsb, idxb1];
+                        var a0 = a[idxa0, offs_a];
+                        var a1 = a[idxa1, offs_a];
+                        var b0 = b[offs_b, idxb0];
+                        var b1 = b[offs_b, idxb1];
 
                         v00 += a0 * b0;
                         v01 += a0 * b1;
                         v10 += a1 * b0;
                         v11 += a1 * b1;
 
-                        var a2 = a[idxa2, offsa];
-                        var a3 = a[idxa3, offsa];
+                        var a2 = a[idxa2, offs_a];
+                        var a3 = a[idxa3, offs_a];
 
                         v20 += a2 * b0;
                         v21 += a2 * b1;
                         v30 += a3 * b0;
                         v31 += a3 * b1;
 
-                        var b2 = b[offsb, idxb2];
-                        var b3 = b[offsb, idxb3];
+                        var b2 = b[offs_b, idxb2];
+                        var b3 = b[offs_b, idxb3];
 
                         v22 += a2 * b2;
                         v23 += a2 * b3;
@@ -2456,8 +2451,8 @@ internal static class MatrixTST
                         v12 += a1 * b2;
                         v13 += a1 * b3;
 
-                        offsa++;
-                        offsb++;
+                        offs_a++;
+                        offs_b++;
                     }
 
                     if (beta == 0)
@@ -2577,13 +2572,13 @@ internal static class MatrixTST
                     var idxa1 = ia + i + 1;
                     var idxa2 = ia + i + 2;
                     var idxa3 = ia + i + 3;
-                    var offsa = ja;
+                    var offs_a = ja;
 
                     var idxb0 = ib + j + 0;
                     var idxb1 = ib + j + 1;
                     var idxb2 = ib + j + 2;
                     var idxb3 = ib + j + 3;
-                    var offsb = jb;
+                    var offs_b = jb;
 
                     var v00 = 0.0;
                     var v01 = 0.0;
@@ -2607,26 +2602,26 @@ internal static class MatrixTST
 
                     for (var t = 0; t < k; t++)
                     {
-                        var a0 = a[idxa0, offsa];
-                        var a1 = a[idxa1, offsa];
-                        var b0 = b[idxb0, offsb];
-                        var b1 = b[idxb1, offsb];
+                        var a0 = a[idxa0, offs_a];
+                        var a1 = a[idxa1, offs_a];
+                        var b0 = b[idxb0, offs_b];
+                        var b1 = b[idxb1, offs_b];
 
                         v00 += a0 * b0;
                         v01 += a0 * b1;
                         v10 += a1 * b0;
                         v11 += a1 * b1;
 
-                        var a2 = a[idxa2, offsa];
-                        var a3 = a[idxa3, offsa];
+                        var a2 = a[idxa2, offs_a];
+                        var a3 = a[idxa3, offs_a];
 
                         v20 += a2 * b0;
                         v21 += a2 * b1;
                         v30 += a3 * b0;
                         v31 += a3 * b1;
 
-                        var b2 = b[idxb2, offsb];
-                        var b3 = b[idxb3, offsb];
+                        var b2 = b[idxb2, offs_b];
+                        var b3 = b[idxb3, offs_b];
 
                         v22 += a2 * b2;
                         v23 += a2 * b3;
@@ -2637,8 +2632,8 @@ internal static class MatrixTST
                         v12 += a1 * b2;
                         v13 += a1 * b3;
 
-                        offsa++;
-                        offsb++;
+                        offs_a++;
+                        offs_b++;
                     }
 
                     if (beta == 0)
@@ -2759,13 +2754,13 @@ internal static class MatrixTST
                     var idxa1 = ja + i + 1;
                     var idxa2 = ja + i + 2;
                     var idxa3 = ja + i + 3;
-                    var offsa = ia;
+                    var offs_a = ia;
 
                     var idxb0 = jb + j + 0;
                     var idxb1 = jb + j + 1;
                     var idxb2 = jb + j + 2;
                     var idxb3 = jb + j + 3;
-                    var offsb = ib;
+                    var offs_b = ib;
 
                     var v00 = 0.0;
                     var v01 = 0.0;
@@ -2789,26 +2784,26 @@ internal static class MatrixTST
 
                     for (var t = 0; t < k; t++)
                     {
-                        var a0 = a[offsa, idxa0];
-                        var a1 = a[offsa, idxa1];
-                        var b0 = b[offsb, idxb0];
-                        var b1 = b[offsb, idxb1];
+                        var a0 = a[offs_a, idxa0];
+                        var a1 = a[offs_a, idxa1];
+                        var b0 = b[offs_b, idxb0];
+                        var b1 = b[offs_b, idxb1];
 
                         v00 += a0 * b0;
                         v01 += a0 * b1;
                         v10 += a1 * b0;
                         v11 += a1 * b1;
 
-                        var a2 = a[offsa, idxa2];
-                        var a3 = a[offsa, idxa3];
+                        var a2 = a[offs_a, idxa2];
+                        var a3 = a[offs_a, idxa3];
 
                         v20 += a2 * b0;
                         v21 += a2 * b1;
                         v30 += a3 * b0;
                         v31 += a3 * b1;
 
-                        var b2 = b[offsb, idxb2];
-                        var b3 = b[offsb, idxb3];
+                        var b2 = b[offs_b, idxb2];
+                        var b3 = b[offs_b, idxb3];
 
                         v22 += a2 * b2;
                         v23 += a2 * b3;
@@ -2819,8 +2814,8 @@ internal static class MatrixTST
                         v12 += a1 * b2;
                         v13 += a1 * b3;
 
-                        offsa++;
-                        offsb++;
+                        offs_a++;
+                        offs_b++;
                     }
                     if (beta == 0)
                     {
@@ -2938,13 +2933,13 @@ internal static class MatrixTST
                     var idxa1 = ja + i + 1;
                     var idxa2 = ja + i + 2;
                     var idxa3 = ja + i + 3;
-                    var offsa = ia;
+                    var offs_a = ia;
 
                     var idxb0 = ib + j + 0;
                     var idxb1 = ib + j + 1;
                     var idxb2 = ib + j + 2;
                     var idxb3 = ib + j + 3;
-                    var offsb = jb;
+                    var offs_b = jb;
 
                     var v00 = 0.0;
                     var v01 = 0.0;
@@ -2968,26 +2963,26 @@ internal static class MatrixTST
 
                     for (var t = 0; t < k; t++)
                     {
-                        var a0 = a[offsa, idxa0];
-                        var a1 = a[offsa, idxa1];
-                        var b0 = b[idxb0, offsb];
-                        var b1 = b[idxb1, offsb];
+                        var a0 = a[offs_a, idxa0];
+                        var a1 = a[offs_a, idxa1];
+                        var b0 = b[idxb0, offs_b];
+                        var b1 = b[idxb1, offs_b];
 
                         v00 += a0 * b0;
                         v01 += a0 * b1;
                         v10 += a1 * b0;
                         v11 += a1 * b1;
 
-                        var a2 = a[offsa, idxa2];
-                        var a3 = a[offsa, idxa3];
+                        var a2 = a[offs_a, idxa2];
+                        var a3 = a[offs_a, idxa3];
 
                         v20 += a2 * b0;
                         v21 += a2 * b1;
                         v30 += a3 * b0;
                         v31 += a3 * b1;
 
-                        var b2 = b[idxb2, offsb];
-                        var b3 = b[idxb3, offsb];
+                        var b2 = b[idxb2, offs_b];
+                        var b3 = b[idxb3, offs_b];
 
                         v22 += a2 * b2;
                         v23 += a2 * b3;
@@ -2998,8 +2993,8 @@ internal static class MatrixTST
                         v12 += a1 * b2;
                         v13 += a1 * b3;
 
-                        offsa++;
-                        offsb++;
+                        offs_a++;
+                        offs_b++;
                     }
 
                     if (beta == 0)
@@ -3143,9 +3138,9 @@ internal static class MatrixTST
         if (mx != 0)
             switch (mx)
             {
-                case <= __MinRealValue / __Epsilon:
+                case <= MinRealValue / Epsilon:
                 {
-                    s = __MinRealValue / __Epsilon;
+                    s = MinRealValue / Epsilon;
                     v = 1 / s;
                     for (k = 1; k <= n; k++)
                         x[k] = v * x[k];
@@ -3153,9 +3148,9 @@ internal static class MatrixTST
                     break;
                 }
 
-                case >= __MaxRealNumber * __Epsilon:
+                case >= MaxRealNumber * Epsilon:
                 {
-                    s = __MaxRealNumber * __Epsilon;
+                    s = MaxRealNumber * Epsilon;
                     v = 1 / s;
                     for (k = 1; k <= n; k++)
                         x[k] = v * x[k];
@@ -3197,9 +3192,9 @@ internal static class MatrixTST
         x[1] = beta * s; // Scale back outputs
     }
 
-    private const double __Epsilon = 5E-16;
-    private const double __MaxRealNumber = 1E300;
-    private const double __MinRealValue = 1E-300;
+    private const double Epsilon = 5E-16;
+    private const double MaxRealNumber = 1E300;
+    private const double MinRealValue = 1E-300;
 
     private static void ApplyReflectionFromTheLeft(double[,] c, double tau, double[] v, int m1, int m2, int n1, int n2, ref double[] work)
     {
