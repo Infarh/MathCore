@@ -1,131 +1,133 @@
-double[,] A = {
-    { 2, 1 },
-    { 1, 3 },
-    { 4, 2 },
-    { 3, 4 }
-};
+const uint poly = 0xEDB88320;
 
-double[] b = [5, 6, 10, 12];
+var table = new uint[256];
 
-double[] x = Ex.SolveLeastSquares(A, b);
+FillTableCRC32RefOut(table, poly);
 
-Console.WriteLine("Решение:");
-foreach (var xi in x)
+var data = "Hello, CRC32!"u8.ToArray();
+
+Console.WriteLine($"data: {data.Select(b => b.ToString("x2")).JoinStrings("")}");
+
+var crc = 0xFFFFFFFFu;
+
+foreach (var b in data)
 {
-    Console.WriteLine(xi);
+    var i = (crc ^ b) & 0xFF;
+    crc = (crc >> 8) ^ table[i];
 }
+
+crc ^= 0xFFFFFFFFu;
+
+Console.WriteLine($"{crc:x8}");
 
 Console.WriteLine("End.");
 return;
 
-static class Ex
+static uint ComputeCRC32(
+    byte[] data,
+    uint[] table,
+    uint CRC = 0xFFFFFFFFu,
+    uint XOR = 0xFFFFFFFFu,
+    bool RefIn = false,
+    bool RefOut = false)
 {
-    public static double[] SolveLeastSquares(double[,] A, double[] b)
+    var crc = CRC;
+
+    if (RefIn)
+        foreach (var b in data)
+            crc = (crc >> 8) ^ table[(crc ^ b) & 0xFF];
+    else
+        foreach (var b in data)
+            crc = (crc << 8) ^ table[((crc >> 24) ^ b) & 0xFF];
+
+    crc ^= XOR;
+
+    return RefOut
+        ? crc.ReverseBits()
+        : crc;
+}
+
+static uint ComputeCRC32WithoutTable(
+    byte[] data,
+    uint poly = 0xEDB88320,
+    uint CRC = 0xFFFFFFFFu,
+    uint XOR = 0xFFFFFFFFu,
+    bool RefIn = false,
+    bool RefOut = false)
+{
+    var crc = CRC;
+
+    foreach (var b in data)
     {
-        var m = A.GetLength(0);
-        var n = A.GetLength(1);
+        crc ^= RefIn ? b.ReverseBits() : b;
 
-        var At = Transpose(A);
-        var AtA = Multiply(At, A);
-        var Atb = Multiply(At, b);
-
-        var x = Solve(AtA, Atb);
-
-        return x;
+        for (var i = 0; i < 8; i++)
+            crc = (crc & 1) != 0
+                ? (crc >> 1) ^ poly
+                : (crc >> 1);
     }
 
-    private static double[,] Transpose(double[,] matrix)
+    crc ^= XOR;
+
+    return RefOut
+        ? crc.ReverseBits()
+        : crc;
+}
+
+static void FillTableCRC32RefOut(uint[] table, uint poly, bool RefIn = true, bool RefOut = false)
+{
+    table.AssertLength(256);
+
+    if (RefOut)
     {
-        var m = matrix.GetLength(0);
-        var n = matrix.GetLength(1);
-        var transposed = new double[n, m];
-
-        for (var i = 0; i < m; i++)
-            for (var j = 0; j < n; j++)
-                transposed[j, i] = matrix[i, j];
-
-        return transposed;
-    }
-
-    private static double[,] Multiply(double[,] A, double[,] B)
-    {
-        var m = A.GetLength(0);
-        var n = A.GetLength(1);
-        var p = B.GetLength(1);
-        var result = new double[m, p];
-
-        for (var i = 0; i < m; i++)
-        {
-            for (var j = 0; j < p; j++)
+        if (RefIn)
+            for (var i = 0u; i < table.Length; i++) // RefIn RefOut
             {
-                result[i, j] = 0;
-                for (var k = 0; k < n; k++)
-                    result[i, j] += A[i, k] * B[k, j];
+                var t = i;
+
+                for (var j = 0; j < 8; j++)
+                    t = (t & 1) == 1
+                        ? (t >> 1) ^ poly
+                        : (t >> 1);
+
+                table[i] = t.ReverseBits();
             }
-        }
-
-        return result;
-    }
-
-    private static double[] Multiply(double[,] A, double[] b)
-    {
-        var m = A.GetLength(0);
-        var n = A.GetLength(1);
-        var result = new double[n];
-
-        for (var i = 0; i < n; i++)
-        {
-            result[i] = 0;
-            for (var j = 0; j < m; j++)
-                result[i] += A[j, i] * b[j];
-        }
-
-        return result;
-    }
-
-    private static double[] Solve(double[,] A, double[] b)
-    {
-        var n = A.GetLength(0);
-        var x = new double[n];
-        var L = new double[n, n];
-        var U = new double[n, n];
-
-        for (var i = 0; i < n; i++)
-        {
-            for (var j = 0; j <= i; j++)
+        else                                        // RefOut
+            for (var i = 0u; i < table.Length; i++)
             {
-                double sum = 0;
-                for (var k = 0; k < j; k++)
-                    sum += L[i, k] * U[k, j];
-                L[i, j] = A[i, j] - sum;
+                var t = i;
+
+                for (var j = 0; j < 8; j++)
+                    t = (t & 0x80000000) != 0
+                        ? (t << 1) ^ poly
+                        : (t << 1);
+
+                table[i] = t.ReverseBits();
             }
 
-            for (var j = i; j < n; j++)
-            {
-                double sum = 0;
-                for (var k = 0; k < i; k++)
-                    sum += L[i, k] * U[k, j];
-                U[i, j] = (A[i, j] - sum) / L[i, i];
-            }
-        }
-
-        var y = new double[n];
-        for (var i = 0; i < n; i++)
-        {
-            double sum = 0;
-            for (var j = 0; j < i; j++)
-                sum += L[i, j] * y[j];
-            y[i] = (b[i] - sum) / L[i, i];
-        }
-
-        for (var i = n - 1; i >= 0; i--)
-        {
-            double sum = 0;
-            for (var j = i + 1; j < n; j++)
-                sum += U[i, j] * x[j];
-            x[i] = y[i] - sum;
-        }
-
-        return x;
+        return;
     }
+
+    if (RefIn)                                  // RefIn
+        for (var i = 0u; i < table.Length; i++)
+        {
+            ref var t = ref table[i];
+            t = i;
+
+            for (var j = 0; j < 8; j++)
+                t = (t & 1) == 1
+                    ? (t >> 1) ^ poly
+                    : (t >> 1);
+        }
+    else                                        // !RefIn && !RefOut
+        for (var i = 0u; i < table.Length; i++)
+        {
+            ref var t = ref table[i];
+            t = i;
+
+            for (var j = 0; j < 8; j++)
+                t = (t & 0x80000000) != 0
+                    ? (t << 1) ^ poly
+                    : (t << 1);
+        }
 }

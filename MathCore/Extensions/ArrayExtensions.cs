@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 using MathCore;
@@ -16,6 +17,96 @@ namespace System;
 ///<summary>Методы расширения для массивов</summary>
 public static class ArrayExtensions
 {
+    /// <summary>Проверяет, что длина массива равна указанному значению</summary>
+    /// <typeparam name="T">Тип элементов массива.</typeparam>
+    /// <param name="array">Проверяемый массив.</param>
+    /// <param name="length">Значение, с которым сравнивается длина массива.</param>
+    /// <param name="ErrorMessage">Сообщение об ошибке, которое будет использовано в исключении, если проверка не пройдена. Если null, используется сообщение по умолчанию.</param>
+    /// <param name="ArgName">Имя аргумента, которое будет использовано в исключении. Если null, используется имя аргумента по умолчанию.</param>
+    /// <returns>Исходный массив, если проверка пройдена.</returns>
+    /// <exception cref="ArgumentException">Выбрасывается, если длина массива не соответствует указанному значению.</exception>
+    public static T[] AssertLength<T>(
+        this T[] array,
+        int length,
+        string? ErrorMessage = null,
+        [CallerArgumentExpression(nameof(array))] string ArgName = null!)
+    {
+        if (array.NotNull().Length != length)
+            throw new ArgumentException(ArgName ?? nameof(array), ErrorMessage ?? $"Размер массива {ArgName ?? nameof(array)}.Length должен быть равен {length}")
+                .WithData("ActualLength", array.Length)
+                .WithData("ExpectedLength", length);
+
+        return array;
+    }
+
+    /// <summary>Проверяет, что длина массива больше указанного значения</summary>
+    /// <typeparam name="T">Тип элементов массива.</typeparam>
+    /// <param name="array">Проверяемый массив.</param>
+    /// <param name="length">Значение, с которым сравнивается длина массива.</param>
+    /// <param name="OrEqual">Если true, проверяет, что длина массива больше или равна указанному значению. Если false, проверяет, что длина массива строго больше указанного значения.</param>
+    /// <param name="ErrorMessage">Сообщение об ошибке, которое будет использовано в исключении, если проверка не пройдена. Если null, используется сообщение по умолчанию.</param>
+    /// <param name="ArgName">Имя аргумента, которое будет использовано в исключении. Если null, используется имя аргумента по умолчанию.</param>
+    /// <returns>Исходный массив, если проверка пройдена.</returns>
+    /// <exception cref="ArgumentException">Выбрасывается, если длина массива не соответствует указанным условиям.</exception>
+    public static T[] AssertLengthGreaterThan<T>(
+        this T[] array,
+        int length,
+        bool OrEqual = true,
+        string? ErrorMessage = null,
+        [CallerArgumentExpression(nameof(array))] string ArgName = null!)
+    {
+        if (OrEqual)
+        {
+            if (!(array.NotNull().Length >= length))
+                throw new ArgumentException(ArgName ?? nameof(array), ErrorMessage ?? $"Размер массива {ArgName ?? nameof(array)}.Length должена быть больше, либо равеа {length}")
+                    .WithData("ActualLength", array.Length)
+                    .WithData("ExpectedLength", length);
+        }
+        else
+        {
+            if (!(array.NotNull().Length > length))
+                throw new ArgumentException(ArgName ?? nameof(array), ErrorMessage ?? $"Размер массива {ArgName ?? nameof(array)}.Length должна быть строго больше {length}")
+                    .WithData("ActualLength", array.Length)
+                    .WithData("ExpectedLength", length);
+        }
+
+        return array;
+    }
+
+    /// <summary>Проверяет, что длина массива меньше указанного значения</summary>
+    /// <typeparam name="T">Тип элементов массива.</typeparam>
+    /// <param name="array">Проверяемый массив.</param>
+    /// <param name="length">Значение, с которым сравнивается длина массива.</param>
+    /// <param name="OrEqual">Если true, проверяет, что длина массива меньше или равна указанному значению. Если false, проверяет, что длина массива строго меньше указанного значения.</param>
+    /// <param name="ErrorMessage">Сообщение об ошибке, которое будет использовано в исключении, если проверка не пройдена. Если null, используется сообщение по умолчанию.</param>
+    /// <param name="ArgName">Имя аргумента, которое будет использовано в исключении. Если null, используется имя аргумента по умолчанию.</param>
+    /// <returns>Исходный массив, если проверка пройдена.</returns>
+    /// <exception cref="ArgumentException">Выбрасывается, если длина массива не соответствует указанным условиям.</exception>
+    public static T[] AssertLengthLessThan<T>(
+        this T[] array,
+        int length,
+        bool OrEqual = true,
+        string? ErrorMessage = null,
+        [CallerArgumentExpression(nameof(array))] string ArgName = null!)
+    {
+        if (OrEqual)
+        {
+            if (!(array.NotNull().Length <= length))
+                throw new ArgumentException(ArgName ?? nameof(array), ErrorMessage ?? $"Размер массива {ArgName ?? nameof(array)}.Length должена быть меньше, либо равеа {length}")
+                    .WithData("ActualLength", array.Length)
+                    .WithData("ExpectedLength", length);
+        }
+        else
+        {
+            if (!(array.NotNull().Length < length))
+                throw new ArgumentException(ArgName ?? nameof(array), ErrorMessage ?? $"Размер массива {ArgName ?? nameof(array)}.Length должна быть строго меньше {length}")
+                    .WithData("ActualLength", array.Length)
+                    .WithData("ExpectedLength", length);
+        }
+
+        return array;
+    }
+
     /// <summary>Заполнить массив указанным значением</summary>
     /// <typeparam name="T">Тип значения</typeparam>
     /// <param name="array">Заполняемый массив</param>
