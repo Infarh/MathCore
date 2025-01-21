@@ -1,133 +1,62 @@
-const uint poly = 0xEDB88320;
+//const uint poly = 0xEDB88320;
 
-var table = new uint[256];
+//var table = new uint[256];
+//var t1 = new uint[256];
+//var t2 = new uint[256];
 
-FillTableCRC32RefOut(table, poly);
+//TestCRC32.FillTableCRC32RefOut(table, poly);
+//TestCRC32.FillTableCRC32RefOut(t1, 0x814141AB, false, false);
+//TestCRC32.FillTableCRC32RefOut(t2, poly, true, false);
 
-var data = "Hello, CRC32!"u8.ToArray();
+//var data = "Hello, CRC32!"u8.ToArray();
 
-Console.WriteLine($"data: {data.Select(b => b.ToString("x2")).JoinStrings("")}");
+//Console.WriteLine($"data: {data.Select(b => b.ToString("x2")).JoinStrings("")}");
 
-var crc = 0xFFFFFFFFu;
+//var crc = 0xFFFFFFFFu;
 
-foreach (var b in data)
+//foreach (var b in data)
+//{
+//    var i = (crc ^ b) & 0xFF;
+//    crc = (crc >> 8) ^ table[i];
+//}
+
+//crc ^= 0xFFFFFFFFu;
+
+//Console.WriteLine($"{crc:x8}");
+
+double[,] A1 =
 {
-    var i = (crc ^ b) & 0xFF;
-    crc = (crc >> 8) ^ table[i];
-}
+    { 0, 2, 3 },
+    { 4, 5, 6 },
+    { 1, 2, 3 }
+};
 
-crc ^= 0xFFFFFFFFu;
+double[] b1 = [4, 8, 12];
+var x = new double[3];
 
-Console.WriteLine($"{crc:x8}");
+Matrix.Array.Solve(A1, b1, x);
+
+
+
+Matrix.Array.Triangulate(A1, out var p, out var d);
+
+double[,] A = 
+{
+    { 1, 2, 3, },
+    { 5, 6, 7, },
+    { 9, 11, 11, },
+};
+
+double[,] b =
+{
+    { 4, },
+    { 8, },
+    { 12, },
+};
+
+
+
+Matrix.Array.Solve(A, b1, x);
 
 Console.WriteLine("End.");
 return;
-
-static uint ComputeCRC32(
-    byte[] data,
-    uint[] table,
-    uint CRC = 0xFFFFFFFFu,
-    uint XOR = 0xFFFFFFFFu,
-    bool RefIn = false,
-    bool RefOut = false)
-{
-    var crc = CRC;
-
-    if (RefIn)
-        foreach (var b in data)
-            crc = (crc >> 8) ^ table[(crc ^ b) & 0xFF];
-    else
-        foreach (var b in data)
-            crc = (crc << 8) ^ table[((crc >> 24) ^ b) & 0xFF];
-
-    crc ^= XOR;
-
-    return RefOut
-        ? crc.ReverseBits()
-        : crc;
-}
-
-static uint ComputeCRC32WithoutTable(
-    byte[] data,
-    uint poly = 0xEDB88320,
-    uint CRC = 0xFFFFFFFFu,
-    uint XOR = 0xFFFFFFFFu,
-    bool RefIn = false,
-    bool RefOut = false)
-{
-    var crc = CRC;
-
-    foreach (var b in data)
-    {
-        crc ^= RefIn ? b.ReverseBits() : b;
-
-        for (var i = 0; i < 8; i++)
-            crc = (crc & 1) != 0
-                ? (crc >> 1) ^ poly
-                : (crc >> 1);
-    }
-
-    crc ^= XOR;
-
-    return RefOut
-        ? crc.ReverseBits()
-        : crc;
-}
-
-static void FillTableCRC32RefOut(uint[] table, uint poly, bool RefIn = true, bool RefOut = false)
-{
-    table.AssertLength(256);
-
-    if (RefOut)
-    {
-        if (RefIn)
-            for (var i = 0u; i < table.Length; i++) // RefIn RefOut
-            {
-                var t = i;
-
-                for (var j = 0; j < 8; j++)
-                    t = (t & 1) == 1
-                        ? (t >> 1) ^ poly
-                        : (t >> 1);
-
-                table[i] = t.ReverseBits();
-            }
-        else                                        // RefOut
-            for (var i = 0u; i < table.Length; i++)
-            {
-                var t = i;
-
-                for (var j = 0; j < 8; j++)
-                    t = (t & 0x80000000) != 0
-                        ? (t << 1) ^ poly
-                        : (t << 1);
-
-                table[i] = t.ReverseBits();
-            }
-
-        return;
-    }
-
-    if (RefIn)                                  // RefIn
-        for (var i = 0u; i < table.Length; i++)
-        {
-            ref var t = ref table[i];
-            t = i;
-
-            for (var j = 0; j < 8; j++)
-                t = (t & 1) == 1
-                    ? (t >> 1) ^ poly
-                    : (t >> 1);
-        }
-    else                                        // !RefIn && !RefOut
-        for (var i = 0u; i < table.Length; i++)
-        {
-            ref var t = ref table[i];
-            t = i;
-
-            for (var j = 0; j < 8; j++)
-                t = (t & 0x80000000) != 0
-                    ? (t << 1) ^ poly
-                    : (t << 1);
-        }
-}

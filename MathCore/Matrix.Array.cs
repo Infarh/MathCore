@@ -242,6 +242,25 @@ public partial class Matrix
                 }
         }
 
+        /// <summary>Применение матрицы перестановок без проверок</summary>
+        /// <param name="matrix">Мектор, подвергаемый перестановке</param>
+        /// <param name="p">Матрица перестановок</param>
+        /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="vector"/></exception>
+        /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="p"/></exception>
+        private static void Permutation_Internal(double[] vector, double[,] p)
+        {
+            GetRowsCount(p, out var N);
+            if (N == 1) return;
+            for (var i = 0; i < N; i++)
+                if ((int)p[i, i] != 1)
+                {
+                    var j = 0;
+                    while (j < N && (int)p[i, j] != 1) j++;
+                    if (j == N || j >= i) continue;
+                    (vector[i], vector[j]) = (vector[j], vector[i]);
+                }
+        }
+
         /// <summary>Применение матрицы перестановок справа (перестановка столбцов) без проверок</summary>
         /// <param name="matrix">Матрица, подвергаемая перестановке столбцов</param>
         /// <param name="p">Матрица перестановок (столбцов)</param>
@@ -627,12 +646,32 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException"><paramref name="matrix"/> == <see langword="null"/></exception>
         /// <exception cref="ArgumentException">В случае если матрица системы <paramref name="matrix"/> не квадратная</exception>
         /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
-        public static double[,] GetSolve(double[,] matrix, double[,] b, out double[,] p)
+        public static double[,] Solve(double[,] matrix, double[,] b, out double[,] p)
         {
             var x = b;
             return TrySolve(matrix, ref x, out p, true)
                 ? x
                 : throw new InvalidOperationException("Невозможно найти обратную матрицу для вырожденной матрицы");
+        }
+
+        /// <summary>Метод решения СЛАУ A*X=B -&gt; X</summary>
+        /// <param name="matrix">Матрица СЛАУ</param>
+        /// <param name="b">Правая часть СЛАУ</param>
+        /// <param name="p">Матрица перестановок</param>
+        /// <returns>Матрица решения уравнения A*X=B -&gt; X</returns>
+        /// <exception cref="InvalidOperationException">Невозможно найти обратную матрицу для вырожденной матрицы</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="matrix"/> == <see langword="null"/></exception>
+        /// <exception cref="ArgumentException">В случае если матрица системы <paramref name="matrix"/> не квадратная</exception>
+        /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+        public static double[,] Solve(double[,] matrix, double[,] b)
+        {
+            var x = b;
+            if(TrySolve(matrix, ref x, out var p, true))
+                throw new InvalidOperationException("Невозможно найти обратную матрицу для вырожденной матрицы");
+
+            Permutation_Left_Internal(x, p);
+
+            return x;
         }
 
         /// <summary>Метод решения СЛАУ</summary>
@@ -648,6 +687,34 @@ public partial class Matrix
         {
             if (!TrySolve(matrix, ref b, out p, clone_b))
                 throw new InvalidOperationException("Невозможно найти обратную матрицу для вырожденной матрицы");
+        }
+
+        public static void Solve(double[,] matrix, double[] b, double[] x)
+        {
+            var rows_count = b.Length;
+            if (rows_count != x.Length)
+                throw new ArgumentException("Размеры векторов не совпадают", nameof(x));
+
+            if(!TrySolve(matrix, ref b, out var p, true))
+                throw new InvalidOperationException("Невозможно найти обратную матрицу для вырожденной матрицы");
+
+            //Operator.Multiply(p, b, x);
+            //Permutation_Internal(b, p);
+            // Уножение матрицы перестановок на вектор правой части
+            for (var i = 0; i < rows_count; i++)
+                for (var j = 0; j < rows_count; j++)
+                {
+                    if (p[i, j] != 1) continue;
+                    x[i] = b[j];
+                    break;
+                }
+        }
+
+        public static double[] Solve(double[,] matrix, double[] b)
+        {
+            var x = new double[b.Length];
+            Solve(matrix, b, x);
+            return x;
         }
 
         /// <summary>Попытаться решить СЛАУ</summary>
@@ -697,6 +764,54 @@ public partial class Matrix
                 b = temp_b;
             else
                 System.Array.Copy(temp_b, b, b.Length);
+
+            return true;
+        }
+
+        /// <summary>Попытаться решить СЛАУ</summary>
+        /// <param name="matrix">Матрица СЛАУ</param>
+        /// <param name="b">Правая часть СЛАУ</param>
+        /// <param name="p">Матрица перестановок</param>
+        /// <param name="clone_b">Работать с копией <paramref name="b"/></param>
+        /// <returns>Истина, если решение СЛАУ получено; ложь - если матрица СЛАУ <paramref name="matrix"/> вырождена</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="matrix"/> == <see langword="null"/></exception>
+        /// <exception cref="ArgumentNullException"><paramref name="b"/> == <see langword="null"/></exception>
+        /// <exception cref="ArgumentException">В случае если матрица системы <paramref name="matrix"/> не квадратная</exception>
+        /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+        public static bool TrySolve(double[,] matrix, ref double[] b, out double[,] p, bool clone_b = false)
+        {
+            if (matrix is null) throw new ArgumentNullException(nameof(matrix));
+            if (b is null) throw new ArgumentNullException(nameof(b));
+            if (matrix.GetLength(0) != matrix.GetLength(1)) throw new ArgumentException("Матрица системы не квадратная", nameof(matrix));
+            if (matrix.GetLength(0) != b.GetLength(0))
+                throw new ArgumentException("Число строк матрицы правой части не равно числу строк матрицы системы", nameof(b));
+
+            var temp_b = b.CloneObject();
+            Triangulate(ref matrix, ref temp_b, out p, out var d);
+            if (d == 0) 
+                return false;
+
+            GetLength(matrix, out var N, out var M);
+            for (var i0 = Math.Min(N, M) - 1; i0 >= 0; i0--)
+            {
+                var pivot = matrix[i0, i0];
+                if (pivot != 1)
+                    temp_b[i0] /= pivot;
+
+                for (var i = i0 - 1; i >= 0; i--)
+                {
+                    var k = matrix[i, i0];
+                    if (k == 0) continue;
+                    matrix[i, i0] = 0d;
+                    temp_b[i] -= temp_b[i0] * k;
+                }
+            }
+
+            if (clone_b)
+                b = temp_b;
+            else
+                System.Array.Copy(temp_b, b, b.Length);
+
             return true;
         }
 
@@ -1528,6 +1643,101 @@ public partial class Matrix
             for (var i = N1; i < N; i++)
                 for (var j = 0; j < B_M; j++)
                     b[i, j] = 0d;
+
+            return N1;
+        }
+
+        /// <summary>Приведение матрицы к треугольному виду</summary>
+        /// <param name="matrix">Матрица, приводимая к треугольному виду</param>
+        /// <param name="b">Вектор правой части СЛАУ</param>
+        /// <param name="p">Матрица перестановок</param>
+        /// <param name="d">Определитель матрицы (произведение диагональных элементов)</param>
+        /// <param name="clone_matrix">Клонировать исходную матрицу</param>
+        /// <param name="clone_b">Клонировать присоединённую матрицу</param>
+        /// <returns>Ранг матрицы (число ненулевых строк)</returns>
+        /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
+        /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
+        /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+        public static int Triangulate(
+            ref double[,] matrix,
+            ref double[] b,
+            out double[,] p,
+            out double d,
+            bool clone_matrix = true,
+            bool clone_b = true
+        )
+        {
+            GetLength(matrix, out var N, out var M);
+            var B_N = b.NotNull().Length;
+            if (B_N != N) throw new ArgumentException("Число строк правой части СЛАУ не равно числу строк исходной матрицы");
+
+            if (clone_matrix)
+                matrix = matrix.CloneObject();
+            if (clone_b)
+                b = b.CloneObject();
+
+            d = 1d;
+            var p_index = new int[N];
+            for (var i = 0; i < N; i++)
+                p_index[i] = i;
+
+            var N1 = Math.Min(N, M);
+            for (var i0 = 0; i0 < N1; i0++)
+            {
+                if (matrix[i0, i0] == 0)
+                {
+                    var max = 0d;
+                    var max_index = -1;
+                    for (var i1 = i0 + 1; i1 < N; i1++)
+                    {
+                        var abs = Math.Abs(matrix[i1, i0]);
+                        if (abs > max)
+                        {
+                            max = abs;
+                            max_index = i1;
+                        }
+                    }
+
+                    if (max_index < 0)
+                    {
+                        p = CreatePermutationMatrix(p_index);
+                        for (var i = i0; i < N; i++)
+                        {
+                            for (var j = i0; j < M; j++)
+                                matrix[i, j] = 0d;
+                                b[i] = 0d;
+                        }
+
+                        d = 0d;
+                        return i0;
+                    }
+
+                    matrix.SwapRows(i0, max_index);
+                    (b[i0], b[max_index]) = (b[max_index], b[i0]);
+                    Swap(ref p_index[i0], ref p_index[max_index]);
+                    d = -d;
+                }
+
+                var pivot = matrix[i0, i0]; // Ведущий элемент строки
+                d *= pivot;
+
+                //Нормируем строку основной матрицы по первому элементу
+                for (var i = i0 + 1; i < N; i++)
+                    if (matrix[i, i0] != 0)
+                    {
+                        var k = matrix[i, i0] / pivot;
+                        matrix[i, i0] = 0d;
+                        for (var j = i0 + 1; j < M; j++)
+                            matrix[i, j] -= matrix[i0, j] * k;
+                        b[i] -= b[i0] * k;
+                    }
+            }
+
+            p = CreatePermutationMatrix(p_index);
+            if (N1 >= N) return N1;
+            for (var i = N1; i < N; i++)
+                b[i] = 0d;
+
             return N1;
         }
 
