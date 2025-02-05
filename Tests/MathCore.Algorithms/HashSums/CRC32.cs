@@ -31,43 +31,56 @@ internal static class CRC32
     }
 
     /// <summary>Генерирует таблицу коэффициентов для вычисления CRC</summary>
-    /// <param name="polynomial">Полином для вычисления CRC</param>
+    /// <param name="poly">Полином для вычисления CRC</param>
     /// <param name="RefIn">Отражение входных байтов</param>
     /// <returns>Таблица коэффициентов для вычисления CRC</returns>
-    public static uint[] GenerateCRCTable(uint polynomial, bool RefIn)
+    public static uint[] GetTable(uint poly, bool RefIn)
     {
         var table = new uint[256];
+        //for (uint i = 0; i < 256; i++)
+        //{
+        //    ref var entry = ref table[i];
+        //    entry = RefIn ? ReflectUInt(i) : i;
+
+        //    entry <<= 24;
+
+        //    for (var j = 0; j < 8; j++)
+        //    {
+        //        if ((entry & 0x80000000) != 0)
+        //            entry = (entry << 1) ^ poly;
+        //        else
+        //            entry <<= 1;
+        //    }
+
+        //    if (RefIn)
+        //        entry = ReflectUInt(entry);
+        //}
+
+        return FillTable(table, poly, RefIn);
+    }
+
+    /// <summary>Заполняет таблицу коэффициентов для вычисления CRC</summary>
+    /// <param name="table">Таблица для заполнения</param>
+    /// <param name="poly">Полином для вычисления CRC</param>
+    /// <param name="RefIn">Отражение входных байтов</param>
+    /// <returns>Заполненная таблица коэффициентов для вычисления CRC</returns>
+    public static uint[] FillTable(uint[] table, uint poly, bool RefIn)
+    {
         for (uint i = 0; i < 256; i++)
         {
-            var entry = i;
-            if (RefIn)
-                entry = ReflectUInt(entry);
+            ref var entry = ref table[i];
+            entry = RefIn ? ReflectUInt(i) : i;
 
             entry <<= 24;
-
             for (var j = 0; j < 8; j++)
-            {
-                if ((entry & 0x80000000) != 0)
-                    entry = (entry << 1) ^ polynomial;
-                else
-                    entry <<= 1;
-            }
+                entry = (entry & 0x80000000) != 0 
+                    ? (entry << 1) ^ poly 
+                    : entry << 1;
 
             if (RefIn)
                 entry = ReflectUInt(entry);
-
-            table[i] = entry;
         }
 
-        for (var i = 0; i < table.Length; i++)
-        {
-            if (i > 0 && i % 8 == 0)
-                Console.WriteLine();
-
-            Console.Write($"0x{table[i]:X8}, ");
-        }
-
-        Console.WriteLine();
         return table;
     }
 
@@ -95,7 +108,7 @@ internal static class CRC32
 
         var table = __CRCTableCache.GetOrAdd(
             (poly, RefIn),
-            key => GenerateCRCTable(key.Polynomial, key.RefIn));
+            key => GetTable(key.Polynomial, key.RefIn));
 
         int bytes_read;
         var buffer = new byte[8192];
@@ -124,14 +137,14 @@ internal static class CRC32
 
     /// <summary>Синхронный метод-расширение для вычисления CRC-32 для потока</summary>
     /// <param name="stream">Поток, для которого вычисляется CRC-32.</param>
-    /// <param name="polynomial">Полином для вычисления CRC-32.</param>
+    /// <param name="poly">Полином для вычисления CRC-32.</param>
     /// <param name="CRC"></param>
     /// <param name="RefIn">Отражение входных байтов.</param>
     /// <param name="RefOut">Отражение выходного значения CRC.</param>
     /// <param name="XOROut">Значение для выполнения XOR с окончательным CRC.</param>
     /// <returns>Значение CRC-32.</returns>
     public static uint GetCRC32(this Stream stream,
-        uint polynomial = 0x04C11DB7,
+        uint poly = 0x04C11DB7,
         uint CRC = 0xFFFFFF,
         bool RefIn = false,
         bool RefOut = false,
@@ -139,7 +152,10 @@ internal static class CRC32
     {
         stream.NotNull();
 
-        var table = __CRCTableCache.GetOrAdd((polynomial, RefIn), key => GenerateCRCTable(key.Polynomial, key.RefIn));
+        var table = __CRCTableCache
+            .GetOrAdd(
+                (poly, RefIn), 
+                key => GetTable(key.Polynomial, key.RefIn));
 
         int bytes_read;
         Span<byte> buffer = stackalloc byte[8192];

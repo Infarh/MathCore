@@ -1,7 +1,8 @@
-﻿
-using MathCore.Algorithms.HashSums;
+﻿using MathCore.Algorithms.HashSums;
 
 const string test_str = "123456789";
+
+//MemoryStream stre = [1, 2, 3];
 
 var test_bytes = System.Text.Encoding.UTF8.GetBytes(test_str);
 
