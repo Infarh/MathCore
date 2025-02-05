@@ -324,9 +324,9 @@ public class Lagrange : Interpolator, IInterpolator
 
     private Lagrange(double[] P) => _Polynom = new(P);
 
-    public Lagrange(params Vector2D[] P)
+    public Lagrange(params IReadOnlyList<Vector2D> P)
     {
-        var length = P.Length;
+        var length = P.Count;
         var x = new double[length];
         var y = new double[length];
 

@@ -2031,7 +2031,7 @@ public static class ArrayExtensions
     /// <param name="B">Перечень устанавливаемых значений</param>
     /// <typeparam name="T">Тип элементов массива</typeparam>
     [DST]
-    public static void SetSubArrays<T>(this T[] A, params T[][] B)
+    public static void SetSubArrays<T>(this T[] A, params IEnumerable<T[]> B)
     {
         var index = 0;
         foreach (var array in B)

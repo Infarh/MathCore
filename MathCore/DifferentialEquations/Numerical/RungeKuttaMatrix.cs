@@ -361,9 +361,9 @@ public class RungeKuttaMatrix
 
         var k1 = f(t, y);
 
-        static Matrix[] GetY(Matrix[] Y, IReadOnlyList<Matrix> YY, double dt, int M, params (Matrix[] K, double k)[] kk)
+        static Matrix[] GetY(Matrix[] Y, IReadOnlyList<Matrix> YY, double dt, int M, params IReadOnlyList<(Matrix[] K, double k)> kk)
         {
-            for (int i = 0, mm = kk.Length; i < M; i++)
+            for (int i = 0, mm = kk.Count; i < M; i++)
             {
                 var yy = kk[0].K[i] * kk[0].k;
                 for (var j = 1; j < mm; j++)
@@ -403,9 +403,9 @@ public class RungeKuttaMatrix
                 (k4, 49 / 176d),
                 (k5, -5103 / 18656d)));
 
-        static Matrix[] GetV(Matrix[] Y, int M, params (Matrix[] K, double k)[] kk)
+        static Matrix[] GetV(Matrix[] Y, int M, params IReadOnlyList<(Matrix[] K, double k)> kk)
         {
-            for (int i = 0, mm = kk.Length; i < M; i++)
+            for (int i = 0, mm = kk.Count; i < M; i++)
             {
                 var y = kk[0].K[i] * kk[0].k;
                 for (var j = 1; j < mm; j++)

@@ -32,4 +32,26 @@ public class CRC64Tests
 
         actual_hash1.ToDebug();
     }
+
+    [TestMethod, Ignore]
+    public void TestCRC64WithKnownValues()
+    {
+        var data = "123456789"u8.ToArray();
+        const ulong expected_crc = 0x995DC9BBDF1939FA; // CRC-64/ECMA-182
+
+        var actual_crc = CRC64.Hash(data, CRC64.Mode.ECMA, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, RefIn: false, RefOut: false);
+
+        Assert.AreEqual(expected_crc, actual_crc, $"Expected: 0x{expected_crc:X16}, Actual: 0x{actual_crc:X16}");
+    }
+
+    [TestMethod, Ignore]
+    public void TestCRC64WithOnlineCalculator()
+    {
+        var data = "Hello World!"u8.ToArray();
+        const ulong expected_crc = 0x1F6A1D2C3C9C2D3A; // CRC-64/ECMA-182
+
+        var actual_crc = CRC64.Hash(data, CRC64.Mode.ECMA, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, RefIn: false, RefOut: false);
+
+        Assert.AreEqual(expected_crc, actual_crc, $"Expected: 0x{expected_crc:X16}, Actual: 0x{actual_crc:X16}");
+    }
 }

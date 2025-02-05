@@ -537,18 +537,7 @@ public static partial class IEnumerableExtensions
     /// <param name="enumerable">Исходная последовательность элементов</param>
     /// <param name="values">Добавляемый элемент</param>
     /// <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на первом месте</returns>
-    public static IEnumerable<T> InsertBefore<T>(this IEnumerable<T>? enumerable, params T[]? values)
-    {
-        if (values != null) foreach (var v in values) yield return v;
-        if (enumerable != null) foreach (var v in enumerable) yield return v;
-    }
-
-    /// <summary>Добавить элемент в начало последовательности</summary>
-    /// <typeparam name="T">Тип элементов последовательности</typeparam>
-    /// <param name="enumerable">Исходная последовательность элементов</param>
-    /// <param name="values">Добавляемый элемент</param>
-    /// <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на первом месте</returns>
-    public static IEnumerable<T> InsertBefore<T>(this IEnumerable<T>? enumerable, IEnumerable<T>? values)
+    public static IEnumerable<T> InsertBefore<T>(this IEnumerable<T>? enumerable, params IEnumerable<T>? values)
     {
         if (values != null) foreach (var v in values) yield return v;
         if (enumerable != null) foreach (var v in enumerable) yield return v;
@@ -559,18 +548,7 @@ public static partial class IEnumerableExtensions
     /// <param name="collection">Исходная последовательность элементов</param>
     /// <param name="values">Добавляемый элемент</param>
     /// <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на последнем месте</returns>
-    public static IEnumerable<T> InsertAfter<T>(this IEnumerable<T>? collection, params T[]? values)
-    {
-        if (collection != null) foreach (var v in collection) yield return v;
-        if (values != null) foreach (var v in values) yield return v;
-    }
-
-    /// <summary>Добавить элемент в конец последовательности</summary>
-    /// <typeparam name="T">Тип элементов последовательности</typeparam>
-    /// <param name="collection">Исходная последовательность элементов</param>
-    /// <param name="values">Добавляемый элемент</param>
-    /// <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на последнем месте</returns>
-    public static IEnumerable<T> InsertAfter<T>(this IEnumerable<T>? collection, IEnumerable<T>? values)
+    public static IEnumerable<T> InsertAfter<T>(this IEnumerable<T>? collection, params IEnumerable<T>? values)
     {
         if (collection != null) foreach (var v in collection) yield return v;
         if (values != null) foreach (var v in values) yield return v;

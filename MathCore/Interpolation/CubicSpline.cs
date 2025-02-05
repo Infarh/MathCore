@@ -37,6 +37,8 @@ public class CubicSpline : Interpolator, IInterpolator
 
     public CubicSpline(double[] X, double[] Y) => Initialize(X, Y);
 
+    /// <summary>Инициализирует сплайн по набору комплексных точек.</summary>
+    /// <param name="Points">Набор комплексных точек.</param>
     public CubicSpline(IList<Complex> Points)
     {
         var count = Points.Count;

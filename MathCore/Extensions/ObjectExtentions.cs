@@ -198,7 +198,7 @@ public static class ObjectExtensions
     /// <summary>Расчёт хеш-кода массива объектов</summary>
     /// <param name="Objects">Массив объектов, хеш-код которых надо рассчитать</param>
     /// <returns>Хеш-код массива объектов</returns>
-    public static int GetHashCode(params object[] Objects) => Objects.GetComplexHashCode();
+    public static int GetHashCode(params IEnumerable<object> Objects) => Objects.GetComplexHashCode();
 
     /// <summary>Расчёт хеш-кода перечисления объектов</summary>
     /// <param name="Objects">Перечисление объектов, хеш-код которых надо рассчитать</param>
@@ -412,10 +412,10 @@ public static class ObjectExtensions
     /// <param name="Format">Строка форматирования результата</param>
     /// <param name="args">Дополнительные аргументы строки форматирования</param>
     [StringFormatMethod(nameof(Format))]
-    public static void ToConsole<TObject>(this TObject? Obj, string Format, params object[] args)
+    public static void ToConsole<TObject>(this TObject? Obj, string Format, params IReadOnlyList<object> args)
     {
         if (Obj is null) return;
-        if (args.Length == 0)
+        if (args.Count == 0)
             Console.Write(Format, Obj);
         else
             Console.Write(Format, args.AppendFirst(Obj).ToArray());
@@ -698,14 +698,14 @@ public static class ObjectExtensions
     /// <param name="d">Делегат метода</param>
     /// <param name="p">Параметры метода</param>
     /// <returns>Выражение вызова метода</returns>
-    public static mcEx GetCallExpression(this object? obj, Delegate d, params Ex[] p) => obj.GetCallExpression(d.Method, p);
+    public static mcEx GetCallExpression(this object? obj, Delegate d, params IEnumerable<Ex> p) => obj.GetCallExpression(d.Method, p);
 
     /// <summary>Получить выражение вызова метода объекта</summary>
     /// <param name="obj">Объект, метод которого надо вызвать</param>
     /// <param name="d">Описание метода</param>
     /// <param name="p">Параметры метода</param>
     /// <returns>Выражение вызова метода</returns>
-    public static mcEx GetCallExpression(this object? obj, MethodInfo d, params Ex[] p) => Ex.Call(obj.ToExpression(), d, p);
+    public static mcEx GetCallExpression(this object? obj, MethodInfo d, params IEnumerable<Ex> p) => Ex.Call(obj.ToExpression(), d, p);
 
     /// <summary>Получить выражение вызова метода объекта</summary>
     /// <param name="obj">Объект, метод которого надо вызвать</param>

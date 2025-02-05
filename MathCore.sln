@@ -16,7 +16,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Service", ".Service", "{B1
 		BuildAndPublish.bat = BuildAndPublish.bat
 		BuildAndTest.bat = BuildAndTest.bat
 		BuildRelease.bat = BuildRelease.bat
+		.github\copilot-instructions.md = .github\copilot-instructions.md
 		Directory.Build.props = Directory.Build.props
+		.github\workflows\publish.yml = .github\workflows\publish.yml
+		.github\workflows\testing.yml = .github\workflows\testing.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarks", "Tests\Benchmarks\Benchmarks.csproj", "{80108823-1EA4-46AC-B365-8B0F9CE59CC6}"
@@ -24,6 +27,17 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathCore.Algorithms", "Tests\MathCore.Algorithms\MathCore.Algorithms.csproj", "{2B8FF1EE-42E8-4961-A734-1068F008D7D1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathCore.Tests.WPF", "Tests\MathCore.Tests.WPF\MathCore.Tests.WPF.csproj", "{2DDA14D6-76EE-4D0A-B9DE-638778395934}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{386742AE-F590-4AA4-8395-53877DC1799F}"
+	ProjectSection(SolutionItems) = preProject
+		.github\copilot-instructions.md = .github\copilot-instructions.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{DC32AE4E-B09F-4746-BDC2-2168F61E5454}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\publish.yml = .github\workflows\publish.yml
+		.github\workflows\testing.yml = .github\workflows\testing.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,14 +47,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Debug|x64.Build.0 = Debug|Any CPU
-		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Release|x64.ActiveCfg = Release|Any CPU
-		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Release|x64.Build.0 = Release|Any CPU
 		{AFA60C84-107F-4582-8EED-2273957E89C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AFA60C84-107F-4582-8EED-2273957E89C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFA60C84-107F-4582-8EED-2273957E89C5}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -81,16 +87,26 @@ Global
 		{2B8FF1EE-42E8-4961-A734-1068F008D7D1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2B8FF1EE-42E8-4961-A734-1068F008D7D1}.Release|x64.ActiveCfg = Release|Any CPU
 		{2B8FF1EE-42E8-4961-A734-1068F008D7D1}.Release|x64.Build.0 = Release|Any CPU
+		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Debug|x64.Build.0 = Debug|Any CPU
+		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Release|x64.ActiveCfg = Release|Any CPU
+		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{25AFB0DF-BCC9-45CA-AA0D-CB76AC5F906D} = {3B53E842-750F-4865-97C0-1703CDDE4C9F}
-		{2DDA14D6-76EE-4D0A-B9DE-638778395934} = {3B53E842-750F-4865-97C0-1703CDDE4C9F}
 		{744E4BA2-2EA7-4AD5-B732-47230ED0A3F1} = {3B53E842-750F-4865-97C0-1703CDDE4C9F}
 		{80108823-1EA4-46AC-B365-8B0F9CE59CC6} = {3B53E842-750F-4865-97C0-1703CDDE4C9F}
 		{2B8FF1EE-42E8-4961-A734-1068F008D7D1} = {3B53E842-750F-4865-97C0-1703CDDE4C9F}
+		{2DDA14D6-76EE-4D0A-B9DE-638778395934} = {3B53E842-750F-4865-97C0-1703CDDE4C9F}
+		{386742AE-F590-4AA4-8395-53877DC1799F} = {B1568FA3-D7EB-4AC6-8208-7F6095E14ED6}
+		{DC32AE4E-B09F-4746-BDC2-2168F61E5454} = {386742AE-F590-4AA4-8395-53877DC1799F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5C46D916-D8DA-4B92-A70C-6EE0C6B01CAD}

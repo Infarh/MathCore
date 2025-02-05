@@ -234,14 +234,14 @@ public static class ExpressionExtensions
     public static bEx Add(this Ex left, string right) => left.Add(right.ToExpression());
     public static bEx Add<T>(this Ex left, T right) => Ex.Add(left, right as Ex ?? right.ToExpression());
 
-    public static bEx? Add<T>(this Ex? left, params T[]? right)
+    public static bEx? Add<T>(this Ex? left, params IReadOnlyList<T>? right)
     {
         var i = 0;
         Ex  l;
         if (left != null) l = left;
-        else if (right is null || right.Length == i) return null;
+        else if (right is null || right.Count == i) return null;
         else l = right[i++].ToExpression();
-        while (i < right?.Length)
+        while (i < right?.Count)
             l = l.AddWithConversion(right[i++].ToExpression());
         return (bEx)l;
     }
@@ -274,28 +274,28 @@ public static class ExpressionExtensions
     public static bEx Multiply(this Ex left, int right) => left.MultiplyWithConversion(right.ToExpression());
     public static bEx Multiply(this Ex left, double right) => left.MultiplyWithConversion(right.ToExpression());
 
-    public static bEx? Multiply(this Ex? left, params Ex[]? right)
+    public static bEx? Multiply(this Ex? left, params IReadOnlyList<Ex>? right)
     {
         Ex  l;
         if (left != null) l = left;
-        else if (right is not { Length: > 0 }) return null;
+        else if (right is not { Count: > 0 }) return null;
         else l = right[1];
 
         var i = 1;
-        while (i < right?.Length)
+        while (i < right?.Count)
             l = l.MultiplyWithConversion(right[i++]);
         return (bEx)l;
     }
 
-    public static bEx? Multiply<T>(this Ex? left, params T[]? right)
+    public static bEx? Multiply<T>(this Ex? left, params IReadOnlyList<T>? right)
     {
         Ex l;
         if (left != null) l = left;
-        else if (right is not { Length: > 0 }) return null;
+        else if (right is not { Count: > 0 }) return null;
         else l = right[1] as Ex ?? right[1].ToExpression();
 
         var i = 1;
-        while (i < right?.Length)
+        while (i < right?.Count)
         {
             var v = right[i++];
             l = l.MultiplyWithConversion(v as Ex ?? v.ToExpression());
@@ -388,31 +388,31 @@ public static class ExpressionExtensions
     public static bEx Coalesce(this Ex first, Ex second) => Ex.Coalesce(first, second);
     public static bEx Coalesce<T>(this Ex first, T second) => Ex.Coalesce(first, second as Ex ?? second.ToExpression());
 
-    public static bEx? Coalesce(this Ex? left, params Ex[]? right)
+    public static bEx? Coalesce(this Ex? left, params IReadOnlyList<Ex>? right)
     {
         var i = 0;
         Ex  l;
         if (left != null) l = left;
-        else if (right is null || right.Length == i) return null;
+        else if (right is null || right.Count == i) return null;
         else l = right[i++];
-        while (i < right?.Length)
+        while (i < right?.Count)
             l = l.Coalesce(right[i++]);
         return (bEx)l;
     }
 
-    public static bEx? Coalesce<T>(this Ex? left, params T[]? right)
+    public static bEx? Coalesce<T>(this Ex? left, params IReadOnlyList<T>? right)
     {
         var i = 0;
         Ex  l;
         if (left != null) l = left;
-        else if (right is null || right.Length == i) return null;
+        else if (right is null || right.Count == i) return null;
         else
         {
             var v = right[i++];
             l = v as Ex ?? v.ToExpression();
         }
 
-        while (i < right?.Length) l = l.Coalesce(right[i++]);
+        while (i < right?.Count) l = l.Coalesce(right[i++]);
 
         return (bEx)l;
     }
@@ -423,28 +423,28 @@ public static class ExpressionExtensions
     public static bEx XOR(this Ex left, Ex right) => ExclusiveOr(left, right);
     public static bEx XOR<T>(this Ex left, T right) => ExclusiveOr(left, right as Ex ?? right.ToExpression());
 
-    public static bEx? XOR(this Ex? left, params Ex[]? right)
+    public static bEx? XOR(this Ex? left, params IReadOnlyList<Ex>? right)
     {
         if (left is null) return null;
-        if (right is not { Length: > 0 }) return null;
+        if (right is not { Count: > 0 }) return null;
 
         var i = 0;
         var l = left;
 
-        while (i < right.Length)
+        while (i < right.Count)
             l = l.XOR(right[i++]);
 
         return (bEx)l;
     }
 
-    public static bEx? XOR<T>(this Ex? left, params T[]? right)
+    public static bEx? XOR<T>(this Ex? left, params IReadOnlyList<T>? right)
     {
         if (left is null) return null;
-        if (right is not { Length: > 0 }) return null;
+        if (right is not { Count: > 0 }) return null;
 
         var i = 0;
         var l = left;
-        while (i < right.Length)
+        while (i < right.Count)
             l = l.XOR(right[i++]);
 
         return (bEx)l;
@@ -479,8 +479,10 @@ public static class ExpressionExtensions
 
     public static Ex ToNewExpression(this Type type) => New(type.GetConstructor(Type.EmptyTypes) ?? throw new InvalidOperationException());
 
-    public static Ex ToNewExpression(this Type type, params Ex[] p) => New(type.GetConstructor(p.Select(pp => pp.Type).ToArray()) ?? throw new InvalidOperationException("Конструктор не найден"));
-    public static Ex ToNewExpression<T>(this Type type, params T[] p) => 
+    public static Ex ToNewExpression(this Type type, params IEnumerable<Ex> p) => 
+        New(type.GetConstructor(p.Select(pp => pp.Type).ToArray()) ?? throw new InvalidOperationException("Конструктор не найден"));
+
+    public static Ex ToNewExpression<T>(this Type type, params IEnumerable<T> p) => 
         New(type.GetConstructor(p.Select(pp => pp!.GetType()).ToArray()) 
             ?? throw new InvalidOperationException("Конструктор не найден"));
 
@@ -493,9 +495,7 @@ public static class ExpressionExtensions
     public static mcEx GetCall(this Ex obj, string method, params Ex[] arg)
         => Call(obj, method, arg.Select(a => a.Type).ToArray(), arg);
 
-    public static mcEx GetCall(this Ex obj, MethodInfo method, IEnumerable<Ex> arg) => Call(obj, method, arg);
-
-    public static mcEx GetCall(this Ex obj, MethodInfo method, params Ex[] arg) => Call(obj, method, arg);
+    public static mcEx GetCall(this Ex obj, MethodInfo method, params IEnumerable<Ex> arg) => Call(obj, method, arg);
 
     public static mcEx GetCall(this Ex obj, MethodInfo method) => Call(obj, method);
 
@@ -505,17 +505,11 @@ public static class ExpressionExtensions
 
     public static mcEx GetCall(this Ex obj, Delegate d) => obj.GetCall(d.Method);
 
-    public static InvocationExpression GetInvoke(this Ex d, IEnumerable<Ex> arg) => Invoke(d, arg);
+    public static InvocationExpression GetInvoke(this Ex d, params IEnumerable<Ex> arg) => Invoke(d, arg);
 
-    public static InvocationExpression GetInvoke(this Ex d, params Ex[] arg) => Invoke(d, arg);
+    public static iEx ArrayAccess(this Ex d, params IEnumerable<Ex> arg) => Ex.ArrayAccess(d, arg);
 
-    public static iEx ArrayAccess(this Ex d, IEnumerable<Ex> arg) => Ex.ArrayAccess(d, arg);
-
-    public static iEx ArrayAccess(this Ex d, params Ex[] arg) => Ex.ArrayAccess(d, arg);
-
-    public static mcEx ArrayIndex(this Ex d, IEnumerable<Ex> arg) => Ex.ArrayIndex(d, arg);
-
-    public static mcEx ArrayIndex(this Ex d, params Ex[] arg) => Ex.ArrayIndex(d, arg);
+    public static mcEx ArrayIndex(this Ex d, params IEnumerable<Ex> arg) => Ex.ArrayIndex(d, arg);
 
     public static uEx ArrayLength(this Ex d) => Ex.ArrayLength(d);
     public static uEx ConvertTo(this Ex d, Type type) => Convert(d, type);
@@ -543,11 +537,11 @@ public static class ExpressionExtensions
     public static uEx MakeUnary(this Ex d, ExpressionType UType, Type type) => Ex.MakeUnary(UType, d, type);
     public static bEx MakeUnary(this Ex left, Ex right, ExpressionType UType) => MakeBinary(UType, left, right);
 
-    public static Expression<TDelegate> CreateLambda<TDelegate>(this Ex body, params pEx[] p) => Lambda<TDelegate>(body, p);
+    public static Expression<TDelegate> CreateLambda<TDelegate>(this Ex body, params IEnumerable<pEx> p) => Lambda<TDelegate>(body, p);
     public static lEx CreateLambda(this Ex body, params pEx[] p) => Lambda(body, p);
-    public static lEx CreateLambda(this Ex body, Type DelegateType, params pEx[] p) => Lambda(DelegateType, body, p);
+    public static lEx CreateLambda(this Ex body, Type DelegateType, params IEnumerable<pEx> p) => Lambda(DelegateType, body, p);
 
-    public static TDelegate CompileTo<TDelegate>(this Ex body, params pEx[] p) => body.CreateLambda<TDelegate>(p).Compile();
+    public static TDelegate CompileTo<TDelegate>(this Ex body, params IEnumerable<pEx> p) => body.CreateLambda<TDelegate>(p).Compile();
 
     public static Ex CloneExpression(this Ex expr)
     {

@@ -197,9 +197,9 @@ public class Newton : Interpolator, IInterpolator
 
     private Newton(double[] PolynomCoefficients) => _Polynom = new(PolynomCoefficients);
 
-    public Newton(params Vector2D[] P)
+    public Newton(params IReadOnlyList<Vector2D> P)
     {
-        var length = P.Length;
+        var length = P.Count;
         var x = new double[length];
         var y = new double[length];
 

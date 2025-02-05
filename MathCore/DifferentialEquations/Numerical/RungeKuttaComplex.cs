@@ -364,9 +364,9 @@ public static class RungeKuttaComplex
 
         var k1 = f(t, y);
 
-        static Complex[] GetY(Complex[] Y, IReadOnlyList<Complex> YY, double dt, int M, params (Complex[] K, double k)[] kk)
+        static Complex[] GetY(Complex[] Y, IReadOnlyList<Complex> YY, double dt, int M, params IReadOnlyList<(Complex[] K, double k)> kk)
         {
-            for (int i = 0, mm = kk.Length; i < M; i++)
+            for (int i = 0, mm = kk.Count; i < M; i++)
             {
                 Complex yy = default;
                 for (var j = 0; j < mm; j++)
@@ -406,9 +406,9 @@ public static class RungeKuttaComplex
                 (k4, 49 / 176d),
                 (k5, -5103 / 18656d)));
 
-        static Complex[] GetV(Complex[] Y, int M, params (Complex[] K, double k)[] kk)
+        static Complex[] GetV(Complex[] Y, int M, params IReadOnlyList<(Complex[] K, double k)> kk)
         {
-            for (int i = 0, mm = kk.Length; i < M; i++)
+            for (int i = 0, mm = kk.Count; i < M; i++)
             {
                 Complex y = default;
                 for (var j = 0; j < mm; j++)

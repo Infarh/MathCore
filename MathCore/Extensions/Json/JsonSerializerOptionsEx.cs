@@ -56,7 +56,7 @@ public static class JsonSerializerOptionsEx
         this JsonSerializerOptions opt, 
         string PropertyName, 
         StringComparison comparison,
-        params Type[] Types) =>
+        params IReadOnlyList<Type> Types) =>
         new(opt)
         {
             TypeInfoResolverChain =
@@ -69,7 +69,7 @@ public static class JsonSerializerOptionsEx
     public static JsonSerializerOptions RemoveProperty(
         this JsonSerializerOptions opt, 
         string PropertyName, 
-        params Type[] Types) =>
+        params IReadOnlyList<Type> Types) =>
         new(opt)
         {
             TypeInfoResolverChain =

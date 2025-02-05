@@ -141,7 +141,7 @@ public readonly struct CSVQuery : IEnumerable<CSVQueryRow>, IEquatable<CSVQuery>
     /// <summary>Добавить колонки в считываемый заголовок</summary>
     /// <param name="Columns">Новые псевдонимы колонок</param>
     /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
-    public CSVQuery AddColumns(params (string AliasName, int Index)[] Columns) => MergeHeader(Columns.ToDictionary(c => c.AliasName, c => c.Index));
+    public CSVQuery AddColumns(params IEnumerable<(string AliasName, int Index)> Columns) => MergeHeader(Columns.ToDictionary(c => c.AliasName, c => c.Index));
 
     /// <summary>Удалить колонку по указанному имени</summary>
     /// <param name="ColumnName">Имя удаляемой колонки</param>

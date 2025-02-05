@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.93</Version>
+    <Version>0.0.93.1</Version>
     <PackageReleaseNotes>
       Добавлен многомерный линейный интерполятор на основе дерева
     </PackageReleaseNotes>

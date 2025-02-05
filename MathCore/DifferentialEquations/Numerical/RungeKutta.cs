@@ -368,9 +368,9 @@ public static class RungeKutta
 
         var k1 = f(t, y);
 
-        static double[] GetY(double[] Y, IReadOnlyList<double> YY, double dt, int M, params (double[] K, double k)[] kk)
+        static double[] GetY(double[] Y, IReadOnlyList<double> YY, double dt, int M, params IReadOnlyList<(double[] K, double k)> kk)
         {
-            for (int i = 0, mm = kk.Length; i < M; i++)
+            for (int i = 0, mm = kk.Count; i < M; i++)
             {
                 var yy = 0d;
                 for (var j = 0; j < mm; j++)
@@ -410,9 +410,9 @@ public static class RungeKutta
                 (k4, 49 / 176d),
                 (k5, -5103 / 18656d)));
 
-        static double[] GetV(double[] Y, int M, params (double[] K, double k)[] kk)
+        static double[] GetV(double[] Y, int M, params IReadOnlyList<(double[] K, double k)> kk)
         {
-            for (int i = 0, mm = kk.Length; i < M; i++)
+            for (int i = 0, mm = kk.Count; i < M; i++)
             {
                 var y = 0d;
                 for (var j = 0; j < mm; j++)

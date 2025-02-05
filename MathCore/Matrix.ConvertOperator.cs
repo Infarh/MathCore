@@ -1,12 +1,11 @@
-﻿using MathCore.Annotations;
+﻿#nullable enable
 
 // ReSharper disable InconsistentNaming
 namespace MathCore;
 
 public partial class Matrix
 {
-    [NotNull]
-    public static implicit operator MatrixComplex([NotNull] Matrix matrix)
+    public static implicit operator MatrixComplex(Matrix matrix)
     {
         var data = matrix._Data;
         var (n, m) = data;
@@ -15,8 +14,7 @@ public partial class Matrix
         return new(complex_data);
     }
 
-    [NotNull]
-    public static explicit operator Matrix([NotNull] MatrixComplex matrix)
+    public static explicit operator Matrix(MatrixComplex matrix)
     {
         var complex_data = matrix.GetData();
         var (n, m) = complex_data;
@@ -27,8 +25,7 @@ public partial class Matrix
 
     /// <summary>Оператор явного приведения вещественной матрицы к целочисленной</summary>
     /// <param name="matrix">Вещественная матрица</param>
-    [NotNull]
-    public static explicit operator MatrixInt([NotNull] Matrix matrix)
+    public static explicit operator MatrixInt(Matrix matrix)
     {
         var data = matrix._Data;
         var (n, m) = data;
@@ -39,7 +36,6 @@ public partial class Matrix
 
     /// <summary>Округление элементов матрицы до ближайшего большего целого</summary>
     /// <returns>Матрица с округленными элементами</returns>
-    [NotNull]
     public MatrixInt Ceiling()
     {
         var data = _Data;
@@ -51,7 +47,6 @@ public partial class Matrix
 
     /// <summary>Округление элементов матрицы до ближайшего меньшего целого</summary>
     /// <returns>Матрица с округленными элементами</returns>
-    [NotNull]
     public MatrixInt Floor()
     {
         var data = _Data;
@@ -63,7 +58,6 @@ public partial class Matrix
 
     /// <summary>Округление элементов матрицы до ближайшего целого</summary>
     /// <returns>Матрица с округленными элементами</returns>
-    [NotNull]
     public MatrixInt Round()
     {
         var data = _Data;
@@ -76,7 +70,6 @@ public partial class Matrix
     /// <summary>Округление элементов матрицы до указанного количества знаков после запятой</summary>
     /// <param name="Digits">Количество знаков после запятой</param>
     /// <returns>Матрица с округленными элементами</returns>
-    [NotNull]
     public MatrixInt Round(int Digits)
     {
         var data = _Data;
@@ -90,7 +83,6 @@ public partial class Matrix
     /// <param name="Digits">Количество знаков после запятой</param>
     /// <param name="Rounding">Стиль округления</param>
     /// <returns>Матрица с округленными элементами</returns>
-    [NotNull]
     public MatrixInt Round(int Digits, MidpointRounding Rounding)
     {
         var data = _Data;
@@ -100,8 +92,7 @@ public partial class Matrix
         return new(int_data);
     }
 
-    [NotNull]
-    public static implicit operator Matrix([NotNull] MatrixInt matrix)
+    public static implicit operator Matrix(MatrixInt matrix)
     {
         var int_data = matrix.GetData();
         var (n, m) = int_data;

@@ -41,7 +41,7 @@ public static class INotifyPropertyChangedExtensions
     /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
     /// <param name="handler">Обработчик события <see cref="INotifyPropertyChanged.PropertyChanged"/> типа <see cref="PropertyChangedEventHandler"/></param>
     /// <param name="Names">Имена свойств</param>
-    public static void RegisterPropertyChangedHandler(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, params string[] Names)
+    public static void RegisterPropertyChangedHandler(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, params IEnumerable<string> Names)
         => obj.PropertyChanged += (s, e) => { if (Names.Any(name => string.Equals(name, e.PropertyName))) handler(s, e); };
 
     /// <summary>Подписка на событие изменения указанных свойств</summary>
@@ -49,7 +49,7 @@ public static class INotifyPropertyChangedExtensions
     /// <param name="handler">Обработчик события <see cref="INotifyPropertyChanged.PropertyChanged"/> типа <see cref="PropertyChangedEventHandler"/></param>
     /// <param name="Names">Имена свойств</param>
     /// <returns>Объект <see cref="IDisposable"/>, вызывающий отписку от события в случае своего уничтожения</returns>
-    public static IDisposable RegisterPropertyChangedHandler_Disposable(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, params string[] Names)
+    public static IDisposable RegisterPropertyChangedHandler_Disposable(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, params IEnumerable<string> Names)
     {
         obj.PropertyChanged += Handler;
         return new LambdaDisposable(() => obj.PropertyChanged -= Handler);
@@ -57,31 +57,6 @@ public static class INotifyPropertyChangedExtensions
         void Handler(object? s, PropertyChangedEventArgs e)
         {
             if (Names.Any(name => string.Equals(name, e.PropertyName))) handler(s, e);
-        }
-    }
-
-    /// <summary>Подписка на событие изменения указанных свойств</summary>
-    /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
-    /// <param name="handler">Обработчик события <see cref="INotifyPropertyChanged.PropertyChanged"/> типа <see cref="PropertyChangedEventHandler"/></param>
-    /// <param name="Names">Имена свойств</param>
-    public static void RegisterPropertyChangedHandler(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, IEnumerable<string> Names)
-        => obj.PropertyChanged += (s, e) => { if (Names.Any(name => string.Equals(name, e.PropertyName))) handler(s, e); };
-
-    /// <summary>Подписка на событие изменения указанных свойств</summary>
-    /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
-    /// <param name="handler">Обработчик события <see cref="INotifyPropertyChanged.PropertyChanged"/> типа <see cref="PropertyChangedEventHandler"/></param>
-    /// <param name="Names">Имена свойств</param>
-    /// <returns>Объект <see cref="IDisposable"/>, вызывающий отписку от события в случае своего уничтожения</returns>
-    public static IDisposable RegisterPropertyChangedHandler_Disposable(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, IEnumerable<string> Names)
-    {
-        var names = Names as string[] ?? Names.ToArray();
-
-        obj.PropertyChanged += Handler;
-        return new LambdaDisposable(() => obj.PropertyChanged -= Handler);
-
-        void Handler(object? s, PropertyChangedEventArgs e)
-        {
-            if (names.Any(name => string.Equals(name, e.PropertyName))) handler(s, e);
         }
     }
 
