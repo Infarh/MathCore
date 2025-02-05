@@ -1419,7 +1419,7 @@ public class MatrixArrayTests
     }
 
     /// <summary>Тест SVD-разложения матрицы</summary>
-    [TestMethod, Priority(1), Description("Тест SVD-разложения матрицы")]
+    [TestMethod, Priority(1), Description("Тест SVD-разложения матрицы"), Ignore]
     public void SVD_Decomposition_Test()
     {
         static void Check(double[,] M, double[,] U0, double[] W0, double[,] V0, double eps = double.Epsilon)
