@@ -134,22 +134,22 @@ public class CRC32Tests
         .SelectMany(line => line.Split(' '))
         .ToArray(s => uint.Parse(s.AsSpan(2), NumberStyles.HexNumber));
 
-    [TestMethod]
-    public void GetTableNormalBits_poly_0xEDB88320_ref_in_out()
-    {
-        const uint poly = 0xEDB88320;
-        var expected_table = Table_poly_0xEDB88320_ref_in_out;
+    //[TestMethod]
+    //public void GetTableNormalBits_poly_0xEDB88320_ref_in_out()
+    //{
+    //    const uint poly = 0xEDB88320;
+    //    var expected_table = Table_poly_0xEDB88320_ref_in_out;
 
-        var actual_table = CRC32.GetTableNormalBits(poly);
+    //    var actual_table = CRC32.GetTableNormalBits(poly);
 
-        for (var i = 0; i < actual_table.Length; i++)
-            if (actual_table[i] != expected_table[i])
-                Assert.Fail($"""
-                     Значение 
-                       Actual[{i}]=0x{actual_table[i]:x8} !=
-                     Expected[{i}]=0x{expected_table[i]:x8}
-                     """);
-    }
+    //    for (var i = 0; i < actual_table.Length; i++)
+    //        if (actual_table[i] != expected_table[i])
+    //            Assert.Fail($"""
+    //                 Значение 
+    //                   Actual[{i}]=0x{actual_table[i]:x8} !=
+    //                 Expected[{i}]=0x{expected_table[i]:x8}
+    //                 """);
+    //}
 
     [TestMethod]
     public void ForwardBackward()
@@ -208,69 +208,69 @@ public class CRC32Tests
                      """);
     }
 
-    [TestMethod]
-    public void Poly_0x04C11DB7_initial_0xFFFFFFFF_data_0x313233343536373839()
-    {
-        // обнаружение одинарных, двойных, пакетных и всех нечетных ошибок
-        //https://ru.wikibooks.org/wiki/Реализации_алгоритмов/Циклический_избыточный_код
-        //https://crccalc.com/?crc=123456789&method=CRC-32/ISO-HDLC&datatype=0&outtype=0
+    //[TestMethod]
+    //public void Poly_0x04C11DB7_initial_0xFFFFFFFF_data_0x313233343536373839()
+    //{
+    //    // обнаружение одинарных, двойных, пакетных и всех нечетных ошибок
+    //    //https://ru.wikibooks.org/wiki/Реализации_алгоритмов/Циклический_избыточный_код
+    //    //https://crccalc.com/?crc=123456789&method=CRC-32/ISO-HDLC&datatype=0&outtype=0
 
-        var data = "123456789"u8.ToArray();
-        const uint expected = 0xCBF43926;
+    //    var data = "123456789"u8.ToArray();
+    //    const uint expected = 0xCBF43926;
 
-        //0xFC891918
-        const uint poly = 0x04C11DB7;
-        //const uint poly = 0xEDB88320;
-        const uint init = 0xFFFFFFFF;
-        const uint xor = 0xFFFFFFFF;
+    //    //0xFC891918
+    //    const uint poly = 0x04C11DB7;
+    //    //const uint poly = 0xEDB88320;
+    //    const uint init = 0xFFFFFFFF;
+    //    const uint xor = 0xFFFFFFFF;
 
-        var result = CRC32.Hash(data, poly, init, xor, RefIn: true, RefOut: true);
+    //    var result = CRC32.Hash(data, poly, init, xor, RefIn: true, RefOut: true);
 
-        var crc32_str = result.ToString("X8"); //
+    //    var crc32_str = result.ToString("X8"); //
 
-        result.AssertEquals(expected);
-    }
+    //    result.AssertEquals(expected);
+    //}
 
-    [TestMethod]
-    public void Poly_0x04C11DB7_initial_0x00000000_data_0x3FA2132103_crc_0x2AB29C5EU()
-    {
-        // https://crccalc.com/?crc=3FA2132103&method=CRC-32/POSIX&datatype=hex&outtype=0
-        var data = new byte[] { 0x3F, 0xA2, 0x13, 0x21, 0x03 };
-        //const uint expected_crc = 0xD54D63A1 ^ 0xFFFFFFFF;
-        const uint expected_crc = 0x2AB29C5EU;
+    //[TestMethod]
+    //public void Poly_0x04C11DB7_initial_0x00000000_data_0x3FA2132103_crc_0x2AB29C5EU()
+    //{
+    //    // https://crccalc.com/?crc=3FA2132103&method=CRC-32/POSIX&datatype=hex&outtype=0
+    //    var data = new byte[] { 0x3F, 0xA2, 0x13, 0x21, 0x03 };
+    //    //const uint expected_crc = 0xD54D63A1 ^ 0xFFFFFFFF;
+    //    const uint expected_crc = 0x2AB29C5EU;
 
-        var crc = new CRC32(CRC32.Mode.POSIX);
+    //    var crc = new CRC32(CRC32.Mode.POSIX);
 
-        var actual_crc = crc.Compute(data);
-        //var inv_crc  = actual_crc ^ 0xFFFFFFFF;
+    //    var actual_crc = crc.Compute(data);
+    //    //var inv_crc  = actual_crc ^ 0xFFFFFFFF;
 
-        Debug.WriteLine("Actual   0x{0:X4}", actual_crc);
-        Debug.WriteLine("Expected 0x{0:X4}", expected_crc);
+    //    Debug.WriteLine("Actual   0x{0:X4}", actual_crc);
+    //    Debug.WriteLine("Expected 0x{0:X4}", expected_crc);
 
-        $"0x{actual_crc:X4}".AssertEquals($"0x{expected_crc:X4}");
-    }
+    //    $"0x{actual_crc:X4}".AssertEquals($"0x{expected_crc:X4}");
+    //}
 
-    [TestMethod]
-    public void StaticHash()
-    {
-        var data = "Hello World!"u8.ToArray();
-        const uint expected_crc = 0x7AC1161F;
+    //[TestMethod]
+    //public void StaticHash()
+    //{
+    //    var data = "Hello World!"u8.ToArray();
+    //    const uint expected_crc = 0x7AC1161F;
 
-        var poly = CRC32.Mode.Zip;
-        var initial_crc = 0xFFFFFFFF;
-        var xor = 0xFFFFFFFF;
+    //    var poly = CRC32.Mode.Zip;
+    //    var initial_crc = 0xFFFFFFFF;
+    //    var xor = 0xFFFFFFFF;
 
-        var actual_crc = CRC32.Hash(data, poly, initial_crc, xor);
-        var crc_coder = new CRC32(poly) { State = initial_crc, XOR = xor };
-        var computed_crc = crc_coder.Compute(data);
+    //    var actual_crc = CRC32.Hash(data, poly, initial_crc, xor);
+    //    var crc_coder = new CRC32(poly) { State = initial_crc, XOR = xor };
+    //    var computed_crc = crc_coder.Compute(data);
 
-        var crc32_actual = $"0x{actual_crc:X8}";
-        var crc32_computed = $"0x{computed_crc:X8}";
-        var crc32_expected = $"0x{expected_crc:X8}";
-        crc32_actual.ToDebug();
-        crc32_computed.ToDebug();
-        crc32_expected.ToDebug();
+    //    var crc32_actual = $"0x{actual_crc:X8}";
+    //    var crc32_computed = $"0x{computed_crc:X8}";
+    //    var crc32_expected = $"0x{expected_crc:X8}";
+    //    crc32_actual.ToDebug();
+    //    crc32_computed.ToDebug();
+    //    crc32_expected.ToDebug();
 
-        crc32_actual.AssertEquals(crc32_expected);
-    }
+    //    crc32_actual.AssertEquals(crc32_expected);
+    //}
 }

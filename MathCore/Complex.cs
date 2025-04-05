@@ -375,6 +375,15 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
 
     /// <summary>Вычисление синуса и косинуса аргумента</summary>
     /// <param name="arg">Аргумент функции</param>
+    /// <param name="A">Амплитуда</param>
+    public static (double Sin, double Cos) SinCosA(double arg, double A) =>
+    (
+        A * Sin(arg),
+        A * Cos(arg)
+    );
+
+    /// <summary>Вычисление синуса и косинуса аргумента</summary>
+    /// <param name="arg">Аргумент функции</param>
     public static (double Sin, double Cos) SinCos(double arg, double abs) =>
     (
         abs * Sin(arg),
