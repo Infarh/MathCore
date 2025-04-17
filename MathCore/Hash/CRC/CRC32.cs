@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Diagnostics.CodeAnalysis;
 
 using MathCore.Annotations;
 
@@ -9,7 +8,7 @@ namespace MathCore.Hash.CRC;
 
 public class CRC32(uint poly = (uint)CRC32.Mode.ZipInv)
 {
-    [PublicAPI, SuppressMessage("ReSharper", "InconsistentNaming"), SuppressMessage("ReSharper", "IdentifierTypo")]
+    [PublicAPI]
     public enum Mode : uint
     {
         /// <summary>Инвертированный полином относительно <see cref="P0x04C11DB7"/></summary>
@@ -22,12 +21,12 @@ public class CRC32(uint poly = (uint)CRC32.Mode.ZipInv)
         P0x000000AF = 0x000000AF,
 
         ZipInv = P0x04C11DB7,
-        Zip    = P0xEDB88320,
-        POSIX  = P0x04C11DB7,
+        Zip = P0xEDB88320,
+        POSIX = P0x04C11DB7,
         CRC32C = P0x1EDC6F41,
         CRC32D = P0xA833982B,
         CRC32Q = P0x814141AB,
-        XFER   = P0x000000AF,
+        XFER = P0x000000AF,
     }
 
     /// <summary>Отражение байта</summary>
@@ -131,6 +130,7 @@ public class CRC32(uint poly = (uint)CRC32.Mode.ZipInv)
         return CRC ^ XOROut;
     }
 
+#if NET5_0_OR_GREATER
     /// <summary>Синхронный метод-расширение для вычисления CRC-32 для потока</summary>
     /// <param name="stream">Поток, для которого вычисляется CRC-32</param>
     /// <param name="poly">Полином для вычисления CRC-32</param>
@@ -223,4 +223,5 @@ public class CRC32(uint poly = (uint)CRC32.Mode.ZipInv)
 
         return CRC ^ XorOut;
     }
+#endif
 }
