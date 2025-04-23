@@ -22,6 +22,20 @@ public class SelectableCollection<T> : ICollection<T>, INotifyPropertyChanged, I
     [NotifyPropertyChangedInvocator]
     protected virtual void OnPropertyChanged([CallerMemberName] string PropertyName = null!) => PropertyChanged?.Invoke(this, new(PropertyName));
 
+    /// <summary>Метод установки значения свойства с генерацией события изменения значения свойства</summary>
+    /// <param name="field">Ссылка на поле</param>
+    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="PropertyName">Имя свойства</param>
+    /// <returns>Истина, если значение свойства было установлено</returns>
+    [NotifyPropertyChangedInvocator]
+    protected virtual bool Set<TValue>(ref TValue field, TValue value, [CallerMemberName] string PropertyName = null!)
+    {
+        if (Equals(field, value)) return false;
+        field = value;
+        OnPropertyChanged(PropertyName);
+        return true;
+    }
+
     #endregion
 
     #region INotifyCollectionChanged
@@ -47,7 +61,7 @@ public class SelectableCollection<T> : ICollection<T>, INotifyPropertyChanged, I
         set
         {
             if (ReferenceEquals(_SelectedItem, value)) return;
-            if (ReferenceEquals(value, default))
+            if (value is null)
             {
                 _SelectedItem = value;
                 OnPropertyChanged();
@@ -78,16 +92,16 @@ public class SelectableCollection<T> : ICollection<T>, INotifyPropertyChanged, I
     /// <param name="Collection">Внутренняя коллекция</param>
     public SelectableCollection(ICollection<T> Collection)
     {
-        if(Collection.NotNull() is not { IsReadOnly: false })
+        if (Collection.NotNull() is not { IsReadOnly: false })
             throw new ArgumentException($"Коллекция {Collection.GetType()} доступна только для чтения", nameof(Collection));
 
         if (Collection is T[])
             throw new ArgumentException("Коллекция не должна быть массивом", nameof(Collection));
 
-        _Collection = Collection.NotNull();
+        _Collection = Collection;
 
         if (Collection is not INotifyCollectionChanged notify_collection) return;
-        _IsNotifyCollection                 =  true;
+        _IsNotifyCollection = true;
         notify_collection.CollectionChanged += OnSourceCollectionChanged;
     }
 
@@ -112,6 +126,9 @@ public class SelectableCollection<T> : ICollection<T>, INotifyPropertyChanged, I
         OnCollectionChanged(E);
     }
 
+    /// <summary>Автоматически выбирать последний добавленный элемент</summary>
+    public bool SelectAddedItem { get; set => Set(ref field, value); }
+
     /// <inheritdoc />
     public int Count => _Collection.Count;
 
@@ -119,25 +136,28 @@ public class SelectableCollection<T> : ICollection<T>, INotifyPropertyChanged, I
     bool ICollection<T>.IsReadOnly => _Collection.IsReadOnly;
 
     /// <inheritdoc />
-    public void Add(T? item)
+    public virtual void Add(T? item)
     {
         if (_IsNotifyCollection)
         {
             _Collection.Add(item);
+            if (SelectAddedItem) SelectedItem = item;
             return;
         }
 
         var old_count = _Collection.Count;
         _Collection.Add(item);
+        if (SelectAddedItem) SelectedItem = item;
+
         if (old_count == _Collection.Count) return;
         OnPropertyChanged(nameof(Count));
         OnCollectionChanged(new(NotifyCollectionChangedAction.Add, item, old_count));
     }
 
     /// <inheritdoc />
-    public void Clear()
+    public virtual void Clear()
     {
-        if(_Collection.Count == 0) return;
+        if (_Collection.Count == 0) return;
         _Collection.Clear();
         OnPropertyChanged(nameof(Count));
         OnCollectionChanged(new(NotifyCollectionChangedAction.Reset));
@@ -151,7 +171,7 @@ public class SelectableCollection<T> : ICollection<T>, INotifyPropertyChanged, I
     public void CopyTo(T[] array, int Index) => _Collection.CopyTo(array, Index);
 
     /// <inheritdoc />
-    public bool Remove(T? item)
+    public virtual bool Remove(T? item)
     {
         var index = -1;
         switch (_Collection)
@@ -182,6 +202,31 @@ public class SelectableCollection<T> : ICollection<T>, INotifyPropertyChanged, I
             SelectedItem = default;
 
         return true;
+    }
+
+    /// <summary>Выбрать первый элемент коллекции</summary>
+    /// <returns>Текущая коллекция</returns>
+    public SelectableCollection<T> SelectFirst()
+    {
+        SelectedItem = _Collection.FirstOrDefault();
+        return this;
+    }
+
+    /// <summary>Выбрать последний элемент коллекции</summary>
+    /// <returns>Текущая коллекция</returns>
+    public SelectableCollection<T> SelectLast()
+    {
+        SelectedItem = _Collection.LastOrDefault();
+        return this;
+    }
+
+    /// <summary>Выбрать последний элемент коллекции</summary>
+    /// <returns>Текущая коллекция</returns>
+    public SelectableCollection<T> SelectItem(T item)
+    {
+        if (_Collection.Contains(item))
+            SelectedItem = item;
+        return this;
     }
 
     #region IEnumerable<T>
