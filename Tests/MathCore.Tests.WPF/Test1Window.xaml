@@ -1,0 +1,21 @@
+﻿<Window x:Class="MathCore.Tests.WPF.Test1Window"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:l="clr-namespace:MathCore.Tests.WPF"
+        xmlns:vm="clr-namespace:MathCore.Tests.WPF.ViewModels"
+        Title="Test1Window" 
+        Width="800" Height="450">
+    <Window.DataContext>
+        <vm:Test1WindowViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <DockPanel>
+            <DataGrid ItemsSource="{Binding Students1}"
+                      SelectedItem="{Binding Students1.SelectedItem}"
+                      DataGridEx.UseDataAnnotations="True"
+                      />
+        </DockPanel>
+    </Grid>
+</Window>

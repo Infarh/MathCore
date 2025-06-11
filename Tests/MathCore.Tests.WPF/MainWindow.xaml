@@ -9,7 +9,7 @@
         xmlns:vm="clr-namespace:MathCore.Tests.WPF.ViewModels"
         Title="MainWindow"
         FontSize="24"
-         Width="800" Height="1000"
+        Width="800" Height="1000"
         MinHeight="1000">
     <Window.DataContext>
         <vm:MainWindowViewModel/>

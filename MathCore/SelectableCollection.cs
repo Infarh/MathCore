@@ -10,7 +10,13 @@ namespace MathCore;
 
 /// <summary>Коллекция, поддерживающая указание выбранного элемента</summary>
 /// <typeparam name="T">Тип элементов коллекции</typeparam>
-public class SelectableCollection<T> : ICollection<T>, INotifyPropertyChanged, INotifyCollectionChanged
+public class SelectableCollection<T> :
+    INotifyPropertyChanged, INotifyCollectionChanged,
+    ICollection<T>, ICollection,
+    IEnumerable<T>, IEnumerable,
+    IList<T>, IList,
+    IReadOnlyCollection<T>,
+    IReadOnlyList<T>
 {
     #region INotifyPropertyChanged
 
@@ -81,6 +87,30 @@ public class SelectableCollection<T> : ICollection<T>, INotifyPropertyChanged, I
     /// <summary>Коллекция поддерживает уведомления об изменениях</summary>
     private readonly bool _IsNotifyCollection;
 
+    public T this[int index]
+    {
+        get => _Collection switch
+        {
+            T[] array => array[index],
+            List<T> list => list[index],
+            IList<T> list => list[index],
+            _ => _Collection.ElementAt(index),
+        };
+        set
+        {
+            switch (_Collection)
+            {
+                case T[] array: array[index] = value; break;
+                case List<T> list: list[index] = value; break;
+                case IList<T> list: list[index] = value; break;
+                default:
+                    var old_item = _Collection.ElementAt(index);
+                    _Collection.Replace(old_item, value);
+                    break;
+            }
+        }
+    }
+
     /// <summary>Инициализация новой коллекции с возможностью выбора элемента</summary>
     public SelectableCollection() : this(new List<T>()) { }
 
@@ -131,9 +161,6 @@ public class SelectableCollection<T> : ICollection<T>, INotifyPropertyChanged, I
 
     /// <inheritdoc />
     public int Count => _Collection.Count;
-
-    /// <inheritdoc />
-    bool ICollection<T>.IsReadOnly => _Collection.IsReadOnly;
 
     /// <inheritdoc />
     public virtual void Add(T? item)
@@ -228,6 +255,197 @@ public class SelectableCollection<T> : ICollection<T>, INotifyPropertyChanged, I
             SelectedItem = item;
         return this;
     }
+
+    #region IList<T>
+
+    int IList<T>.IndexOf(T item) => _Collection.FirstIndexOf(item);
+
+    void IList<T>.Insert(int index, T item)
+    {
+        switch (_Collection)
+        {
+            default: throw new NotSupportedException($"Коллекция {_Collection.GetType()} не поддерживает операцию {typeof(IList<T>).Name}.Insert(index, item)");
+            case T[]: throw new NotSupportedException($"Невозможно свтавить элемент в массив по индексу {index}");
+            case List<T> list:
+                list.Insert(index, item);
+                OnPropertyChanged(nameof(Count));
+                OnCollectionChanged(new(NotifyCollectionChangedAction.Add, item, index));
+                break;
+            case IList<T> list:
+                list.Insert(index, item);
+                OnPropertyChanged(nameof(Count));
+                OnCollectionChanged(new(NotifyCollectionChangedAction.Add, item, index));
+                break;
+        }
+    }
+
+    void IList<T>.RemoveAt(int index)
+    {
+        switch (_Collection)
+        {
+            default: throw new NotSupportedException($"Коллекция {_Collection.GetType()} не поддерживает операцию {typeof(IList<T>).Name}.RemoveAt(index)");
+            case T[]: throw new NotSupportedException($"Невозможно удалить элемент в массив по индексу {index}");
+            case List<T> list:
+                var item = this[index];
+                list.RemoveAt(index);
+                OnPropertyChanged(nameof(Count));
+                OnCollectionChanged(new(NotifyCollectionChangedAction.Remove, item, index));
+                break;
+            case IList<T> list:
+                item = this[index];
+                list.RemoveAt(index);
+                OnPropertyChanged(nameof(Count));
+                OnCollectionChanged(new(NotifyCollectionChangedAction.Remove, item, index));
+                break;
+        }
+    }
+
+    #endregion
+
+    #region IList
+
+    bool IList.IsFixedSize => (_Collection as IList)?.IsFixedSize ?? true;
+
+    bool IList.IsReadOnly => (_Collection as IList)?.IsReadOnly ?? true;
+
+    object IList.this[int index] { get => this[index]; set => this[index] = (T)value; }
+
+    int IList.Add(object? value)
+    {
+        if (value is { } && !value.GetType().IsAssignableFrom(typeof(T)))
+            throw new InvalidCastException($"Значение типа {value.GetType()} не может быть присвоено переменной типа {typeof(T)}");
+
+        switch (_Collection)
+        {
+            case T[]:
+            default: throw new NotSupportedException($"Коллекция {_Collection.GetType()} не поддерживает операцию ILIst.Add(object)");
+            case List<T>:
+            case IList<T>:
+            case IList:
+                Add((T?)value);
+                var index = Count - 1;
+                OnPropertyChanged(nameof(Count));
+                OnCollectionChanged(new(NotifyCollectionChangedAction.Add, (T?)value, index));
+                return index;
+        }
+    }
+
+    bool IList.Contains(object? value)
+    {
+        if (value is { } && !value.GetType().IsAssignableFrom(typeof(T)))
+            throw new InvalidCastException($"Значение типа {value.GetType()} не может быть присвоено переменной типа {typeof(T)}");
+
+        switch (_Collection)
+        {
+            default: throw new NotSupportedException($"Коллекция {_Collection.GetType()} не поддерживает операцию ILIst.Contains(object)");
+            case T[] array: return array.Contains((T?)value);
+            case List<T> list: return list.Contains((T?)value);
+            case IList<T> list: return list.Contains((T?)value);
+            case IList list: return list.Contains((T?)value);
+        }
+    }
+
+    int IList.IndexOf(object? value)
+    {
+        if (value is { } && !value.GetType().IsAssignableFrom(typeof(T)))
+            throw new InvalidCastException($"Значение типа {value.GetType()} не может быть присвоено переменной типа {typeof(T)}");
+
+        switch (_Collection)
+        {
+            default: throw new NotSupportedException($"Коллекция {_Collection.GetType()} не поддерживает операцию ILIst.Contains(object)");
+            case T[] array: return Array.IndexOf(array, value);
+            case List<T> list: return list.IndexOf((T?)value);
+            case IList<T> list: return list.IndexOf((T?)value);
+            case IList list: return list.IndexOf((T?)value);
+        }
+    }
+
+    void IList.Insert(int index, object? value)
+    {
+        if (value is { } && !value.GetType().IsAssignableFrom(typeof(T)))
+            throw new InvalidCastException($"Значение типа {value.GetType()} не может быть присвоено переменной типа {typeof(T)}");
+
+        switch (_Collection)
+        {
+            default: throw new NotSupportedException($"Коллекция {_Collection.GetType()} не поддерживает операцию IList.Insert(index, object)");
+            case T[]: throw new NotSupportedException($"Невозможно вставить элемент в массив по индексу {index}");
+            case List<T> list:
+                list.Insert(index, (T?)value);
+                OnPropertyChanged(nameof(Count));
+                OnCollectionChanged(new(NotifyCollectionChangedAction.Add, (T?)value, index));
+                break;
+            case IList<T> list:
+                list.Insert(index, (T?)value);
+                OnPropertyChanged(nameof(Count));
+                OnCollectionChanged(new(NotifyCollectionChangedAction.Add, (T?)value, index));
+                break;
+        }
+    }
+
+    void IList.Remove(object? value)
+    {
+        if (value is { } && !value.GetType().IsAssignableFrom(typeof(T)))
+            throw new InvalidCastException($"Значение типа {value.GetType()} не может быть присвоено переменной типа {typeof(T)}");
+
+        switch (_Collection)
+        {
+            default: throw new NotSupportedException($"Коллекция {_Collection.GetType()} не поддерживает операцию IList.Remove(object)");
+            case T[]: throw new NotSupportedException($"Невозможно удалить элемент из массива");
+            case List<T>:
+            case IList<T>:
+                if (Remove((T?)value))
+                {
+                    OnPropertyChanged(nameof(Count));
+                    OnCollectionChanged(new(NotifyCollectionChangedAction.Remove, new T[] { (T?)value }));
+                }
+                break;
+        }
+    }
+
+    void IList.RemoveAt(int index)
+    {
+        switch (_Collection)
+        {
+            default: throw new NotSupportedException($"Коллекция {_Collection.GetType()} не поддерживает операцию IList.RemoveAt(index)");
+            case T[]: throw new NotSupportedException($"Невозможно удалить элемент из массива по индексу {index}");
+            case List<T> list:
+                var item = list[index];
+                list.RemoveAt(index);
+                OnPropertyChanged(nameof(Count));
+                OnCollectionChanged(new(NotifyCollectionChangedAction.Remove, item, index));
+                break;
+            case IList<T> list:
+                item = list[index];
+                list.RemoveAt(index);
+                OnPropertyChanged(nameof(Count));
+                OnCollectionChanged(new(NotifyCollectionChangedAction.Remove, item, index));
+                break;
+        }
+    }
+
+    #endregion
+
+    #region ICollection
+
+    bool ICollection<T>.IsReadOnly => _Collection.IsReadOnly;
+
+    int ICollection.Count => _Collection.Count;
+
+    bool ICollection.IsSynchronized => (_Collection as ICollection)?.IsSynchronized ?? false;
+
+    object ICollection.SyncRoot => (_Collection as ICollection)?.SyncRoot ?? (field ??= new());
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+        var i = index;
+        foreach (var item in _Collection)
+        {
+            if (index >= array.Length) return;
+            array.SetValue(item, i++);
+        }
+    }
+
+    #endregion
 
     #region IEnumerable<T>
 
