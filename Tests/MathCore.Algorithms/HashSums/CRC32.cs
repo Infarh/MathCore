@@ -34,30 +34,7 @@ internal static class CRC32
     /// <param name="poly">Полином для вычисления CRC</param>
     /// <param name="RefIn">Отражение входных байтов</param>
     /// <returns>Таблица коэффициентов для вычисления CRC</returns>
-    public static uint[] GetTable(uint poly, bool RefIn)
-    {
-        var table = new uint[256];
-        //for (uint i = 0; i < 256; i++)
-        //{
-        //    ref var entry = ref table[i];
-        //    entry = RefIn ? ReflectUInt(i) : i;
-
-        //    entry <<= 24;
-
-        //    for (var j = 0; j < 8; j++)
-        //    {
-        //        if ((entry & 0x80000000) != 0)
-        //            entry = (entry << 1) ^ poly;
-        //        else
-        //            entry <<= 1;
-        //    }
-
-        //    if (RefIn)
-        //        entry = ReflectUInt(entry);
-        //}
-
-        return FillTable(table, poly, RefIn);
-    }
+    public static uint[] GetTable(uint poly, bool RefIn) => FillTable(new uint[256], poly, RefIn);
 
     /// <summary>Заполняет таблицу коэффициентов для вычисления CRC</summary>
     /// <param name="table">Таблица для заполнения</param>

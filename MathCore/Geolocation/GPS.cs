@@ -16,6 +16,8 @@ public static class GPS
     private const double ToDeg = MathCore.Consts.ToDeg;
     /// <summary>PI / 2</summary>
     private const double PI05 = MathCore.Consts.pi05;
+    /// <summary>2*PI</summary>
+    private const double PI2 = MathCore.Consts.pi2;
     // ReSharper restore InconsistentNaming
 
     /// <summary>Константы размеров</summary>
@@ -96,17 +98,88 @@ public static class GPS
         if (double.IsNaN(latitude1) || double.IsNaN(longitude1) || double.IsNaN(latitude2) || double.IsNaN(longitude2))
             return double.NaN;
 
-        latitude1  *= ToRad;
-        latitude2  *= ToRad;
+        latitude1 *= ToRad;
+        latitude2 *= ToRad;
         longitude1 *= ToRad;
         longitude2 *= ToRad;
 
-        var d_latitude  = latitude2 - latitude1;
+        var d_latitude = latitude2 - latitude1;
         var d_longitude = longitude2 - longitude1;
         var sin_d_lat05 = Sin(d_latitude / 2);
         var sin_d_lon05 = Sin(d_longitude / 2);
-        var a           = sin_d_lat05 * sin_d_lat05 + Cos(latitude1) * Cos(latitude2) * sin_d_lon05 * sin_d_lon05;
+        var a = sin_d_lat05 * sin_d_lat05 + Cos(latitude1) * Cos(latitude2) * sin_d_lon05 * sin_d_lon05;
         return 2 * Atan2(Sqrt(a), Sqrt(1 - a)) * Consts.EarthRadius;
+    }
+
+    public static double VincentyDistance(double latitude1, double longitude1, double latitude2, double longitude2)
+    {
+        const double a = 6378137; // Большая полуось WGS-84
+        const double a_2 = a * a;
+        const double f = 1 / 298.257223563; // Сжатие WGS-84
+        const double b = (1 - f) * a;
+        const double b_2 = b * b;
+        const double abb = (a_2 - b_2) / b_2;
+
+        latitude1 *= ToRad;
+        latitude2 *= ToRad;
+        longitude1 *= ToRad;
+        longitude2 *= ToRad;
+
+        var u11 = Atan((1 - f) * Tan(latitude1));
+        var u22 = Atan((1 - f) * Tan(latitude2));
+        var l = longitude2 - longitude1;
+        var (sin_u1, cos_u1) = Complex.SinCos(u11);
+        var (sin_u2, cos_u2) = Complex.SinCos(u22);
+
+        double sin_sgm;
+        double cos_sigma;
+        double sigma;
+        double cos2_alpha;
+        double cos2_sgm_m;
+        double lambda_p;
+
+        var lambda = l;
+        var iter_limit = 100;
+        const double lambda_p_eps = 1e-12;
+        do
+        {
+            var (sin_lambda, cos_lambda) = Complex.SinCos(lambda);
+            sin_sgm = Sqrt(cos_u2 * sin_lambda * (cos_u2 * sin_lambda) +
+                           (cos_u1 * sin_u2 - sin_u1 * cos_u2 * cos_lambda) *
+                           (cos_u1 * sin_u2 - sin_u1 * cos_u2 * cos_lambda));
+
+            if (sin_sgm == 0)
+                return 0; // Coincident points
+
+            cos_sigma = sin_u1 * sin_u2 + cos_u1 * cos_u2 * cos_lambda;
+            sigma = Atan2(sin_sgm, cos_sigma);
+            var sin_alpha = cos_u1 * cos_u2 * sin_lambda / sin_sgm;
+            cos2_alpha = 1 - sin_alpha * sin_alpha;
+            cos2_sgm_m = cos_sigma - 2 * sin_u1 * sin_u2 / cos2_alpha;
+
+            if (double.IsNaN(cos2_sgm_m))
+                cos2_sgm_m = 0; // Equatorial line: cos2Alpha=0
+
+            var c = f / 16 * cos2_alpha * (4 + f * (4 - 3 * cos2_alpha));
+            lambda_p = lambda;
+            lambda = l + (1 - c) * f * sin_alpha *
+                     (sigma + c * sin_sgm * (cos2_sgm_m + c * cos_sigma * (2 * cos2_sgm_m * cos2_sgm_m - 1)));
+        }
+        while (Abs(lambda - lambda_p) > lambda_p_eps && --iter_limit > 0);
+
+        if (iter_limit == 0)
+            return double.NaN; // Formula failed to converge
+
+        var u2 = cos2_alpha * abb;
+        var a2 = 1 + u2 / 16384 * (4096 + u2 * (u2 * (320 - 175 * u2) - 768));
+        var b2 = u2 / 1024 * (256 + u2 * (u2 * (74 - 47 * u2) - 128));
+        var d_sgm = b2 * sin_sgm * (cos2_sgm_m + b2 / 4 * (cos_sigma * (2 * cos2_sgm_m * cos2_sgm_m - 1) -
+                                                           b2 / 6 * cos2_sgm_m * (4 * sin_sgm * sin_sgm - 3) *
+                                                           (4 * cos2_sgm_m * cos2_sgm_m - 3)));
+
+        var s = b * a2 * (sigma - d_sgm);
+
+        return s; // Distance in meters
     }
 
     /// <summary>Вычисление расстояния между двумя точками на поверхности земли, заданными своими координатами</summary>
@@ -131,8 +204,8 @@ public static class GPS
         if (double.IsNaN(latitude1) || double.IsNaN(longitude1) || double.IsNaN(latitude2) || double.IsNaN(longitude2))
             return double.NaN;
 
-        latitude1  *= ToRad;
-        latitude2  *= ToRad;
+        latitude1 *= ToRad;
+        latitude2 *= ToRad;
         longitude1 *= ToRad;
         longitude2 *= ToRad;
 
@@ -147,8 +220,8 @@ public static class GPS
         if (double.IsNaN(latitude1) || double.IsNaN(longitude1) || double.IsNaN(latitude2) || double.IsNaN(longitude2))
             return double.NaN;
 
-        latitude1  *= ToRad;
-        latitude2  *= ToRad;
+        latitude1 *= ToRad;
+        latitude2 *= ToRad;
         longitude1 *= ToRad;
         longitude2 *= ToRad;
 
@@ -166,15 +239,16 @@ public static class GPS
         if (double.IsNaN(latitude1) || double.IsNaN(longitude1) || double.IsNaN(latitude2) || double.IsNaN(longitude2))
             return double.NaN;
 
-        latitude1  *= ToRad;
-        latitude2  *= ToRad;
+        latitude1 *= ToRad;
+        latitude2 *= ToRad;
         longitude1 *= ToRad;
         longitude2 *= ToRad;
 
         var d_lon = longitude2 - longitude1;
-        var y     = Sin(d_lon) * Cos(latitude2);
+        var y = Sin(d_lon) * Cos(latitude2);
         var x = Cos(latitude1) * Sin(latitude2)
-            - Sin(latitude1) * Cos(latitude2) * Cos(d_lon);
+              - Sin(latitude1) * Cos(latitude2) * Cos(d_lon);
+
         return (Atan2(y, x) / ToRad + 360) % 360;
     }
 
@@ -199,20 +273,20 @@ public static class GPS
         if (double.IsNaN(latitude1) || double.IsNaN(longitude1) || double.IsNaN(latitude2) || double.IsNaN(longitude2))
             return new(double.NaN, double.NaN);
 
-        latitude1  *= ToRad;
-        latitude2  *= ToRad;
+        latitude1 *= ToRad;
+        latitude2 *= ToRad;
         longitude1 *= ToRad;
         longitude2 *= ToRad;
 
-        var d_lon    = longitude2 - longitude1;
+        var d_lon = longitude2 - longitude1;
         var cos_lat1 = Cos(latitude1);
         var cos_lat2 = Cos(latitude2);
 
-        var bx           = cos_lat2 * Cos(d_lon);
-        var by           = cos_lat2 * Sin(d_lon);
-        var latitude_05  = Atan2(Sin(latitude1) + Sin(latitude2), Sqrt((cos_lat1 + bx) * (cos_lat1 + bx) + by * by));
+        var (by, bx) = Complex.SinCosA(d_lon, cos_lat2);
+
+        var latitude_05 = Atan2(Sin(latitude1) + Sin(latitude2), Sqrt((cos_lat1 + bx) * (cos_lat1 + bx) + by * by));
         var longitude_05 = longitude1 + Atan2(by, cos_lat1 + bx);
-        return new(latitude_05 / ToRad, longitude_05 / ToRad);
+        return new(latitude_05 * ToDeg, longitude_05 * ToDeg);
     }
 
     /// <summary>Определение курса по координатам начальной и конечной точки</summary>
@@ -236,20 +310,18 @@ public static class GPS
         if (double.IsNaN(latitude) || double.IsNaN(longitude) || double.IsNaN(heading) || double.IsNaN(distance))
             return new(double.NaN, double.NaN);
 
-        latitude  *= ToRad;
+        latitude *= ToRad;
         longitude *= ToRad;
         if (heading is < 0 or > 360) heading = (heading + 360) % 360;
         heading *= ToRad;
 
         distance /= Consts.EarthRadius;
 
-        var sin_lat = Sin(latitude);
-        var cos_lat = Cos(latitude);
-        var sin_d   = Sin(distance);
-        var cos_d   = Cos(distance);
+        var (sin_lat, cos_lat) = Complex.SinCos(latitude);
+        var (sin_dst, cos_dst) = Complex.SinCos(distance);
 
-        var sin_latitude2 = sin_lat * cos_d + cos_lat * sin_d * Cos(heading);
-        var longitude2    = longitude + Atan2(Sin(heading) * sin_d * cos_lat, cos_d - sin_lat * sin_latitude2);
+        var sin_latitude2 = sin_lat * cos_dst + cos_lat * sin_dst * Cos(heading);
+        var longitude2 = longitude + Atan2(Sin(heading) * sin_dst * cos_lat, cos_dst - sin_lat * sin_latitude2);
         return new(Asin(sin_latitude2) / ToRad, (longitude2 / ToRad + 540) % 360 - 180);
     }
 
@@ -308,29 +380,26 @@ public static class GPS
             || double.IsNaN(heading1) || double.IsNaN(heading2))
             return new(double.NaN, double.NaN);
 
-        latitude1  *= ToRad;
-        latitude2  *= ToRad;
+        latitude1 *= ToRad;
+        latitude2 *= ToRad;
         longitude1 *= ToRad;
         longitude2 *= ToRad;
-        heading1   *= ToRad;
-        heading2   *= ToRad;
+        heading1 *= ToRad;
+        heading2 *= ToRad;
 
-        var d_lat       = latitude2 - latitude1;
-        var d_lon       = longitude2 - longitude1;
+        var d_lat = latitude2 - latitude1;
+        var d_lon = longitude2 - longitude1;
         var sin_d_lat05 = Sin(d_lat / 2);
         var sin_d_lon05 = Sin(d_lon / 2);
 
-        var cos_lat1 = Cos(latitude1);
-        var cos_lat2 = Cos(latitude2);
-        var sin_lat1 = Sin(latitude1);
-        var sin_lat2 = Sin(latitude2);
+        var (sin_lat1, cos_lat1) = Complex.SinCos(latitude1);
+        var (sin_lat2, cos_lat2) = Complex.SinCos(latitude2);
 
-        var angular_distance     = 2 * Asin(Sqrt(sin_d_lat05 * sin_d_lat05 + cos_lat1 * cos_lat2 * sin_d_lon05 * sin_d_lon05));
-        var sin_angular_distance = Sin(angular_distance);
-        var cos_angular_distance = Cos(angular_distance);
-        var init_heading         = Acos((sin_lat2 - sin_lat1 * Cos(angular_distance)) / (sin_angular_distance * cos_lat1));
+        var angular_distance = 2 * Asin(Sqrt(sin_d_lat05 * sin_d_lat05 + cos_lat1 * cos_lat2 * sin_d_lon05 * sin_d_lon05));
+        var (sin_angular_distance, cos_angular_distance) = Complex.SinCos(angular_distance);
+        var init_heading = Acos((sin_lat2 - sin_lat1 * Cos(angular_distance)) / (sin_angular_distance * cos_lat1));
 
-        if (double.IsNaN(init_heading)) 
+        if (double.IsNaN(init_heading))
             init_heading = 0;
 
         var final_heading = Acos((sin_lat1 - sin_lat2 * Cos(angular_distance)) / (sin_angular_distance * cos_lat2));
@@ -339,34 +408,32 @@ public static class GPS
         if (d_lon > 0)
         {
             th12 = init_heading;
-            th21 = 2 * PI - final_heading;
+            th21 = PI2 - final_heading;
         }
         else
         {
-            th12 = 2 * PI - final_heading;
+            th12 = PI2 - final_heading;
             th21 = init_heading;
         }
 
         var a1 = heading1 - th12;
         var a2 = th21 - heading2;
 
-        var sin_a1 = Sin(a1);
-        var sin_a2 = Sin(a2);
-        var cos_a1 = Cos(a1);
-        var cos_a2 = Cos(a2);
+        var (sin_a1, cos_a1) = Complex.SinCos(a1);
+        var (sin_a2, cos_a2) = Complex.SinCos(a2);
 
         if (sin_a1.Equals(0d) && sin_a2.Equals(0d) || sin_a1 * sin_a2 < 0)
             return new(double.NaN, double.NaN);
 
-        var a3                         = Acos(-cos_a1 * cos_a2 + sin_a1 * sin_a2 * cos_angular_distance);
-        var cos_a3                     = Cos(a3);
-        var angular_distance_p1_p2     = Atan2(sin_angular_distance * sin_a1 * sin_a2, cos_a2 + cos_a1 * cos_a3);
+        var a3 = Acos(sin_a1 * sin_a2 * cos_angular_distance - cos_a1 * cos_a2);
+        var cos_a3 = Cos(a3);
+        var angular_distance_p1_p2 = Atan2(sin_angular_distance * sin_a1 * sin_a2, cos_a2 + cos_a1 * cos_a3);
         var sin_angular_distance_p1_p2 = Sin(angular_distance_p1_p2);
         var cos_angular_distance_p1_p2 = Cos(angular_distance_p1_p2);
-        var latitude3                  = Asin(sin_lat1 * cos_angular_distance_p1_p2 + cos_lat1 * sin_angular_distance_p1_p2 * Cos(heading1));
-        var d_lon_13                   = Atan2(Sin(heading1) * sin_angular_distance_p1_p2 * cos_lat1, cos_angular_distance_p1_p2 - sin_lat1 * Sin(latitude3));
-        var longitude3                 = longitude1 + d_lon_13;
-        return new(latitude3 / ToRad, (longitude3 / ToRad + 540) % 360 - 180);
+        var latitude3 = Asin(sin_lat1 * cos_angular_distance_p1_p2 + cos_lat1 * sin_angular_distance_p1_p2 * Cos(heading1));
+        var d_lon_13 = Atan2(Sin(heading1) * sin_angular_distance_p1_p2 * cos_lat1, cos_angular_distance_p1_p2 - sin_lat1 * Sin(latitude3));
+        var longitude3 = longitude1 + d_lon_13;
+        return new(latitude3 * ToDeg, (longitude3 * ToDeg + 540) % 360 - 180);
     }
 
     /// <summary>Определение точки пресечения двух курсов, каждый из которых задан исходной точкой</summary>
@@ -392,7 +459,7 @@ public static class GPS
             switch (Lat)
             {
                 case <= -90: return double.NegativeInfinity;
-                case >= 90:  return double.PositiveInfinity;
+                case >= 90: return double.PositiveInfinity;
                 default:
                     {
                         var lat = Lat * ToRad;
@@ -409,17 +476,17 @@ public static class GPS
 
         public static double YToLatitude(double y)
         {
-            var t     = Exp(-y * ToRad);
-            var lat   = PI05 - 2 * Atan(t);
+            var t = Exp(-y * ToRad);
+            var lat = PI05 - 2 * Atan(t);
             var delta = 1d;
 
-            const int    max_iterations = 10;
-            const double eps            = 1e-6;
+            const int max_iterations = 10;
+            const double eps = 1e-6;
             for (var i = 0; i < max_iterations && delta > eps; i++)
             {
                 var new_lat = PI05 - 2 * Atan(t * ConformalFactor(lat));
                 delta = Abs(1 - new_lat / lat);
-                lat   = new_lat;
+                lat = new_lat;
             }
 
             return lat * ToDeg;

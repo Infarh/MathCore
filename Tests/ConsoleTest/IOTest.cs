@@ -2,6 +2,7 @@
 using System.IO.Compression;
 
 namespace ConsoleTest;
+
 public static class IOTest
 {
     public static void Run()

@@ -1,5 +1,7 @@
-﻿using System.Drawing;
+﻿#nullable enable
+using System.Drawing;
 using System.Globalization;
+using System.Text;
 
 using MathCore.Vectors;
 
@@ -8,7 +10,7 @@ using static System.Math;
 namespace MathCore.Geolocation;
 
 /// <summary>Географическое положение</summary>
-public readonly struct GeoLocation : IEquatable<GeoLocation>
+public readonly struct GeoLocation : IEquatable<GeoLocation>, IFormattable
 {
     /// <summary>Радиус Земли в метрах</summary>
     public const double EarthRadius = 6_378_137d;
@@ -121,6 +123,51 @@ public readonly struct GeoLocation : IEquatable<GeoLocation>
         FormattableString result = $"{lat_angle}°{lat_min:00}'{lat:00.############}''{(lat_sign >= 0 ? "N" : "S")}, {lon_angle}°{lon_min:00}'{lon:00.############}''{(lon_sign >= 0 ? "E" : "W")}";
 
         return result.ToString(CultureInfo.InvariantCulture);
+    }
+
+    public string ToString(IFormatProvider formatter)
+    {
+        var lat = Latitude;
+        var lon = Longitude;
+
+        var lat_sign = Sign(lat);
+        var lon_sign = Sign(lon);
+
+        lat = Abs(lat);
+        lon = Abs(lon);
+
+        var lat_angle = (int)lat;
+        var lon_angle = (int)lon;
+
+        lat -= lat_angle;
+        lon -= lon_angle;
+
+        lat *= 60;
+        lon *= 60;
+
+        var lat_min = (int)lat;
+        var lon_min = (int)lon;
+
+        lat -= lat_min;
+        lon -= lon_min;
+
+        lat *= 60;
+        lon *= 60;
+
+        FormattableString result = $"{lat_angle}°{lat_min:00}'{lat:00.############}''{(lat_sign >= 0 ? "N" : "S")}, {lon_angle}°{lon_min:00}'{lon:00.############}''{(lon_sign >= 0 ? "E" : "W")}";
+
+        return result.ToString(formatter);
+    }
+
+    public string ToString(string? format, IFormatProvider? provider)
+    {
+        var result = new StringBuilder();
+        result.Append(Latitude >= 0.0 ? 'N' : 'S');
+        result.Append(Latitude.ToString(format, provider)).Append('°');
+        result.Append(',').Append(' ');
+        result.Append(Longitude >= 0.0 ? 'E' : 'W');
+        result.Append(Longitude.ToString(format, provider)).Append('°');
+        return result.ToString();
     }
 
     public static bool operator ==(GeoLocation left, GeoLocation right) => left.Equals(right);
