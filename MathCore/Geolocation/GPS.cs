@@ -239,26 +239,17 @@ public static class GPS
         if (double.IsNaN(latitude1) || double.IsNaN(longitude1) || double.IsNaN(latitude2) || double.IsNaN(longitude2))
             return double.NaN;
 
-        const double eps = 1e-6;
-        if (Abs(latitude1 - latitude2) < eps && Abs(longitude1 - longitude2) < eps)
-            return 0;
-
         latitude1 *= ToRad;
         latitude2 *= ToRad;
         longitude1 *= ToRad;
         longitude2 *= ToRad;
 
-        var d_lat = latitude2 - latitude1;
         var d_lon = longitude2 - longitude1;
+        var y = Sin(d_lon) * Cos(latitude2);
+        var x = Cos(latitude1) * Sin(latitude2)
+              - Sin(latitude1) * Cos(latitude2) * Cos(d_lon);
 
-        var sin_d_lat05 = Sin(d_lat / 2);
-        var sin_d_lon05 = Sin(d_lon / 2);
-
-        var a = sin_d_lat05 * sin_d_lat05 + Cos(latitude1) * Cos(latitude2) * sin_d_lon05 * sin_d_lon05;
-
-        var c = 2 * Atan2(Sqrt(a), Sqrt(1 - a));
-
-        return Consts.EarthRadius * c;
+        return (Atan2(y, x) / ToRad + 360) % 360;
     }
 
     /// <summary>Определение курса по координатам начальной и конечной точки</summary>
