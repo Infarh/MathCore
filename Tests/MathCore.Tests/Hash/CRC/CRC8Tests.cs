@@ -112,7 +112,7 @@ public class CRC8Tests
     [TestMethod]
     public void Poly_31_MAXIM()
     {
-        var data = new byte[] { 0x12, 0x34, 0x56, 0x78 };
+        var data = new byte[] { 0x12, 0x34, 0x56, 0x78 }; // 0x12345678
         var crc = new CRC8(CRC8.Mode.MAXIM) { State = 0, XOR = 0, RefIn = true, RefOut = true };
         const byte expected_crc = 0x98;
 
