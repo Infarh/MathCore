@@ -37,9 +37,36 @@ public static class RegExExtensions
 
     public static int ValueIntOrDefault(this Group? g, int Default = 0) => g is null || !g.Success || !int.TryParse(g.Value, out var v) ? Default : v;
 
-    public static double ValuedDoubleOrDefault(this Group? g, double Default = double.NaN) => g is null || !g.Success || !double.TryParse(g.Value, out var v) ? Default : v;
+    private static NumberFormatInfo? __CultureRU;
 
-    public static double ValuedDoubleOrDefault(this Group? g, IFormatProvider format, NumberStyles style = NumberStyles.Float, double Default = double.NaN) => g is null || !g.Success || !double.TryParse(g.Value, style, format, out var v) ? Default : v;
+    public static double ValueDoubleOrDefaultUniversal(this Group? g, double Default = double.NaN) =>
+        g is null
+        || !g.Success
+        || !double.TryParse(g.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var v)
+        || !double.TryParse(g.Value, NumberStyles.Float, __CultureRU ??= new() { NumberDecimalSeparator = "," }, out v)
+            ? Default
+            : v;
+
+    public static double ValueDoubleOrDefaultInvariant(this Group? g, double Default = double.NaN) =>
+        g is null
+        || !g.Success
+        || !double.TryParse(g.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var v)
+            ? Default
+            : v;
+
+    public static double ValueDoubleOrDefault(this Group? g, double Default = double.NaN) =>
+        g is null
+        || !g.Success
+        || !double.TryParse(g.Value, out var v)
+            ? Default
+            : v;
+
+    public static double ValueDoubleOrDefault(this Group? g, IFormatProvider format, NumberStyles style = NumberStyles.Float, double Default = double.NaN) =>
+        g is null ||
+        !g.Success ||
+        !double.TryParse(g.Value, style, format, out var v)
+            ? Default
+            : v;
 
     public static bool ValueBoolOrDefault(this Group? g, bool Default = false) => g is null || !g.Success || !bool.TryParse(g.Value, out var v) ? Default : v;
 
