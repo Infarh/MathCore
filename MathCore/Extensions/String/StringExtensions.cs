@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.IO.Compression;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -31,7 +32,7 @@ public static class StringExtensions
 
     public static bool TryConvertTo<T>(this string? str, out T? value)
     {
-        if(str is null || typeof(T).GetTypeConverter() is not { } converter || !converter.CanConvertFrom(typeof(string)))
+        if (str is null || typeof(T).GetTypeConverter() is not { } converter || !converter.CanConvertFrom(typeof(string)))
         {
             value = default;
             return false;
@@ -140,22 +141,26 @@ public static class StringExtensions
     /// <summary>Создать объект чтения данных строки</summary>
     /// <param name="str">Исходная строка</param>
     /// <returns>Объект <see cref="StringReader"/> для чтения данных строки</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringReader CreateReader(this string str) => new(str);
 
     /// <summary>Создать построитель строки</summary>
     /// <param name="str">Исходная строка</param>
     /// <returns>Объект <see cref="StringBuilder"/> для формирования строки</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringBuilder CreateBuilder(this string str) => new(str);
 
     /// <summary>Преобразовать строку в указатель</summary>
     /// <param name="str">Исходная строка</param>
     /// <returns>Указатель на позицию в строке</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringPtr AsStringPtr(this string str) => new(str, 0, str.Length);
 
     /// <summary>Преобразовать строку в указатель</summary>
     /// <param name="str">Исходная строка</param>
     /// <param name="Pos">Положение в строке</param>
     /// <returns>Указатель на позицию в строке</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringPtr AsStringPtr(this string str, int Pos) => new(str, Pos, str.Length - Pos);
 
     /// <summary>Преобразовать строку в указатель</summary>
@@ -163,6 +168,7 @@ public static class StringExtensions
     /// <param name="Pos">Положение в строке</param>
     /// <param name="Length">Длина подстроки</param>
     /// <returns>Указатель на позицию в строке</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringPtr AsStringPtr(this string str, int Pos, int Length) => new(str, Pos, Length);
 
     /// <summary>Сжать строку в последовательность байт</summary>
@@ -187,10 +193,17 @@ public static class StringExtensions
     public static async Task<byte[]> CompressAsync(this string str, CancellationToken Cancel = default)
     {
         using var output = new MemoryStream();
+#if NET8_0_OR_GREATER
+        await
+#endif
         using (var compressor = new GZipStream(output, CompressionLevel.Optimal))
         {
             var bytes = Encoding.UTF8.GetBytes(str);
+#if NET8_0_OR_GREATER
+            await compressor.WriteAsync(bytes, Cancel).ConfigureAwait(false);
+#else
             await compressor.WriteAsync(bytes, 0, bytes.Length, Cancel).ConfigureAwait(false);
+#endif
         }
 
         return output.ToArray();
@@ -201,9 +214,9 @@ public static class StringExtensions
     /// <returns>Распакованная последовательность байт в строковом представлении</returns>
     public static string DecompressAsString(this byte[] bytes)
     {
-        using var input_stream  = new MemoryStream(bytes);
+        using var input_stream = new MemoryStream(bytes);
         using var output_stream = new MemoryStream();
-        using var g_zip_stream  = new GZipStream(input_stream, CompressionMode.Decompress);
+        using var g_zip_stream = new GZipStream(input_stream, CompressionMode.Decompress);
         g_zip_stream.CopyTo(output_stream);
 
         return Encoding.UTF8.GetString(output_stream.ToArray());
@@ -223,14 +236,18 @@ public static class StringExtensions
         return Encoding.UTF8.GetString(output_stream.ToArray());
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string JoinStrings(this IEnumerable<string> strings, string separator) => string.Join(separator, strings);
 
 #if NET5_0_OR_GREATER
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string JoinStrings(this IEnumerable<string> strings, char separator) => string.Join(separator, strings);
 #endif
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte[] ComputeSHA256(this string text, Encoding? encoding = null) => (encoding ?? Encoding.Default).GetBytes(text).ComputeSHA256();
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte[] ComputeMD5(this string text, Encoding? encoding = null) => (encoding ?? Encoding.Default).GetBytes(text).ComputeMD5();
 
     /// <summary>Перечисление подстрок, разделяемых указанным строковым шаблоном</summary>
@@ -316,24 +333,29 @@ public static class StringExtensions
     /// <param name="Str">Проверяемая строка</param>
     /// <returns>Истина, если строка пуста, либо если передана нулевая ссылка</returns>
     [DST]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsNullOrEmpty(this string? Str) => string.IsNullOrEmpty(Str);
 
     /// <summary>Строка присутствует и не пуста</summary>
     /// <param name="Str">Проверяемая строка</param>
     /// <returns>Истина, если строка не  пуста, и если передана ненулевая ссылка</returns>
     [DST]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsNotNullOrEmpty(this string? Str) => !string.IsNullOrEmpty(Str);
 
     [DST]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsNullOrWhiteSpace(this string? Str) => string.IsNullOrWhiteSpace(Str);
 
     [DST]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsNotNullOrWhiteSpace(this string? Str) => !string.IsNullOrWhiteSpace(Str);
 
     /// <summary>Удаление символов в начале строки</summary>
     /// <param name="str">Обрабатываемая строка</param>
     /// <param name="symbols">Перечень удаляемых символов</param>
     /// <returns>Новая строка с удалёнными символами в начале</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string ClearSymbolsAtBegin(this string str, params char[] symbols)
     {
         var i = 0;
@@ -360,11 +382,13 @@ public static class StringExtensions
     /// <param name="str">Обрабатываемая строка</param>
     /// <param name="symbols">Перечень удаляемых символов</param>
     /// <returns>Новая строка с удалёнными символами в начале и конце</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string ClearSymbolsAtBeginAndEnd(this string str, params char[] symbols) => str.ClearSymbolsAtBegin(symbols).ClearSymbolsAtEnd(symbols);
 
     /// <summary>Удаление служебных символов в начале и конце строки</summary>
     /// <param name="str">Обрабатываемая строка</param>
     /// <returns>Новая строка с удалёнными служебными символами в начали и конце</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string ClearSystemSymbolsAtBeginAndEnd(this string str) => str.ClearSymbolsAtBeginAndEnd(' ', '\n', '\r');
 
     /// <summary>Проверка на пустоту строки</summary>
@@ -383,6 +407,7 @@ public static class StringExtensions
     /// <param name="str">Шифруемая строка</param>
     /// <param name="password">Пароль шифрования</param>
     /// <returns>Зашифрованная строка</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string Encrypt(this string str, string password) => str.Encrypt(password, __Salt);
 
     /// <summary>Зашифровать строку</summary>
@@ -390,6 +415,7 @@ public static class StringExtensions
     /// <param name="password">Пароль шифрования</param>
     /// <param name="Salt">Соль алгоритма</param>
     /// <returns>Зашифрованная строка</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string Encrypt(this string str, string password, byte[] Salt) => Convert.ToBase64String(str.Compress().Encrypt(password, Salt));
 
     /// <summary>Зашифровать массив байт</summary>
@@ -431,6 +457,7 @@ public static class StringExtensions
     /// <param name="str">Зашифрованная строка</param>
     /// <param name="password">Пароль шифрования</param>
     /// <returns>Расшифрованная строка</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string Decrypt(this string str, string password) => Convert.FromBase64String(str).Decrypt(password).DecompressAsString();
 
     /// <summary>Массив байт - "соль" алгоритма шифрования Rfc2898</summary>
@@ -482,35 +509,62 @@ public static class StringExtensions
         return algorithm.CreateDecryptor();
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Match MatchRegEx(this string str, string expr) => Regex.Match(str, expr);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Match MatchRegEx(this string str, string expr, RegexOptions options) => Regex.Match(str, expr, options);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Match MatchRegEx(this string str, Regex expr) => expr.Match(str);
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsMatchRegEx(this string str, string expr) => Regex.IsMatch(str, expr);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsIsMatchRegEx(this string str, string expr, RegexOptions options) => Regex.IsMatch(str, expr, options);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsMatchRegEx(this string str, Regex expr) => expr.IsMatch(str);
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ToInt(this string str) => int.Parse(str);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ToInt(this string str, IFormatProvider provider) => int.Parse(str, provider);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ToInt(this string str, NumberStyles style, IFormatProvider provider) => int.Parse(str, style, provider);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ToInt(this string str, NumberStyles style) => int.Parse(str, style);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int? ToIntNull(this string str) => int.TryParse(str, out var v) ? v : null;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int? ToIntNull(this string str, NumberStyles style, IFormatProvider provider) => int.TryParse(str, style, provider, out var v) ? v : null;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParseInt(this string str, out int value) => int.TryParse(str, out value);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParseInt(this string str, NumberStyles style, IFormatProvider provider, out int value) => int.TryParse(str, style, provider, out value);
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double ToDouble(this string str) => double.Parse(str);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double ToDouble(this string str, IFormatProvider provider) => double.Parse(str, provider);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double ToDouble(this string str, NumberStyles style, IFormatProvider provider) => double.Parse(str, style, provider);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double ToDouble(this string str, NumberStyles style) => double.Parse(str, style);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double? ToDoubleNull(this string str) => double.TryParse(str, out var v) ? v : null;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double? ToDoubleNull(this string str, NumberStyles style, IFormatProvider provider) => double.TryParse(str, style, provider, out var v) ? v : null;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParseDouble(this string str, out double value) => double.TryParse(str, out value);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParseDouble(this string str, NumberStyles style, IFormatProvider provider, out double value) => double.TryParse(str, style, provider, out value);
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double ToDoubleInvariant(this string str)
     {
-        if (str.IndexOf('.') >= 0)
+#if NET8_0_OR_GREATER
+        if (str.Contains('.'))
+#else
+        if (str.IndexOf('.') >= 0) 
+#endif
             return double.Parse(str, CultureInfo.InvariantCulture);
         return double.Parse(str, CultureInfo.GetCultureInfo("ru-RU"));
     }
@@ -545,26 +599,43 @@ public static class StringExtensions
         return true;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool ContainsInvariant(this string str, string pattern) => str.IndexOf(pattern, StringComparison.InvariantCulture) >= 0;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool ContainsInvariantIgnoreCase(this string str, string pattern) => str.IndexOf(pattern, StringComparison.InvariantCultureIgnoreCase) >= 0;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool ContainsOrdinal(this string str, string pattern) => str.IndexOf(pattern, StringComparison.Ordinal) >= 0;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool ContainsOrdinalIgnoreCase(this string str, string pattern) => str.IndexOf(pattern, StringComparison.OrdinalIgnoreCase) >= 0;
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EqualsInvariant(this string str, string other) => string.Equals(str, other, StringComparison.InvariantCulture);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EqualsInvariantIgnoreCase(this string str, string other) => string.Equals(str, other, StringComparison.InvariantCultureIgnoreCase);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EqualsOrdinal(this string str, string other) => string.Equals(str, other, StringComparison.Ordinal);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EqualsOrdinalIgnoreCase(this string str, string other) => string.Equals(str, other, StringComparison.OrdinalIgnoreCase);
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool StartWithInvariant(this string str, string other) => str.StartsWith(other, StringComparison.InvariantCulture);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool StartWithInvariantIgnoreCase(this string str, string other) => str.StartsWith(other, StringComparison.InvariantCultureIgnoreCase);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool StartWithOrdinal(this string str, string other) => str.StartsWith(other, StringComparison.Ordinal);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool StartWithOrdinalIgnoreCase(this string str, string other) => str.StartsWith(other, StringComparison.OrdinalIgnoreCase);
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EndWithInvariant(this string str, string other) => str.EndsWith(other, StringComparison.InvariantCulture);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EndWithInvariantIgnoreCase(this string str, string other) => str.EndsWith(other, StringComparison.InvariantCultureIgnoreCase);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EndWithOrdinal(this string str, string other) => str.EndsWith(other, StringComparison.Ordinal);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EndWithOrdinalIgnoreCase(this string str, string other) => str.EndsWith(other, StringComparison.OrdinalIgnoreCase);
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringSegmentsEnumerable EnumerateSegments(this string s, int SegmentLength) => new(s, SegmentLength);
 
     public delegate StringPtr StringPtrSelector(StringPtr ptr);
@@ -614,8 +685,10 @@ public static class StringExtensions
         return result.ToString();
     }
 
-    public static StringSegmentsEnumerable Select(this StringSegmentsEnumerable strings, StringPtrSelector Selector) => 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static StringSegmentsEnumerable Select(this StringSegmentsEnumerable strings, StringPtrSelector Selector) =>
         new(strings.SourceString, strings.SegmentLength, Selector);
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Stream ToByteStream(this string str, Encoding? encoding = null) => new StringByteStream(str, encoding ?? Encoding.UTF8);
 }
