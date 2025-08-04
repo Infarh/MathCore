@@ -6,12 +6,19 @@ using System.Reflection;
 using MathCore.Extensions.Expressions;
 
 namespace MathCore.Extensions;
+
+/// <summary>Статический класс с методами расширения для получения значений полей объекта через рефлексию</summary>
 public static class ObjectReflectionFieldsExtensions
 {
+    /// <summary>Флаги для поиска непубличных полей экземпляра</summary>
     private const BindingFlags __NonPublic = BindingFlags.Instance | BindingFlags.NonPublic;
 
+    /// <summary>Кэш делегатов для получения значения поля по типу и имени поля</summary>
     private static readonly ConcurrentDictionary<(Type, string), Func<object, object?>?> __FieldGetters = new();
 
+    /// <summary>Создать делегат для получения значения публичного поля по имени</summary>
+    /// <param name="field">Пара (тип, имя поля)</param>
+    /// <returns>Делегат для получения значения поля или null, если поле не найдено</returns>
     private static Func<object, object?>? GetPublicFieldGetter((Type type, string FieldName) field)
     {
         var (type, field_name) = field;
@@ -34,6 +41,9 @@ public static class ObjectReflectionFieldsExtensions
         return function;
     }
 
+    /// <summary>Создать делегат для получения значения непубличного поля по имени</summary>
+    /// <param name="field">Пара (тип, имя поля)</param>
+    /// <returns>Делегат для получения значения поля или null, если поле не найдено</returns>
     private static Func<object, object?>? GetPrivateFieldGetter((Type type, string FieldName) field)
     {
         var (type, field_name) = field;
@@ -56,12 +66,16 @@ public static class ObjectReflectionFieldsExtensions
         return function;
     }
 
+    /// <summary>Получить значение публичного поля объекта по имени</summary>
+    /// <param name="obj">Объект, из которого извлекается значение поля</param>
+    /// <param name="FieldName">Имя поля</param>
+    /// <returns>Значение поля или null, если поле не найдено</returns>
     public static object? GetFieldValue(this object obj, string FieldName)
     {
-        if(!obj.TryGetFieldValue(FieldName, out var value))
+        if (!obj.TryGetFieldValue(FieldName, out var value))
             throw new InvalidOperationException($"Тип {obj.GetType()} не содержит поля {FieldName}")
             {
-                Data = 
+                Data =
                 {
                     { nameof(obj), obj.GetType() },
                     { nameof(FieldName), FieldName },
@@ -71,6 +85,11 @@ public static class ObjectReflectionFieldsExtensions
         return value;
     }
 
+    /// <summary>Получить значение поля объекта по имени, включая непубличные поля</summary>
+    /// <param name="obj">Объект, из которого извлекается значение поля</param>
+    /// <param name="FieldName">Имя поля</param>
+    /// <param name="NonPublic">Включать непубличные поля</param>
+    /// <returns>Значение поля или null, если поле не найдено</returns>
     public static object? GetFieldValue(this object obj, string FieldName, bool NonPublic)
     {
         if (!obj.TryGetFieldValue(FieldName, NonPublic, out var value))
@@ -87,6 +106,11 @@ public static class ObjectReflectionFieldsExtensions
         return value;
     }
 
+    /// <summary>Попытатьcя получить значение публичного поля объекта по имени</summary>
+    /// <param name="obj">Объект, из которого извлекается значение поля</param>
+    /// <param name="FieldName">Имя поля</param>
+    /// <param name="value">Полученное значение поля</param>
+    /// <returns>True если поле найдено, иначе false</returns>
     public static bool TryGetFieldValue(this object obj, string FieldName, out object? value)
     {
         var type = obj.NotNull().GetType();
@@ -100,9 +124,15 @@ public static class ObjectReflectionFieldsExtensions
         return true;
     }
 
+    /// <summary>Попытаться получить значение поля объекта по имени, включая непубличные поля</summary>
+    /// <param name="obj">Объект, из которого извлекается значение поля</param>
+    /// <param name="FieldName">Имя поля</param>
+    /// <param name="NonPublic">Включать непубличные поля</param>
+    /// <param name="value">Полученное значение поля</param>
+    /// <returns>True если поле найдено, иначе false</returns>
     public static bool TryGetFieldValue(this object obj, string FieldName, bool NonPublic, out object? value)
     {
-        if(!NonPublic)
+        if (!NonPublic)
             return obj.TryGetFieldValue(FieldName, out value);
 
         var type = obj.NotNull().GetType();
@@ -116,8 +146,18 @@ public static class ObjectReflectionFieldsExtensions
         return true;
     }
 
+    /// <summary>Получить значение публичного поля объекта с приведением типа</summary>
+    /// <param name="obj">Объект, из которого извлекается значение поля</param>
+    /// <param name="FieldName">Имя поля</param>
+    /// <typeparam name="TValue">Тип возвращаемого значения</typeparam>
+    /// <returns>Значение поля приведённое к типу TValue или null</returns>
     public static TValue? GetFieldValue<TValue>(this object obj, string FieldName) => (TValue?)obj.GetFieldValue(FieldName);
 
+    /// <summary>Создать типизированный делегат для получения значения публичного поля</summary>
+    /// <param name="field">Пара (тип, имя поля)</param>
+    /// <typeparam name="T">Тип объекта</typeparam>
+    /// <typeparam name="TValue">Тип значения поля</typeparam>
+    /// <returns>Делегат для получения значения поля или null, если поле не найдено</returns>
     private static Delegate? GetPublicFieldGetter<T, TValue>((Type type, string FieldName) field)
     {
         var (type, field_name) = field;
@@ -135,6 +175,11 @@ public static class ObjectReflectionFieldsExtensions
         return function;
     }
 
+    /// <summary>Создать типизированный делегат для получения значения непубличного поля</summary>
+    /// <param name="field">Пара (тип, имя поля)</param>
+    /// <typeparam name="T">Тип объекта</typeparam>
+    /// <typeparam name="TValue">Тип значения поля</typeparam>
+    /// <returns>Делегат для получения значения поля или null, если поле не найдено</returns>
     private static Delegate? GetPrivateFieldGetter<T, TValue>((Type type, string FieldName) field)
     {
         var (type, field_name) = field;
@@ -154,9 +199,15 @@ public static class ObjectReflectionFieldsExtensions
 
     private static readonly ConcurrentDictionary<(Type, string), Delegate?> __TypedGetters = new();
 
+    /// <summary>Получить значение публичного поля объекта с приведением типа</summary>
+    /// <param name="obj">Объект, из которого извлекается значение поля</param>
+    /// <param name="FieldName">Имя поля</param>
+    /// <typeparam name="T">Тип объекта</typeparam>
+    /// <typeparam name="TValue">Тип возвращаемого значения</typeparam>
+    /// <returns>Значение поля приведённое к типу TValue или null</returns>
     public static TValue? GetFieldValue<T, TValue>(this T obj, string FieldName)
     {
-        if(!obj.TryGetFieldValue(FieldName, out TValue value))
+        if (!obj.TryGetFieldValue(FieldName, out TValue value))
             throw new InvalidOperationException($"Тип {typeof(T)} не содержит поля {FieldName}")
             {
                 Data =
@@ -171,9 +222,16 @@ public static class ObjectReflectionFieldsExtensions
         return value;
     }
 
+    /// <summary>Получить значение поля объекта с приведением типа, включая непубличные поля</summary>
+    /// <param name="obj">Объект, из которого извлекается значение поля</param>
+    /// <param name="FieldName">Имя поля</param>
+    /// <param name="NonPublic">Включать непубличные поля</param>
+    /// <typeparam name="T">Тип объекта</typeparam>
+    /// <typeparam name="TValue">Тип возвращаемого значения</typeparam>
+    /// <returns>Значение поля приведённое к типу TValue или null</returns>
     public static TValue? GetFieldValue<T, TValue>(this T obj, string FieldName, bool NonPublic)
     {
-        if(!obj.TryGetFieldValue(FieldName, NonPublic, out TValue value))
+        if (!obj.TryGetFieldValue(FieldName, NonPublic, out TValue value))
             throw new InvalidOperationException($"Тип {typeof(T)} не содержит поля {FieldName}")
             {
                 Data =
@@ -189,6 +247,13 @@ public static class ObjectReflectionFieldsExtensions
         return value;
     }
 
+    /// <summary>Попытатьcя получить значение публичного поля объекта с приведением типа</summary>
+    /// <param name="obj">Объект, из которого извлекается значение поля</param>
+    /// <param name="FieldName">Имя поля</param>
+    /// <param name="value">Полученное значение поля</param>
+    /// <typeparam name="T">Тип объекта</typeparam>
+    /// <typeparam name="TValue">Тип возвращаемого значения</typeparam>
+    /// <returns>True если поле найдено, иначе false</returns>
     public static bool TryGetFieldValue<T, TValue>(this T obj, string FieldName, out TValue? value)
     {
         if (obj is null) throw new ArgumentNullException(nameof(obj));
@@ -198,15 +263,23 @@ public static class ObjectReflectionFieldsExtensions
         {
             value = default;
             return false;
-        }    
+        }
 
         value = getter(obj);
         return true;
     }
 
+    /// <summary>Попытаться получить значение поля объекта с приведением типа, включая непубличные поля</summary>
+    /// <param name="obj">Объект, из которого извлекается значение поля</param>
+    /// <param name="FieldName">Имя поля</param>
+    /// <param name="NonPublic">Включать непубличные поля</param>
+    /// <param name="value">Полученное значение поля</param>
+    /// <typeparam name="T">Тип объекта</typeparam>
+    /// <typeparam name="TValue">Тип возвращаемого значения</typeparam>
+    /// <returns>True если поле найдено, иначе false</returns>
     public static bool TryGetFieldValue<T, TValue>(this T obj, string FieldName, bool NonPublic, out TValue? value)
     {
-        if(!NonPublic)
+        if (!NonPublic)
             return obj.TryGetFieldValue(FieldName, out value);
 
         if (obj is null) throw new ArgumentNullException(nameof(obj));
@@ -216,7 +289,7 @@ public static class ObjectReflectionFieldsExtensions
         {
             value = default;
             return false;
-        }    
+        }
 
         value = getter(obj);
         return true;
@@ -411,7 +484,7 @@ public static class ObjectReflectionFieldsExtensions
     //    public void Clear() => throw new NotSupportedException();
 
     //    public bool Contains(KeyValuePair<string, object?> item) => Equals(this[item.Key], item.Value);
-        
+
     //    public bool ContainsKey(string key) => _FieldNames.Value.Contains(key);
 
     //    public void CopyTo(KeyValuePair<string, object?>[] array, int Index)

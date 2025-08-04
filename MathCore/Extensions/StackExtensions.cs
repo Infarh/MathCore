@@ -5,6 +5,10 @@ namespace System.Collections.Generic;
 /// <summary>Методы-расширения для <see cref="Stack{T}"/></summary>
 public static class StackExtensions
 {
+    /// <summary>Преобразовать перечисление в стек</summary>
+    /// <typeparam name="T">Тип элементов перечисления</typeparam>
+    /// <param name="items">Перечисление элементов</param>
+    /// <returns>Новый стек, содержащий элементы перечисления</returns>
     public static Stack<T> ToStack<T>(this IEnumerable<T> items) => new(items);
 
     /// <summary>Добавить элемент в стек</summary>
@@ -24,6 +28,11 @@ public static class StackExtensions
         return stack;
     }
 
+    /// <summary>Добавить диапазон значений в стек</summary>
+    /// <typeparam name="T">Тип элементов стека</typeparam>
+    /// <param name="stack">Стек, в который надо добавить значения</param>
+    /// <param name="values">Диапазон добавляемых значений</param>
+    /// <returns>Модифицированный стек</returns>
     public static Stack<T> AddValuesRange<T>(this Stack<T> stack, IEnumerable<T>? values)
     {
         switch (values)
@@ -57,6 +66,10 @@ public static class StackExtensions
         }
     }
 
+    /// <summary>Перечислить элементы стека до его опустошения</summary>
+    /// <typeparam name="T">Тип элементов стека</typeparam>
+    /// <param name="stack">Стек, элементы которого надо перечислить</param>
+    /// <returns>Перечисление элементов стека</returns>
     public static IEnumerable<T> EnumerateToEnd<T>(this Stack<T> stack)
     {
         while (stack.Count > 0)

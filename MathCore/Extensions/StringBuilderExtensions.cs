@@ -14,85 +14,231 @@ namespace System.Text;
 
 public static class StringBuilderExtensions
 {
+    /// <summary>Устанавливает длину строки</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="length">Новая длина строки</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     public static StringBuilder SetLength(this StringBuilder builder, int length)
     {
         builder.Length = length < 0 ? builder.Length + length : length;
         return builder;
     }
 
+    /// <summary>Перечисляет строки в объекте <see cref="StringBuilder"/></summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="SkipEmpty">Пропускать ли пустые строки</param>
+    /// <returns>Перечисление строк</returns>
     public static IEnumerable<string> EnumLines(this StringBuilder builder, bool SkipEmpty = false) => builder.ToString().EnumLines(SkipEmpty);
 
+    /// <summary>Перечисляет строки в объекте <see cref="StringBuilder"/> с преобразованием</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="selector">Функция преобразования строки</param>
+    /// <param name="SkipEmpty">Пропускать ли пустые строки</param>
+    /// <typeparam name="T">Тип результата преобразования</typeparam>
+    /// <returns>Перечисление преобразованных строк</returns>
     public static IEnumerable<T> EnumLines<T>(this StringBuilder builder, Func<string, T> selector, bool SkipEmpty = false) => builder.ToString().EnumLines(selector, SkipEmpty);
 
+    /// <summary>Перечисляет строки в объекте <see cref="StringBuilder"/> с преобразованием и индексом</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="selector">Функция преобразования строки с индексом</param>
+    /// <param name="SkipEmpty">Пропускать ли пустые строки</param>
+    /// <typeparam name="T">Тип результата преобразования</typeparam>
+    /// <returns>Перечисление преобразованных строк</returns>
     public static IEnumerable<T> EnumLines<T>(this StringBuilder builder, Func<string, int, T> selector, bool SkipEmpty = false) => builder.ToString().EnumLines(selector, SkipEmpty);
 
-    /// <summary>Создать объект чтения</summary>
-    /// <param name="str">Исходный объект <see cref="StringBuilder"/></param>
-    /// <returns>Объект чтения строк</returns>
+    /// <summary>Создает объект чтения строк</summary>
+    /// <param name="str">Объект <see cref="StringBuilder"/></param>
+    /// <returns>Объект <see cref="StringReader"/></returns>
     public static StringReader CreateReader(this StringBuilder str) => new((str.NotNull()).ToString());
 
-    /// <summary>Создать объект записи строк</summary>
-    /// <param name="builder">Исходный объект <see cref="StringBuilder"/></param>
-    /// <returns>Объект записи строк</returns>
+    /// <summary>Создает объект записи строк</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <returns>Объект <see cref="StringWriter"/></returns>
     public static StringWriter CreateWriter(this StringBuilder builder) => new(builder.NotNull());
 
+    /// <summary>Добавляет форматированную строку</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="Format">Формат строки</param>
+    /// <param name="arg0">Аргумент форматирования</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     [StringFormatMethod("Format")]
     public static StringBuilder Append(this StringBuilder builder, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string Format, object arg0) => builder.AppendFormat(Format, arg0);
 
+    /// <summary>Добавляет форматированную строку</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="Format">Формат строки</param>
+    /// <param name="arg0">Первый аргумент форматирования</param>
+    /// <param name="arg1">Второй аргумент форматирования</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     [StringFormatMethod("Format")]
     public static StringBuilder Append(this StringBuilder builder, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string Format, object arg0, object arg1) => builder.AppendFormat(Format, arg0, arg1);
 
+    /// <summary>Добавляет форматированную строку</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="Format">Формат строки</param>
+    /// <param name="arg0">Первый аргумент форматирования</param>
+    /// <param name="arg1">Второй аргумент форматирования</param>
+    /// <param name="arg2">Третий аргумент форматирования</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     [StringFormatMethod("Format")]
     public static StringBuilder Append(this StringBuilder builder, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string Format, object arg0, object arg1, object arg2) => builder.AppendFormat(Format, arg0, arg1, arg2);
 
+    /// <summary>Добавляет форматированную строку</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="Format">Формат строки</param>
+    /// <param name="args">Аргументы форматирования</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     [StringFormatMethod("Format")]
     public static StringBuilder Append(this StringBuilder builder, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string Format, params object[] args) => builder.AppendFormat(Format, args);
 
+    /// <summary>Добавляет перевод строки</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     public static StringBuilder LN(this StringBuilder builder) => builder.AppendLine();
 
+    /// <summary>Добавляет строку с переводом строки</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="str">Добавляемая строка</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     public static StringBuilder LN(this StringBuilder builder, string str) => builder.AppendLine(str);
 
+    /// <summary>Добавляет форматированную строку и перевод строки</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="Format">Формат строки</param>
+    /// <param name="arg0">Аргумент форматирования</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     [StringFormatMethod("Format")]
     public static StringBuilder LN(this StringBuilder builder, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string Format, object arg0) => builder.AppendFormat(Format, arg0).LN();
 
+    /// <summary>Добавляет форматированную строку и перевод строки</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="Format">Формат строки</param>
+    /// <param name="arg0">Первый аргумент форматирования</param>
+    /// <param name="arg1">Второй аргумент форматирования</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     [StringFormatMethod("Format")]
     public static StringBuilder LN(this StringBuilder builder, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string Format, object arg0, object arg1) => builder.AppendFormat(Format, arg0, arg1).LN();
 
+    /// <summary>Добавляет форматированную строку и перевод строки</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="Format">Формат строки</param>
+    /// <param name="arg0">Первый аргумент форматирования</param>
+    /// <param name="arg1">Второй аргумент форматирования</param>
+    /// <param name="arg2">Третий аргумент форматирования</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     [StringFormatMethod("Format")]
     public static StringBuilder LN(this StringBuilder builder, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string Format, object arg0, object arg1, object arg2) => builder.AppendFormat(Format, arg0, arg1, arg2).LN();
 
+    /// <summary>Добавляет форматированную строку и перевод строки</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="Format">Формат строки</param>
+    /// <param name="args">Аргументы форматирования</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     [StringFormatMethod("Format")]
     public static StringBuilder LN(this StringBuilder builder, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string Format, params object[] args) => builder.AppendFormat(Format, args).LN();
 
+    /// <summary>Добавляет перевод строки в зависимости от условия</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="If">Условие добавления</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     public static StringBuilder LN(this StringBuilder builder, bool If) => If ? builder.AppendLine() : builder;
 
+    /// <summary>Добавляет строку с переводом строки в зависимости от условия</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="If">Условие добавления</param>
+    /// <param name="str">Добавляемая строка</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     public static StringBuilder LN(this StringBuilder builder, bool If, string str) => If ? builder.AppendLine(str) : builder;
 
+    /// <summary>Добавляет форматированную строку и перевод строки в зависимости от условия</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="If">Условие добавления</param>
+    /// <param name="Format">Формат строки</param>
+    /// <param name="arg0">Аргумент форматирования</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     [StringFormatMethod("Format")]
     public static StringBuilder LN(this StringBuilder builder, bool If, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string Format, object arg0) => If ? builder.AppendFormat(Format, arg0).LN() : builder;
 
+    /// <summary>Добавляет форматированную строку и перевод строки в зависимости от условия</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="If">Условие добавления</param>
+    /// <param name="Format">Формат строки</param>
+    /// <param name="arg0">Первый аргумент форматирования</param>
+    /// <param name="arg1">Второй аргумент форматирования</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     [StringFormatMethod("Format")]
     public static StringBuilder LN(this StringBuilder builder, bool If, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string Format, object arg0, object arg1) => If ? builder.AppendFormat(Format, arg0, arg1).LN() : builder;
 
+    /// <summary>Добавляет форматированную строку и перевод строки в зависимости от условия</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="If">Условие добавления</param>
+    /// <param name="Format">Формат строки</param>
+    /// <param name="arg0">Первый аргумент форматирования</param>
+    /// <param name="arg1">Второй аргумент форматирования</param>
+    /// <param name="arg2">Третий аргумент форматирования</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     [StringFormatMethod("Format")]
     public static StringBuilder LN(this StringBuilder builder, bool If, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string Format, object arg0, object arg1, object arg2) => If ? builder.AppendFormat(Format, arg0, arg1, arg2).LN() : builder;
 
+    /// <summary>Добавляет форматированную строку и перевод строки в зависимости от условия</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="If">Условие добавления</param>
+    /// <param name="Format">Формат строки</param>
+    /// <param name="args">Аргументы форматирования</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     [StringFormatMethod("Format")]
     public static StringBuilder LN(this StringBuilder builder, bool If, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string Format, params object[] args) => If ? builder.AppendFormat(Format, args).LN() : builder;
 
+    /// <summary>Добавляет строку в зависимости от условия</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="If">Условие добавления</param>
+    /// <param name="Value">Добавляемая строка</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     public static StringBuilder Append(this StringBuilder builder, bool If, string Value) => If ? builder.Append(Value) : builder;
 
+    /// <summary>Добавляет символ в зависимости от условия</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="If">Условие добавления</param>
+    /// <param name="Value">Добавляемый символ</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     public static StringBuilder Append(this StringBuilder builder, bool If, char Value) => If ? builder.Append(Value) : builder;
 
+    /// <summary>Добавляет форматированную строку в зависимости от условия</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="If">Условие добавления</param>
+    /// <param name="Format">Формат строки</param>
+    /// <param name="arg">Аргумент форматирования</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     [StringFormatMethod("Format")]
     public static StringBuilder Append(this StringBuilder builder, bool If, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string Format, object arg) => !If ? builder : builder.AppendFormat(Format, arg);
 
+    /// <summary>Добавляет форматированную строку в зависимости от условия</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="If">Условие добавления</param>
+    /// <param name="Format">Формат строки</param>
+    /// <param name="arg0">Первый аргумент форматирования</param>
+    /// <param name="arg1">Второй аргумент форматирования</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     [StringFormatMethod("Format")]
     public static StringBuilder Append(this StringBuilder builder, bool If, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string Format, object arg0, object arg1) => If ? builder.AppendFormat(Format, arg0, arg1) : builder;
 
+    /// <summary>Добавляет форматированную строку в зависимости от условия</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="If">Условие добавления</param>
+    /// <param name="Format">Формат строки</param>
+    /// <param name="arg0">Первый аргумент форматирования</param>
+    /// <param name="arg1">Второй аргумент форматирования</param>
+    /// <param name="arg2">Третий аргумент форматирования</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     [StringFormatMethod("Format")]
     public static StringBuilder Append(this StringBuilder builder, bool If, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string Format, object arg0, object arg1, object arg2) => If ? builder.AppendFormat(Format, arg0, arg1, arg2) : builder;
 
+    /// <summary>Добавляет форматированную строку в зависимости от условия</summary>
+    /// <param name="builder">Объект <see cref="StringBuilder"/></param>
+    /// <param name="If">Условие добавления</param>
+    /// <param name="Format">Формат строки</param>
+    /// <param name="args">Аргументы форматирования</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     [StringFormatMethod("Format")]
     public static StringBuilder Append(this StringBuilder builder, bool If, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string Format, params object[] args) => If ? builder.AppendFormat(Format, args) : builder;
 
@@ -106,6 +252,11 @@ public static class StringBuilderExtensions
 
 #endif
 
+    /// <summary>Проверяет начинается ли строка с заданного префикса</summary>
+    /// <param name="str">Объект <see cref="StringBuilder"/></param>
+    /// <param name="start">Префикс</param>
+    /// <param name="comparison">Тип сравнения</param>
+    /// <returns>Истина, если строка начинается с префикса</returns>
     public static bool StartWith(this StringBuilder str, string start, StringComparison comparison = StringComparison.Ordinal)
     {
         if (start is not { Length: > 0 and var start_len })
@@ -138,6 +289,11 @@ public static class StringBuilderExtensions
         }
     }
 
+    /// <summary>Удаляет начальную часть строки, если она совпадает с заданной</summary>
+    /// <param name="str">Объект <see cref="StringBuilder"/></param>
+    /// <param name="start">Удаляемая часть</param>
+    /// <param name="comparison">Тип сравнения</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     public static StringBuilder TrimStart(this StringBuilder str, string? start, StringComparison comparison = StringComparison.Ordinal)
     {
         if (start is not { Length: > 0 and var len })
@@ -149,6 +305,11 @@ public static class StringBuilderExtensions
         return str;
     }
 
+    /// <summary>Проверяет заканчивается ли строка заданным суффиксом</summary>
+    /// <param name="str">Объект <see cref="StringBuilder"/></param>
+    /// <param name="end">Суффикс</param>
+    /// <param name="comparison">Тип сравнения</param>
+    /// <returns>Истина, если строка заканчивается на суффикс</returns>
     public static bool EndWith(this StringBuilder str, string end, StringComparison comparison = StringComparison.Ordinal)
     {
         if (end is not { Length: > 0 and var end_len })
@@ -180,6 +341,11 @@ public static class StringBuilderExtensions
         }
     }
 
+    /// <summary>Удаляет конечную часть строки, если она совпадает с заданной</summary>
+    /// <param name="str">Объект <see cref="StringBuilder"/></param>
+    /// <param name="end">Удаляемая часть</param>
+    /// <param name="comparison">Тип сравнения</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
     public static StringBuilder TrimEnd(this StringBuilder str, string? end, StringComparison comparison = StringComparison.Ordinal)
     {
         if (end is not { Length: > 0 and var len })

@@ -218,6 +218,7 @@ public static class INotifyPropertyChangedExtensions
 
     #endregion
 
+    /// <summary>Абстрактный класс подписчика на изменение свойства объекта, реализующего INotifyPropertyChanged</summary>
     public abstract class Subscriber(INotifyPropertyChanged Obj, string PropertyName)
     {
         private event PropertyChangedEventHandler? OnPropertyChangedEventHandlers;
@@ -298,6 +299,7 @@ public static class INotifyPropertyChangedExtensions
             ValueChangeEventHandlers       = null;
         }
     }
+    /// <summary>Класс подписчика на изменение свойства объекта типа T, реализующего INotifyPropertyChanged</summary>
     public sealed class Subscriber<T> : Subscriber where T : INotifyPropertyChanged
     {
         private event Action<T>? OnObjectValueChangedHandlers;
@@ -331,9 +333,10 @@ public static class INotifyPropertyChangedExtensions
             OnObjectValueChangedHandlers = null;
         }
     }
-
+    /// <summary>Словарь подписчиков на изменение свойств объектов, реализующих INotifyPropertyChanged</summary>
     private static readonly Dictionary<INotifyPropertyChanged, Dictionary<string, Subscriber>> __Subscribers = [];
 
+    /// <summary>Создать IDisposable для подписки на изменение свойства объекта</summary>
     public static IDisposable UsingSubscribeToProperty(
         this INotifyPropertyChanged obj,
         string EventName,
@@ -342,12 +345,7 @@ public static class INotifyPropertyChangedExtensions
         obj.SubscribeTo(EventName, Handler);
         return new LambdaDisposable(() => obj.UnsubscribeFromProperty(EventName, Handler));
     }
-
-    /// <summary>Подписаться на событие изменения свойства</summary>
-    /// <typeparam name="T">Тип объекта, генерирующего событие</typeparam>
-    /// <param name="obj">Объект, на событие изменения свойств которого производится подписка</param>
-    /// <param name="PropertyName">Имя отслеживаемого свойства</param>
-    /// <param name="Handler">Обработчик события</param>
+    /// <summary>Подписаться на событие изменения свойства объекта типа T</summary>
     public static void SubscribeTo<T>(
         this T? obj,
         string PropertyName,
@@ -362,7 +360,7 @@ public static class INotifyPropertyChangedExtensions
             object_subscriber.OnPropertyChangedEvent += Handler;
         }
     }
-
+    /// <summary>Получить подписчика на изменение свойства объекта типа T</summary>
     public static Subscriber<T> SubscribeTo<T>(this T obj, string PropertyName)
         where T : INotifyPropertyChanged
     {
@@ -372,7 +370,7 @@ public static class INotifyPropertyChangedExtensions
             return (Subscriber<T>)object_subscribers.GetValueOrAddNew(PropertyName, () => new Subscriber<T>(obj, PropertyName)) ?? throw new InvalidOperationException();
         }
     }
-
+    /// <summary>Отписаться от события изменения свойства объекта</summary>
     public static void UnsubscribeFromProperty(
         this INotifyPropertyChanged? obj,
         string EventName,
@@ -391,7 +389,7 @@ public static class INotifyPropertyChangedExtensions
             if (object_subscribers.Count == 0) __Subscribers.Remove(obj);
         }
     }
-
+    /// <summary>Очистить обработчики событий изменения свойств объекта</summary>
     public static void ClearPropertyEventHandlers(this INotifyPropertyChanged obj, string? EventName = null)
     {
         lock (__Subscribers)

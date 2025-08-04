@@ -32,6 +32,6 @@ public static class IProgressExtensions
     /// <typeparam name="T">Тип данных прогресса</typeparam>
     /// <param name="progress">Исходный прогресс операции</param>
     /// <param name="CallCount">Число пропускаемых вызовов</param>
-    /// <returns>Информатор прогресса с прореживанием вызовов по количествоу</returns>
+    /// <returns>Информатор прогресса с прореживанием вызовов по количеству</returns>
     public static IProgress<T> DecimateByCallCount<T>(this IProgress<T> progress, int CallCount) => new ProgressCallCountDecimator<T>(progress, CallCount);
 }

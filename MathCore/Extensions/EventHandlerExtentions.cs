@@ -78,8 +78,7 @@ public static class EventHandlerExtension
         object Sender,
         params string[] PropertyName)
     {
-        if (PropertyName is null) throw new ArgumentNullException(nameof(PropertyName));
-        if (Handler is null || PropertyName.Length == 0) return;
+        if (Handler is null || PropertyName.NotNull().Length == 0) return;
         var args = PropertyName.ToArray(name => new PropertyChangedEventArgs(name));
         foreach (var d in Handler.GetInvocationList())
             switch (d.Target)
@@ -176,9 +175,9 @@ public static class EventHandlerExtension
     /// <param name="e">Аргументы события</param>
     [DST]
     public static void FastStart<TEventArgs>(
-        this EventHandler<TEventArgs>? Handler, 
+        this EventHandler<TEventArgs>? Handler,
         object? Sender,
-        TEventArgs e) 
+        TEventArgs e)
         where TEventArgs : EventArgs
         => Handler?.Invoke(Sender, e);
 
@@ -239,8 +238,8 @@ public static class EventHandlerExtension
     /// <returns>Массив результатов обработки события</returns>
     [DST]
     public static TResult?[] Start<TResult, TSender, TArgs>(
-        this EventHandler<TResult, TSender, TArgs>? Handler, 
-        TSender? Sender, 
+        this EventHandler<TResult, TSender, TArgs>? Handler,
+        TSender? Sender,
         TArgs Args) =>
         Handler is null
             ? []

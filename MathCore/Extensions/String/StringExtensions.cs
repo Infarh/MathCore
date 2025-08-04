@@ -17,6 +17,10 @@ namespace System;
 /// <summary>Методы-расширения класса <see cref="T:System.String">строк</see></summary>
 public static class StringExtensions
 {
+    /// <summary>Подсчитывает количество вхождений символа в строке</summary>
+    /// <param name="s">Исходная строка</param>
+    /// <param name="c">Символ для подсчёта</param>
+    /// <returns>Количество вхождений символа в строке</returns>
     public static int CountChar(this string s, char c)
     {
         var length = s.Length;
@@ -30,6 +34,11 @@ public static class StringExtensions
         return count;
     }
 
+    /// <summary>Пытается преобразовать строку в указанный тип</summary>
+    /// <typeparam name="T">Тип, в который нужно преобразовать строку</typeparam>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="value">Результат преобразования</param>
+    /// <returns>Истина, если преобразование прошло успешно</returns>
     public static bool TryConvertTo<T>(this string? str, out T? value)
     {
         if (str is null || typeof(T).GetTypeConverter() is not { } converter || !converter.CanConvertFrom(typeof(string)))
@@ -64,11 +73,11 @@ public static class StringExtensions
         return false;
     }
 
-    /// <summary>Перечисление строк в строке</summary>
+    /// <summary>Перечисляет строки в исходной строке</summary>
     /// <param name="str">Исходная строка</param>
     /// <param name="SkipEmpty">Пропускать пустые строки</param>
     /// <param name="Trim">Обрезать строки</param>
-    /// <returns>Перечисление строк в строке</returns>
+    /// <returns>Перечисление строк</returns>
     public static IEnumerable<string> EnumLines(this string str, bool SkipEmpty = false, bool Trim = false)
     {
         using var reader = str.CreateReader();
@@ -84,10 +93,11 @@ public static class StringExtensions
                     yield return line;
     }
 
-    /// <summary>Перечисление строк в строке</summary>
+    /// <summary>Перечисляет строки в исходной строке с обрезкой символов</summary>
     /// <param name="str">Исходная строка</param>
+    /// <param name="TrimChar">Символ для обрезки</param>
     /// <param name="SkipEmpty">Пропускать пустые строки</param>
-    /// <returns>Перечисление строк в строке</returns>
+    /// <returns>Перечисление строк</returns>
     public static IEnumerable<string> EnumLines(this string str, char TrimChar, bool SkipEmpty = false)
     {
         using var reader = str.CreateReader();
@@ -96,10 +106,11 @@ public static class StringExtensions
                 yield return line.Trim(TrimChar);
     }
 
-    /// <summary>Перечисление строк в строке</summary>
+    /// <summary>Перечисляет строки в исходной строке с обрезкой символов</summary>
     /// <param name="str">Исходная строка</param>
     /// <param name="SkipEmpty">Пропускать пустые строки</param>
-    /// <returns>Перечисление строк в строке</returns>
+    /// <param name="TrimChars">Символы для обрезки</param>
+    /// <returns>Перечисление строк</returns>
     public static IEnumerable<string> EnumLines(this string str, bool SkipEmpty = false, params char[] TrimChars)
     {
         using var reader = str.CreateReader();
@@ -108,11 +119,12 @@ public static class StringExtensions
                 yield return line.Trim(TrimChars);
     }
 
-    /// <summary>Перечисление строк в строке</summary>
+    /// <summary>Перечисляет строки в исходной строке с преобразованием</summary>
+    /// <typeparam name="T">Тип результата преобразования</typeparam>
     /// <param name="str">Исходная строка</param>
-    /// <param name="Selector">Преобразователь значения</param>
+    /// <param name="Selector">Функция преобразования строки</param>
     /// <param name="SkipEmpty">Пропускать пустые строки</param>
-    /// <returns>Перечисление строк в строке</returns>
+    /// <returns>Перечисление преобразованных строк</returns>
     public static IEnumerable<T> EnumLines<T>(this string str, Func<string, T> Selector, bool SkipEmpty = false)
     {
         using var reader = str.CreateReader();
@@ -121,11 +133,12 @@ public static class StringExtensions
                 yield return Selector(line);
     }
 
-    /// <summary>Перечисление строк в строке</summary>
+    /// <summary>Перечисляет строки в исходной строке с преобразованием и индексом</summary>
+    /// <typeparam name="T">Тип результата преобразования</typeparam>
     /// <param name="str">Исходная строка</param>
-    /// <param name="Selector">Преобразователь значения</param>
+    /// <param name="Selector">Функция преобразования строки с индексом</param>
     /// <param name="SkipEmpty">Пропускать пустые строки</param>
-    /// <returns>Перечисление строк в строке</returns>
+    /// <returns>Перечисление преобразованных строк</returns>
     public static IEnumerable<T> EnumLines<T>(this string str, Func<string, int, T> Selector, bool SkipEmpty = false)
     {
         using var reader = str.CreateReader();
@@ -141,18 +154,21 @@ public static class StringExtensions
     /// <summary>Создать объект чтения данных строки</summary>
     /// <param name="str">Исходная строка</param>
     /// <returns>Объект <see cref="StringReader"/> для чтения данных строки</returns>
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringReader CreateReader(this string str) => new(str);
 
     /// <summary>Создать построитель строки</summary>
     /// <param name="str">Исходная строка</param>
     /// <returns>Объект <see cref="StringBuilder"/> для формирования строки</returns>
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringBuilder CreateBuilder(this string str) => new(str);
 
     /// <summary>Преобразовать строку в указатель</summary>
     /// <param name="str">Исходная строка</param>
     /// <returns>Указатель на позицию в строке</returns>
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringPtr AsStringPtr(this string str) => new(str, 0, str.Length);
 
@@ -160,6 +176,7 @@ public static class StringExtensions
     /// <param name="str">Исходная строка</param>
     /// <param name="Pos">Положение в строке</param>
     /// <returns>Указатель на позицию в строке</returns>
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringPtr AsStringPtr(this string str, int Pos) => new(str, Pos, str.Length - Pos);
 
@@ -167,7 +184,8 @@ public static class StringExtensions
     /// <param name="str">Исходная строка</param>
     /// <param name="Pos">Положение в строке</param>
     /// <param name="Length">Длина подстроки</param>
-    /// <returns>Указатель на позицию в строке</returns>
+    /// <returns>Указатель on позицию в строке</returns>
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringPtr AsStringPtr(this string str, int Pos, int Length) => new(str, Pos, Length);
 
@@ -236,19 +254,35 @@ public static class StringExtensions
         return Encoding.UTF8.GetString(output_stream.ToArray());
     }
 
+    /// <summary>Объединяет строки с указанным разделителем</summary>
+    /// <param name="strings">Строки для объединения</param>
+    /// <param name="separator">Разделитель</param>
+    /// <returns>Результирующая строка</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string JoinStrings(this IEnumerable<string> strings, string separator) => string.Join(separator, strings);
 
 #if NET5_0_OR_GREATER
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string JoinStrings(this IEnumerable<string> strings, char separator) => string.Join(separator, strings);
+/// <summary>Объединяет строки с указанным символьным разделителем</summary>
+/// <param name="strings">Строки для объединения</param>
+/// <param name="separator">Символ-разделитель</param>
+/// <returns>Результирующая строка</returns>
+[MethodImpl(MethodImplOptions.AggressiveInlining)]
+public static string JoinStrings(this IEnumerable<string> strings, char separator) => string.Join(separator, strings);
 #endif
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static byte[] ComputeSHA256(this string text, Encoding? encoding = null) => (encoding ?? Encoding.Default).GetBytes(text).ComputeSHA256();
+/// <summary>Вычисляет SHA256-хеш строки</summary>
+/// <param name="text">Исходная строка</param>
+/// <param name="encoding">Кодировка</param>
+/// <returns>Массив байт с хешем</returns>
+[MethodImpl(MethodImplOptions.AggressiveInlining)]
+public static byte[] ComputeSHA256(this string text, Encoding? encoding = null) => (encoding ?? Encoding.Default).GetBytes(text).ComputeSHA256();
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static byte[] ComputeMD5(this string text, Encoding? encoding = null) => (encoding ?? Encoding.Default).GetBytes(text).ComputeMD5();
+/// <summary>Вычисляет MD5-хеш строки</summary>
+/// <param name="text">Исходная строка</param>
+/// <param name="encoding">Кодировка</param>
+/// <returns>Массив байт с хешем</returns>
+[MethodImpl(MethodImplOptions.AggressiveInlining)]
+public static byte[] ComputeMD5(this string text, Encoding? encoding = null) => (encoding ?? Encoding.Default).GetBytes(text).ComputeMD5();
 
     /// <summary>Перечисление подстрок, разделяемых указанным строковым шаблоном</summary>
     /// <param name="Str">Разбиваемая строка</param>
@@ -297,6 +331,14 @@ public static class StringExtensions
         return Str[start_index..stop_index];
     }
 
+    /// <summary>Выделение подстроки, ограниченной шаблоном начала и шаблоном окончания строки начиная с указанного смещения, с возвратом текста до и после</summary>
+    /// <param name="Str">Входная строка</param>
+    /// <param name="Offset">Смещение во входной строке начала поиска</param>
+    /// <param name="Open">Шаблон начала подстроки</param>
+    /// <param name="Close">Шаблон окончания подстроки</param>
+    /// <param name="TextBefore">Текст до найденной подстроки</param>
+    /// <param name="TextAfter">Текст после найденной подстроки</param>
+    /// <returns>Подстрока, заключённая между указанными шаблонами начала и окончания</returns>
     public static string? GetBracketText(
         this string Str,
         ref int Offset,
@@ -343,10 +385,16 @@ public static class StringExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsNotNullOrEmpty(this string? Str) => !string.IsNullOrEmpty(Str);
 
+    /// <summary>Проверка строки на пустоту или пробелы</summary>
+    /// <param name="Str">Проверяемая строка</param>
+    /// <returns>Истина, если строка пуста, либо если передана нулевая ссылка, либо состоит только из пробелов</returns>
     [DST]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsNullOrWhiteSpace(this string? Str) => string.IsNullOrWhiteSpace(Str);
 
+    /// <summary>Строка присутствует и не состоит только из пробелов</summary>
+    /// <param name="Str">Проверяемая строка</param>
+    /// <returns>Истина, если строка не пуста, не состоит только из пробелов и если передана ненулевая ссылка</returns>
     [DST]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsNotNullOrWhiteSpace(this string? Str) => !string.IsNullOrWhiteSpace(Str);
@@ -387,7 +435,7 @@ public static class StringExtensions
 
     /// <summary>Удаление служебных символов в начале и конце строки</summary>
     /// <param name="str">Обрабатываемая строка</param>
-    /// <returns>Новая строка с удалёнными служебными символами в начали и конце</returns>
+    /// <returns>Новая строка с удалёнными служебными символами в начале и конце</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string ClearSystemSymbolsAtBeginAndEnd(this string str) => str.ClearSymbolsAtBeginAndEnd(' ', '\n', '\r');
 
@@ -395,8 +443,8 @@ public static class StringExtensions
     /// <param name="str">Проверяемая строка</param>
     /// <param name="ParameterName">Имя параметра, добавляемое в исключение в случае его генерации</param>
     /// <param name="Message">Сообщение, добавляемое в исключение в случае его генерации</param>
-    /// <exception cref="ArgumentNullException">Если переданная пустая ссылка на строку <paramref name="str"/></exception>
-    /// <exception cref="ArgumentException">Если переданная строка <paramref name="str"/> является пустой</exception>
+    /// <exception cref="ArgumentNullException">Если передана пустая ссылка на строку</exception>
+    /// <exception cref="ArgumentException">Если переданная строка является пустой</exception>
     /// <returns>Строка, гарантированно не являющаяся пустой</returns>
     public static string NotEmpty(this string? str, string ParameterName, string? Message = "Передана пустая строка") =>
         string.IsNullOrEmpty(str ?? throw new ArgumentNullException(ParameterName))
@@ -424,7 +472,7 @@ public static class StringExtensions
     /// <returns>Зашифрованная последовательность байт</returns>
     public static byte[] Encrypt(this byte[] data, string password) => data.Encrypt(password, __Salt);
 
-    /// <summary>Зашифровать</summary>
+    /// <summary>Зашифровать массив байт с солью</summary>
     /// <param name="data">Шифруемый массив байт</param>
     /// <param name="password">Пароль</param>
     /// <param name="Salt">Соль</param>
@@ -509,54 +557,169 @@ public static class StringExtensions
         return algorithm.CreateDecryptor();
     }
 
+    /// <summary>Выполнить регулярное выражение для строки</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="expr">Регулярное выражение</param>
+    /// <returns>Результат сопоставления</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Match MatchRegEx(this string str, string expr) => Regex.Match(str, expr);
+
+    /// <summary>Выполнить регулярное выражение для строки с опциями</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="expr">Регулярное выражение</param>
+    /// <param name="options">Опции регулярного выражения</param>
+    /// <returns>Результат сопоставления</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Match MatchRegEx(this string str, string expr, RegexOptions options) => Regex.Match(str, expr, options);
+
+    /// <summary>Выполнить регулярное выражение для строки</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="expr">Объект регулярного выражения</param>
+    /// <returns>Результат сопоставления</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Match MatchRegEx(this string str, Regex expr) => expr.Match(str);
 
+    /// <summary>Проверить соответствие строки регулярному выражению</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="expr">Регулярное выражение</param>
+    /// <returns>Истина, если строка соответствует выражению</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsMatchRegEx(this string str, string expr) => Regex.IsMatch(str, expr);
+
+    /// <summary>Проверить соответствие строки регулярному выражению с опциями</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="expr">Регулярное выражение</param>
+    /// <param name="options">Опции регулярного выражения</param>
+    /// <returns>Истина, если строка соответствует выражению</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsIsMatchRegEx(this string str, string expr, RegexOptions options) => Regex.IsMatch(str, expr, options);
+
+    /// <summary>Проверить соответствие строки регулярному выражению</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="expr">Объект регулярного выражения</param>
+    /// <returns>Истина, если строка соответствует выражению</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsMatchRegEx(this string str, Regex expr) => expr.IsMatch(str);
 
+    /// <summary>Преобразовать строку в целое число</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <returns>Целое число</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ToInt(this string str) => int.Parse(str);
+
+    /// <summary>Преобразовать строку в целое число с учетом культуры</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="provider">Провайдер формата</param>
+    /// <returns>Целое число</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ToInt(this string str, IFormatProvider provider) => int.Parse(str, provider);
+
+    /// <summary>Преобразовать строку в целое число с учетом стиля и культуры</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="style">Стиль числа</param>
+    /// <param name="provider">Провайдер формата</param>
+    /// <returns>Целое число</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ToInt(this string str, NumberStyles style, IFormatProvider provider) => int.Parse(str, style, provider);
+
+    /// <summary>Преобразовать строку в целое число с учетом стиля</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="style">Стиль числа</param>
+    /// <returns>Целое число</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ToInt(this string str, NumberStyles style) => int.Parse(str, style);
+
+    /// <summary>Преобразовать строку в целое число, если возможно</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <returns>Целое число или null</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int? ToIntNull(this string str) => int.TryParse(str, out var v) ? v : null;
+
+    /// <summary>Преобразовать строку в целое число, если возможно, с учетом стиля и культуры</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="style">Стиль числа</param>
+    /// <param name="provider">Провайдер формата</param>
+    /// <returns>Целое число или null</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int? ToIntNull(this string str, NumberStyles style, IFormatProvider provider) => int.TryParse(str, style, provider, out var v) ? v : null;
+
+    /// <summary>Преобразовать строку в целое число, если возможно</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="value">Результат преобразования</param>
+    /// <returns>Истина, если преобразование прошло успешно</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParseInt(this string str, out int value) => int.TryParse(str, out value);
+
+    /// <summary>Преобразовать строку в целое число, если возможно, с учетом стиля и культуры</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="style">Стиль числа</param>
+    /// <param name="provider">Провайдер формата</param>
+    /// <param name="value">Результат преобразования</param>
+    /// <returns>Истина, если преобразование прошло успешно</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParseInt(this string str, NumberStyles style, IFormatProvider provider, out int value) => int.TryParse(str, style, provider, out value);
 
+    /// <summary>Преобразовать строку в число с плавающей точкой</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <returns>Число с плавающей точкой</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double ToDouble(this string str) => double.Parse(str);
+
+    /// <summary>Преобразовать строку в число с плавающей точкой с учетом культуры</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="provider">Провайдер формата</param>
+    /// <returns>Число с плавающей точкой</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double ToDouble(this string str, IFormatProvider provider) => double.Parse(str, provider);
+
+    /// <summary>Преобразовать строку в число с плавающей точкой с учетом стиля и культуры</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="style">Стиль числа</param>
+    /// <param name="provider">Провайдер формата</param>
+    /// <returns>Число с плавающей точкой</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double ToDouble(this string str, NumberStyles style, IFormatProvider provider) => double.Parse(str, style, provider);
+
+    /// <summary>Преобразовать строку в число с плавающей точкой с учетом стиля</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="style">Стиль числа</param>
+    /// <returns>Число с плавающей точкой</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double ToDouble(this string str, NumberStyles style) => double.Parse(str, style);
+
+    /// <summary>Преобразовать строку в число с плавающей точкой, если возможно</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <returns>Число с плавающей точкой или null</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double? ToDoubleNull(this string str) => double.TryParse(str, out var v) ? v : null;
+
+    /// <summary>Преобразовать строку в число с плавающей точкой, если возможно, с учетом стиля и культуры</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="style">Стиль числа</param>
+    /// <param name="provider">Провайдер формата</param>
+    /// <returns>Число с плавающей точкой или null</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double? ToDoubleNull(this string str, NumberStyles style, IFormatProvider provider) => double.TryParse(str, style, provider, out var v) ? v : null;
+
+    /// <summary>Преобразовать строку в число с плавающей точкой, если возможно</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="value">Результат преобразования</param>
+    /// <returns>Истина, если преобразование прошло успешно</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParseDouble(this string str, out double value) => double.TryParse(str, out value);
+
+    /// <summary>Преобразовать строку в число с плавающей точкой, если возможно, с учетом стиля и культуры</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="style">Стиль числа</param>
+    /// <param name="provider">Провайдер формата</param>
+    /// <param name="value">Результат преобразования</param>
+    /// <returns>Истина, если преобразование прошло успешно</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParseDouble(this string str, NumberStyles style, IFormatProvider provider, out double value) => double.TryParse(str, style, provider, out value);
 
+    /// <summary>Преобразовать строку в число с плавающей точкой с учетом культуры (инвариантная или ru-RU)</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <returns>Число с плавающей точкой</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double ToDoubleInvariant(this string str)
     {
@@ -569,6 +732,9 @@ public static class StringExtensions
         return double.Parse(str, CultureInfo.GetCultureInfo("ru-RU"));
     }
 
+    /// <summary>Проверить, является ли строка целым числом</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <returns>Истина, если строка содержит только цифры</returns>
     public static bool IsInt(this string str)
     {
         if (str is not { Length: > 0 }) return false;
@@ -578,6 +744,9 @@ public static class StringExtensions
         return true;
     }
 
+    /// <summary>Проверить, является ли строка числом с плавающей точкой</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <returns>Истина, если строка содержит только цифры и одну точку или запятую</returns>
     public static bool IsDouble(this string str)
     {
         if (str is not { Length: > 0 } || str[^1] is '.' or ',')
@@ -599,39 +768,67 @@ public static class StringExtensions
         return true;
     }
 
+    /// <summary>Проверить, содержит ли строка подстроку с учетом культуры</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="pattern">Искомая подстрока</param>
+    /// <returns>Истина, если строка содержит подстроку</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool ContainsInvariant(this string str, string pattern) => str.IndexOf(pattern, StringComparison.InvariantCulture) >= 0;
+
+    /// <summary>Проверить, содержит ли строка подстроку с учетом культуры без учета регистра</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="pattern">Искомая подстрока</param>
+    /// <returns>Истина, если строка содержит подстроку</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool ContainsInvariantIgnoreCase(this string str, string pattern) => str.IndexOf(pattern, StringComparison.InvariantCultureIgnoreCase) >= 0;
+
+    /// <summary>Проверить, содержит ли строка подстроку с учетом порядка байт</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="pattern">Искомая подстрока</param>
+    /// <returns>Истина, если строка содержит подстроку</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool ContainsOrdinal(this string str, string pattern) => str.IndexOf(pattern, StringComparison.Ordinal) >= 0;
+
+    /// <summary>Проверить, содержит ли строка подстроку с учетом порядка байт без учета регистра</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="pattern">Искомая подстрока</param>
+    /// <returns>Истина, если строка содержит подстроку</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool ContainsOrdinalIgnoreCase(this string str, string pattern) => str.IndexOf(pattern, StringComparison.OrdinalIgnoreCase) >= 0;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EqualsInvariant(this string str, string other) => string.Equals(str, other, StringComparison.InvariantCulture);
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EqualsInvariantIgnoreCase(this string str, string other) => string.Equals(str, other, StringComparison.InvariantCultureIgnoreCase);
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EqualsOrdinal(this string str, string other) => string.Equals(str, other, StringComparison.Ordinal);
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EqualsOrdinalIgnoreCase(this string str, string other) => string.Equals(str, other, StringComparison.OrdinalIgnoreCase);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool StartWithInvariant(this string str, string other) => str.StartsWith(other, StringComparison.InvariantCulture);
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool StartWithInvariantIgnoreCase(this string str, string other) => str.StartsWith(other, StringComparison.InvariantCultureIgnoreCase);
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool StartWithOrdinal(this string str, string other) => str.StartsWith(other, StringComparison.Ordinal);
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool StartWithOrdinalIgnoreCase(this string str, string other) => str.StartsWith(other, StringComparison.OrdinalIgnoreCase);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EndWithInvariant(this string str, string other) => str.EndsWith(other, StringComparison.InvariantCulture);
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EndWithInvariantIgnoreCase(this string str, string other) => str.EndsWith(other, StringComparison.InvariantCultureIgnoreCase);
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EndWithOrdinal(this string str, string other) => str.EndsWith(other, StringComparison.Ordinal);
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EndWithOrdinalIgnoreCase(this string str, string other) => str.EndsWith(other, StringComparison.OrdinalIgnoreCase);
 
@@ -685,6 +882,10 @@ public static class StringExtensions
         return result.ToString();
     }
 
+    /// <summary>Преобразовать сегменты строки</summary>
+    /// <param name="strings">Сегменты строки</param>
+    /// <param name="Selector">Функция преобразования сегмента</param>
+    /// <returns>Перечисление преобразованных сегментов</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringSegmentsEnumerable Select(this StringSegmentsEnumerable strings, StringPtrSelector Selector) =>
         new(strings.SourceString, strings.SegmentLength, Selector);

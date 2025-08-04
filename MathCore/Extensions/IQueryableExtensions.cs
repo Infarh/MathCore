@@ -20,8 +20,22 @@ public static class IQueryableExtensions
     public static IQueryable<T> Page<T>(this IQueryable<T> items, int PageNumber, int PageItemsCount) =>
         items.Skip(PageItemsCount * PageNumber).Take(PageItemsCount);
 
+    /// <summary>Вычисляет дисперсию элементов последовательности</summary>
+    /// <param name="query">Последовательность чисел</param>
+    /// <returns>Дисперсия</returns>
     public static double Dispersion(this IQueryable<double> query) => query.Average(x => x * x - query.Average() * query.Average());
         
+    /// <summary>Выполняет левое внешнее соединение двух последовательностей</summary>
+    /// <param name="OuterItems">Внешняя последовательность</param>
+    /// <param name="InnerItems">Внутренняя последовательность</param>
+    /// <param name="OuterKeySelector">Функция выбора ключа из внешней последовательности</param>
+    /// <param name="InnerKeySelector">Функция выбора ключа из внутренней последовательности</param>
+    /// <param name="ResultSelector">Функция формирования результата соединения</param>
+    /// <typeparam name="T1">Тип элементов внешней последовательности</typeparam>
+    /// <typeparam name="T2">Тип элементов внутренней последовательности</typeparam>
+    /// <typeparam name="TKey">Тип ключа соединения</typeparam>
+    /// <typeparam name="TResult">Тип результата соединения</typeparam>
+    /// <returns>Результат левого внешнего соединения</returns>
     public static IQueryable<TResult> LeftOuterJoin<T1, T2, TKey, TResult>(
         this IQueryable<T1> OuterItems,
         IEnumerable<T2> InnerItems,

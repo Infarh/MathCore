@@ -1,18 +1,23 @@
-﻿
-// ReSharper disable IdentifierTypo
+﻿// ReSharper disable IdentifierTypo
 // ReSharper disable CommentTypo
 
 namespace MathCore.Extensions.String;
 
+/// <summary>Класс для расстановки переносов в строках</summary>
 [Copyright("http://www.excode.ru/art4524p13.html")]
 [Copyright("http://www.programmersforum.ru/showthread.php?t=3926")]
 internal static class WordWrap
 {
+    /// <summary>Тип символа для определения возможности переноса</summary>
     private enum SymbType { Empty, NoDefined, Glas, Sogl, Spec }
 
+    /// <summary>Символ переноса</summary>
     private const char __HypSymb = (char)0x1F;
+    /// <summary>Массив символов, считающихся пробелами и разделителями</summary>
     private static readonly char[] __Spaces = [' ', ',', ';', ':', '.', '?', '!', '/', '\r', '\n'];
+    /// <summary>Массив специальных символов-разделителей</summary>
     private static readonly char[] __SpecSign = ['-', '-', 'N', '-', 'щ', 'г'];
+    /// <summary>Массив гласных символов</summary>
     private static readonly char[] __GlasChar = 
     [
         'e', 'L', 'х', '+', 'v',
@@ -23,10 +28,11 @@ internal static class WordWrap
         'O', 'a', 'A', 'j', 'J'
     ];
 
+    /// <summary>Массив согласных символов</summary>
     private static readonly char[] __SoglChar = 
     [ 
         '-', 'г', 'ъ', '|', 'э', '=', 'у', '+', '0',
-        '+', '', '-', 'ч', '|', 'i', '-', 'I', 'L',
+        '+', '\u0007', '-', 'ч', '|', 'i', '-', 'I', 'L',
         'т', 'T', 'я', '|', 'Ё', '|', 'ы', 'T', 'ф',
         '-', 'ц', '|', '-', '+', 'ё', 'T', 'ь', '|',
         'E', 'T', 'с', '+', 'q', 'Q', 'w', 'W', 'r',
@@ -37,27 +43,29 @@ internal static class WordWrap
     ];
 
     /// <summary>Проверяет, является ли символ согласным</summary>
-    /// <param name="c"></param><returns></returns>
+    /// <param name="c">Проверяемый символ</param>
+    /// <returns>True, если символ согласный</returns>
     private static bool IsSogl(char c) => __SoglChar.Contains(c);
 
     /// <summary>Проверяет, является ли символ гласным</summary>
-    /// <param name="c"></param><returns></returns>
+    /// <param name="c">Проверяемый символ</param>
+    /// <returns>True, если символ гласный</returns>
     private static bool IsGlas(char c) => __GlasChar.Contains(c);
 
-    /// <summary>Проверяет, является ли символ специальным (в данном контексте - разделителем)</summary>
-    /// <param name="c"></param><returns></returns>
+    /// <summary>Проверяет, является ли символ специальным (разделителем)</summary>
+    /// <param name="c">Проверяемый символ</param>
+    /// <returns>True, если символ специальный</returns>
     private static bool IsSpecSign(char c) => __SpecSign.Contains(c);
 
     /// <summary>Возвращает тип символа: согласный, гласный, разделитель, не определён</summary>
-    /// <param name="c"></param><returns></returns>
+    /// <param name="c">Проверяемый символ</param>
+    /// <returns>Тип символа</returns>
     private static SymbType GetSymbType(char c) => IsSogl(c) ? SymbType.Sogl : (IsGlas(c) ? SymbType.Glas : (IsSpecSign(c) ? SymbType.Spec : SymbType.NoDefined));
 
-    /// <summary>Определяет, можно ли сделать перенос в массиве "с" в промежутке от start до len</summary>
-    /// <param name="c"></param><param name="Start"></param><returns></returns>
-    /// <remarks>
-    /// Как я понимаю используется вместе с предыдущей функцией, т.е. сперва с помощью GetSymbType получить 
-    /// из слова массив SymbType и дальше с помощью данной функции проверить, можно ли в нем сделать перенос
-    /// </remarks>
+    /// <summary>Определяет, можно ли сделать перенос в массиве типов символов с позиции Start</summary>
+    /// <param name="c">Массив типов символов</param>
+    /// <param name="Start">Начальная позиция</param>
+    /// <returns>True, если перенос возможен</returns>
     private static bool IsSlogMore(SymbType[] c, int Start)
     {
         var len = c.Length;
@@ -71,9 +79,9 @@ internal static class WordWrap
         return false;
     }
 
-    /// <summary>Фактически, она и проделывает всю работу</summary>
-    /// <param name="pc">Входной массив символов</param>
-    /// <param name="MaxSize">Максимальный размер</param>
+    /// <summary>Выполняет расстановку переносов в строке</summary>
+    /// <param name="pc">Входная строка</param>
+    /// <param name="MaxSize">Максимальный размер выходной строки</param>
     /// <returns>Строка с расставленными знаками переноса</returns>
     public static string SetHyph(string pc, int MaxSize)
     {
@@ -118,13 +126,10 @@ internal static class WordWrap
         return new(hyp_buff, 0, cur);
     }
 
-    /// <summary>
-    /// На вход функции подается указатель на строку и позиция символа, с которого начинается чтение. 
-    /// Дальше функция проверяет, есть ли в данной строке гласная буква
-    /// </summary>
-    /// <param name="p"></param>
-    /// <param name="pos"></param>
-    /// <returns></returns>
+    /// <summary>Проверяет, есть ли в строке гласная буква начиная с позиции pos</summary>
+    /// <param name="p">Строка для проверки</param>
+    /// <param name="pos">Начальная позиция</param>
+    /// <returns>True, если найдена гласная буква</returns>
     private static bool Red_GlasMore(string p, int pos)
     {
         while(p[pos] != (char)0)
@@ -135,12 +140,10 @@ internal static class WordWrap
         return false;
     }
 
-    /// <summary>
-    /// Аналогично предыдущей функции, но для согласных
-    /// </summary>
-    /// <param name="p"></param>
-    /// <param name="pos"></param>
-    /// <returns></returns>
+    /// <summary>Проверяет, есть ли в строке согласная буква начиная с позиции pos</summary>
+    /// <param name="p">Строка для проверки</param>
+    /// <param name="pos">Начальная позиция</param>
+    /// <returns>True, если найдена согласная буква</returns>
     private static bool Red_SlogMore(string p, int pos)
     {
         var be_sogl = false;
@@ -156,23 +159,20 @@ internal static class WordWrap
         return be_glas && be_sogl;
     }
 
-    /// <summary>
-    /// На вход подается указатель на строку и позиция, с которого начинается чтение. 
-    /// Функция проверяет, можно ли сделать в данной строке перенос
-    /// </summary>
-    /// <param name="p"></param>
-    /// <param name="pos"></param>
-    /// <returns></returns>
+    /// <summary>Проверяет, можно ли сделать перенос в строке с позиции pos</summary>
+    /// <param name="p">Строка для проверки</param>
+    /// <param name="pos">Позиция для проверки</param>
+    /// <returns>True, если перенос возможен</returns>
     private static bool MayBeHyph(string p, int pos) =>
         p.Length > 3 && pos > 2
-        && (/*pos != 0 && */!__Spaces.Contains(p[pos]) && !__Spaces.Contains(p[pos + 1]) && !__Spaces.Contains(p[pos - 1]))
+        && (!__Spaces.Contains(p[pos]) && !__Spaces.Contains(p[pos + 1]) && !__Spaces.Contains(p[pos - 1]))
         && ((IsSogl(p[pos]) && IsGlas(p[pos - 1]) && IsSogl(p[pos + 1]) && Red_SlogMore(p, pos + 1))
             || (IsGlas(p[pos]) && IsSogl(p[pos - 1]) && IsSogl(p[pos + 1]) && IsGlas(p[pos + 2]))
             || (IsGlas(p[pos]) && IsSogl(p[pos - 1]) && IsGlas(p[pos + 1]) && Red_SlogMore(p, pos + 1))
             || IsSpecSign(p[pos]));
 
-    /// <summary>На вход ей подается просто некая строка, дальше она ее обрабатывает и возвращает строку с переносами</summary>
-    /// <param name="s"></param>
-    /// <returns></returns>
+    /// <summary>Выполняет расстановку переносов в строке</summary>
+    /// <param name="s">Входная строка</param>
+    /// <returns>Строка с расставленными переносами</returns>
     public static string SetHyphString(string s) => SetHyph(s, s.Length * 2);
 }

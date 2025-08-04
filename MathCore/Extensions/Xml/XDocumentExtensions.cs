@@ -10,6 +10,9 @@ namespace System.Xml.Linq;
 [PublicAPI]
 public static class XDocumentExtensions
 {
+    /// <summary>Преобразует XDocument в строку XML</summary>
+    /// <param name="document">Документ XML</param>
+    /// <returns>Строка, представляющая XML-документ</returns>
     public static string ToXml(this XDocument document)
     {
         var result = new StringBuilder();
@@ -18,6 +21,9 @@ public static class XDocumentExtensions
         return result.ToString();
     }
 
+    /// <summary>Сохраняет XDocument в файл</summary>
+    /// <param name="xml">Документ XML</param>
+    /// <param name="file">Файл для сохранения</param>
     public static void Save(this XDocument xml, FileInfo file) => xml.Save(file.FullName);
 
     //public static XObject? XPath(this XContainer xml, string path) =>
@@ -33,6 +39,9 @@ public static class XDocumentExtensions
     //                { } node             => throw new InvalidOperationException($"Непредвиденный тип {node.GetType()} элемента в результате вычисления {path}")
     //            };
 
+    /// <summary>Получает корневой элемент из контейнера XML</summary>
+    /// <param name="xml">Контейнер XML</param>
+    /// <returns>Корневой элемент контейнера</returns>
     private static XElement GetRoot(this XContainer xml) => xml switch
     {
         XElement element             => element,
@@ -40,6 +49,10 @@ public static class XDocumentExtensions
         _                            => throw new InvalidOperationException("В документе отсутствует корневой элемент")
     };
 
+    /// <summary>Выполняет XPath-запрос и возвращает первый найденный объект</summary>
+    /// <param name="xml">Контейнер XML</param>
+    /// <param name="path">XPath-запрос</param>
+    /// <returns>Найденный объект или null</returns>
     public static XObject? XPath(this XContainer xml, string path) => path is not { Length: > 0 }
         ? throw new ArgumentException("Не задан путь")
         : ((IEnumerable<object>)xml.GetRoot().XPathEvaluate(path)).FirstOrDefault() switch
@@ -50,6 +63,10 @@ public static class XDocumentExtensions
             { } node             => throw new InvalidOperationException($"Непредвиденный тип {node.GetType()} элемента в результате вычисления {path}")
         };
 
+    /// <summary>Устанавливает значение для элемента или атрибута, найденного по XPath-запросу</summary>
+    /// <param name="xml">Контейнер XML</param>
+    /// <param name="path">XPath-запрос</param>
+    /// <param name="Value">Новое значение</param>
     public static void XPathSetValue(this XContainer xml, string path, object Value)
     {
         if (path is not { Length: > 0 }) throw new ArgumentException("Не задан путь");
@@ -61,6 +78,10 @@ public static class XDocumentExtensions
         }
     }
 
+    /// <summary>Возвращает строковое значение элемента или атрибута, найденного по XPath-запросу</summary>
+    /// <param name="xml">Контейнер XML</param>
+    /// <param name="path">XPath-запрос</param>
+    /// <returns>Строковое значение или null</returns>
     public static string? XPathString(this XContainer xml, string path) => path is not { Length: > 0 }
         ? throw new ArgumentException("Не задан путь")
         : ((IEnumerable<object>)xml.GetRoot().XPathEvaluate(path)).FirstOrDefault() switch
@@ -71,6 +92,10 @@ public static class XDocumentExtensions
             { } node             => throw new InvalidOperationException($"Непредвиденный тип {node.GetType()} элемента в результате вычисления {path}")
         };
 
+    /// <summary>Возвращает целочисленное значение элемента или атрибута, найденного по XPath-запросу</summary>
+    /// <param name="xml">Контейнер XML</param>
+    /// <param name="path">XPath-запрос</param>
+    /// <returns>Целочисленное значение или null</returns>
     public static int? XPathInt32(this XContainer xml, string path) => path is not { Length: > 0 }
         ? throw new ArgumentException("Не задан путь")
         : ((IEnumerable<object>)xml.GetRoot().XPathEvaluate(path)).FirstOrDefault() switch
@@ -81,6 +106,10 @@ public static class XDocumentExtensions
             { } node             => throw new InvalidOperationException($"Непредвиденный тип {node.GetType()} элемента в результате вычисления {path}")
         };
 
+    /// <summary>Возвращает значение с плавающей точкой элемента или атрибута, найденного по XPath-запросу</summary>
+    /// <param name="xml">Контейнер XML</param>
+    /// <param name="path">XPath-запрос</param>
+    /// <returns>Значение с плавающей точкой или null</returns>
     public static double? XPathDouble(this XContainer xml, string path) => path is not { Length: > 0 }
         ? throw new ArgumentException("Не задан путь")
         : ((IEnumerable<object>)xml.GetRoot().XPathEvaluate(path)).FirstOrDefault() switch
@@ -91,6 +120,10 @@ public static class XDocumentExtensions
             { } node             => throw new InvalidOperationException($"Непредвиденный тип {node.GetType()} элемента в результате вычисления {path}")
         };
 
+    /// <summary>Возвращает значение даты и времени элемента или атрибута, найденного по XPath-запросу</summary>
+    /// <param name="xml">Контейнер XML</param>
+    /// <param name="path">XPath-запрос</param>
+    /// <returns>Значение даты и времени или null</returns>
     public static DateTime? XPathDateTime(this XContainer xml, string path) => path is not { Length: > 0 }
         ? throw new ArgumentException("Не задан путь")
         : ((IEnumerable<object>)xml.GetRoot().XPathEvaluate(path)).FirstOrDefault() switch
@@ -101,6 +134,10 @@ public static class XDocumentExtensions
             { } node             => throw new InvalidOperationException($"Непредвиденный тип {node.GetType()} элемента в результате вычисления {path}")
         };
 
+    /// <summary>Возвращает логическое значение элемента или атрибута, найденного по XPath-запросу</summary>
+    /// <param name="xml">Контейнер XML</param>
+    /// <param name="path">XPath-запрос</param>
+    /// <returns>Логическое значение или null</returns>
     public static bool? XPathBool(this XContainer xml, string path) => path is not { Length: > 0 }
         ? throw new ArgumentException("Не задан путь")
         : ((IEnumerable<object>)xml.GetRoot().XPathEvaluate(path)).FirstOrDefault() switch
@@ -111,5 +148,8 @@ public static class XDocumentExtensions
             { } node             => throw new InvalidOperationException($"Непредвиденный тип {node.GetType()} элемента в результате вычисления {path}")
         };
 
+    /// <summary>Сохраняет XElement в файл</summary>
+    /// <param name="element">Элемент XML</param>
+    /// <param name="file">Файл для сохранения</param>
     public static void Save(this XElement element, FileInfo file) => element.Save(file.FullName);
 }
