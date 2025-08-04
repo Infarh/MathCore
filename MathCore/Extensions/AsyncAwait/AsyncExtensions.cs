@@ -8,6 +8,10 @@ namespace System.Threading.Tasks;
 
 public static class AsyncExtensions
 {
+    /// <summary>Асинхронно обрабатывает элементы, получаемые от Producer, с помощью Consumer</summary>
+    /// <param name="source">Источник данных</param>
+    /// <param name="Producer">Функция получения элемента и признака завершения</param>
+    /// <param name="Consumer">Функция обработки элемента</param>
     public static async Task Process<TSource, TValue>(
         [DisallowNull] this TSource source,
         Func<TSource, Task<(TValue Value, bool IsComplete)>> Producer,
@@ -26,6 +30,11 @@ public static class AsyncExtensions
         } while (reading != null);
     }
 
+    /// <summary>Асинхронно обрабатывает элементы с дополнительным параметром, получаемые от Producer, с помощью Consumer</summary>
+    /// <param name="source">Источник данных</param>
+    /// <param name="p">Дополнительный параметр</param>
+    /// <param name="Producer">Функция получения элемента и признака завершения</param>
+    /// <param name="Consumer">Функция обработки элемента</param>
     public static async Task Process<TSource, TValue, TP>(
         [DisallowNull] this TSource source,
         TP p,
@@ -45,6 +54,12 @@ public static class AsyncExtensions
         } while (reading != null);
     }
 
+    /// <summary>Асинхронно обрабатывает элементы с двумя дополнительными параметрами, получаемые от Producer, с помощью Consumer</summary>
+    /// <param name="source">Источник данных</param>
+    /// <param name="p1">Первый дополнительный параметр</param>
+    /// <param name="p2">Второй дополнительный параметр</param>
+    /// <param name="Producer">Функция получения элемента и признака завершения</param>
+    /// <param name="Consumer">Функция обработки элемента</param>
     public static async Task Process<TSource, TValue, TP1, TP2>(
         [DisallowNull] this TSource source,
         TP1 p1,
@@ -65,6 +80,13 @@ public static class AsyncExtensions
         } while (reading != null);
     }
 
+    /// <summary>Асинхронно обрабатывает элементы с тремя дополнительными параметрами, получаемые от Producer, с помощью Consumer</summary>
+    /// <param name="source">Источник данных</param>
+    /// <param name="p1">Первый дополнительный параметр</param>
+    /// <param name="p2">Второй дополнительный параметр</param>
+    /// <param name="p3">Третий дополнительный параметр</param>
+    /// <param name="Producer">Функция получения элемента и признака завершения</param>
+    /// <param name="Consumer">Функция обработки элемента</param>
     public static async Task Process<TSource, TValue, TP1, TP2, TP3>(
         [DisallowNull] this TSource source,
         TP1 p1,
@@ -88,6 +110,10 @@ public static class AsyncExtensions
 
     /* ------------------------------------------------------------------------------------ */
 
+    /// <summary>Выполняет действие асинхронно</summary>
+    /// <param name="obj">Объект для передачи в действие</param>
+    /// <param name="action">Действие для выполнения</param>
+    /// <param name="Cancel">Токен отмены</param>
     public static Task Async<T>(this T obj, Action<T> action, CancellationToken Cancel = default)
     {
         if (action is null) throw new ArgumentNullException(nameof(action));
@@ -100,6 +126,10 @@ public static class AsyncExtensions
         }, new object[] { action, obj }, Cancel);
     }
 
+    /// <summary>Выполняет действие асинхронно с поддержкой отмены</summary>
+    /// <param name="obj">Объект для передачи в действие</param>
+    /// <param name="action">Действие для выполнения</param>
+    /// <param name="Cancel">Токен отмены</param>
     public static Task Async<T>(this T obj, Action<T, CancellationToken> action, CancellationToken Cancel = default) => action is null
         ? throw new ArgumentNullException(nameof(action))
         : Task.Factory.StartNew(
@@ -113,6 +143,11 @@ public static class AsyncExtensions
             new object?[] { action, obj, Cancel },
             Cancel);
 
+    /// <summary>Выполняет действие асинхронно с дополнительным параметром</summary>
+    /// <param name="obj">Объект для передачи в действие</param>
+    /// <param name="p">Дополнительный параметр</param>
+    /// <param name="action">Действие для выполнения</param>
+    /// <param name="Cancel">Токен отмены</param>
     public static Task Async<T, TP>(this T obj, TP p, Action<T, TP> action, CancellationToken Cancel = default) => action is null
         ? throw new ArgumentNullException(nameof(action))
         : Task.Factory.StartNew(
@@ -124,6 +159,11 @@ public static class AsyncExtensions
                 method(arg, pp1);
             }, new object?[] { action, obj, p }, Cancel);
 
+    /// <summary>Выполняет действие асинхронно с дополнительным параметром и поддержкой отмены</summary>
+    /// <param name="obj">Объект для передачи в действие</param>
+    /// <param name="p">Дополнительный параметр</param>
+    /// <param name="action">Действие для выполнения</param>
+    /// <param name="Cancel">Токен отмены</param>
     public static Task Async<T, TP>(this T obj, TP p, Action<T, TP, CancellationToken> action, CancellationToken Cancel = default) => action is null
         ? throw new ArgumentNullException(nameof(action))
         : Task.Factory.StartNew(
@@ -136,6 +176,12 @@ public static class AsyncExtensions
                 method(arg, pp1, c);
             }, new object?[] { action, obj, p, Cancel }, Cancel);
 
+    /// <summary>Выполняет действие асинхронно с двумя дополнительными параметрами</summary>
+    /// <param name="obj">Объект для передачи в действие</param>
+    /// <param name="p1">Первый дополнительный параметр</param>
+    /// <param name="p2">Второй дополнительный параметр</param>
+    /// <param name="action">Действие для выполнения</param>
+    /// <param name="Cancel">Токен отмены</param>
     public static Task Async<T, TP1, TP2>(this T obj, TP1 p1, TP2 p2, Action<T, TP1, TP2> action, CancellationToken Cancel = default) => action is null
         ? throw new ArgumentNullException(nameof(action))
         : Task.Factory.StartNew(
@@ -148,6 +194,12 @@ public static class AsyncExtensions
                 method(arg, pp1, pp2);
             }, new object?[] { action, obj, p1, p2 }, Cancel);
 
+    /// <summary>Выполняет действие асинхронно с двумя дополнительными параметрами и поддержкой отмены</summary>
+    /// <param name="obj">Объект для передачи в действие</param>
+    /// <param name="p1">Первый дополнительный параметр</param>
+    /// <param name="p2">Второй дополнительный параметр</param>
+    /// <param name="action">Действие для выполнения</param>
+    /// <param name="Cancel">Токен отмены</param>
     public static Task Async<T, TP1, TP2>(this T obj, TP1 p1, TP2 p2, Action<T, TP1, TP2, CancellationToken> action, CancellationToken Cancel = default) => action is null
         ? throw new ArgumentNullException(nameof(action))
         : Task.Factory.StartNew(
@@ -161,6 +213,13 @@ public static class AsyncExtensions
                 method(arg, pp1, pp2, c);
             }, new object?[] { action, obj, p1, p2, Cancel }, Cancel);
 
+    /// <summary>Выполняет действие асинхронно с тремя дополнительными параметрами</summary>
+    /// <param name="obj">Объект для передачи в действие</param>
+    /// <param name="p1">Первый дополнительный параметр</param>
+    /// <param name="p2">Второй дополнительный параметр</param>
+    /// <param name="p3">Третий дополнительный параметр</param>
+    /// <param name="action">Действие для выполнения</param>
+    /// <param name="Cancel">Токен отмены</param>
     public static Task Async<T, TP1, TP2, TP3>(this T obj, TP1 p1, TP2 p2, TP3 p3, Action<T, TP1, TP2, TP3> action, CancellationToken Cancel = default) => action is null
         ? throw new ArgumentNullException(nameof(action))
         : Task.Factory.StartNew(
@@ -176,6 +235,13 @@ public static class AsyncExtensions
             new object?[] { action, obj, p1, p2, p3 },
             Cancel);
 
+    /// <summary>Выполняет действие асинхронно с тремя дополнительными параметрами и поддержкой отмены</summary>
+    /// <param name="obj">Объект для передачи в действие</param>
+    /// <param name="p1">Первый дополнительный параметр</param>
+    /// <param name="p2">Второй дополнительный параметр</param>
+    /// <param name="p3">Третий дополнительный параметр</param>
+    /// <param name="action">Действие для выполнения</param>
+    /// <param name="Cancel">Токен отмены</param>
     public static Task Async<T, TP1, TP2, TP3>(this T obj, TP1 p1, TP2 p2, TP3 p3, Action<T, TP1, TP2, TP3, CancellationToken> action, CancellationToken Cancel = default) => action is null
         ? throw new ArgumentNullException(nameof(action))
         : Task.Factory.StartNew(
@@ -192,6 +258,10 @@ public static class AsyncExtensions
             new object?[] { action, obj, p1, p2, p3, Cancel },
             Cancel);
 
+    /// <summary>Выполняет функцию асинхронно и возвращает результат</summary>
+    /// <param name="obj">Объект для передачи в функцию</param>
+    /// <param name="func">Функция для выполнения</param>
+    /// <param name="Cancel">Токен отмены</param>
     public static Task<TResult?> Async<T, TResult>(this T obj, Func<T, TResult> func, CancellationToken Cancel = default) => func is null
         ? throw new ArgumentNullException(nameof(func))
         : Task<TResult?>.Factory.StartNew(
@@ -204,6 +274,10 @@ public static class AsyncExtensions
             new object?[] { func, obj },
             Cancel);
 
+    /// <summary>Выполняет функцию асинхронно с поддержкой отмены и возвращает результат</summary>
+    /// <param name="obj">Объект для передачи в функцию</param>
+    /// <param name="func">Функция для выполнения</param>
+    /// <param name="Cancel">Токен отмены</param>
     public static Task<TResult?> Async<T, TResult>(this T obj, Func<T, CancellationToken, TResult> func, CancellationToken Cancel = default) => func is null
         ? throw new ArgumentNullException(nameof(func))
         : Task<TResult?>.Factory.StartNew(
@@ -215,6 +289,11 @@ public static class AsyncExtensions
                 return method(arg, c);
             }, new object?[] { func, obj, Cancel }, Cancel);
 
+    /// <summary>Выполняет функцию асинхронно с дополнительным параметром и возвращает результат</summary>
+    /// <param name="obj">Объект для передачи в функцию</param>
+    /// <param name="p">Дополнительный параметр</param>
+    /// <param name="func">Функция для выполнения</param>
+    /// <param name="Cancel">Токен отмены</param>
     public static Task<TResult?> Async<T, TP, TResult>(this T obj, TP p, Func<T, TP, TResult> func, CancellationToken Cancel = default) => func is null
         ? throw new ArgumentNullException(nameof(func))
         : Task<TResult?>.Factory.StartNew(
@@ -228,6 +307,11 @@ public static class AsyncExtensions
             new object?[] { func, obj, p },
             Cancel);
 
+    /// <summary>Выполняет функцию асинхронно с дополнительным параметром и поддержкой отмены, возвращает результат</summary>
+    /// <param name="obj">Объект для передачи в функцию</param>
+    /// <param name="p">Дополнительный параметр</param>
+    /// <param name="func">Функция для выполнения</param>
+    /// <param name="Cancel">Токен отмены</param>
     public static Task<TResult?> Async<T, TP, TResult>(this T obj, TP p, Func<T, TP, CancellationToken, TResult> func, CancellationToken Cancel = default) => func is null
         ? throw new ArgumentNullException(nameof(func))
         : Task<TResult?>.Factory.StartNew(
@@ -240,6 +324,12 @@ public static class AsyncExtensions
                 return method(arg, pp1, c);
             }, new object?[] { func, obj, p, Cancel }, Cancel);
 
+    /// <summary>Выполняет функцию асинхронно с двумя дополнительными параметрами и возвращает результат</summary>
+    /// <param name="obj">Объект для передачи в функцию</param>
+    /// <param name="p1">Первый дополнительный параметр</param>
+    /// <param name="p2">Второй дополнительный параметр</param>
+    /// <param name="func">Функция для выполнения</param>
+    /// <param name="Cancel">Токен отмены</param>
     public static Task<TResult?> Async<T, TP1, TP2, TResult>(this T obj, TP1 p1, TP2 p2, Func<T, TP1, TP2, TResult> func, CancellationToken Cancel = default) => func is null
         ? throw new ArgumentNullException(nameof(func))
         : Task<TResult?>.Factory.StartNew(
@@ -252,6 +342,12 @@ public static class AsyncExtensions
                 return method(arg, pp1, pp2);
             }, new object?[] { func, obj, p1, p2 }, Cancel);
 
+    /// <summary>Выполняет функцию асинхронно с двумя дополнительными параметрами и поддержкой отмены, возвращает результат</summary>
+    /// <param name="obj">Объект для передачи в функцию</param>
+    /// <param name="p1">Первый дополнительный параметр</param>
+    /// <param name="p2">Второй дополнительный параметр</param>
+    /// <param name="func">Функция для выполнения</param>
+    /// <param name="Cancel">Токен отмены</param>
     public static Task<TResult?> Async<T, TP1, TP2, TResult>(this T obj, TP1 p1, TP2 p2, Func<T, TP1, TP2, CancellationToken, TResult> func, CancellationToken Cancel = default) => func is null
         ? throw new ArgumentNullException(nameof(func))
         : Task<TResult?>.Factory.StartNew(
@@ -265,6 +361,13 @@ public static class AsyncExtensions
                 return method(arg, pp1, pp2, c);
             }, new object[] { func, obj, p1, p2, Cancel }, Cancel);
 
+    /// <summary>Выполняет функцию асинхронно с тремя дополнительными параметрами и возвращает результат</summary>
+    /// <param name="obj">Объект для передачи в функцию</param>
+    /// <param name="p1">Первый дополнительный параметр</param>
+    /// <param name="p2">Второй дополнительный параметр</param>
+    /// <param name="p3">Третий дополнительный параметр</param>
+    /// <param name="func">Функция для выполнения</param>
+    /// <param name="Cancel">Токен отмены</param>
     public static Task<TResult?> Async<T, TP1, TP2, TP3, TResult>(
         this T obj,
         TP1 p1,
@@ -287,6 +390,13 @@ public static class AsyncExtensions
                 new object?[] { func, obj, p1, p2, p3 },
                 Cancel);
 
+    /// <summary>Выполняет функцию асинхронно с тремя дополнительными параметрами и поддержкой отмены, возвращает результат</summary>
+    /// <param name="obj">Объект для передачи в функцию</param>
+    /// <param name="p1">Первый дополнительный параметр</param>
+    /// <param name="p2">Второй дополнительный параметр</param>
+    /// <param name="p3">Третий дополнительный параметр</param>
+    /// <param name="func">Функция для выполнения</param>
+    /// <param name="Cancel">Токен отмены</param>
     public static Task<TResult?> Async<T, TP1, TP2, TP3, TResult>(
         this T obj,
         TP1 p1,
