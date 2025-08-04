@@ -230,6 +230,6 @@ public class IDictionaryExtensionsTests
 
         var actual_string = dict.ToPatternString(pattern_string);
 
-        Assert.That.Value(actual_string).IsEqual(expected_string);
+        Assert.Instance.Value(actual_string).IsEqual(expected_string);
     }
 }

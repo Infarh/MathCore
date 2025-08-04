@@ -37,7 +37,7 @@ public class NewtonTests
 
         var actual_coefficients = Newton.GetPolynomCoefficients(xx, yy);
 
-        Assert.That.Collection(actual_coefficients).IsEqualTo(expected_coefficients);
+        Assert.Instance.Collection(actual_coefficients).IsEqualTo(expected_coefficients);
 
         // Сравнение с первоисточником в англо.википедии https://en.wikipedia.org/wiki/Newton_polynomial
         double[] expected_wikipedia_coefficients =
@@ -50,7 +50,7 @@ public class NewtonTests
         ];
 
         const double accuracy = 5.1e-5;
-        Assert.That.Collection(actual_coefficients)
+        Assert.Instance.Collection(actual_coefficients)
            .IsEqualTo(expected_wikipedia_coefficients, accuracy);
     }
 
@@ -81,6 +81,6 @@ public class NewtonTests
         var actual_coefficients2 = Lagrange.GetPolynomCoefficients(xx, yy);
 
         const double accuracy = 7.106e-15;
-        Assert.That.Collection(actual_coefficients).IsEqualTo(expected_coefficients, accuracy);
+        Assert.Instance.Collection(actual_coefficients).IsEqualTo(expected_coefficients, accuracy);
     }
 }

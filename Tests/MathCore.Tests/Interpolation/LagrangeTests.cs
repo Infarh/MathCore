@@ -26,7 +26,7 @@ public class LagrangeTests
         var delta = Y.Zip(yy, (y0, y1) => y0 - y1);
         var error = delta.Sum(v => v.Pow2()) / (Y.Length + 1);
 
-        Assert.That.Value(error).LessThan(2.00e-4, 6.36e-007);
+        Assert.Instance.Value(error).LessThan(2.00e-4, 6.36e-007);
     }
 
     [TestMethod]

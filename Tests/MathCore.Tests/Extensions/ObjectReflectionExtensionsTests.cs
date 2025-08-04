@@ -190,7 +190,7 @@ public class ObjectReflectionExtensionsTests
     {
         var obj = new TestPropertyObject();
 
-        var exception = Assert.ThrowsException<InvalidOperationException>(
+        var exception = Assert.ThrowsExactly<InvalidOperationException>(
             () => obj.GetPropertyValue(nameof(TestPropertyObject.StringWriteOnlyProperty))
         );
 
@@ -214,7 +214,7 @@ public class ObjectReflectionExtensionsTests
     {
         var obj = new TestPropertyObject();
 
-        var exception = Assert.ThrowsException<InvalidOperationException>(
+        var exception = Assert.ThrowsExactly<InvalidOperationException>(
             () => obj.GetPropertyValue<TestPropertyObject, string>(
                 nameof(TestPropertyObject.StringWriteOnlyProperty))
         );
@@ -314,7 +314,7 @@ public class ObjectReflectionExtensionsTests
 
         object o = obj;
 
-        var exception = Assert.ThrowsException<InvalidOperationException>(
+        var exception = Assert.ThrowsExactly<InvalidOperationException>(
             () => o.SetPropertyValue(nameof(TestPropertyObject.StringReadOnlyProperty), (object)"123")
         );
 
@@ -342,7 +342,7 @@ public class ObjectReflectionExtensionsTests
     {
         var obj = new TestPropertyObject();
 
-        var exception = Assert.ThrowsException<InvalidOperationException>(
+        var exception = Assert.ThrowsExactly<InvalidOperationException>(
             () => obj.SetPropertyValue(nameof(TestPropertyObject.StringReadOnlyProperty), "123")
         );
 
@@ -447,7 +447,7 @@ public class ObjectReflectionExtensionsTests
     {
         var obj = new TestPropertyObject();
 
-        var exception = Assert.ThrowsException<InvalidOperationException>(
+        var exception = Assert.ThrowsExactly<InvalidOperationException>(
             () => obj.GetPropertyValue("PrivateStringProperty")
         );
 
@@ -469,7 +469,7 @@ public class ObjectReflectionExtensionsTests
     {
         var obj = new TestPropertyObject();
 
-        var exception = Assert.ThrowsException<InvalidOperationException>(
+        var exception = Assert.ThrowsExactly<InvalidOperationException>(
             () => obj.GetPropertyValue<TestPropertyObject, string>("PrivateStringProperty")
         );
 

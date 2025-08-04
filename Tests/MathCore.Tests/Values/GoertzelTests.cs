@@ -48,7 +48,7 @@ public class GoertzelTests : UnitTest
 
         var comparer = new ComplexToleranceComparer();
 
-        Assert.That.Value(actual_y7).IsEqual(expected_y7, comparer);
+        Assert.Instance.Value(actual_y7).IsEqual(expected_y7, comparer);
     }
 
     [TestMethod]

@@ -23,8 +23,8 @@ public class SwarmTests
         var swarm = new Swarm();
         swarm.Minimize(F, [-10d, -10d, -10d], [10d, 10d, 10d], 1000, out var X, out var V);
 
-        Assert.That.Value(V).IsEqual(__V0);
-        CollectionAssert.That.Collection(X).ValuesAreEqualTo(__X0, __Y0, __Z0).WithAccuracy(3e-8);
+        Assert.Instance.Value(V).IsEqual(__V0);
+        CollectionAssert.Instance.Collection(X).ValuesAreEqualTo(__X0, __Y0, __Z0).WithAccuracy(3e-8);
     }
 
     [TestMethod]
@@ -33,8 +33,8 @@ public class SwarmTests
         var swarm = new Swarm();
         swarm.Minimize(F, [(-10, 10), (-10, 10), (-10, 10)], 1000, out var X, out var V);
 
-        Assert.That.Value(V).IsEqual(__V0);
-        CollectionAssert.That.Collection(X).ValuesAreEqualTo(__X0, __Y0, __Z0).WithAccuracy(3e-8);
+        Assert.Instance.Value(V).IsEqual(__V0);
+        CollectionAssert.Instance.Collection(X).ValuesAreEqualTo(__X0, __Y0, __Z0).WithAccuracy(3e-8);
     }
 
     [TestMethod]
@@ -43,8 +43,8 @@ public class SwarmTests
         var swarm = new Swarm();
         swarm.Maximize(FNeg, [-10d, -10d, -10d], [10d, 10d, 10d], 1000, out var X, out var V);
 
-        Assert.That.Value(V).IsEqual(-__V0);
-        CollectionAssert.That.Collection(X).ValuesAreEqualTo(__X0, __Y0, __Z0).WithAccuracy(3e-8);
+        Assert.Instance.Value(V).IsEqual(-__V0);
+        CollectionAssert.Instance.Collection(X).ValuesAreEqualTo(__X0, __Y0, __Z0).WithAccuracy(3e-8);
     }
 
     [TestMethod]
@@ -53,7 +53,7 @@ public class SwarmTests
         var swarm = new Swarm();
         swarm.Maximize(FNeg, [(-10, 10), (-10, 10), (-10, 10)], 1000, out var X, out var V);
 
-        Assert.That.Value(V).IsEqual(-__V0);
-        CollectionAssert.That.Collection(X).ValuesAreEqualTo(__X0, __Y0, __Z0).WithAccuracy(3e-8);
+        Assert.Instance.Value(V).IsEqual(-__V0);
+        CollectionAssert.Instance.Collection(X).ValuesAreEqualTo(__X0, __Y0, __Z0).WithAccuracy(3e-8);
     }
 }

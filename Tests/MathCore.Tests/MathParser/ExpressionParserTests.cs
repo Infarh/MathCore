@@ -958,7 +958,7 @@ public class ExpressionParserTests
         Assert.IsTrue(LimitFunctionFunded);
         Assert.IsTrue(CoreFunctionFunded);
 
-        var root = Assert.That.Value(expr.Tree.Root)
+        var root = Assert.Instance.Value(expr.Tree.Root)
            .As<FunctionalNode>()
            .Where(node => node.Operator).Check(@operator => @operator.Is<SumOperator>())
            .ActualValue;
@@ -972,7 +972,7 @@ public class ExpressionParserTests
             Assert.AreEqual("i", ((VariableValueNode)params_root.Left).Variable.Name);
             Assert.IsInstanceOfType(params_root.Right, typeof(IntervalNode));
 
-            Assert.That.Value(params_root.Right).As<IntervalNode>()
+            Assert.Instance.Value(params_root.Right).As<IntervalNode>()
                .Where(interval_node => interval_node.Left).Check(left => left.As<ConstValueNode>().Where(c => c.Value).IsEqual(0))
                .Where(interval_node => interval_node.Right).Check(right => right.As<FunctionNode>()
                    .Where(function_node => function_node.ArgumentsNames.Length).Check(length => length.IsEqual(1))
@@ -980,13 +980,13 @@ public class ExpressionParserTests
                        .Where(func => func.Name).Check(name => name.IsEqual("Length"))
                        .Where(func => func.Delegate).Check(func => func.As<Func<double, double>>().Where(f => f.Invoke(0)))));
 
-            var interval = Assert.That.Value(params_root.Right).As<IntervalNode>().ActualValue;
+            var interval = Assert.Instance.Value(params_root.Right).As<IntervalNode>().ActualValue;
 
-            var length_function = Assert.That.Value(interval.Right).As<FunctionNode>().ActualValue;
-            Assert.That.Value(((Func<double, double>)length_function.Function.Delegate).Invoke(0)).IsEqual(6);
+            var length_function = Assert.Instance.Value(interval.Right).As<FunctionNode>().ActualValue;
+            Assert.Instance.Value(((Func<double, double>)length_function.Function.Delegate).Invoke(0)).IsEqual(6);
             Assert.IsTrue(LimitFunctionExecuted);
             LimitFunctionExecuted = false;
-            Assert.That.Value(length_function.Function.GetValue([0.0])).IsEqual(6);
+            Assert.Instance.Value(length_function.Function.GetValue([0.0])).IsEqual(6);
             Assert.IsTrue(LimitFunctionExecuted);
 
             Assert.IsTrue(parameters_expr.Variable.Exist("a"));

@@ -253,7 +253,7 @@ public class Vector3DTests : UnitTest
         {
             var p = v.GetProjectionTo(new Vector3D(Direction));
             var P = v.GetProjectionTo(Direction);
-            Assert.That.Value(P).IsEqual(p, 6.0e-14);
+            Assert.Instance.Value(P).IsEqual(p, 6.0e-14);
         }
 
         Test(new());

@@ -16,7 +16,7 @@ public class FListTests
     {
         var empty1 = FList<int>.Empty;
         var empty2 = FList<int>.Empty;
-        Assert.That.Value(empty1).IsReferenceEquals(empty2);
+        Assert.Instance.Value(empty1).IsReferenceEquals(empty2);
     }
 
     [TestMethod]
@@ -24,7 +24,7 @@ public class FListTests
     {
         var empty1 = FList.Empty<int>();
         var empty2 = FList<int>.Empty;
-        Assert.That.Value(empty1).IsReferenceEquals(empty2);
+        Assert.Instance.Value(empty1).IsReferenceEquals(empty2);
     }
 
     [TestMethod]
@@ -32,7 +32,7 @@ public class FListTests
     {
         const int head = 42;
         var       list = FList.New(head);
-        Assert.That.Value(list)
+        Assert.Instance.Value(list)
            .Where(l => l.IsEmpty).CheckEquals(false)
            .Where(l => l.Head).CheckEquals(head)
            .Where(l => l.Tail).Check(tail => tail.IsReferenceEquals(FList<int>.Empty));
@@ -43,7 +43,7 @@ public class FListTests
     {
         int[] items = [1, 2, 3];
         var   list  = FList.New(items);
-        Assert.That.Value(list)
+        Assert.Instance.Value(list)
            .Where(l => l.IsEmpty).CheckEquals(false)
            .Where(l => l.Head).CheckEquals(items[0])
            .Where(l => l.Tail).Check(tail1 => tail1
@@ -64,7 +64,7 @@ public class FListTests
         var items       = Enumerable.Range(1, 3);
         var items_array = items.ToArray();
         var list        = FList.New(items);
-        Assert.That.Value(list)
+        Assert.Instance.Value(list)
            .Where(l => l.IsEmpty).CheckEquals(false)
            .Where(l => l.Head).CheckEquals(items_array[0])
            .Where(l => l.Tail).Check(tail1 => tail1
@@ -79,12 +79,11 @@ public class FListTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
     public void PrivateParameterlessConstructorThrowInvalidOperationException()
     {
         var ctor    = typeof(FList<int>).GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, null, [], null);
         var creator = ctor.NewExpression().CreateLambda<Func<FList<int>>>().Compile();
-        var list    = creator();
+        Assert.ThrowsExactly<InvalidOperationException>(() => creator());
     }
 
     [TestMethod]
@@ -94,7 +93,7 @@ public class FListTests
         var list       = FList.New(items);
         var item_index = 0;
         foreach (var item in (IEnumerable)list) 
-            Assert.That.Value(item).IsEqual(items[item_index++]);
+            Assert.Instance.Value(item).IsEqual(items[item_index++]);
     }
 
     [TestMethod]
@@ -104,6 +103,6 @@ public class FListTests
         var list               = FList.New(items);
         var list_string        = list.ToString();
         var string_list_values = Regex.Matches(list_string, @"\d+").Select(m => int.Parse(m.Value)).ToArray();
-        Assert.That.Collection(string_list_values).IsEqualTo(items);
+        Assert.Instance.Collection(string_list_values).IsEqualTo(items);
     }
 }

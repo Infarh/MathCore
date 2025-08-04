@@ -247,15 +247,15 @@ public class ServiceManagerTests
 
         var main_instance2 = manager.Service;
 
-        Assert.That.Value(main_instance1).IsReferenceEquals(main_instance2);
-        Assert.That.Value(thread1_instance1).IsReferenceEquals(thread1_instance2);
-        Assert.That.Value(thread2_instance1).IsReferenceEquals(thread2_instance2);
+        Assert.Instance.Value(main_instance1).IsReferenceEquals(main_instance2);
+        Assert.Instance.Value(thread1_instance1).IsReferenceEquals(thread1_instance2);
+        Assert.Instance.Value(thread2_instance1).IsReferenceEquals(thread2_instance2);
 
-        Assert.That.Value(main_instance1)
+        Assert.Instance.Value(main_instance1)
            .IsNotReferenceEquals(thread1_instance1)
            .IsNotReferenceEquals(thread2_instance1);
 
-        Assert.That.Value(thread1_instance1)
+        Assert.Instance.Value(thread1_instance1)
            .IsNotReferenceEquals(thread2_instance1);
     }
 
@@ -324,15 +324,15 @@ public class ServiceManagerTests
 
         var main_instance2 = manager.Service;
 
-        Assert.That.Value(main_instance1).IsReferenceEquals(main_instance2);
-        Assert.That.Value(thread1_instance1).IsReferenceEquals(thread1_instance2);
-        Assert.That.Value(thread2_instance1).IsReferenceEquals(thread2_instance2);
+        Assert.Instance.Value(main_instance1).IsReferenceEquals(main_instance2);
+        Assert.Instance.Value(thread1_instance1).IsReferenceEquals(thread1_instance2);
+        Assert.Instance.Value(thread2_instance1).IsReferenceEquals(thread2_instance2);
 
-        Assert.That.Value(main_instance1)
+        Assert.Instance.Value(main_instance1)
            .IsNotReferenceEquals(thread1_instance1)
            .IsNotReferenceEquals(thread2_instance1);
 
-        Assert.That.Value(thread1_instance1)
+        Assert.Instance.Value(thread1_instance1)
            .IsNotReferenceEquals(thread2_instance1);
     }
 

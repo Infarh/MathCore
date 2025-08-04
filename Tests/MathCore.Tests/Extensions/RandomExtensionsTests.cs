@@ -56,6 +56,6 @@ public class RandomExtensionsTests
 
         var quantile = MathCore.SpecialFunctions.Distribution.Student.QuantileHi2(0.95, freedom_degree);
 
-        Assert.That.Value(pirsons_criteria).LessThan(quantile);
+        Assert.Instance.Value(pirsons_criteria).LessThan(quantile);
     }
 }

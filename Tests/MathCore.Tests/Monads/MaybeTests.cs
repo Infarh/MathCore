@@ -17,8 +17,8 @@ public class MaybeTests
 
         var two = one.Where(z => z > 0).Select(z => z + 1);
 
-        Assert.That.Value(one()).IsEqual(1);
-        Assert.That.Value(two()).IsEqual(2);
-        Assert.ThrowsException<InvalidOperationException>(() => nothing2());
+        Assert.Instance.Value(one()).IsEqual(1);
+        Assert.Instance.Value(two()).IsEqual(2);
+        Assert.ThrowsExactly<InvalidOperationException>(() => nothing2());
     }
 }

@@ -16,6 +16,6 @@ public class EnumExtensions : UnitTest
 
         var description = value.GetDescription();
 
-        Assert.That.Value(description).IsEqual("TestValueDescription");
+        Assert.Instance.Value(description).IsEqual("TestValueDescription");
     }
 }

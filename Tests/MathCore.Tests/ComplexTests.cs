@@ -292,7 +292,7 @@ public class ComplexTests
         var b          = new Complex(0, 7);
         var c          = a + b;
         var expected_c = new Complex(5, 7);
-        Assert.That.Value(c).IsEqual(expected_c, "5 + 7i != (5+7i)");
+        Assert.Instance.Value(c).IsEqual(expected_c, "5 + 7i != (5+7i)");
         Assert.AreEqual(0, (double)(new Complex(4, -12.33) - (-6.2 + new Complex(10.2, -12.33))),
             1e-15, "-6.2 + (10.2-12.33i) != (4-12.33i)");
     }
@@ -327,8 +327,8 @@ public class ComplexTests
         while (Y.Abs.Equals(0));
         var q = Y.Re * Y.Re + Y.Im * Y.Im;
         var (re, im) = X / Y;
-        Assert.That.Value(re).IsEqual((X.Re * Y.Re + X.Im * Y.Im) / q, 2e-15);
-        Assert.That.Value(im).IsEqual((X.Im * Y.Re - X.Re * Y.Im) / q, 2e-15);
+        Assert.Instance.Value(re).IsEqual((X.Re * Y.Re + X.Im * Y.Im) / q, 2e-15);
+        Assert.Instance.Value(im).IsEqual((X.Im * Y.Re - X.Re * Y.Im) / q, 2e-15);
     }
 
     /// <summary> test for op_Division</summary>
@@ -740,8 +740,8 @@ public class ComplexTests
         var (actual_asin_re, actual_asin_im) = Complex.Trigonometry.Asin(z);
 
         const double expected_asin_im = 1.427980580692356;
-        Assert.That.Value(actual_asin_im).IsEqual(expected_asin_im, 2.23e-16);
-        Assert.That.Value(actual_asin_re).IsEqual(0);
+        Assert.Instance.Value(actual_asin_im).IsEqual(expected_asin_im, 2.23e-16);
+        Assert.Instance.Value(actual_asin_re).IsEqual(0);
     }
 
     [TestMethod]
@@ -753,7 +753,7 @@ public class ComplexTests
 
         const double expected_acos_re = 1.570796326794897;
         const double expected_asin_im = -1.427980580692356;
-        Assert.That.Value(actual_acos_re).IsEqual(expected_acos_re, 4.45e-16);
-        Assert.That.Value(actual_acos_im).IsEqual(expected_asin_im, 2.23e-16);
+        Assert.Instance.Value(actual_acos_re).IsEqual(expected_acos_re, 4.45e-16);
+        Assert.Instance.Value(actual_acos_im).IsEqual(expected_asin_im, 2.23e-16);
     }
 }

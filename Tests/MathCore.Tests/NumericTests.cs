@@ -21,7 +21,7 @@ public class NumericTests
 
         var actual_hi_bit_index = Numeric.HiBit(value);
 
-        Assert.That.Value(actual_hi_bit_index).IsEqual(expected_hi_bit_value);
+        Assert.Instance.Value(actual_hi_bit_index).IsEqual(expected_hi_bit_value);
     }
 
     [TestMethod]
@@ -32,7 +32,7 @@ public class NumericTests
 
         var actual_hi_bit_index = Numeric.HiBit(value);
 
-        Assert.That.Value(actual_hi_bit_index).IsEqual(expected_hi_bit_value);
+        Assert.Instance.Value(actual_hi_bit_index).IsEqual(expected_hi_bit_value);
     }
 
     [TestMethod]
@@ -43,7 +43,7 @@ public class NumericTests
 
         var actual_bit_count = Numeric.SignedBitCount(value);
 
-        Assert.That.Value(actual_bit_count).IsEqual(expected_bit_count);
+        Assert.Instance.Value(actual_bit_count).IsEqual(expected_bit_count);
     }
 
     [TestMethod]
@@ -54,6 +54,6 @@ public class NumericTests
 
         var actual_log2 = Numeric.Log2(value);
 
-        Assert.That.Value(actual_log2).IsEqual(expected_log2);
+        Assert.Instance.Value(actual_log2).IsEqual(expected_log2);
     }
 }

@@ -24,9 +24,9 @@ public class Swarm2DTests
             IterationCount: 1000,
             out var X, out var Y,
             out var Z);
-        Assert.That.Value(X).IsEqual(__X0, 3.0e-8);
-        Assert.That.Value(Y).IsEqual(__Y0, 3.0e-8);
-        Assert.That.Value(Z).IsEqual(__Z0);
+        Assert.Instance.Value(X).IsEqual(__X0, 3.0e-8);
+        Assert.Instance.Value(Y).IsEqual(__Y0, 3.0e-8);
+        Assert.Instance.Value(Z).IsEqual(__Z0);
     }
 
     [TestMethod]
@@ -40,9 +40,9 @@ public class Swarm2DTests
             IterationCount: 1000,
             out var X, out var Y,
             out var Z);
-        Assert.That.Value(X).IsEqual(__X0, 3.0e-8);
-        Assert.That.Value(Y).IsEqual(__Y0, 3.0e-8);
-        Assert.That.Value(Z).IsEqual(__Z0);
+        Assert.Instance.Value(X).IsEqual(__X0, 3.0e-8);
+        Assert.Instance.Value(Y).IsEqual(__Y0, 3.0e-8);
+        Assert.Instance.Value(Z).IsEqual(__Z0);
     }
 
     [TestMethod]
@@ -56,9 +56,9 @@ public class Swarm2DTests
             IterationCount: 1000,
             out var X, out var Y,
             out var Z);
-        Assert.That.Value(X).IsEqual(__X0, 3.0e-8);
-        Assert.That.Value(Y).IsEqual(__Y0, 3.0e-8);
-        Assert.That.Value(Z).IsEqual(-__Z0);
+        Assert.Instance.Value(X).IsEqual(__X0, 3.0e-8);
+        Assert.Instance.Value(Y).IsEqual(__Y0, 3.0e-8);
+        Assert.Instance.Value(Z).IsEqual(-__Z0);
     }
 
     [TestMethod]
@@ -72,8 +72,8 @@ public class Swarm2DTests
             IterationCount: 1000,
             out var X, out var Y,
             out var Z);
-        Assert.That.Value(X).IsEqual(__X0, 3.0e-8);
-        Assert.That.Value(Y).IsEqual(__Y0, 3.0e-8);
-        Assert.That.Value(Z).IsEqual(-__Z0);
+        Assert.Instance.Value(X).IsEqual(__X0, 3.0e-8);
+        Assert.Instance.Value(Y).IsEqual(__Y0, 3.0e-8);
+        Assert.Instance.Value(Z).IsEqual(-__Z0);
     }
 }

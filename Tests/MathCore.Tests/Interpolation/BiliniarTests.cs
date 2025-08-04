@@ -29,6 +29,6 @@ public class BiliniarTests
 
         var result = interpolator.Interpolate(x0, y0);
 
-        Assert.That.Value(result).IsEqual(z0, 1.75e-003);
+        Assert.Instance.Value(result).IsEqual(z0, 1.75e-003);
     }
 }

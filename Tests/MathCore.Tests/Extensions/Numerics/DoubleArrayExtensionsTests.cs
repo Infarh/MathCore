@@ -37,7 +37,7 @@ public class DoubleArrayExtensionsTests
 
         const double eps                 = 3.56e-014;
         const double expected_dispersion = 61.692836579796810;
-        Assert.That.Value(variance).IsEqual(expected_dispersion, eps);
+        Assert.Instance.Value(variance).IsEqual(expected_dispersion, eps);
     }
 
     [TestMethod]
@@ -49,6 +49,6 @@ public class DoubleArrayExtensionsTests
 
         const double eps                 = 4.45e-015;
         const double expected_dispersion = 7.102040816326531;
-        Assert.That.Value(variance).IsEqual(expected_dispersion, eps);
+        Assert.Instance.Value(variance).IsEqual(expected_dispersion, eps);
     }
 }
