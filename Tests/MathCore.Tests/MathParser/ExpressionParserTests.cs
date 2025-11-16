@@ -44,12 +44,12 @@ public class ExpressionParserTests
     [TestMethod, Priority(10), Description("Общий тест парсера")]
     public void MathExpression_Parse_Test()
     {
-        var       parser = new ExpressionParser();
-        const int a      = 1;
-        const int b      = 2;
-        var       exp    = parser.Parse($"{a}+{b}");
-        var       tree   = exp.Tree;
-        var       root   = tree.Root;
+        var parser = new ExpressionParser();
+        const int a = 1;
+        const int b = 2;
+        var exp = parser.Parse($"{a}+{b}");
+        var tree = exp.Tree;
+        var root = tree.Root;
         Assert.IsTrue(root is AdditionOperatorNode);
 
         var left = root.Left;
@@ -124,9 +124,9 @@ public class ExpressionParserTests
     public void MathExpression_OperatorPriority_Test()
     {
         var parser = new ExpressionParser();
-        var expr   = parser.Parse("2+2*2");
-        var tree   = expr.Tree;
-        var root   = tree.Root;
+        var expr = parser.Parse("2+2*2");
+        var tree = expr.Tree;
+        var root = tree.Root;
         Assert.IsTrue(root is AdditionOperatorNode);
         Assert.IsTrue(root.Left is ConstValueNode);
         Assert.IsTrue(root.Right is MultiplicationOperatorNode);
@@ -142,9 +142,9 @@ public class ExpressionParserTests
     public void MathExpression_Bracket_Test()
     {
         var parser = new ExpressionParser();
-        var expr   = parser.Parse("(2+2)*2");
-        var tree   = expr.Tree;
-        var root   = tree.Root;
+        var expr = parser.Parse("(2+2)*2");
+        var tree = expr.Tree;
+        var root = tree.Root;
         Assert.IsTrue(root is MultiplicationOperatorNode);
         Assert.IsTrue(root.Left is ComputedBracketNode);
         Assert.IsTrue(root.Left.Left is AdditionOperatorNode);
@@ -161,8 +161,8 @@ public class ExpressionParserTests
     public void ExpressionTree_ValueTestNode_Test()
     {
         var parser = new ExpressionParser();
-        var expr   = parser.Parse("2");
-        var root   = expr.Tree.Root;
+        var expr = parser.Parse("2");
+        var root = expr.Tree.Root;
         Assert.IsTrue(root is ConstValueNode);
         var value = (ConstValueNode)root;
         Assert.AreEqual(2, value.Value);
@@ -181,8 +181,8 @@ public class ExpressionParserTests
     public void ExpressionTree_PrefixUnaryOperator_Test()
     {
         var parser = new ExpressionParser();
-        var expr   = parser.Parse("-2");
-        var root   = expr.Tree.Root;
+        var expr = parser.Parse("-2");
+        var root = expr.Tree.Root;
         Assert.IsTrue(root is subtractionOperatorNode);
         Assert.AreEqual(-2, expr.Compute());
 
@@ -190,7 +190,7 @@ public class ExpressionParserTests
         root = expr.Tree.Root;
         Assert.IsTrue(root is AdditionOperatorNode);
         Assert.IsTrue(root.Left is subtractionOperatorNode);
-        Assert.IsTrue(root["l"].Left == null);
+        Assert.IsNull(root["l"].Left);
         Assert.IsTrue(root["l"].Right is ConstValueNode);
         Assert.IsTrue(root.Right is ConstValueNode);
         Assert.AreEqual(1, expr.Compute());
@@ -200,7 +200,7 @@ public class ExpressionParserTests
         Assert.IsTrue(root is MultiplicationOperatorNode);
         Assert.IsTrue(root.Left is ConstValueNode);
         Assert.IsTrue(root.Right is subtractionOperatorNode);
-        Assert.IsTrue(root["r"].Left == null);
+        Assert.IsNull(root["r"].Left);
         Assert.IsTrue(root["r"].Right is ConstValueNode);
         Assert.AreEqual(-2, expr.Compute());
 
@@ -213,8 +213,8 @@ public class ExpressionParserTests
     public void MathExpression_OperatorOfEquality_SimpleTest()
     {
         var parser = new ExpressionParser();
-        var expr   = parser.Parse("4 = 2");
-        Assert.IsInstanceOfType(expr.Tree.Root, typeof(EqualityOperatorNode));
+        var expr = parser.Parse("4 = 2");
+        Assert.IsInstanceOfType<EqualityOperatorNode>(expr.Tree.Root);
         Assert.AreEqual(0, expr.Compute());
         expr = parser.Parse("x = y");
         Assert.AreEqual(1, expr.Compute());
@@ -235,10 +235,10 @@ public class ExpressionParserTests
     public void MathExpression_OperatorOfNotEquality_SimpleTest()
     {
         var parser = new ExpressionParser();
-        var expr   = parser.Parse("4 ≠ 2");
-        Assert.IsInstanceOfType(expr.Tree.Root, typeof(NotOperatorNode));
+        var expr = parser.Parse("4 ≠ 2");
+        Assert.IsInstanceOfType<NotOperatorNode>(expr.Tree.Root);
         Assert.AreEqual(1, expr.Compute());
-        Assert.IsInstanceOfType(parser.Parse("4!2").Tree.Root, typeof(NotOperatorNode));
+        Assert.IsInstanceOfType<NotOperatorNode>(parser.Parse("4!2").Tree.Root);
         expr = parser.Parse("x ≠ y");
         Assert.AreEqual(0, expr.Compute());
         Assert.AreEqual(0, expr.Compute(4, 4));
@@ -259,8 +259,8 @@ public class ExpressionParserTests
     public void MathExpression_OperatorGraterThen_SimpleTest()
     {
         var parser = new ExpressionParser();
-        var expr   = parser.Parse("4 > 2");
-        Assert.IsInstanceOfType(expr.Tree.Root, typeof(GreaterThenOperatorNode));
+        var expr = parser.Parse("4 > 2");
+        Assert.IsInstanceOfType<GreaterThenOperatorNode>(expr.Tree.Root);
         Assert.AreEqual(1, expr.Compute());
         expr = parser.Parse("x > y");
 
@@ -280,8 +280,8 @@ public class ExpressionParserTests
     public void MathExpression_OperatorLessThen_SimpleTest()
     {
         var parser = new ExpressionParser();
-        var expr   = parser.Parse("4 < 2");
-        Assert.IsInstanceOfType(expr.Tree.Root, typeof(LessThenOperatorNode));
+        var expr = parser.Parse("4 < 2");
+        Assert.IsInstanceOfType<LessThenOperatorNode>(expr.Tree.Root);
         Assert.AreEqual(0, expr.Compute());
         expr = parser.Parse("x < y");
 
@@ -302,8 +302,8 @@ public class ExpressionParserTests
     public void MathExpression_OperatorAnd_SimpleTest()
     {
         var parser = new ExpressionParser();
-        var expr   = parser.Parse("4 & 2");
-        Assert.IsInstanceOfType(expr.Tree.Root, typeof(AndOperatorNode));
+        var expr = parser.Parse("4 & 2");
+        Assert.IsInstanceOfType<AndOperatorNode>(expr.Tree.Root);
         Assert.AreEqual(1, expr.Compute());
         expr = parser.Parse("x & y");
 
@@ -325,8 +325,8 @@ public class ExpressionParserTests
     public void MathExpression_OperatorOr_SimpleTest()
     {
         var parser = new ExpressionParser();
-        var expr   = parser.Parse("4 | 2");
-        Assert.IsInstanceOfType(expr.Tree.Root, typeof(OrOperatorNode));
+        var expr = parser.Parse("4 | 2");
+        Assert.IsInstanceOfType<OrOperatorNode>(expr.Tree.Root);
         Assert.AreEqual(1, expr.Compute());
         expr = parser.Parse("x | y");
 
@@ -348,8 +348,8 @@ public class ExpressionParserTests
     public void MathExpression_OperatorNot_SimpleTest()
     {
         var parser = new ExpressionParser();
-        var expr   = parser.Parse("!2");
-        Assert.IsInstanceOfType(expr.Tree.Root, typeof(NotOperatorNode));
+        var expr = parser.Parse("!2");
+        Assert.IsInstanceOfType<NotOperatorNode>(expr.Tree.Root);
         Assert.AreEqual(0, expr.Compute());
         expr = parser.Parse("!x");
 
@@ -369,10 +369,10 @@ public class ExpressionParserTests
     public void ExpressionTree_LogicOperator_ComplexTest()
     {
         var parser = new ExpressionParser();
-        var expr   = parser.Parse("(3&0)|(4<0)");
-        Assert.IsInstanceOfType(expr.Tree.Root, typeof(OrOperatorNode));
-        Assert.IsInstanceOfType(expr.Tree.Root.Left?.Left, typeof(AndOperatorNode));
-        Assert.IsInstanceOfType(expr.Tree.Root.Right?.Left, typeof(LessThenOperatorNode));
+        var expr = parser.Parse("(3&0)|(4<0)");
+        Assert.IsInstanceOfType<OrOperatorNode>(expr.Tree.Root);
+        Assert.IsInstanceOfType<AndOperatorNode>(expr.Tree.Root.Left?.Left);
+        Assert.IsInstanceOfType<LessThenOperatorNode>(expr.Tree.Root.Right?.Left);
         Assert.AreEqual(0, expr.Compute());
         var _0 = expr.Compile();
         Assert.AreEqual(0, _0());
@@ -383,24 +383,24 @@ public class ExpressionParserTests
     public void ExpressionTree_SelectorOperator_Test()
     {
         var parser = new ExpressionParser();
-        var expr   = parser.Parse("(x>3)?7:-8");
-        var root   = expr.Tree.Root;
-        Assert.IsInstanceOfType(root, typeof(SelectorOperatorNode));
-        Assert.IsInstanceOfType(root["l/l"], typeof(GreaterThenOperatorNode));
-        Assert.IsInstanceOfType(root.Right, typeof(VariantOperatorNode));
-        Assert.IsInstanceOfType(root["r/l"], typeof(ConstValueNode));
-        Assert.IsInstanceOfType(root["r/r"], typeof(subtractionOperatorNode));
-        Assert.IsInstanceOfType(root["r/r/r"], typeof(ConstValueNode));
+        var expr = parser.Parse("(x>3)?7:-8");
+        var root = expr.Tree.Root;
+        Assert.IsInstanceOfType<SelectorOperatorNode>(root);
+        Assert.IsInstanceOfType<GreaterThenOperatorNode>(root["l/l"]);
+        Assert.IsInstanceOfType<VariantOperatorNode>(root.Right);
+        Assert.IsInstanceOfType<ConstValueNode>(root["r/l"]);
+        Assert.IsInstanceOfType<subtractionOperatorNode>(root["r/r"]);
+        Assert.IsInstanceOfType<ConstValueNode>(root["r/r/r"]);
         Assert.AreEqual(7, expr.Compute(4));
         Assert.AreEqual(-8, expr.Compute(2));
 
         var abs_expr = parser.Parse("x>0?x:-x");
-        var abs_f    = abs_expr.Compile<Func<double, double>>();
+        var abs_f = abs_expr.Compile<Func<double, double>>();
         for (var i = -5; i <= 5; i++)
             Assert.AreEqual(Math.Abs(i), abs_f(i));
 
         var interval_expr = parser.Parse("-1<x&x<1?5:0");
-        var interval_f    = interval_expr.Compile<Func<double, double>>();
+        var interval_f = interval_expr.Compile<Func<double, double>>();
         Assert.AreEqual(0, interval_f(-5));
         Assert.AreEqual(0, interval_f(-1));
         Assert.AreEqual(5, interval_f(0));
@@ -409,12 +409,12 @@ public class ExpressionParserTests
         Assert.AreEqual(0, interval_f(5));
     }
 
-    [TestMethod, Timeout(500)]
+    [TestMethod, Timeout(500, CooperativeCancellation = true)]
     public void MathExpression_AbsExpression_StressTest()
     {
-        var parser   = new ExpressionParser();
+        var parser = new ExpressionParser();
         var abs_expr = parser.Parse("x>0?x:-x");
-        var abs_f    = abs_expr.Compile<Func<double, double>>();
+        var abs_f = abs_expr.Compile<Func<double, double>>();
         for (var i = 0; i < 2500000; i++)
         {
             abs_f(-10);
@@ -422,10 +422,10 @@ public class ExpressionParserTests
         }
     }
 
-    [TestMethod, Timeout(500)]
+    [TestMethod, Timeout(500, CooperativeCancellation = true)]
     public void MathExpression_AbsExpression_Original_StressTest()
     {
-        var parser   = new ExpressionParser();
+        var parser = new ExpressionParser();
         var abs_expr = parser.Parse("x>0?x:-x");
         // ReSharper disable once UnusedVariable
         var abs_f = abs_expr.Compile<Func<double, double>>();
@@ -497,8 +497,8 @@ public class ExpressionParserTests
     [TestMethod, Description("Тестирование коллекции переменных")]
     public void ExpressionVariableCollection_Test()
     {
-        var parser         = new ExpressionParser();
-        var expr           = parser.Parse("2+2*2");
+        var parser = new ExpressionParser();
+        var expr = parser.Parse("2+2*2");
         var var_collection = expr.Variable;
         Assert.IsNotNull(var_collection);
         Assert.AreEqual(0, var_collection.Count);
@@ -521,7 +521,7 @@ public class ExpressionParserTests
         Assert.AreEqual(7, var_x.Value);
         Assert.AreEqual(0, var_y.Value);
 
-        expr           = parser.Parse("2x^4-7x^3+3x^2-2x+3-7y");
+        expr = parser.Parse("2x^4-7x^3+3x^2-2x+3-7y");
         var_collection = expr.Variable;
         Assert.AreEqual(2, var_collection.Count);
         var_x = var_collection[0];
@@ -540,15 +540,15 @@ public class ExpressionParserTests
         vars.Foreach(v => Assert.AreEqual(10, v.GetValue()));
 
 
-        expr               = parser.Parse("2x-y");
+        expr = parser.Parse("2x-y");
         expr.Variable["x"] = new LambdaExpressionVariable(() => 20);
-        Assert.IsInstanceOfType(expr.Variable["x"], typeof(LambdaExpressionVariable));
+        Assert.IsInstanceOfType<LambdaExpressionVariable>(expr.Variable["x"]);
         Assert.AreEqual(0, expr.Variable["x"].Value);
         Assert.AreEqual(20, expr.Variable["x"].GetValue());
         Assert.AreEqual(20, expr.Variable["x"].Value);
         Assert.AreEqual(40, expr.Compute());
 
-        expr           = parser.Parse("(2x-3.27y)^(sin(x)/x)-2z+3q/2x+y");
+        expr = parser.Parse("(2x-3.27y)^(sin(x)/x)-2z+3q/2x+y");
         var_collection = expr.Variable;
         var x_var_call_counter = 0;
         var_collection["x"] = new LambdaExpressionVariable(() =>
@@ -576,7 +576,7 @@ public class ExpressionParserTests
 
         var var_names = var_collection.Names.ToArray();
         Assert.AreEqual(5, var_collection.Count);
-        Assert.AreEqual(5, var_names.Length);
+        Assert.HasCount(5, var_names);
         CollectionAssert.AreEqual(new[] { "y", "z", "q", "x", "test1" }, var_names);
         Assert.IsTrue(var_collection.Exist("x"));
         Assert.IsTrue(var_collection.Exist("test1"));
@@ -622,7 +622,7 @@ public class ExpressionParserTests
     public void ExpressionConstantCollection_Test()
     {
         var parser = new ExpressionParser();
-        var expr   = parser.Parse("2e^5sin(2pi*x)*3-pi");
+        var expr = parser.Parse("2e^5sin(2pi*x)*3-pi");
 
         var const_collection = expr.Constants;
         Assert.IsNotNull(const_collection);
@@ -633,10 +633,10 @@ public class ExpressionParserTests
         Assert.AreEqual(Math.PI, constants[1].Value);
 
         parser.Constants.Add("c1", -13);
-        expr             = parser.Parse("13+c1");
+        expr = parser.Parse("13+c1");
         const_collection = expr.Constants;
-        constants        = [.. const_collection];
-        Assert.AreEqual(1, constants.Length);
+        constants = [.. const_collection];
+        Assert.HasCount(1, constants);
         Assert.AreEqual("c1", constants[0].Name);
         Assert.AreEqual(constants[0], expr.Constants["c1"]);
         Assert.AreEqual("c1", expr.Constants["c1"].Name);
@@ -657,8 +657,8 @@ public class ExpressionParserTests
     [TestMethod, Description("Тестирование коллекции функций")]
     public void ExpressionFunctionCollection_Test()
     {
-        var parser          = new ExpressionParser();
-        var expr            = parser.Parse("10^5");
+        var parser = new ExpressionParser();
+        var expr = parser.Parse("10^5");
         var func_collection = expr.Functions;
         Assert.IsNotNull(func_collection);
         Assert.AreEqual(0, func_collection.Count);
@@ -668,7 +668,7 @@ public class ExpressionParserTests
             if (e.Name == "sinc" && e.ArgumentCount == 1)
                 e.Function = new Func<double, double>(x => Math.Sin(x) / x);
         };
-        expr            = parser.Parse("2sin(2pi*x-3)/sinc(y)");
+        expr = parser.Parse("2sin(2pi*x-3)/sinc(y)");
         func_collection = expr.Functions;
         Assert.AreEqual(2, func_collection.Count);
         var sin_func = func_collection["sin", 1];
@@ -697,7 +697,7 @@ public class ExpressionParserTests
         var node = root["l/r"] as FunctionNode;
         Assert.IsNotNull(node);
         Assert.AreEqual("cos", node.Name);
-        Assert.AreEqual(1, node.ArgumentsNames.Length);
+        Assert.HasCount(1, node.ArgumentsNames);
         root = node.Arguments.First().Value;
         Assert.IsTrue(root is subtractionOperatorNode);
 
@@ -706,7 +706,7 @@ public class ExpressionParserTests
         node = root.Right as FunctionNode;
         Assert.IsNotNull(node);
         Assert.AreEqual("log", node.Name);
-        Assert.AreEqual(2, node.ArgumentsNames.Length);
+        Assert.HasCount(2, node.ArgumentsNames);
         var args = node.Arguments.Select(a => a.Value).ToArray();
         Assert.IsTrue(args[0] is ConstValueNode);
         Assert.IsTrue(args[1] is VariableValueNode);
@@ -795,18 +795,18 @@ public class ExpressionParserTests
     private const string __StressTestExpressionStr = "(5 * x * x * x - 3 * x * x + 2 * x - 1) / (2 * x)";
     /// <summary>Таймаут на тестирование вычислений после процесса компиляции</summary>
     private const int __StressTest_CompileTimeout = 150;
-    /// <summary>Таймаут на тестирование вычислений после процесса разбора мат.выражения</summary>
+    /// <summary>Таймаут на тестирование вычислений после процесса разбора мат. выражения</summary>
     private const int __StressTest_ComputeTimeout = 3900;
 
     /// <summary>Нагрузочное тестирование скомпилированного выражения</summary>
-    [TestMethod, Timeout(__StressTest_CompileTimeout), Description("Нагрузочное тестирование скомпилированного выражения")]
+    [TestMethod, Timeout(__StressTest_CompileTimeout, CooperativeCancellation = true), Description("Нагрузочное тестирование скомпилированного выражения")]
     public void MathExpression_CompileStressTest()
     {
         var parser = new ExpressionParser();
 
-        var          expr = parser.Parse(__StressTestExpressionStr);
-        const double x    = 0.7;
-        var          func = expr.Compile<Func<double, double>>();
+        var expr = parser.Parse(__StressTestExpressionStr);
+        const double x = 0.7;
+        var func = expr.Compile<Func<double, double>>();
         Assert.AreEqual((5 * x * x * x - 3 * x * x + 2 * x - 1) / (2 * x), func(x));
 
         for (var i = 0; i < 250000; i++)
@@ -814,13 +814,13 @@ public class ExpressionParserTests
     }
 
     /// <summary>Нагрузочное тестирование вычисления выражения</summary>
-    [TestMethod, Timeout(__StressTest_ComputeTimeout), Description("Нагрузочное тестирование вычисления выражения")]
+    [TestMethod, Timeout(__StressTest_ComputeTimeout, CooperativeCancellation = true), Description("Нагрузочное тестирование вычисления выражения")]
     public void MathExpression_ComputeStressTest()
     {
         var parser = new ExpressionParser();
 
-        var          expr = parser.Parse(__StressTestExpressionStr);
-        const double x    = 0.7;
+        var expr = parser.Parse(__StressTestExpressionStr);
+        const double x = 0.7;
         Assert.AreEqual((5 * x * x * x - 3 * x * x + 2 * x - 1) / (2 * x), expr.Compute(x));
 
         for (var i = 0; i < 250000; i++)
@@ -832,13 +832,13 @@ public class ExpressionParserTests
     public void MathExpression_Operator_Addition_SimpleTest()
     {
         var parser = new ExpressionParser();
-        var A      = parser.Parse("5");
-        var B      = parser.Parse("7");
-        var C      = A + B;
-        var tree   = C.Tree;
-        Assert.IsInstanceOfType(tree.Root, typeof(AdditionOperatorNode));
-        Assert.IsInstanceOfType(tree.Root.Left, typeof(ConstValueNode));
-        Assert.IsInstanceOfType(tree.Root.Right, typeof(ConstValueNode));
+        var A = parser.Parse("5");
+        var B = parser.Parse("7");
+        var C = A + B;
+        var tree = C.Tree;
+        Assert.IsInstanceOfType<AdditionOperatorNode>(tree.Root);
+        Assert.IsInstanceOfType<ConstValueNode>(tree.Root.Left);
+        Assert.IsInstanceOfType<ConstValueNode>(tree.Root.Right);
         Assert.AreEqual(5, ((ConstValueNode)tree.Root.Left).Value);
         Assert.AreEqual(7, ((ConstValueNode)tree.Root.Right).Value);
         Assert.AreEqual(5 + 7, C.Compute());
@@ -849,13 +849,13 @@ public class ExpressionParserTests
     public void MathExpression_Operator_subtraction_SimpleTest()
     {
         var parser = new ExpressionParser();
-        var A      = parser.Parse("5");
-        var B      = parser.Parse("7");
-        var C      = A - B;
-        var tree   = C.Tree;
-        Assert.IsInstanceOfType(tree.Root, typeof(subtractionOperatorNode));
-        Assert.IsInstanceOfType(tree.Root.Left, typeof(ConstValueNode));
-        Assert.IsInstanceOfType(tree.Root.Right, typeof(ConstValueNode));
+        var A = parser.Parse("5");
+        var B = parser.Parse("7");
+        var C = A - B;
+        var tree = C.Tree;
+        Assert.IsInstanceOfType<subtractionOperatorNode>(tree.Root);
+        Assert.IsInstanceOfType<ConstValueNode>(tree.Root.Left);
+        Assert.IsInstanceOfType<ConstValueNode>(tree.Root.Right);
         Assert.AreEqual(5, ((ConstValueNode)tree.Root.Left).Value);
         Assert.AreEqual(7, ((ConstValueNode)tree.Root.Right).Value);
         Assert.AreEqual(5 - 7, C.Compute());
@@ -866,13 +866,13 @@ public class ExpressionParserTests
     public void MathExpression_Operator_Multiplication_SimpleTest()
     {
         var parser = new ExpressionParser();
-        var A      = parser.Parse("5");
-        var B      = parser.Parse("7");
-        var C      = A * B;
-        var tree   = C.Tree;
-        Assert.IsInstanceOfType(tree.Root, typeof(MultiplicationOperatorNode));
-        Assert.IsInstanceOfType(tree.Root.Left, typeof(ConstValueNode));
-        Assert.IsInstanceOfType(tree.Root.Right, typeof(ConstValueNode));
+        var A = parser.Parse("5");
+        var B = parser.Parse("7");
+        var C = A * B;
+        var tree = C.Tree;
+        Assert.IsInstanceOfType<MultiplicationOperatorNode>(tree.Root);
+        Assert.IsInstanceOfType<ConstValueNode>(tree.Root.Left);
+        Assert.IsInstanceOfType<ConstValueNode>(tree.Root.Right);
         Assert.AreEqual(5, ((ConstValueNode)tree.Root.Left).Value);
         Assert.AreEqual(7, ((ConstValueNode)tree.Root.Right).Value);
         Assert.AreEqual(5 * 7, C.Compute());
@@ -883,13 +883,13 @@ public class ExpressionParserTests
     public void MathExpression_Operator_Division_SimpleTest()
     {
         var parser = new ExpressionParser();
-        var A      = parser.Parse("4");
-        var B      = parser.Parse("2");
-        var C      = A / B;
-        var tree   = C.Tree;
-        Assert.IsInstanceOfType(tree.Root, typeof(DivisionOperatorNode));
-        Assert.IsInstanceOfType(tree.Root.Left, typeof(ConstValueNode));
-        Assert.IsInstanceOfType(tree.Root.Right, typeof(ConstValueNode));
+        var A = parser.Parse("4");
+        var B = parser.Parse("2");
+        var C = A / B;
+        var tree = C.Tree;
+        Assert.IsInstanceOfType<DivisionOperatorNode>(tree.Root);
+        Assert.IsInstanceOfType<ConstValueNode>(tree.Root.Left);
+        Assert.IsInstanceOfType<ConstValueNode>(tree.Root.Right);
         Assert.AreEqual(4, ((ConstValueNode)tree.Root.Left).Value);
         Assert.AreEqual(2, ((ConstValueNode)tree.Root.Right).Value);
         Assert.AreEqual(4 / 2, C.Compute());
@@ -900,13 +900,13 @@ public class ExpressionParserTests
     public void MathExpression_Operator_ComplexTest()
     {
         var parser = new ExpressionParser();
-        var A      = parser.Parse("2");
-        var B      = parser.Parse("3");
-        var C      = parser.Parse("4");
-        var D      = A + B * C;
+        var A = parser.Parse("2");
+        var B = parser.Parse("3");
+        var C = parser.Parse("4");
+        var D = A + B * C;
         Assert.AreEqual(2 + 3 * 4, D.Compute());
 
-        D =  A + B;
+        D = A + B;
         D *= C;
 
         Assert.AreEqual((2 + 3) * 4, D.Compute());
@@ -928,9 +928,9 @@ public class ExpressionParserTests
 
         var polynom = new Polynom(1, 3, 5, 7, 9, 11);
 
-        var CoreFunctionFunded    = false;
-        var CoreFunctionExecuted  = false;
-        var LimitFunctionFunded   = false;
+        var CoreFunctionFunded = false;
+        var CoreFunctionExecuted = false;
+        var LimitFunctionFunded = false;
         var LimitFunctionExecuted = false;
 
         var a_list = new List<(double index, double value)>(6);
@@ -949,7 +949,7 @@ public class ExpressionParserTests
             }
             else if (e.SignatureEqual("Length", 1))
             {
-                e.Function          = new Func<double, double>(_ => { LimitFunctionExecuted = true; return polynom.Length; });
+                e.Function = new Func<double, double>(_ => { LimitFunctionExecuted = true; return polynom.Length; });
                 LimitFunctionFunded = true;
             }
         };
@@ -958,21 +958,21 @@ public class ExpressionParserTests
         Assert.IsTrue(LimitFunctionFunded);
         Assert.IsTrue(CoreFunctionFunded);
 
-        var root = Assert.Instance.Value(expr.Tree.Root)
+        var root = Assert.That.Value(expr.Tree.Root)
            .As<FunctionalNode>()
            .Where(node => node.Operator).Check(@operator => @operator.Is<SumOperator>())
            .ActualValue;
 
         {
             var parameters_expr = root.Parameters;
-            var params_root     = parameters_expr.Tree.Root as EqualityOperatorNode;
+            var params_root = parameters_expr.Tree.Root as EqualityOperatorNode;
             Assert.IsNotNull(params_root);
-            Assert.IsInstanceOfType(params_root.Left, typeof(VariableValueNode));
+            Assert.IsInstanceOfType<VariableValueNode>(params_root.Left);
             Assert.IsNotNull(params_root.Left);
             Assert.AreEqual("i", ((VariableValueNode)params_root.Left).Variable.Name);
-            Assert.IsInstanceOfType(params_root.Right, typeof(IntervalNode));
+            Assert.IsInstanceOfType<IntervalNode>(params_root.Right);
 
-            Assert.Instance.Value(params_root.Right).As<IntervalNode>()
+            Assert.That.Value(params_root.Right).As<IntervalNode>()
                .Where(interval_node => interval_node.Left).Check(left => left.As<ConstValueNode>().Where(c => c.Value).IsEqual(0))
                .Where(interval_node => interval_node.Right).Check(right => right.As<FunctionNode>()
                    .Where(function_node => function_node.ArgumentsNames.Length).Check(length => length.IsEqual(1))
@@ -980,13 +980,13 @@ public class ExpressionParserTests
                        .Where(func => func.Name).Check(name => name.IsEqual("Length"))
                        .Where(func => func.Delegate).Check(func => func.As<Func<double, double>>().Where(f => f.Invoke(0)))));
 
-            var interval = Assert.Instance.Value(params_root.Right).As<IntervalNode>().ActualValue;
+            var interval = Assert.That.Value(params_root.Right).As<IntervalNode>().ActualValue;
 
-            var length_function = Assert.Instance.Value(interval.Right).As<FunctionNode>().ActualValue;
-            Assert.Instance.Value(((Func<double, double>)length_function.Function.Delegate).Invoke(0)).IsEqual(6);
+            var length_function = Assert.That.Value(interval.Right).As<FunctionNode>().ActualValue;
+            Assert.That.Value((((Func<double, double>?)length_function.Function.Delegate)!).Invoke(0)).IsEqual(6);
             Assert.IsTrue(LimitFunctionExecuted);
             LimitFunctionExecuted = false;
-            Assert.Instance.Value(length_function.Function.GetValue([0.0])).IsEqual(6);
+            Assert.That.Value(length_function.Function.GetValue([0.0])).IsEqual(6);
             Assert.IsTrue(LimitFunctionExecuted);
 
             Assert.IsTrue(parameters_expr.Variable.Exist("a"));
@@ -999,14 +999,16 @@ public class ExpressionParserTests
         }
 
         const double x = 2;
-        var          p = polynom.Value(x);
+        var p = polynom.Value(x);
         LimitFunctionExecuted = false;
-        CoreFunctionExecuted  = false;
+        CoreFunctionExecuted = false;
         var result = expr.Compute(x);
         Assert.IsTrue(LimitFunctionExecuted);
         Assert.IsTrue(CoreFunctionExecuted);
         Assert.AreEqual(p, result,
-            "Значение, полученное от полинома и мат.выражения не совпадают.\r\n" +
-            $"Ошибка {Math.Abs(p - result)}({Math.Abs(p - result) / p:p})");
+            $"""
+             Значение, полученное от полинома и мат.выражения не совпадают.
+             Ошибка {Math.Abs(p - result)}({Math.Abs(p - result) / p:p})
+             """);
     }
 }

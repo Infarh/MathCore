@@ -78,7 +78,7 @@ public class StudentTests
     [DataRow(0.95, 10, 18.3070, __QuantileHi2ApproximationValuesTestAccuracy, DisplayName = "p:0.95, k:10")]
     public void QuantileHi2ApproximationValuesTest(double p, int k, double ExpectedValue, double Accuracy = 1e-16) =>
 #pragma warning disable CS0618 // Type or member is obsolete
-        Assert.Instance.Value(QuantileHi2Approximation(p, k)).IsEqual(ExpectedValue, Accuracy, $"Квантиль(p:{p}, k:{k})~{Accuracy}");
+        Assert.That.Value(QuantileHi2Approximation(p, k)).IsEqual(ExpectedValue, Accuracy, $"Квантиль(p:{p}, k:{k})~{Accuracy}");
 #pragma warning restore CS0618 // Type or member is obsolete
 
     private const double __QuantileHi2ValuesTestAccuracy = 2.14e-14;

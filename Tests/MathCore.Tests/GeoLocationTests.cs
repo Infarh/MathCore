@@ -15,7 +15,7 @@ public class GeoLocationTests
 
         var location = new GeoLocation(lat, lon);
 
-        Assert.Instance.Value(location.LatAngle).IsEqual(expected);
+        Assert.That.Value(location.LatAngle).IsEqual(expected);
     }
 
     [TestMethod]
@@ -28,7 +28,7 @@ public class GeoLocationTests
 
         var location = new GeoLocation(lat, lon);
 
-        Assert.Instance.Value(location.LatMinutes).IsEqual(expected);
+        Assert.That.Value(location.LatMinutes).IsEqual(expected);
     }
 
     [TestMethod]
@@ -41,7 +41,7 @@ public class GeoLocationTests
 
         var location = new GeoLocation(lat, lon);
 
-        Assert.Instance.Value(location.LatSeconds).IsEqual(expected, 1e-3);
+        Assert.That.Value(location.LatSeconds).IsEqual(expected, 1e-3);
     }
 
     [TestMethod]
@@ -54,7 +54,7 @@ public class GeoLocationTests
 
         var location = new GeoLocation(lat, lon);
 
-        Assert.Instance.Value(location.LonAngle).IsEqual(expected);
+        Assert.That.Value(location.LonAngle).IsEqual(expected);
     }
 
     [TestMethod]
@@ -67,7 +67,7 @@ public class GeoLocationTests
 
         var location = new GeoLocation(lat, lon);
 
-        Assert.Instance.Value(location.LonMinutes).IsEqual(expected);
+        Assert.That.Value(location.LonMinutes).IsEqual(expected);
     }
 
     [TestMethod]
@@ -80,7 +80,7 @@ public class GeoLocationTests
 
         var location = new GeoLocation(lat, lon);
 
-        Assert.Instance.Value(location.LonSeconds).IsEqual(expected, 1e-3);
+        Assert.That.Value(location.LonSeconds).IsEqual(expected, 1e-3);
     }
 
     [TestMethod]
@@ -93,23 +93,23 @@ public class GeoLocationTests
 
         var str = location.ToString();
 
-        Assert.Instance.Value(str).AsNotNull().Where(s => s.Length).GreaterThan(0);
+        Assert.That.Value(str).AsNotNull().Where(s => s.Length).GreaterThan(0);
         var lat_lon = str.Split(',');
-        Assert.Instance.Value(lat_lon.Length).IsEqual(2);
+        Assert.That.Value(lat_lon.Length).IsEqual(2);
 
         var lat_str = lat_lon[0].Trim();
         var lon_str = lat_lon[1].Trim();
-        Assert.Instance.Value(lat_str.Length).GreaterThan(0);
-        Assert.Instance.Value(lon_str.Length).GreaterThan(0);
+        Assert.That.Value(lat_str.Length).GreaterThan(0);
+        Assert.That.Value(lon_str.Length).GreaterThan(0);
 
-        Assert.Instance.Value(lat_str).EndWith("N");
-        Assert.Instance.Value(lon_str).EndWith("E");
+        Assert.That.Value(lat_str).EndWith("N");
+        Assert.That.Value(lon_str).EndWith("E");
 
         lat_str = lat_str.TrimEnd('N', '\'');
         lon_str = lon_str.TrimEnd('E', '\'');
 
-        Assert.Instance.Value(lat_str).StartWith("55°45'20.9988");
-        Assert.Instance.Value(lon_str).StartWith("37°37'04.000");
+        Assert.That.Value(lat_str).StartWith("55°45'20.9988");
+        Assert.That.Value(lon_str).StartWith("37°37'04.000");
     }
 
     private readonly GeoLocation _Point1 = new(55.96984993756632, 37.38720697324383);
@@ -122,7 +122,7 @@ public class GeoLocationTests
 
         var distance = _Point1.DistanceTo(_Point2);
 
-        Assert.Instance.Value(distance).IsEqual(expected_distance, 1e-0);
+        Assert.That.Value(distance).IsEqual(expected_distance, 1e-0);
     }
 
     [TestMethod]
@@ -132,7 +132,7 @@ public class GeoLocationTests
 
         var heading = _Point1.HeadingTo(_Point2);
 
-        Assert.Instance.Value(heading).IsEqual(expected_heading, 1e-0);
+        Assert.That.Value(heading).IsEqual(expected_heading, 1e-0);
     }
 
     [TestMethod]
@@ -142,7 +142,7 @@ public class GeoLocationTests
 
         var (expected_lat, expected_lon) = _Point2;
 
-        Assert.Instance.Value(actual_lat).IsEqual(expected_lat, 2.02e-5);
-        Assert.Instance.Value(actual_lon).IsEqual(expected_lon, 2.02e-5);
+        Assert.That.Value(actual_lat).IsEqual(expected_lat, 2.02e-5);
+        Assert.That.Value(actual_lon).IsEqual(expected_lon, 2.02e-5);
     }
 }

@@ -31,7 +31,7 @@ public class TestDataAttribute : Attribute, ITestDataSource
             //throw new InvalidOperationException("Метод-источник данных возвращает значение, не поддерживающее перечисление");
         }
 
-        var test_data = (IEnumerable)source_method.Invoke(null, null)
+        var test_data = (IEnumerable?)source_method.Invoke(null, null)
             ?? throw new InvalidOperationException("Не удалось получить результат вызова метода-источника данных");
 
         var test_method_parameters = TestMethod.GetParameters();
@@ -64,7 +64,7 @@ public class TestDataAttribute : Attribute, ITestDataSource
         }
     }
 
-    public string GetDisplayName(MethodInfo TestMethod, object[] data)
+    public string? GetDisplayName(MethodInfo TestMethod, object?[]? data)
     {
         if (!string.IsNullOrWhiteSpace(DisplayName)) return DisplayName;
         if (data is null) return null;

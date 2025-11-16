@@ -22,6 +22,6 @@ public class CsvWriterTests : CSVTestsBase
         using var reader            = result.CreateReader();
         var       header_line       = reader.ReadLine();
         var       header_components = header_line?.Split(ValuesSeparator);
-        Assert.Instance.Collection(header_components).IsEqualTo(Headers.Append(additional_header_name).ToArray());
+        Assert.That.Collection(header_components).IsEqualTo(Headers.Append(additional_header_name).ToArray());
     }
 }

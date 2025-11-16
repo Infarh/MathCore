@@ -59,7 +59,7 @@ public partial class WorkTests
     {
         var work_result = Work.With("Hello World!").Execute();
 
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(work_result)
            .Is<WorkResult<string>>()
            .Where(Result => Result.Result).Check(value => value.IsEqual(work_result.Result))
            .Where(Result => Result.Error).Check(value => value.IsNull())
@@ -74,8 +74,8 @@ public partial class WorkTests
 
         var work_result = Work.BeginInvoke(action).Execute();
 
-        Assert.Instance.Value(action.Executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(action.Executed).IsTrue();
+        Assert.That.Value(work_result)
            .Is<WorkResult>()
            .Where(Result => Result.Error).Check(value => value.IsNull())
            .Where(Result => Result.Success).Check(value => value.IsTrue())
@@ -89,8 +89,8 @@ public partial class WorkTests
 
         var work_result = Work.BeginInvoke(fail_action).Execute();
 
-        Assert.Instance.Value(fail_action.Executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(fail_action.Executed).IsTrue();
+        Assert.That.Value(work_result)
            .Is<WorkResult>()
            .Where(Result => Result.Error).Check(Value => Value.IsEqual(fail_action.Exception))
            .Where(Result => Result.Success).Check(value => value.IsFalse())
@@ -104,8 +104,8 @@ public partial class WorkTests
         var success_function = TestFunction.Value(expected_string);
         var work_result = Work.BeginGet(success_function.Execute).Execute();
 
-        Assert.Instance.Value(success_function.Executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(success_function.Executed).IsTrue();
+        Assert.That.Value(work_result)
            .As<WorkResult<string>>()
            .Where(Result => Result.Result).Check(Value => Value.IsEqual(expected_string))
            .Where(Result => Result.Error).Check(value => value.IsNull())
@@ -123,9 +123,9 @@ public partial class WorkTests
            .Invoke(second_action)
            .Execute();
 
-        Assert.Instance.Value(first_action.Executed).IsTrue();
-        Assert.Instance.Value(second_action.Executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(first_action.Executed).IsTrue();
+        Assert.That.Value(second_action.Executed).IsTrue();
+        Assert.That.Value(work_result)
            .Is<WorkResult>()
            .Where(Result => Result.Error).Check(value => value.IsNull())
            .Where(Result => Result.Success).Check(value => value.IsTrue())
@@ -142,9 +142,9 @@ public partial class WorkTests
            .Invoke(test_action)
            .Execute();
 
-        Assert.Instance.Value(fail_action.Executed).IsTrue();
-        Assert.Instance.Value(test_action.Executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(fail_action.Executed).IsTrue();
+        Assert.That.Value(test_action.Executed).IsTrue();
+        Assert.That.Value(work_result)
            .Is<WorkResult>()
            .Where(Result => Result.Error).Check(value => value.IsEqual(fail_action.Exception))
            .Where(Result => Result.Success).Check(value => value.IsFalse())
@@ -162,9 +162,9 @@ public partial class WorkTests
            .Invoke(fail_action)
            .Execute();
 
-        Assert.Instance.Value(first_action.Executed).IsTrue();
-        Assert.Instance.Value(fail_action.Executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(first_action.Executed).IsTrue();
+        Assert.That.Value(fail_action.Executed).IsTrue();
+        Assert.That.Value(work_result)
            .Is<WorkResult>()
            .Where(Result => Result.Error).Check(value => value.As<ApplicationException>()
                .Where(exception => exception.Message).IsEqual(exception_message))
@@ -184,9 +184,9 @@ public partial class WorkTests
            .Invoke(second_fail_action)
            .Execute();
 
-        Assert.Instance.Value(first_fail_action.Executed).IsTrue();
-        Assert.Instance.Value(second_fail_action.Executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(first_fail_action.Executed).IsTrue();
+        Assert.That.Value(second_fail_action.Executed).IsTrue();
+        Assert.That.Value(work_result)
            .Is<WorkResult>()
            .Where(Result => Result.Error).Check(Value => Value.As<AggregateException>()
                .Where(exception => exception.InnerExceptions).Check(value =>
@@ -219,9 +219,9 @@ public partial class WorkTests
            .Invoke(TestAction)
            .Execute();
 
-        Assert.Instance.Value(test_action_executed).IsTrue();
-        Assert.Instance.Value(actual_value).IsEqual(expected_value);
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(test_action_executed).IsTrue();
+        Assert.That.Value(actual_value).IsEqual(expected_value);
+        Assert.That.Value(work_result)
            .As<WorkResult>()
            .Where(result => result.Error).Check(exception => exception.IsNull())
            .Where(result => result.Success).Check(state => state.IsTrue())
@@ -250,9 +250,9 @@ public partial class WorkTests
            .Invoke(TestAction)
            .Execute();
 
-        Assert.Instance.Value(test_action_executed).IsTrue();
-        Assert.Instance.Value(actual_value).IsEqual(expected_value);
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(test_action_executed).IsTrue();
+        Assert.That.Value(actual_value).IsEqual(expected_value);
+        Assert.That.Value(work_result)
            .As<WorkResult>()
            .Where(result => result.Error).Check(exception => exception.IsEqual(expected_exception))
            .Where(result => result.Success).Check(state => state.IsFalse())
@@ -269,9 +269,9 @@ public partial class WorkTests
            .InvokeIfSuccess(test_action)
            .Execute();
 
-        Assert.Instance.Value(begin_action.Executed).IsTrue();
-        Assert.Instance.Value(test_action.Executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(begin_action.Executed).IsTrue();
+        Assert.That.Value(test_action.Executed).IsTrue();
+        Assert.That.Value(work_result)
            .As<WorkResult>()
            .Where(result => result.Error).Check(error => error.IsNull())
            .Where(result => result.Success).Check(state => state.IsTrue())
@@ -288,9 +288,9 @@ public partial class WorkTests
            .InvokeIfSuccess(test_action)
            .Execute();
 
-        Assert.Instance.Value(fail_action.Executed).IsTrue();
-        Assert.Instance.Value(test_action.Executed).IsFalse();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(fail_action.Executed).IsTrue();
+        Assert.That.Value(test_action.Executed).IsFalse();
+        Assert.That.Value(work_result)
            .As<WorkResult>()
            .Where(result => result.Error).Check(exception => exception.IsEqual(fail_action.Exception))
            .Where(result => result.Success).Check(state => state.IsFalse())
@@ -307,9 +307,9 @@ public partial class WorkTests
            .InvokeIfFailure(test_action)
            .Execute();
 
-        Assert.Instance.Value(success_action.Executed).IsTrue();
-        Assert.Instance.Value(test_action.Executed).IsFalse();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(success_action.Executed).IsTrue();
+        Assert.That.Value(test_action.Executed).IsFalse();
+        Assert.That.Value(work_result)
            .As<WorkResult>()
            .Where(result => result.Error).Check(error => error.IsNull())
            .Where(result => result.Success).Check(state => state.IsTrue())
@@ -326,9 +326,9 @@ public partial class WorkTests
            .InvokeIfFailure(test_action)
            .Execute();
 
-        Assert.Instance.Value(fail_action.Executed).IsTrue();
-        Assert.Instance.Value(test_action.Executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(fail_action.Executed).IsTrue();
+        Assert.That.Value(test_action.Executed).IsTrue();
+        Assert.That.Value(work_result)
            .As<WorkResult>()
            .Where(result => result.Error).Check(exception => exception.IsEqual(fail_action.Exception))
            .Where(result => result.Success).Check(state => state.IsFalse())
@@ -353,10 +353,10 @@ public partial class WorkTests
            .InvokeIfFailure(ExceptionHandler)
            .Execute();
 
-        Assert.Instance.Value(fail_action.Executed).IsTrue();
-        Assert.Instance.Value(exception_handler_executed).IsTrue();
-        Assert.Instance.Value(handled_exception).IsEqual(expected_exception);
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(fail_action.Executed).IsTrue();
+        Assert.That.Value(exception_handler_executed).IsTrue();
+        Assert.That.Value(handled_exception).IsEqual(expected_exception);
+        Assert.That.Value(work_result)
            .As<WorkResult>()
            .Where(result => result.Error).Check(exception => exception.IsEqual(expected_exception))
            .Where(result => result.Success).Check(state => state.IsFalse())
@@ -375,10 +375,10 @@ public partial class WorkTests
            .InvokeIfSuccess(test_action)
            .Execute();
 
-        Assert.Instance.Value(begin_action.Executed).IsTrue();
-        Assert.Instance.Value(success_action.Executed).IsTrue();
-        Assert.Instance.Value(test_action.Executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(begin_action.Executed).IsTrue();
+        Assert.That.Value(success_action.Executed).IsTrue();
+        Assert.That.Value(test_action.Executed).IsTrue();
+        Assert.That.Value(work_result)
            .As<WorkResult>()
            .Where(result => result.Error).Check(exception => exception.IsNull())
            .Where(result => result.Success).Check(state => state.IsTrue())
@@ -397,10 +397,10 @@ public partial class WorkTests
            .InvokeIfSuccess(test_action)
            .Execute();
 
-        Assert.Instance.Value(begin_action.Executed).IsTrue();
-        Assert.Instance.Value(fail_action.Executed).IsTrue();
-        Assert.Instance.Value(test_action.Executed).IsFalse();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(begin_action.Executed).IsTrue();
+        Assert.That.Value(fail_action.Executed).IsTrue();
+        Assert.That.Value(test_action.Executed).IsFalse();
+        Assert.That.Value(work_result)
            .As<WorkResult>()
            .Where(result => result.Error).Check(exception => exception.IsEqual(fail_action.Exception))
            .Where(result => result.Success).Check(state => state.IsFalse())
@@ -419,10 +419,10 @@ public partial class WorkTests
            .InvokeIfSuccess(test_action)
            .Execute();
 
-        Assert.Instance.Value(begin_action.Executed).IsTrue();
-        Assert.Instance.Value(success_action.Executed).IsTrue();
-        Assert.Instance.Value(test_action.Executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(begin_action.Executed).IsTrue();
+        Assert.That.Value(success_action.Executed).IsTrue();
+        Assert.That.Value(test_action.Executed).IsTrue();
+        Assert.That.Value(work_result)
            .As<WorkResult>()
            .Where(result => result.Error).Check(exception => exception.IsNull())
            .Where(result => result.Success).Check(state => state.IsTrue())
@@ -441,10 +441,10 @@ public partial class WorkTests
            .InvokeIfSuccess(test_action)
            .Execute();
 
-        Assert.Instance.Value(begin_action.Executed).IsTrue();
-        Assert.Instance.Value(fail_action.Executed).IsTrue();
-        Assert.Instance.Value(test_action.Executed).IsFalse();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(begin_action.Executed).IsTrue();
+        Assert.That.Value(fail_action.Executed).IsTrue();
+        Assert.That.Value(test_action.Executed).IsFalse();
+        Assert.That.Value(work_result)
            .As<WorkResult>()
            .Where(result => result.Error).Check(exception => exception.IsEqual(fail_action.Exception))
            .Where(result => result.Success).Check(state => state.IsFalse())
@@ -465,11 +465,11 @@ public partial class WorkTests
            .InvokeIfFailure(test_action)
            .Execute();
 
-        Assert.Instance.Value(begin_action.Executed).IsTrue();
-        Assert.Instance.Value(success_action1.Executed).IsTrue();
-        Assert.Instance.Value(success_action2.Executed).IsTrue();
-        Assert.Instance.Value(test_action.Executed).IsFalse();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(begin_action.Executed).IsTrue();
+        Assert.That.Value(success_action1.Executed).IsTrue();
+        Assert.That.Value(success_action2.Executed).IsTrue();
+        Assert.That.Value(test_action.Executed).IsFalse();
+        Assert.That.Value(work_result)
            .As<WorkResult>()
            .Where(result => result.Error).Check(exception => exception.IsNull())
            .Where(result => result.Success).Check(state => state.IsTrue())
@@ -490,11 +490,11 @@ public partial class WorkTests
            .InvokeIfFailure(test_action)
            .Execute();
 
-        Assert.Instance.Value(begin_action.Executed).IsTrue();
-        Assert.Instance.Value(fail_action.Executed).IsTrue();
-        Assert.Instance.Value(no_execute_action.Executed).IsFalse();
-        Assert.Instance.Value(test_action.Executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(begin_action.Executed).IsTrue();
+        Assert.That.Value(fail_action.Executed).IsTrue();
+        Assert.That.Value(no_execute_action.Executed).IsFalse();
+        Assert.That.Value(test_action.Executed).IsTrue();
+        Assert.That.Value(work_result)
            .As<WorkResult>()
            .Where(result => result.Error).Check(exception => exception.IsEqual(fail_action.Exception))
            .Where(result => result.Success).Check(state => state.IsFalse())
@@ -517,12 +517,12 @@ public partial class WorkTests
            .Invoke(test_action)
            .Execute();
 
-        Assert.Instance.Value(begin_action.Executed).IsTrue();
-        Assert.Instance.Value(fail_action.Executed).IsTrue();
-        Assert.Instance.Value(no_execute_action.Executed).IsFalse();
-        Assert.Instance.Value(on_fail_action.Executed).IsTrue();
-        Assert.Instance.Value(test_action.Executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(begin_action.Executed).IsTrue();
+        Assert.That.Value(fail_action.Executed).IsTrue();
+        Assert.That.Value(no_execute_action.Executed).IsFalse();
+        Assert.That.Value(on_fail_action.Executed).IsTrue();
+        Assert.That.Value(test_action.Executed).IsTrue();
+        Assert.That.Value(work_result)
            .As<WorkResult>()
            .Where(result => result.Error).Check(exception => exception.IsEqual(fail_action.Exception))
            .Where(result => result.Success).Check(state => state.IsFalse())
@@ -536,8 +536,8 @@ public partial class WorkTests
 
         var work_result = Work.BeginGet(test_function.Execute).Execute();
 
-        Assert.Instance.Value(test_function.Executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(test_function.Executed).IsTrue();
+        Assert.That.Value(work_result)
            .As<WorkResult<string>>()
            .Where(result => result.Result).Check(value => value.IsEqual(test_function.ReturnValue))
            .Where(result => result.Error).Check(error => error.IsNull())
@@ -555,9 +555,9 @@ public partial class WorkTests
            .Get(test_function.Execute)
            .Execute();
 
-        Assert.Instance.Value(begin_action.Executed).IsTrue();
-        Assert.Instance.Value(test_function.Executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(begin_action.Executed).IsTrue();
+        Assert.That.Value(test_function.Executed).IsTrue();
+        Assert.That.Value(work_result)
            .As<WorkResult<string>>()
            .Where(result => result.Result).Check(value => value.IsEqual(test_function.ReturnValue))
            .Where(result => result.Error).Check(error => error.IsNull())
@@ -577,11 +577,11 @@ public partial class WorkTests
            .GetIfSuccess(test_function.Execute)
            .Execute();
 
-        Assert.Instance
+        Assert.That
            .Value(begin_action.Executed).IsTrue().And
            .Value(fail_action.Executed).IsTrue().And
            .Value(test_function.Executed).IsFalse();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(work_result)
            .As<WorkResult<string>>()
            .Where(result => result.Result).Check(str => str.IsNull())
            .Where(result => result.Success).Check(state => state.IsFalse())
@@ -603,12 +603,12 @@ public partial class WorkTests
            .GetIfFailure(on_fail_function.Execute)
            .Execute();
 
-        Assert.Instance
+        Assert.That
            .Value(begin_action.Executed).IsTrue().And
            .Value(fail_action.Executed).IsTrue().And
            .Value(no_executed_function.Executed).IsFalse().And
            .Value(on_fail_function.Executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(work_result)
            .As<WorkResult<string>>()
            .Where(result => result.Result).Check(str => str.IsEqual(on_fail_function.ReturnValue))
            .Where(result => result.Success).Check(state => state.IsFalse())
@@ -626,9 +626,9 @@ public partial class WorkTests
            .GetIfFailure(on_fail_function.Execute)
            .Execute();
 
-        Assert.Instance.Value(begin_action.Executed).IsTrue();
-        Assert.Instance.Value(on_fail_function.Executed).IsFalse();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(begin_action.Executed).IsTrue();
+        Assert.That.Value(on_fail_function.Executed).IsFalse();
+        Assert.That.Value(work_result)
            .As<WorkResult<string>>()
            .Where(result => result.Result).Check(value => value.IsNull())
            .Where(result => result.Error).Check(exception => exception.IsNull())
@@ -656,12 +656,12 @@ public partial class WorkTests
            .GetIfFailure(ExceptionHandler)
            .Execute();
 
-        Assert.Instance
+        Assert.That
            .Value(begin_action.Executed).IsTrue().And
            .Value(fail_action.Executed).IsTrue().And
            .Value(no_executed_function.Executed).IsFalse().And
            .Value(exception_handler_executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(work_result)
            .As<WorkResult<string>>()
            .Where(result => result.Result).Check(str => str.IsEqual(fail_action.Exception.Message))
            .Where(result => result.Success).Check(state => state.IsTrue())
@@ -687,12 +687,12 @@ public partial class WorkTests
            .GetIfFailure(ExceptionHandler)
            .Execute();
 
-        Assert.Instance
+        Assert.That
            .Value(begin_action.Executed).IsTrue().And
            .Value(value_function.Executed).IsTrue().And
            .Value(exception_handler_executed).IsFalse();
 
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(work_result)
            .As<WorkResult<string>>()
            .Where(result => result.Result).Check(str => str.IsEqual(value_function.ReturnValue))
            .Where(result => result.Success).Check(state => state.IsTrue())
@@ -710,7 +710,7 @@ public partial class WorkTests
            .Get(x => x.ToBase(10).Average())
            .Execute();
 
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(work_result)
            .As<WorkResult<int, double>>()
            .Where(result => result.Result).Check(value => value.IsEqual(5))
            .Where(result => result.Parameter).Check(value => value.IsEqual(123456789))
@@ -729,7 +729,7 @@ public partial class WorkTests
            .GetIfSuccess(x => x.ToBase(10).Average())
            .Execute();
 
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(work_result)
            .As<WorkResult<int, double>>()
            .Where(result => result.Result).Check(value => value.IsEqual(5))
            .Where(result => result.Parameter).Check(value => value.IsEqual(123456789))
@@ -748,7 +748,7 @@ public partial class WorkTests
            .GetIfSuccess(x => x.ToBase(10).Average())
            .Execute();
 
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(work_result)
            .As<WorkResult<int, double>>()
            .Where(result => result.Result).Check(value => value.IsEqual(default))
            .Where(result => result.Parameter).Check(value => value.IsEqual(default))
@@ -778,10 +778,10 @@ public partial class WorkTests
            .GetIfFailure(ExceptionHandler)
            .Execute();
 
-        Assert.Instance.Value(exception_handler_executed).IsFalse();
-        Assert.Instance.Value(handled_exception).IsNull();
+        Assert.That.Value(exception_handler_executed).IsFalse();
+        Assert.That.Value(handled_exception).IsNull();
 
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(work_result)
            .As<WorkResult<int, double>>()
            .Where(result => result.Result).Check(value => value.IsEqual(5))
            .Where(result => result.Parameter).Check(value => value.IsEqual(123456789))
@@ -844,9 +844,9 @@ public partial class WorkTests
            .GetIfFailure(ExceptionHandler)
            .Execute();
 
-        Assert.Instance.Value(exception_handler_executed).IsTrue();
-        Assert.Instance.Value(handled_exception).Is<FormatException>();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(exception_handler_executed).IsTrue();
+        Assert.That.Value(handled_exception).Is<FormatException>();
+        Assert.That.Value(work_result)
            .As<WorkResult<double>>()
            .Where(result => result.Result).Check(value => value.IsEqual(default))
            .Where(result => result.Error).Check(exception => exception.As<AggregateException>()
@@ -870,8 +870,8 @@ public partial class WorkTests
         var work_result = Work.BeginGet(TestFunction)
            .Execute();
 
-        Assert.Instance.Value(test_function_executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(test_function_executed).IsTrue();
+        Assert.That.Value(work_result)
            .As<WorkResult<int>>()
            .Where(result => result.Error).Check(exception => exception.IsEqual(expected_exception))
            .Where(result => result.Failure).Check(status => status.IsTrue())
@@ -900,9 +900,9 @@ public partial class WorkTests
            .Get(TestFunction)
            .Execute();
 
-        Assert.Instance.Value(start_action_executed).IsTrue();
-        Assert.Instance.Value(test_function_executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(start_action_executed).IsTrue();
+        Assert.That.Value(test_function_executed).IsTrue();
+        Assert.That.Value(work_result)
            .As<WorkResult<int>>()
            .Where(result => result.Error).Check(exception => exception.As<AggregateException>()
                .Where(ex => ex.InnerExceptions[0]).Check(error0 => error0.IsEqual(expected_base_work_exception))
@@ -929,9 +929,9 @@ public partial class WorkTests
            .InvokeIfFailure(ExceptionHandler)
            .Execute();
 
-        Assert.Instance.Value(handled_exception).Is<FormatException>();
-        Assert.Instance.Value(exception_handler_executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(handled_exception).Is<FormatException>();
+        Assert.That.Value(exception_handler_executed).IsTrue();
+        Assert.That.Value(work_result)
            .Where(result => result.Error).Check(exception => exception.Is<FormatException>())
            .Where(result => result.Success).Check(status => status.IsFalse())
            .Where(result => result.Failure).Check(status => status.IsTrue());
@@ -955,9 +955,9 @@ public partial class WorkTests
            .InvokeIfFailure(ExceptionHandler)
            .Execute();
 
-        Assert.Instance.Value(handled_exception).IsNull();
-        Assert.Instance.Value(exception_handler_executed).IsFalse();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(handled_exception).IsNull();
+        Assert.That.Value(exception_handler_executed).IsFalse();
+        Assert.That.Value(work_result)
            .Where(result => result.Error).Check(exception => exception.IsNull())
            .Where(result => result.Success).Check(status => status.IsTrue())
            .Where(result => result.Failure).Check(status => status.IsFalse());
@@ -983,9 +983,9 @@ public partial class WorkTests
            .InvokeIfFailure(ExceptionHandler)
            .Execute();
 
-        Assert.Instance.Value(handled_exception).Is<FormatException>();
-        Assert.Instance.Value(exception_handler_executed).IsTrue();
-        Assert.Instance.Value(work_result)
+        Assert.That.Value(handled_exception).Is<FormatException>();
+        Assert.That.Value(exception_handler_executed).IsTrue();
+        Assert.That.Value(work_result)
            .Where(result => result.Error).Check(Exception => Exception.As<AggregateException>()
                .Where(ex => ex.InnerExceptions[0]).Check(inner_ex0 => inner_ex0.Is<FormatException>())
                .Where(ex => ex.InnerExceptions[1]).Check(inner_ex1 => inner_ex1.IsEqual(expected_exception)))

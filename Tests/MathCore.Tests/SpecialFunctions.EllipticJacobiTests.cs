@@ -30,7 +30,7 @@ public class SpecialFunctionsEllipticJacobiTests
         const double eps    = 3.22e-5;
         var          actual = K.ToArray(EllipticJacobi.FullEllipticIntegral);
             
-        Assert.Instance.Collection(actual).IsEqualTo(expected_K, eps);
+        Assert.That.Collection(actual).IsEqualTo(expected_K, eps);
     }
 
     [TestMethod]
@@ -41,7 +41,7 @@ public class SpecialFunctionsEllipticJacobiTests
 
         var actual_K = EllipticJacobi.FullEllipticIntegral_Recursive(k);
 
-        Assert.Instance.Value(actual_K).IsEqual(expected_K, 4.45e-16);
+        Assert.That.Value(actual_K).IsEqual(expected_K, 4.45e-16);
     }
 
     [TestMethod]
@@ -55,7 +55,7 @@ public class SpecialFunctionsEllipticJacobiTests
 
         var actual_sn = EllipticJacobi.sn_iterative(z, k);
 
-        Assert.Instance.Value(actual_sn).IsEqual(expected_sn, 1.12e-16);
+        Assert.That.Value(actual_sn).IsEqual(expected_sn, 1.12e-16);
     }
 
     [TestMethod]
@@ -67,7 +67,7 @@ public class SpecialFunctionsEllipticJacobiTests
 
         var actual_sn = EllipticJacobi.sn_uk(u, k);
 
-        Assert.Instance.Value(actual_sn).IsEqual(expected_sn, 1.12e-16);
+        Assert.That.Value(actual_sn).IsEqual(expected_sn, 1.12e-16);
     }
 
     [TestMethod]
@@ -79,7 +79,7 @@ public class SpecialFunctionsEllipticJacobiTests
 
         var actual_sn = EllipticJacobi.sn_uk_recursive(u, k);
 
-        Assert.Instance.Value(actual_sn).IsEqual(expected_sn, 1.12e-16);
+        Assert.That.Value(actual_sn).IsEqual(expected_sn, 1.12e-16);
     }
 
     [TestMethod]
@@ -93,7 +93,7 @@ public class SpecialFunctionsEllipticJacobiTests
 
         var actual_cd = EllipticJacobi.cd_iterative(z, k);
 
-        Assert.Instance.Value(actual_cd).IsEqual(expected_cd, 1.12e-16);
+        Assert.That.Value(actual_cd).IsEqual(expected_cd, 1.12e-16);
     }
 
     [TestMethod]
@@ -105,13 +105,13 @@ public class SpecialFunctionsEllipticJacobiTests
 
         var actual_cd = EllipticJacobi.cd_uk(u, k);
 
-        Assert.Instance.Value(actual_cd).IsEqual(expected_cd, 1.12e-16);
+        Assert.That.Value(actual_cd).IsEqual(expected_cd, 1.12e-16);
 
         const double u2           = 0.2;
         const double k2           = 0.766760202993181;
         const double expected_cd2 = 0.968346873207978;
         actual_cd = EllipticJacobi.cd_uk(u2, k2);
-        Assert.Instance.Value(actual_cd).IsEqual(expected_cd2, 2.23e-16);
+        Assert.That.Value(actual_cd).IsEqual(expected_cd2, 2.23e-16);
     }
 
     [TestMethod]
@@ -123,7 +123,7 @@ public class SpecialFunctionsEllipticJacobiTests
 
         var actual_cd = EllipticJacobi.cd_uk_recursive(u, k);
 
-        Assert.Instance.Value(actual_cd).IsEqual(expected_cd, 1.12e-16);
+        Assert.That.Value(actual_cd).IsEqual(expected_cd, 1.12e-16);
     }
 
     [TestMethod]
@@ -135,11 +135,11 @@ public class SpecialFunctionsEllipticJacobiTests
 
         var sn = EllipticJacobi.sn_uk(u, k);
 
-        Assert.Instance.Value(sn).IsEqual(expected_sn, 1.12e-16);
+        Assert.That.Value(sn).IsEqual(expected_sn, 1.12e-16);
 
         var actual_sn_inversed = EllipticJacobi.sn_inverse(sn, k);
 
-        Assert.Instance.Value(actual_sn_inversed).IsEqual(u, 2.23e-16);
+        Assert.That.Value(actual_sn_inversed).IsEqual(u, 2.23e-16);
     }
 
     [TestMethod]
@@ -151,11 +151,11 @@ public class SpecialFunctionsEllipticJacobiTests
 
         var sn = EllipticJacobi.sn_uk(u, k);
 
-        Assert.Instance.Value(sn).IsEqual(expected_sn, 1.12e-16);
+        Assert.That.Value(sn).IsEqual(expected_sn, 1.12e-16);
 
         var actual_sn_inversed = EllipticJacobi.sn_inverse_recursive(sn, k);
 
-        Assert.Instance.Value(actual_sn_inversed).IsEqual(u, 2.23e-16);
+        Assert.That.Value(actual_sn_inversed).IsEqual(u, 2.23e-16);
     }
 
     [TestMethod]
@@ -165,12 +165,12 @@ public class SpecialFunctionsEllipticJacobiTests
         const double k           = 0.93;
         const double expected_cd = 7.618094237515579e-1;
         var          cd          = EllipticJacobi.cd_uk(u, k);
-        Assert.Instance.Value(cd).IsEqual(expected_cd, 1.12e-16);
+        Assert.That.Value(cd).IsEqual(expected_cd, 1.12e-16);
 
         const double expected_cd_inverse = u;
 
         var actual_cd_inversed = EllipticJacobi.cd_inverse(cd, k);
-        Assert.Instance.Value(actual_cd_inversed).IsEqual(expected_cd_inverse, 1.12e-16);
+        Assert.That.Value(actual_cd_inversed).IsEqual(expected_cd_inverse, 1.12e-16);
     }
 
     [TestMethod]
@@ -180,11 +180,11 @@ public class SpecialFunctionsEllipticJacobiTests
         const double k           = 0.93;
         const double expected_cd = 7.618094237515579e-1;
         var          cd          = EllipticJacobi.cd_uk(u, k);
-        Assert.Instance.Value(cd).IsEqual(expected_cd, 1.12e-16);
+        Assert.That.Value(cd).IsEqual(expected_cd, 1.12e-16);
 
         const double expected_cd_inverse = u;
 
         var actual_cd_inversed = EllipticJacobi.cd_inverse_recursive(cd, k);
-        Assert.Instance.Value(actual_cd_inversed).IsEqual(expected_cd_inverse, 1.12e-16);
+        Assert.That.Value(actual_cd_inversed).IsEqual(expected_cd_inverse, 1.12e-16);
     }
 }

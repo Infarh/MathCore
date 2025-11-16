@@ -28,29 +28,27 @@ public class PolynomTests : UnitTest
     #endregion
 
     /// <summary>Тест конструктора</summary>
-    [TestMethod, Priority(1), Timeout(100), Description("Тест конструктора")]
+    [TestMethod, Priority(1), Timeout(100, CooperativeCancellation = true), Description("Тест конструктора")]
     public void PolynomConstructor_Test()
     {
         var N       = GetRNDInt(5, 15);
         var A       = GetRNDDoubleArray(N);
         var polynom = new Polynom(A);
         Assert.AreEqual(A.Length - 1, polynom.Power,
-            "Степень полинома {0} не соответствует числу коэффициентов при степенях {1} - 1", polynom.Power, A.Length);
+            $"Степень полинома {polynom.Power} не соответствует числу коэффициентов при степенях {A.Length} - 1");
 
         for (var i = 0; i < N; i++)
-            Assert.AreEqual(A[i], polynom[i], "Коэффициент {0} при степени {1} не соответствует исходному {2}",
-                polynom[i], i, A[i]);
+            Assert.AreEqual(A[i], polynom[i], $"Коэффициент {polynom[i]} при степени {i} не соответствует исходному {A[i]}");
 
         polynom = new(new List<double>(A));
         Assert.AreEqual(A.Length - 1, polynom.Power,
-            "Степень полинома {0} не соответствует числу коэффициентов при степенях {1} - 1", polynom.Power, A.Length);
+            $"Степень полинома {polynom.Power} не соответствует числу коэффициентов при степенях {A.Length} - 1");
         for (var i = 0; i < N; i++)
-            Assert.AreEqual(A[i], polynom[i], "Коэффициент {0} при степени {1} не соответствует исходному {2}",
-                polynom[i], i, A[i]);
+            Assert.AreEqual(A[i], polynom[i], $"Коэффициент {polynom[i]} при степени {i} не соответствует исходному {A[i]}");
     }
 
     /// <summary>Тест значения полинома</summary>
-    [TestMethod, Priority(1), Timeout(100), Description("Тест значения")]
+    [TestMethod, Priority(1), Timeout(100, CooperativeCancellation = true), Description("Тест значения")]
     public void Value_Test()
     {
         double[] A = [3, 5, 7];
@@ -74,7 +72,7 @@ public class PolynomTests : UnitTest
         }
 
         foreach (var x in X)
-            Assert.Instance.Value(p.Value(x)).IsEqual(P(x), 2.0e-15);
+            Assert.That.Value(p.Value(x)).IsEqual(P(x), 2.0e-15);
     }
 
     /// <summary>Тест клонирования</summary>
@@ -97,16 +95,16 @@ public class PolynomTests : UnitTest
         var Q = new Polynom(1, 3, 5);
         var Z = new Polynom(1, 3, 5, 7);
 
-        Assert.IsTrue(P.Equals(P), "Полином {0} не равен сам себе {1}", P, P);
-        Assert.IsTrue(P.Equals(Q), "Полином {0} не равен идентичному полиному {1}", P, Q);
-        Assert.IsFalse(P.Equals(null), "Полином {0} равен null", P);
-        Assert.IsFalse(P.Equals(Z), "Полином {0} равен неравному ему полиному {1}", P, Z);
+        Assert.IsTrue(P.Equals(P), $"Полином {P} не равен сам себе {P}");
+        Assert.IsTrue(P.Equals(Q), $"Полином {P} не равен идентичному полиному {Q}");
+        Assert.IsFalse(P.Equals(null), $"Полином {P} равен null");
+        Assert.IsFalse(P.Equals(Z), $"Полином {P} равен неравному ему полиному {Z}");
 
         P = new(GetRNDDoubleArray(GetRNDInt(5, 15), -5, 5));
         Q = new(P.Coefficients);
 
-        Assert.IsTrue(P.Equals(Q), "Случайный полином {0} не равен полиному {1}, составленному из его коэффициентов", P, Q);
-        Assert.IsFalse(P.Equals(Z), "Случайный полином {0} равен неравному ему полиному {1}", P, Z);
+        Assert.IsTrue(P.Equals(Q), $"Случайный полином {P} не равен полиному {Q}, составленному из его коэффициентов");
+        Assert.IsFalse(P.Equals(Z), $"Случайный полином {P} равен неравному ему полиному {Z}");
     }
 
     /// <summary>Тестирование метода определения равенства полиномов</summary>
@@ -117,23 +115,23 @@ public class PolynomTests : UnitTest
         var Q = new Polynom(1, 3, 5);
         var Z = new Polynom(1, 3, 5, 7);
 
-        Assert.IsTrue(P.Equals((object)P), "Полином {0} не равен сам себе {1}", P, P);
-        Assert.IsTrue(P.Equals((object)Q), "Полином {0} не равен идентичному полиному {1}", P, Q);
-        Assert.IsFalse(P.Equals((object)null), "Полином {0} равен null", P);
-        Assert.IsFalse(P.Equals(new object()), "Полином {0} равен null", P);
-        Assert.IsFalse(P.Equals(5), "Полином {0} равен целому числу", P);
+        Assert.IsTrue(P.Equals((object)P), $"Полином {P} не равен сам себе {P}");
+        Assert.IsTrue(P.Equals((object)Q), $"Полином {P} не равен идентичному полиному {Q}");
+        Assert.IsFalse(P.Equals((object?)null), $"Полином {P} равен null");
+        Assert.IsFalse(P.Equals(new object()), $"Полином {P} равен null");
+        Assert.IsFalse(P.Equals(5), $"Полином {P} равен целому числу");
         // ReSharper disable once SuspiciousTypeConversion.Global
-        Assert.IsFalse(P.Equals("Test"), "Полином {0} равен строке", P);
-        Assert.IsFalse(P.Equals((object)Z), "Полином {0} равен неравному ему полиному {1}", P, Z);
+        Assert.IsFalse(P.Equals("Test"), $"Полином {P} равен строке");
+        Assert.IsFalse(P.Equals((object)Z), $"Полином {P} равен неравному ему полиному {Z}");
 
         P = new(GetRNDDoubleArray(GetRNDInt(5, 15), -5, 5));
         Q = new(P.Coefficients);
 
-        Assert.IsTrue(P.Equals((object)Q), "Случайный полином {0} не равен полиному {1}, составленному из его коэффициентов", P, Q);
-        Assert.IsFalse(P.Equals((object)Z), "Случайный полином {0} равен неравному ему полиному {1}", P, Z);
+        Assert.IsTrue(P.Equals((object)Q), $"Случайный полином {P} не равен полиному {Q}, составленному из его коэффициентов");
+        Assert.IsFalse(P.Equals((object)Z), $"Случайный полином {P} равен неравному ему полиному {Z}");
     }
 
-    [MathCore.Annotations.NotNull] private Polynom GetRandomPolynom(int Power = -1) => new(GetRNDDoubleArray(Power <= -1 ? GetRNDInt(5, 15) : Power + 1, -5, 5));
+    private Polynom GetRandomPolynom(int Power = -1) => new(GetRNDDoubleArray(Power <= -1 ? GetRNDInt(5, 15) : Power + 1, -5, 5));
 
     /// <summary>Тест оператора сложения полиномов</summary>
     [TestMethod]
@@ -143,8 +141,7 @@ public class PolynomTests : UnitTest
         var Q = new Polynom(9, 8, 15, 23);
         var Z = new Polynom(12, 13, 22, 23);
 
-        Assert.IsTrue((P + Q).Equals(Z), "Сумма детерминированных тестовых полиномов рассчитана неверно: " +
-            "{0} + {1} == {2}", P, Q, Z);
+        Assert.IsTrue((P + Q).Equals(Z), $"Сумма детерминированных тестовых полиномов рассчитана неверно: {P} + {Q} == {Z}");
 
         P = GetRandomPolynom();
         Q = GetRandomPolynom();
@@ -160,9 +157,7 @@ public class PolynomTests : UnitTest
         var y_expected = y_p.Zip(y_q, (a, b) => a + b);
 
         var Y = y_actual.Zip(y_expected, (actual, expected) => new { actual, expected });
-        Y.Foreach(v => Assert.IsFalse(Math.Abs(v.expected - v.actual) / v.expected > 4.45e-14,
-            "Относительная точность между ожидаемым {0} и полученным {1} значениями составила {2}",
-            v.expected, v.actual, Math.Abs(v.expected - v.actual) / v.expected));
+        Y.Foreach(v => Assert.IsLessThanOrEqualTo(4.45e-14, Math.Abs(v.expected - v.actual) / v.expected, $"Относительная точность между ожидаемым {v.expected} и полученным {v.actual} значениями составила {Math.Abs(v.expected - v.actual) / v.expected}"));
     }
 
     ///// <summary>
@@ -231,10 +226,10 @@ public class PolynomTests : UnitTest
     {
         void Test(Polynom PP, Polynom QQ)
         {
-            Assert.AreEqual(PP.Power, QQ.Power, "Порядки полиномов P = {0} и Q = {1} не совпадают!", PP, QQ);
+            Assert.AreEqual(PP.Power, QQ.Power, $"Порядки полиномов P = {PP} и Q = {QQ} не совпадают!");
             PP.Zip(QQ, (p, q) => new { p, q })
-               .Foreach((z, i) => Assert.AreEqual(z.p, -z.q, "Для полинома P = {0} значение {1} коэффициента P[{1}] = {2} не равно инвертированному значению полинома Q = {3} : -Q[{1}] = {4}", PP, i, z.p, QQ, -z.q));
-            Assert.IsTrue(PP.Equals(-QQ), "Не выполняется равенство P == Q, если Q = -P для P = {0}, Q = {1}", PP, QQ);
+               .Foreach((z, i) => Assert.AreEqual(z.p, -z.q, $"Для полинома P = {PP} значение {i} коэффициента P[{i}] = {z.p} не равно инвертированному значению полинома Q = {QQ} : -Q[{i}] = {-z.q}"));
+            Assert.IsTrue(PP.Equals(-QQ), $"Не выполняется равенство P == Q, если Q = -P для P = {PP}, Q = {QQ}");
 
             GetRNDDoubleArray(GetRNDInt(5, 15), -5, 5).Foreach(x => Assert.AreEqual(0, PP.Value(x) + QQ.Value(x), 1e-16));
         }
@@ -253,7 +248,7 @@ public class PolynomTests : UnitTest
         void Test(Polynom P, Polynom Q)
         {
             var Z = P - Q;
-            Assert.AreEqual(Math.Max(P.Power, Q.Power), Z.Power, "Степень полинома разности {2} = {5} не равна " + "максимуму из степеней уменьшаемого {0} = {3} и вычитаемого {1} = {4} полиномов", P, Q, Z, P.Power, Q.Power, Z.Power);
+            Assert.AreEqual(Math.Max(P.Power, Q.Power), Z.Power, $"Степень полинома разности {Z} = {Z.Power} не равна максимуму из степеней уменьшаемого {P} = {P.Power} и вычитаемого {Q} = {Q.Power} полиномов");
             GetRNDDoubleArray(1000, -50, 50)
                .Select(x => new { yP       = P.Value(x), yQ      = Q.Value(x), yZ = Z.Value(x) })
                .Select(v => new { expected = v.yP - v.yQ, actual = v.yZ })

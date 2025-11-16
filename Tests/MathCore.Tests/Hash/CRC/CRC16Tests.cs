@@ -19,7 +19,7 @@ public class CRC16Tests
 
         Debug.WriteLine("Actual   0x{0:X4}", actual_crc);
         Debug.WriteLine("Expected 0x{0:X4}", expected_crc);
-        Assert.Instance.Value($"0x{actual_crc:X4}").IsEqual($"0x{expected_crc:X4}");
+        Assert.That.Value($"0x{actual_crc:X4}").IsEqual($"0x{expected_crc:X4}");
     }
 
     [TestMethod]

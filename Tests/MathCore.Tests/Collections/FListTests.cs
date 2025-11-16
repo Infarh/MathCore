@@ -16,7 +16,7 @@ public class FListTests
     {
         var empty1 = FList<int>.Empty;
         var empty2 = FList<int>.Empty;
-        Assert.Instance.Value(empty1).IsReferenceEquals(empty2);
+        Assert.That.Value(empty1).IsReferenceEquals(empty2);
     }
 
     [TestMethod]
@@ -24,7 +24,7 @@ public class FListTests
     {
         var empty1 = FList.Empty<int>();
         var empty2 = FList<int>.Empty;
-        Assert.Instance.Value(empty1).IsReferenceEquals(empty2);
+        Assert.That.Value(empty1).IsReferenceEquals(empty2);
     }
 
     [TestMethod]
@@ -32,7 +32,7 @@ public class FListTests
     {
         const int head = 42;
         var       list = FList.New(head);
-        Assert.Instance.Value(list)
+        Assert.That.Value(list)
            .Where(l => l.IsEmpty).CheckEquals(false)
            .Where(l => l.Head).CheckEquals(head)
            .Where(l => l.Tail).Check(tail => tail.IsReferenceEquals(FList<int>.Empty));
@@ -43,7 +43,7 @@ public class FListTests
     {
         int[] items = [1, 2, 3];
         var   list  = FList.New(items);
-        Assert.Instance.Value(list)
+        Assert.That.Value(list)
            .Where(l => l.IsEmpty).CheckEquals(false)
            .Where(l => l.Head).CheckEquals(items[0])
            .Where(l => l.Tail).Check(tail1 => tail1
@@ -64,7 +64,7 @@ public class FListTests
         var items       = Enumerable.Range(1, 3);
         var items_array = items.ToArray();
         var list        = FList.New(items);
-        Assert.Instance.Value(list)
+        Assert.That.Value(list)
            .Where(l => l.IsEmpty).CheckEquals(false)
            .Where(l => l.Head).CheckEquals(items_array[0])
            .Where(l => l.Tail).Check(tail1 => tail1
@@ -93,7 +93,7 @@ public class FListTests
         var list       = FList.New(items);
         var item_index = 0;
         foreach (var item in (IEnumerable)list) 
-            Assert.Instance.Value(item).IsEqual(items[item_index++]);
+            Assert.That.Value(item).IsEqual(items[item_index++]);
     }
 
     [TestMethod]
@@ -103,6 +103,6 @@ public class FListTests
         var list               = FList.New(items);
         var list_string        = list.ToString();
         var string_list_values = Regex.Matches(list_string, @"\d+").Select(m => int.Parse(m.Value)).ToArray();
-        Assert.Instance.Collection(string_list_values).IsEqualTo(items);
+        Assert.That.Collection(string_list_values).IsEqualTo(items);
     }
 }

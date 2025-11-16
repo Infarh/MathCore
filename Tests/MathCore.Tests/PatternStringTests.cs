@@ -24,7 +24,7 @@ public class PatternStringTests
 
         var result = processor.ToString();
 
-        Assert.Instance.Value(result).IsEqual($"{file_name}[{now:yyy-MM-ddTHH-mm-ss}].{ext}");
+        Assert.That.Value(result).IsEqual($"{file_name}[{now:yyy-MM-ddTHH-mm-ss}].{ext}");
     }
 
     [TestMethod]
@@ -48,6 +48,6 @@ public class PatternStringTests
         var result = processor.ToString();
         Debug.WriteLine(result);
 
-        Assert.Instance.Value(result).IsEqual($"{file_name}[{now:yyy-MM-ddTHH-mm-ss}].{ext}");
+        Assert.That.Value(result).IsEqual($"{file_name}[{now:yyy-MM-ddTHH-mm-ss}].{ext}");
     }
 }

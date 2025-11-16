@@ -77,7 +77,7 @@ public class CRC8Tests
 
         Debug.WriteLine("Actual   0x{0:X2}", actual_crc);
         Debug.WriteLine("Expected 0x{0:X2}", expected_crc);
-        Assert.Instance.Value($"0x{actual_crc:X2}").IsEqual($"0x{expected_crc:X2}");
+        Assert.That.Value($"0x{actual_crc:X2}").IsEqual($"0x{expected_crc:X2}");
     }
 
     [TestMethod]
@@ -90,7 +90,7 @@ public class CRC8Tests
 
         Debug.WriteLine("Actual   0x{0:X2}", actual_crc);
         Debug.WriteLine("Expected 0x{0:X2}", expected_crc);
-        Assert.Instance.Value($"0x{actual_crc:X2}").IsEqual($"0x{expected_crc:X2}");
+        Assert.That.Value($"0x{actual_crc:X2}").IsEqual($"0x{expected_crc:X2}");
     }
 
     [TestMethod]
@@ -106,7 +106,7 @@ public class CRC8Tests
 
         Debug.WriteLine("Actual   0x{0:X2}", actual_crc);
         Debug.WriteLine("Expected 0x{0:X2}", expected_crc);
-        Assert.Instance.Value($"0x{actual_crc:X2}").IsEqual($"0x{expected_crc:X2}");
+        Assert.That.Value($"0x{actual_crc:X2}").IsEqual($"0x{expected_crc:X2}");
     }
 
     [TestMethod, Ignore]
@@ -121,7 +121,7 @@ public class CRC8Tests
         Debug.WriteLine("Actual   0x{0:X2}", actual_crc);
         Debug.WriteLine("Expected 0x{0:X2}", expected_crc);
         // Эталонное значение для MAXIM: 0x98
-        Assert.Instance.Value($"0x{actual_crc:X2}").IsEqual($"0x{expected_crc:X2}");
+        Assert.That.Value($"0x{actual_crc:X2}").IsEqual($"0x{expected_crc:X2}");
     }
 
     [TestMethod, Ignore]
@@ -135,7 +135,7 @@ public class CRC8Tests
 
         Debug.WriteLine("Actual   0x{0:X2}", actual_crc);
         Debug.WriteLine("Expected 0x{0:X2}", expected_crc);
-        Assert.Instance.Value($"0x{actual_crc:X2}").IsEqual($"0x{expected_crc:X2}");
+        Assert.That.Value($"0x{actual_crc:X2}").IsEqual($"0x{expected_crc:X2}");
     }
 
     [TestMethod]
@@ -146,7 +146,7 @@ public class CRC8Tests
 
         var result = crc.ComputeChecksumBytes(data);
 
-        Assert.Instance.Value(result.Length).IsEqual(1);
+        Assert.That.Value(result.Length).IsEqual(1);
     }
 
     [TestMethod]
@@ -158,7 +158,7 @@ public class CRC8Tests
         var crc1 = crc.ContinueCompute(0, data);
         var crc2 = crc.ContinueCompute(0, (IEnumerable<byte>)data);
 
-        Assert.Instance.Value(crc1).IsEqual(crc2);
+        Assert.That.Value(crc1).IsEqual(crc2);
     }
 
     [TestMethod]
@@ -171,6 +171,6 @@ public class CRC8Tests
         crc.Compute(ref crc_val, data);
         var expected = crc.ContinueCompute(0, data);
 
-        Assert.Instance.Value(crc_val).IsEqual(expected);
+        Assert.That.Value(crc_val).IsEqual(expected);
     }
 }

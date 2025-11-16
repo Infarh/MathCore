@@ -67,7 +67,7 @@ public class CsvQueryTests : CSVTestsBase
 
         var students_array = students.Take(5).ToArray();
 
-        Assert.Instance.Collection(students_array)
+        Assert.That.Collection(students_array)
            .AllItems((student, i) => student
                .Where(s => s.Id).Check(id => id.IsEqual(i + 1))
                .Where(s => s.Name).Check(Name => Name.IsEqual($"Name-{i + 1}"))
@@ -92,8 +92,8 @@ public class CsvQueryTests : CSVTestsBase
 
         var expected_headers = new SortedList<string, int>(header_columns);
 
-        Assert.Instance.Collection(header.Keys).IsEqualTo(expected_headers.Keys);
-        Assert.Instance.Collection(header).IsEqualTo(expected_headers);
+        Assert.That.Collection(header.Keys).IsEqualTo(expected_headers.Keys);
+        Assert.That.Collection(header).IsEqualTo(expected_headers);
     }
 
     [TestMethod]

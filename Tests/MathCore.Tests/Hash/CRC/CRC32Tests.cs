@@ -168,20 +168,19 @@ public class CRC32Tests
 
         return;
 
-        static uint CRC_Normal(uint[] table, uint crc, ReadOnlySpan<byte> bytes)
-        {
-            foreach (var b in bytes)
-                crc = table[((crc >> 24) ^ b) & 0xFF] ^ (crc << 8);
-            return crc;
-        }
+        //static uint CRC_Normal(uint[] table, uint crc, ReadOnlySpan<byte> bytes)
+        //{
+        //    foreach (var b in bytes)
+        //        crc = table[((crc >> 24) ^ b) & 0xFF] ^ (crc << 8);
+        //    return crc;
+        //}
 
-        static uint CRC_Ref(uint[] table, uint crc, ReadOnlySpan<byte> bytes)
-        {
-            foreach (var b in bytes)
-                crc = table[(crc ^ b) & 0xFF] ^ (crc >> 8);
-            return crc;
-        }
-
+        //static uint CRC_Ref(uint[] table, uint crc, ReadOnlySpan<byte> bytes)
+        //{
+        //    foreach (var b in bytes)
+        //        crc = table[(crc ^ b) & 0xFF] ^ (crc >> 8);
+        //    return crc;
+        //}
     }
 
     [TestMethod, Ignore]

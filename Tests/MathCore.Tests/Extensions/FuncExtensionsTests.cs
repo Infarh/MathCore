@@ -15,7 +15,7 @@ public class FuncExtensionsTests
 
         var actual_result = await func.InvokeAsync();
 
-        Assert.Instance.Value(actual_result).IsEqual(expected_result);
+        Assert.That.Value(actual_result).IsEqual(expected_result);
     }
 
     [TestMethod]
@@ -31,6 +31,6 @@ public class FuncExtensionsTests
 
         var actual_result = await func.InvokeAsync(data_string);
 
-        Assert.Instance.Value(actual_result).IsEqual(expected_result);
+        Assert.That.Value(actual_result).IsEqual(expected_result);
     }
 }

@@ -161,14 +161,14 @@ public partial class WorkTests
 
         var registration_result = controller.Register(test_user_name, test_user_password);
 
-        CollectionAssert.Instance.Collection(users).Contains(user => user.UserName == test_user_name);
-        Assert.Instance.Value(registration_result).IsNotNull();
-        Assert.Instance.Value(registration_result).Is<SuccessResult>();
+        CollectionAssert.That.Collection(users).Contains(user => user.UserName == test_user_name);
+        Assert.That.Value(registration_result).IsNotNull();
+        Assert.That.Value(registration_result).Is<SuccessResult>();
 
         var test_user    = user_manager.GetUserByName(test_user_name);
         var login_result = controller.Login(test_user_name, test_user_password);
-        Assert.Instance.Value(login_result).Is<SuccessResult>();
-        Assert.Instance.Value(test_user)
+        Assert.That.Value(login_result).Is<SuccessResult>();
+        Assert.That.Value(test_user)
            .AsNotNull()
            .Where(user => user.LoggedIn).IsTrue();
     }

@@ -29,9 +29,9 @@ public class LimitedStreamTests
         var actual_position        = limited.Position;
         var actual_source_position = source.Position;
 
-        Assert.Instance.Value(seek_actual).IsEqual(expected_seek);
-        Assert.Instance.Value(actual_position).IsEqual(expected_seek);
-        Assert.Instance.Value(actual_source_position).IsEqual(stream_offset + expected_seek);
+        Assert.That.Value(seek_actual).IsEqual(expected_seek);
+        Assert.That.Value(actual_position).IsEqual(expected_seek);
+        Assert.That.Value(actual_source_position).IsEqual(stream_offset + expected_seek);
     }
 
     [TestMethod, Ignore]
@@ -47,9 +47,9 @@ public class LimitedStreamTests
 
         var error = Assert.ThrowsExactly<IOException>(() => limited.Seek(offset, SeekOrigin.Begin));
 
-        Assert.Instance.Value(error.Message)
+        Assert.That.Value(error.Message)
            .IsEqual("An attempt was made to move the position before the beginning of the stream.");
-        Assert.Instance.Value(error.Data["offset"]).IsEqual(offset);
+        Assert.That.Value(error.Data["offset"]).IsEqual(offset);
     }
 
     [TestMethod]
@@ -69,9 +69,9 @@ public class LimitedStreamTests
         var actual_position        = limited.Position;
         var actual_source_position = source.Position;
 
-        Assert.Instance.Value(actual_seek).IsEqual(expected_seek);
-        Assert.Instance.Value(actual_position).IsEqual(expected_seek);
-        Assert.Instance.Value(actual_source_position).IsEqual(expected_source_position);
+        Assert.That.Value(actual_seek).IsEqual(expected_seek);
+        Assert.That.Value(actual_position).IsEqual(expected_seek);
+        Assert.That.Value(actual_source_position).IsEqual(expected_source_position);
     }
 
     [TestMethod]
@@ -90,9 +90,9 @@ public class LimitedStreamTests
         var seek_actual     = limited.Seek(offset, SeekOrigin.End);
         var actual_position = limited.Position;
 
-        Assert.Instance.Value(seek_actual).IsEqual(expected_position);
-        Assert.Instance.Value(actual_position).IsEqual(expected_position);
-        Assert.Instance.Value(source.Position).IsEqual(expected_source_position);
+        Assert.That.Value(seek_actual).IsEqual(expected_position);
+        Assert.That.Value(actual_position).IsEqual(expected_position);
+        Assert.That.Value(source.Position).IsEqual(expected_source_position);
     }
 
     [TestMethod, Ignore]
@@ -108,9 +108,9 @@ public class LimitedStreamTests
 
         var error = Assert.ThrowsExactly<IOException>(() => limited.Seek(offset, SeekOrigin.End));
 
-        Assert.Instance.Value(error.Message)
+        Assert.That.Value(error.Message)
            .IsEqual("An attempt was made to move the position before the beginning of the stream.");
-        Assert.Instance.Value(error.Data["offset"]).IsEqual(offset);
+        Assert.That.Value(error.Data["offset"]).IsEqual(offset);
     }
 
     //[TestMethod]
@@ -130,9 +130,9 @@ public class LimitedStreamTests
     //    var actual_position = limited.Position;
     //    var actual_source_position = source.Position;
 
-    //    Assert.Instance.Value(actual_seek).IsEqual(expected_seek);
-    //    Assert.Instance.Value(actual_position).IsEqual(expected_seek);
-    //    Assert.Instance.Value(actual_source_position).IsEqual(expected_source_position);
+    //    Assert.That.Value(actual_seek).IsEqual(expected_seek);
+    //    Assert.That.Value(actual_position).IsEqual(expected_seek);
+    //    Assert.That.Value(actual_source_position).IsEqual(expected_source_position);
     //}
 
     //[TestMethod]
@@ -149,6 +149,6 @@ public class LimitedStreamTests
     //    limited.Write(buffer);
 
     //    for (var i = 0; i < length; i++)
-    //        Assert.Instance.Value(buffer[i]).IsEqual((byte)(i + offset));
+    //        Assert.That.Value(buffer[i]).IsEqual((byte)(i + offset));
     //}
 }

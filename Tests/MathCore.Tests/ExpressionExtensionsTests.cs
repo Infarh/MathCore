@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+
 using MathCore.Extensions.Expressions;
 
 namespace MathCore.Tests;
@@ -51,8 +52,8 @@ public class ExpressionExtensionsTests
 
         var modified_function = (Func<double, double>)modified_expression.Compile();
 
-        Assert.AreEqual((int)modified_function(1), 21);
-        Assert.AreEqual((int)modified_function(2), 2 * 2 * 2 * 2 * 2 * 2 + 20);
+        Assert.AreEqual(21, (int)modified_function(1));
+        Assert.AreEqual(2 * 2 * 2 * 2 * 2 * 2 + 20, (int)modified_function(2));
     }
 
     [TestMethod]
@@ -71,7 +72,7 @@ public class ExpressionExtensionsTests
         var modified_function = (Func<double, double, double, double>)modified_expression.Compile();
 
         var result = modified_function(1, 10, -9);
-        Assert.AreEqual(result, 50);
+        Assert.AreEqual(50, result);
 
         Console.WriteLine(original_expression);
         Console.WriteLine();

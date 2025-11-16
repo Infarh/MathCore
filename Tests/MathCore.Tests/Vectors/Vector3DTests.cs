@@ -1,6 +1,8 @@
 ﻿using MathCore.Vectors;
 
 using static System.Math;
+// ReSharper disable InconsistentNaming
+// ReSharper disable MoveLocalFunctionAfterJumpStatement
 
 // ReSharper disable UnusedMember.Global
 
@@ -23,9 +25,9 @@ public class Vector3DTests : UnitTest
     private static void TestVectorsComponents(double x, double y, double z, Vector3D r, double delta = double.Epsilon)
     {
         var (rx, ry, rz) = r;
-        Assert.AreEqual(x, rx, delta, "\r\nКомпонента вектора r.X = {0} не соответствует требуемому значению {1}", rx, x);
-        Assert.AreEqual(y, ry, delta, "\r\nКомпонента вектора r.Y = {0} не соответствует требуемому значению {1}", ry, y);
-        Assert.AreEqual(z, rz, delta, "\r\nКомпонента вектора r.Z = {0} не соответствует требуемому значению {1}", rz, z);
+        Assert.AreEqual(x, rx, delta, $"\r\nКомпонента вектора r.X = {rx} не соответствует требуемому значению {x}");
+        Assert.AreEqual(y, ry, delta, $"\r\nКомпонента вектора r.Y = {ry} не соответствует требуемому значению {y}");
+        Assert.AreEqual(z, rz, delta, $"\r\nКомпонента вектора r.Z = {rz} не соответствует требуемому значению {z}");
     }
 
     /// <summary>Тест общего конструктора 3-х-мерного вектора</summary>
@@ -86,9 +88,9 @@ public class Vector3DTests : UnitTest
         {
             //testRA(r, a);
             var v = new Vector3D(r, a);
-            Assert.AreEqual(x, v.X, 2e-16, "\r\n{0}.X = {1} != {2} = x", v, v.X, x);
-            Assert.AreEqual(y, v.Y, 2e-16, "\r\n{0}.Y = {1} != {2} = x", v, v.Y, y);
-            Assert.AreEqual(z, v.Z, 2e-16, "\r\n{0}.Z = {1} != {2} = x", v, v.Z, z);
+            Assert.AreEqual(x, v.X, 2e-16, $"\r\n{v}.X = {v.X} != {x} = x");
+            Assert.AreEqual(y, v.Y, 2e-16, $"\r\n{v}.Y = {v.Y} != {y} = x");
+            Assert.AreEqual(z, v.Z, 2e-16, $"\r\n{v}.Z = {v.Z} != {z} = x");
         }
 
         var R = 0.0;
@@ -110,8 +112,8 @@ public class Vector3DTests : UnitTest
         double Theta;
         double Phi;
 
-        Func<double, double> sin1 = Sin;
-        Func<double, double> cos1 = Cos;
+        var sin1 = Sin;
+        var cos1 = Cos;
         void TestThetaPhi() => TestXYZ(R, new(Theta, Phi), R * sin1(Theta) * cos1(Phi), R * sin1(Theta) * sin1(Phi), R * cos1(Theta));
 
         for (Phi = -2 * pi; Phi <= 2 * pi; Phi += 0.1 * pi)
@@ -134,9 +136,9 @@ public class Vector3DTests : UnitTest
         {
             //testRA(r, a);
             var v = a.DirectionalVector;
-            Assert.AreEqual(x, v.X, 2e-16, "\r\n{0}.X = {1} != {2} = x", v, v.X, x);
-            Assert.AreEqual(y, v.Y, 2e-16, "\r\n{0}.Y = {1} != {2} = x", v, v.Y, y);
-            Assert.AreEqual(z, v.Z, 2e-16, "\r\n{0}.Z = {1} != {2} = x", v, v.Z, z);
+            Assert.AreEqual(x, v.X, 2e-16, $"\r\n{v}.X = {v.X} != {x} = x");
+            Assert.AreEqual(y, v.Y, 2e-16, $"\r\n{v}.Y = {v.Y} != {y} = x");
+            Assert.AreEqual(z, v.Z, 2e-16, $"\r\n{v}.Z = {v.Z} != {z} = x");
         }
 
         var A = new SpaceAngle();
@@ -253,7 +255,7 @@ public class Vector3DTests : UnitTest
         {
             var p = v.GetProjectionTo(new Vector3D(Direction));
             var P = v.GetProjectionTo(Direction);
-            Assert.Instance.Value(P).IsEqual(p, 6.0e-14);
+            Assert.That.Value(P).IsEqual(p, 6.0e-14);
         }
 
         Test(new());
@@ -273,7 +275,7 @@ public class Vector3DTests : UnitTest
     [TestMethod, Priority(4), Description("Тестирование метода преобразования вектора в базисе")]
     public void InBasis_Test()
     {
-        var seed = -1212098950;
+        const int seed = -1212098950;
         //var seed = (int)DateTime.Now.Ticks;
         var x = Vector3D.Random(rnd: new(seed));
         var b = new Basis3D(1, 0, 0,
@@ -296,18 +298,15 @@ public class Vector3DTests : UnitTest
 
         var actual_angle = (y.AngleXOY - x.AngleXOY + 2 * pi).AbsMod(2 * pi);
         Assert.AreEqual(angle, actual_angle, eps,
-            "\r\n\t|(y.AngleXOY - x.AngleXOY) - angle| = {0:E}" +
-            "\r\n\tangle = {1}·π" +
-            "\r\n\tx.AngleXOY = {2}·π - {3}" +
-            "\r\n\ty.AngleXOY = {4}·π - {5}" +
-            "\r\n\ty.AngleXOY - x.AngleXOY = {6}·π"+
-            "\r\n\tseed = {7}",
-            Abs(y.AngleXOY - x.AngleXOY - angle),
-            angle / Consts.pi,
-            x.AngleXOY / pi, x,
-            y.AngleXOY / pi, y,
-            (y.AngleXOY - x.AngleXOY) / pi,
-            seed);
+            $"""
+
+                 |(y.AngleXOY - x.AngleXOY) - angle| = {Abs(y.AngleXOY - x.AngleXOY - angle):E}
+                 angle = {angle / Consts.pi}·π
+                 x.AngleXOY = {x.AngleXOY / pi}·π - {x}
+                 y.AngleXOY = {y.AngleXOY / pi}·π - {y}
+                 y.AngleXOY - x.AngleXOY = {(y.AngleXOY - x.AngleXOY) / pi}·π
+                 seed = {seed}
+             """);
     }
 
     /// <summary>Тестирование метода определения проекции вектора на вектор</summary>
@@ -342,7 +341,7 @@ public class Vector3DTests : UnitTest
 #pragma warning disable IDE0047 // Удалить ненужные круглые скобки
         Assert.AreEqual((X * Y) / Y.R, X.GetProjectionTo(Y));
         Assert.AreEqual((X * Y) / X.R, Y.GetProjectionTo(X));
-#pragma warning restore IDE0047 // Удалить ненужные круглые скобки
+#pragma warning restore IDE0047 // Удалить ненужные скобки
     }
 
     /// <summary>Тестирование скалярного произведения двух векторов</summary>
@@ -940,7 +939,7 @@ public class Vector3DTests : UnitTest
         void Test()
         {
             var v = new Vector3D(x, y, z);
-            Assert.AreEqual(Atan2(Sqrt(x * x + y * y), z), v.Theta, "{0}", v);
+            Assert.AreEqual(Atan2(Sqrt(x * x + y * y), z), v.Theta, $"{v}");
         }
 
         Test();
@@ -974,7 +973,7 @@ public class Vector3DTests : UnitTest
             var r = new Vector3D(x, y, z);
             // ReSharper disable once InconsistentNaming
             var rR = r.R;
-            Assert.AreEqual(R, rR, double.Epsilon, "Длина вектора {0} = {1} не соответствует ожидаемой {2}", r, rR, R);
+            Assert.AreEqual(R, rR, double.Epsilon, $"Длина вектора {r} = {rR} не соответствует ожидаемой {R}");
         }
 
         Test();
@@ -1003,7 +1002,7 @@ public class Vector3DTests : UnitTest
             var r = new Vector3D(x, y, z);
             // ReSharper disable once InconsistentNaming
             var rR = r.R_XOY;
-            Assert.AreEqual(R, rR, double.Epsilon, "Длина вектора {0} = {1} не соответствует ожидаемой {2}", r, rR, R);
+            Assert.AreEqual(R, rR, double.Epsilon, $"Длина вектора {r} = {rR} не соответствует ожидаемой {R}");
         }
 
         Test();
@@ -1030,7 +1029,7 @@ public class Vector3DTests : UnitTest
             var r = new Vector3D(x, y, z);
             // ReSharper disable once InconsistentNaming
             var rR = r.R_XOZ;
-            Assert.AreEqual(R, rR, double.Epsilon, "Длина вектора {0} = {1} не соответствует ожидаемой {2}", r, rR, R);
+            Assert.AreEqual(R, rR, double.Epsilon, $"Длина вектора {r} = {rR} не соответствует ожидаемой {R}");
         }
 
         Test();
@@ -1057,7 +1056,7 @@ public class Vector3DTests : UnitTest
             var r = new Vector3D(x, y, z);
             // ReSharper disable once InconsistentNaming
             var rR = r.R_YOZ;
-            Assert.AreEqual(R, rR, double.Epsilon, "Длина вектора {0} = {1} не соответствует ожидаемой {2}", r, rR, R);
+            Assert.AreEqual(R, rR, double.Epsilon, $"Длина вектора {r} = {rR} не соответствует ожидаемой {R}");
         }
 
         Test();
@@ -1113,7 +1112,7 @@ public class Vector3DTests : UnitTest
         var x = GetRNDDouble();
         // ReSharper disable once UseDeconstruction
         var r = new Vector3D(x, 0, 0);
-        Assert.AreEqual(x, r.X, "Свойство вектора r.X = {0} не соответствует ожидаемому x = {1}", r.X, x);
+        Assert.AreEqual(x, r.X, $"Свойство вектора r.X = {r.X} не соответствует ожидаемому x = {x}");
     }
 
     /// <summary>Тест свойства - Y</summary>
@@ -1123,7 +1122,7 @@ public class Vector3DTests : UnitTest
         var y = GetRNDDouble();
         // ReSharper disable once UseDeconstruction
         var r = new Vector3D(0, y, 0);
-        Assert.AreEqual(y, r.Y, "Свойство вектора r.Y = {0} не соответствует ожидаемому y = {1}", r.Y, y);
+        Assert.AreEqual(y, r.Y, $"Свойство вектора r.Y = {r.Y} не соответствует ожидаемому y = {y}");
     }
 
     /// <summary>Тест свойства - Z</summary>
@@ -1133,7 +1132,7 @@ public class Vector3DTests : UnitTest
         var z = GetRNDDouble();
         // ReSharper disable once UseDeconstruction
         var r = new Vector3D(0, 0, z);
-        Assert.AreEqual(z, r.Z, "Свойство вектора r.Z = {0} не соответствует ожидаемому z = {1}", r.Z, z);
+        Assert.AreEqual(z, r.Z, $"Свойство вектора r.Z = {r.Z} не соответствует ожидаемому z = {z}");
     }
 
     #endregion

@@ -11,7 +11,7 @@ public class IntExtensionsTests
 
         var actual_digit_count = value.GetNumberOfDigits();
 
-        Assert.Instance.Value(actual_digit_count)
+        Assert.That.Value(actual_digit_count)
            .IsEqual(expected_digit_count);
     }
 
@@ -23,6 +23,6 @@ public class IntExtensionsTests
 
         var actual_bits_count = value.BitCount();
 
-        Assert.Instance.Value(actual_bits_count).IsEqual(expected_bits_count);
+        Assert.That.Value(actual_bits_count).IsEqual(expected_bits_count);
     }
 }

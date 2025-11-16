@@ -59,8 +59,8 @@ public class PSOMinimizerTests : UnitTest
 
             f.Minimize(x0 - Dx / 2, x0 + Dx / 2, 100, out var x, out var y);
 
-            Assert.Instance.Value(x).IsEqual(x0, 0.5, "x != x0");
-            Assert.Instance.Value(y).IsEqual(y0, 0.5, "y != y0");
+            Assert.That.Value(x).IsEqual(x0, 0.5, "x != x0");
+            Assert.That.Value(y).IsEqual(y0, 0.5, "y != y0");
         }
     }
 
@@ -80,8 +80,8 @@ public class PSOMinimizerTests : UnitTest
             f.Maximize(x0 - Dx / 2, x0 + Dx / 2, 100, out var x, out var y);
 
             const double eps = 0.5;
-            Assert.Instance.Value(x).IsEqual(x0, eps, "x != x0");
-            Assert.Instance.Value(y).IsEqual(y0, eps, "y != y0");
+            Assert.That.Value(x).IsEqual(x0, eps, "x != x0");
+            Assert.That.Value(y).IsEqual(y0, eps, "y != y0");
         }
     }
 }

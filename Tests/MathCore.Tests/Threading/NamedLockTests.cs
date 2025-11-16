@@ -7,7 +7,7 @@ namespace MathCore.Tests.Threading;
 [TestClass]
 public class NamedLockTests
 {
-    [TestMethod, Timeout(10000)]
+    [TestMethod, Timeout(10000, CooperativeCancellation = true)]
     public async Task MultipleAccessTest()
     {
         const string resource_name = "test";

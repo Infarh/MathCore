@@ -300,7 +300,7 @@ public class IEnumerableExtensionsTests
 
         var buffer = x.AverageMedian(3).ToArray();
 
-        Assert.Instance.Collection(buffer).ValuesAreEqual(expected_y);
+        Assert.That.Collection(buffer).ValuesAreEqual(expected_y);
     }
 
     [TestMethod]
@@ -334,7 +334,7 @@ public class IEnumerableExtensionsTests
 
         var buffer = x.AverageMedian(4).ToArray();
 
-        Assert.Instance.Collection(buffer).ValuesAreEqual(expected_y);
+        Assert.That.Collection(buffer).ValuesAreEqual(expected_y);
     }
 
     [TestMethod]
@@ -346,7 +346,7 @@ public class IEnumerableExtensionsTests
         var items = Enumerable.Range(0, total_count);
         var last = items.TakeLast(count).ToArray();
 
-        CollectionAssert.Instance.Collection(last)
+        CollectionAssert.That.Collection(last)
            .IsEqualTo(Enumerable.Range(total_count - count, count).ToArray());
     }
 
@@ -361,13 +361,13 @@ public class IEnumerableExtensionsTests
 
         var blocks = items.AsBlockEnumerable(block_size).ToArray();
 
-        Assert.Instance.Value(blocks).Where(b => b.Length).IsEqual(expected_blocks_count);
+        Assert.That.Value(blocks).Where(b => b.Length).IsEqual(expected_blocks_count);
 
         for (var i = 0; i < expected_blocks_count - 1; i++)
         {
             var block = blocks[i];
             var expected_collection = Enumerable.Range(i * block_size + 1, block_size);
-            Assert.Instance.Collection(block).IsEqualTo(expected_collection);
+            Assert.That.Collection(block).IsEqualTo(expected_collection);
         }
     }
 }

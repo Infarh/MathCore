@@ -58,7 +58,7 @@ public class SpecialFunctionsTests
         for (var k = 0; k <= n; k++)
         {
             var actual = MathCore.SpecialFunctions.BinomialCoefficient(n, k);
-            Assert.Instance.Value(actual).IsEqual(expected[k]);
+            Assert.That.Value(actual).IsEqual(expected[k]);
         }
     }
 
@@ -67,7 +67,7 @@ public class SpecialFunctionsTests
     {
         const int n      = 4;
         var       actual = MathCore.SpecialFunctions.BinomialCoefficient(n, -1);
-        Assert.Instance.Value(actual).IsEqual(0);
+        Assert.That.Value(actual).IsEqual(0);
     }
 
     [TestMethod]
@@ -75,6 +75,6 @@ public class SpecialFunctionsTests
     {
         const int n      = 4;
         var       actual = MathCore.SpecialFunctions.BinomialCoefficient(n, n + 1);
-        Assert.Instance.Value(actual).IsEqual(0);
+        Assert.That.Value(actual).IsEqual(0);
     }
 }

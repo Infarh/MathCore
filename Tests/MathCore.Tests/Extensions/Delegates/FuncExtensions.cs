@@ -71,7 +71,7 @@ public class FuncExtensionsIntegrals
          
         PrintTestResult(integral_value, 1, test.CallCount);
 
-        Assert.Instance.Value(integral_value).IsEqual(__ExpectedIntegralOfTestFunc_0_1);
+        Assert.That.Value(integral_value).IsEqual(__ExpectedIntegralOfTestFunc_0_1);
     }
 
     [TestMethod]
@@ -86,7 +86,7 @@ public class FuncExtensionsIntegrals
 
         PrintTestResult(integral_value, 1, test.CallCount, eps);
 
-        Assert.Instance.Value(integral_value).IsEqual(__ExpectedIntegralOfTestFunc_0_1, eps);
+        Assert.That.Value(integral_value).IsEqual(__ExpectedIntegralOfTestFunc_0_1, eps);
 
     }
 }

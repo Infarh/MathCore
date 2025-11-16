@@ -1,8 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-
-using MathCore.Annotations;
+// ReSharper disable InconsistentNaming
 
 namespace MathCore.Tests;
 
@@ -47,10 +46,9 @@ public class MatrixArrayTests
 
     #region DebugPrint
 
-    [CanBeNull]
-    public static string ToArrayFormat(double[,] array, [MathCore.Annotations.NotNull] string format = "g") =>
+    public static string? ToArrayFormat(double[,] array, string format = "g") =>
         array.ToStringFormatView(format, ", ")
-          ?.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+          ?.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries)
            .Select(s => $"\t\t\t\t{{ {s} }}")
            .JoinStrings(",\r\n")
            .ToFormattedString("{{\r\n{0}\r\n\t\t\t}}");
@@ -68,7 +66,7 @@ public class MatrixArrayTests
 
     //[NotNull]
     //public static string ToArrayFormat([NotNull] double[] array, string format = "g") =>
-    //    $"{{ {string.Join(", ", array.Select(v => v.ToString(format, CultureInfo.InvariantCulture)).ToArray())} }}";
+    //    $"{{ {string.Join(", ", array.Select(v => v.ToString(format)).ToArray())} }}";
 
     #endregion
 
@@ -103,7 +101,7 @@ public class MatrixArrayTests
     //    return matrix;
     //}
 
-    [DebuggerStepThrough, MathCore.Annotations.NotNull]
+    [DebuggerStepThrough]
     private static double[,] GetUnitaryArrayMatrix(int n) => Matrix.Array.GetUnitaryArrayMatrix(n);
 
     /* ------------------------------------------------------------------------------------------ */
@@ -557,7 +555,7 @@ public class MatrixArrayTests
         var t = m.CloneObject();
         var b1 = b.CloneObject();
         var b2 = b1;
-        t = Matrix.Array.GetTriangle(t, ref b2, out var p, out var rank, out var d, true);
+        t = Matrix.Array.GetTriangle(t, ref b2, out var p, out var rank, out var d);
         Assert.AreNotEqual(b1, b2);
         Assert.AreEqual(-2, d);
         Assert.AreEqual(m.GetLength(0), rank);
@@ -618,7 +616,7 @@ public class MatrixArrayTests
         t = m.CloneObject();
         b1 = b.CloneObject();
         b2 = b1;
-        t = Matrix.Array.GetTriangle(t, ref b2, out p, out rank, out d, true);
+        t = Matrix.Array.GetTriangle(t, ref b2, out p, out rank, out d);
         Assert.AreNotEqual(b1, b2);
         Assert.AreEqual(-2, d);
         Assert.AreEqual(m.GetLength(0) - 2, rank);
@@ -786,7 +784,7 @@ public class MatrixArrayTests
 
         var t = m;
         var b1 = b;
-        var rank = Matrix.Array.Triangulate(ref t, ref b1, out var p, out var d, true, true);
+        var rank = Matrix.Array.Triangulate(ref t, ref b1, out var p, out var d);
         Assert.IsFalse(ReferenceEquals(t, m));
         Assert.IsFalse(ReferenceEquals(b1, b));
         Assert.AreEqual(-2, d);
@@ -868,13 +866,12 @@ public class MatrixArrayTests
     [TestMethod]
     public void TrySolve_Exceptions()
     {
-        double[,] m = null;
-        double[,] b = null;
-        double[,] p;
-        Exception error;
+        double[,]? m = null;
+        double[,]? b = null;
+        Exception? error;
         try
         {
-            Matrix.Array.TrySolve(m, ref b, out p);
+            Matrix.Array.TrySolve(m, ref b, out _);
             error = null;
         }
 #pragma warning disable CA1031 // Do not catch general exception types
@@ -884,14 +881,14 @@ public class MatrixArrayTests
         }
 #pragma warning restore CA1031 // Do not catch general exception types
         Assert.IsNotNull(error);
-        Assert.IsInstanceOfType(error, typeof(ArgumentNullException));
+        Assert.IsInstanceOfType<ArgumentNullException>(error);
         Assert.AreEqual("matrix", ((ArgumentNullException)error).ParamName);
 
         m = new double[5, 7];
         b = null;
         try
         {
-            Matrix.Array.TrySolve(m, ref b, out p);
+            Matrix.Array.TrySolve(m, ref b, out _);
             error = null;
         }
 #pragma warning disable CA1031 // Do not catch general exception types
@@ -901,14 +898,14 @@ public class MatrixArrayTests
         }
 #pragma warning restore CA1031 // Do not catch general exception types
         Assert.IsNotNull(error);
-        Assert.IsInstanceOfType(error, typeof(ArgumentNullException));
+        Assert.IsInstanceOfType<ArgumentNullException>(error);
         Assert.AreEqual("b", ((ArgumentNullException)error).ParamName);
 
         m = new double[5, 8];
         b = new double[5, 8];
         try
         {
-            Matrix.Array.TrySolve(m, ref b, out p);
+            Matrix.Array.TrySolve(m, ref b, out _);
             error = null;
         }
 #pragma warning disable CA1031 // Do not catch general exception types
@@ -918,14 +915,14 @@ public class MatrixArrayTests
         }
 #pragma warning restore CA1031 // Do not catch general exception types
         Assert.IsNotNull(error);
-        Assert.IsInstanceOfType(error, typeof(ArgumentException));
+        Assert.IsInstanceOfType<ArgumentException>(error);
         Assert.AreEqual("matrix", ((ArgumentException)error).ParamName);
 
         m = new double[5, 5];
         b = new double[6, 8];
         try
         {
-            Matrix.Array.TrySolve(m, ref b, out p);
+            Matrix.Array.TrySolve(m, ref b, out _);
             error = null;
         }
 #pragma warning disable CA1031 // Do not catch general exception types
@@ -935,7 +932,7 @@ public class MatrixArrayTests
         }
 #pragma warning restore CA1031 // Do not catch general exception types
         Assert.IsNotNull(error);
-        Assert.IsInstanceOfType(error, typeof(ArgumentException));
+        Assert.IsInstanceOfType<ArgumentException>(error);
         Assert.AreEqual("b", ((ArgumentException)error).ParamName);
     }
 
@@ -1110,7 +1107,7 @@ public class MatrixArrayTests
 #pragma warning disable CA1031 // Do not catch general exception types
         catch (Exception e)
         {
-            Assert.IsInstanceOfType(e, typeof(InvalidOperationException));
+            Assert.IsInstanceOfType<InvalidOperationException>(e);
         }
 #pragma warning restore CA1031 // Do not catch general exception types
         Assert.AreEqual(b1, b2);
@@ -1160,7 +1157,7 @@ public class MatrixArrayTests
 #pragma warning disable CA1031 // Do not catch general exception types
         catch (Exception e)
         {
-            Assert.IsInstanceOfType(e, typeof(InvalidOperationException));
+            Assert.IsInstanceOfType<InvalidOperationException>(e);
         }
 #pragma warning restore CA1031 // Do not catch general exception types
         CollectionAssert.AreEqual(b, b1);
@@ -1217,7 +1214,7 @@ public class MatrixArrayTests
 
         Assert.AreEqual(5, d);
 
-        Exception exception = null;
+        Exception? exception = null;
         try
         {
             Matrix.Array.GetDeterminant(new double[5, 7]);
@@ -1265,22 +1262,28 @@ public class MatrixArrayTests
 
         var i0 = GetUnitaryArrayMatrix(3);
         var i = Matrix.Array.Operator.Multiply(a, inv);
-        CollectionAssert.AreEqual(i0, i, MatrixTest.GetComparer(1e-14));
+        CollectionAssert.AreEqual(i0, i, MatrixTest.GetComparer());
         CollectionAssert.AreEqual(GetUnitaryArrayMatrix(3), p);
     }
 
     [TestMethod]
     public void Inverse_MatrixResult_Matrix_ArgumentNullException_Test() => Assert.ThrowsExactly<ArgumentNullException>(() => Matrix.Array.Inverse(null, new double[5, 5]));
+
     [TestMethod]
     public void Inverse_MatrixResult_Result_ArgumentNullException_Test() => Assert.ThrowsExactly<ArgumentNullException>(() => Matrix.Array.Inverse(new double[5, 5], null));
+
     [TestMethod]
     public void Inverse_MatrixResult_Matrix_ArgumentException_Test() => Assert.ThrowsExactly<ArgumentException>(() => Matrix.Array.Inverse(new double[5, 7], new double[5, 5]));
+
     [TestMethod]
     public void Inverse_MatrixResult_Result_ArgumentException_Test1() => Assert.ThrowsExactly<ArgumentException>(() => Matrix.Array.Inverse(new double[5, 5], new double[5, 7]));
+
     [TestMethod]
     public void Inverse_MatrixResult_Result_ArgumentException_Test2() => Assert.ThrowsExactly<ArgumentException>(() => Matrix.Array.Inverse(new double[5, 5], new double[7, 5]));
+
     [TestMethod]
     public void Inverse_MatrixResult_SingularMatrix_InvalidOperationException_Test() => Assert.ThrowsExactly<InvalidOperationException>(() => Matrix.Array.Inverse(new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } }, new double[3, 3]));
+
     [TestMethod]
     public void Inverse_MatrixResult_Test()
     {
@@ -1296,7 +1299,7 @@ public class MatrixArrayTests
         var i = Matrix.Array.Operator.Multiply(a, inv);
 
         var i0 = GetUnitaryArrayMatrix(3);
-        CollectionAssert.AreEqual(i0, i, MatrixTest.GetComparer(1e-14));
+        CollectionAssert.AreEqual(i0, i, MatrixTest.GetComparer());
     }
 
     /// <summary>Тест вычисления обратной матрицы</summary>
@@ -1363,7 +1366,7 @@ public class MatrixArrayTests
         var result = Matrix.Array.GetLUDecomposition(a, out var l, out var u, out var d);
         Assert.IsTrue(result);
         Assert.AreEqual(5 * (2 * 4 - 0 * 0) - 3 * (1 * 4 - 0 * 3) + 2 * (1 * 0 - 2 * 3), d);
-        var eps = MatrixTest.GetComparer(1e-14);
+        var eps = MatrixTest.GetComparer();
         CollectionAssert.AreEqual(L, l, eps);
         CollectionAssert.AreEqual(U, u, eps);
     }
@@ -1432,14 +1435,14 @@ public class MatrixArrayTests
             Assert.AreEqual(U0.GetLength(1), U.GetLength(1));
             try
             {
-                CollectionAssert.AreEqual(U0, U, cmp, "U0 - U = {0}", Matrix.Array.Operator.Subtract(U0, U).ToStringFormatView("g", ", ", CultureInfo.InvariantCulture));
+                CollectionAssert.AreEqual(U0, U, cmp, $"U0 - U = {Matrix.Array.Operator.Subtract(U0, U).ToStringFormatView("g", ", ")}");
             }
             catch (AssertFailedException e)
             {
                 throw new AssertFailedException($"Разница в элементах матрицы (U0 - U) составила {Matrix.Array.Operator.Subtract(U0, U).EnumerateElementsByRows().Select(Math.Abs).Max()}", e);
             }
 
-            Assert.AreEqual(W0.Length, W.Length);
+            Assert.HasCount(W0.Length, W);
             try
             {
                 CollectionAssert.AreEqual(W0, W, cmp, W0.Zip(W, (x, y) => (x - y).ToString(CultureInfo.InvariantCulture)).JoinStrings(", "));
@@ -1454,7 +1457,7 @@ public class MatrixArrayTests
             Assert.AreEqual(V0.GetLength(1), V.GetLength(1));
             try
             {
-                CollectionAssert.AreEqual(V0, V, cmp, "V0 - V = {0}", Matrix.Array.Operator.Subtract(V0, V).ToStringFormatView("g", ", ", CultureInfo.InvariantCulture));
+                CollectionAssert.AreEqual(V0, V, cmp, $"V0 - V = {Matrix.Array.Operator.Subtract(V0, V).ToStringFormatView("g", ", ")}");
 
             }
             catch (AssertFailedException e)
@@ -1467,7 +1470,7 @@ public class MatrixArrayTests
 
             try
             {
-                CollectionAssert.AreEqual(M, M1, cmp, "M - M1 = {0}", Matrix.Array.Operator.Subtract(M, M1).ToStringFormatView("g", ", ", CultureInfo.InvariantCulture));
+                CollectionAssert.AreEqual(M, M1, cmp, $"M - M1 = {Matrix.Array.Operator.Subtract(M, M1).ToStringFormatView("g", ", ")}");
             }
             catch (AssertFailedException e)
             {
@@ -1598,10 +1601,10 @@ public class MatrixArrayTests
 
         var cols = Matrix.Array.MatrixToColsArray(m);
 
-        Assert.AreEqual(3, cols.Length);
-        Assert.AreEqual(3, cols[0].Length);
-        Assert.AreEqual(3, cols[1].Length);
-        Assert.AreEqual(3, cols[2].Length);
+        Assert.HasCount(3, cols);
+        Assert.HasCount(3, cols[0]);
+        Assert.HasCount(3, cols[1]);
+        Assert.HasCount(3, cols[2]);
         CollectionAssert.AreEqual(new[] { 1d, 4, 7 }, cols[0]);
         CollectionAssert.AreEqual(new[] { 2d, 5, 8 }, cols[1]);
         CollectionAssert.AreEqual(new[] { 3d, 6, 9 }, cols[2]);
@@ -1622,10 +1625,10 @@ public class MatrixArrayTests
 
         var cols = Matrix.Array.MatrixToRowsArray(m);
 
-        Assert.AreEqual(3, cols.Length);
-        Assert.AreEqual(3, cols[0].Length);
-        Assert.AreEqual(3, cols[1].Length);
-        Assert.AreEqual(3, cols[2].Length);
+        Assert.HasCount(3, cols);
+        Assert.HasCount(3, cols[0]);
+        Assert.HasCount(3, cols[1]);
+        Assert.HasCount(3, cols[2]);
         CollectionAssert.AreEqual(new[] { 1d, 2, 3 }, cols[0]);
         CollectionAssert.AreEqual(new[] { 4d, 5, 6 }, cols[1]);
         CollectionAssert.AreEqual(new[] { 7d, 8, 9 }, cols[2]);
@@ -1729,7 +1732,7 @@ public class MatrixArrayTests
     }
 
     [TestMethod]
-    // ReSharper disable once AssignNullToNotNullAttribute                                                            B
+    // ReSharper disable once AssignNullToNotNullAttribute
     public void Rank_ArgumentNullException_Test() => Assert.ThrowsExactly<ArgumentNullException>(() => Matrix.Array.Rank(null));
 
     [TestMethod]
@@ -2319,7 +2322,7 @@ public class MatrixArrayTests
     [TestMethod]
     public void TransposeOut_Input_ArgumentNullException_Test()
     {
-        double[,] a = null;
+        double[,]? a = null;
         var actual = new double[3, 4];
         Assert.ThrowsExactly<ArgumentNullException>(() => Matrix.Array.Transpose(a, actual));
     }
@@ -2334,7 +2337,7 @@ public class MatrixArrayTests
             { 7, 8, 9 },
             { 10,11,12 }
         };
-        double[,] actual = null;
+        double[,]? actual = null;
         Assert.ThrowsExactly<ArgumentNullException>(() => Matrix.Array.Transpose(a, actual));
     }
 
@@ -2379,11 +2382,11 @@ public class MatrixArrayTests
         var expected = 4 * 8 - 5 * 7;
 
         var actual = Matrix.Array.GetAdjunct(a, 0, 2);
-        Assert.Instance.Value(actual).IsEqual(expected);
+        Assert.That.Value(actual).IsEqual(expected);
 
         expected = -(1 * 6 - 3 * 4);
         actual = Matrix.Array.GetAdjunct(a, 2, 1);
-        Assert.Instance.Value(actual).IsEqual(expected);
+        Assert.That.Value(actual).IsEqual(expected);
     }
 
     [TestMethod]
@@ -2399,7 +2402,7 @@ public class MatrixArrayTests
             { 7, 8, 9 }
         };
 
-        Exception exception = null;
+        Exception? exception = null;
         try
         {
             Matrix.Array.GetAdjunct(a, -1, 2);
@@ -2409,9 +2412,9 @@ public class MatrixArrayTests
             exception = e;
         }
         Assert.IsNotNull(exception);
-        Assert.Instance.Value(exception).Is<ArgumentOutOfRangeException>();
-        Assert.Instance.Value(((ArgumentOutOfRangeException)exception).ParamName).IsEqual("n");
-        Assert.Instance.Value(((ArgumentOutOfRangeException)exception).ActualValue).IsEqual(-1);
+        Assert.That.Value(exception).Is<ArgumentOutOfRangeException>();
+        Assert.That.Value(((ArgumentOutOfRangeException)exception).ParamName).IsEqual("n");
+        Assert.That.Value(((ArgumentOutOfRangeException)exception).ActualValue).IsEqual(-1);
 
         exception = null;
         try
@@ -2423,9 +2426,9 @@ public class MatrixArrayTests
             exception = e;
         }
         Assert.IsNotNull(exception);
-        Assert.Instance.Value(exception).Is<ArgumentOutOfRangeException>();
-        Assert.Instance.Value(((ArgumentOutOfRangeException)exception).ParamName).IsEqual("n");
-        Assert.Instance.Value(((ArgumentOutOfRangeException)exception).ActualValue).IsEqual(3);
+        Assert.That.Value(exception).Is<ArgumentOutOfRangeException>();
+        Assert.That.Value(((ArgumentOutOfRangeException)exception).ParamName).IsEqual("n");
+        Assert.That.Value(((ArgumentOutOfRangeException)exception).ActualValue).IsEqual(3);
 
         exception = null;
         try
@@ -2437,9 +2440,9 @@ public class MatrixArrayTests
             exception = e;
         }
         Assert.IsNotNull(exception);
-        Assert.Instance.Value(exception).Is<ArgumentOutOfRangeException>();
-        Assert.Instance.Value(((ArgumentOutOfRangeException)exception).ParamName).IsEqual("m");
-        Assert.Instance.Value(((ArgumentOutOfRangeException)exception).ActualValue).IsEqual(-1);
+        Assert.That.Value(exception).Is<ArgumentOutOfRangeException>();
+        Assert.That.Value(((ArgumentOutOfRangeException)exception).ParamName).IsEqual("m");
+        Assert.That.Value(((ArgumentOutOfRangeException)exception).ActualValue).IsEqual(-1);
 
         exception = null;
         try
@@ -2451,9 +2454,9 @@ public class MatrixArrayTests
             exception = e;
         }
         Assert.IsNotNull(exception);
-        Assert.Instance.Value(exception).Is<ArgumentOutOfRangeException>();
-        Assert.Instance.Value(((ArgumentOutOfRangeException)exception).ParamName).IsEqual("m");
-        Assert.Instance.Value(((ArgumentOutOfRangeException)exception).ActualValue).IsEqual(3);
+        Assert.That.Value(exception).Is<ArgumentOutOfRangeException>();
+        Assert.That.Value(((ArgumentOutOfRangeException)exception).ParamName).IsEqual("m");
+        Assert.That.Value(((ArgumentOutOfRangeException)exception).ActualValue).IsEqual(3);
     }
 
     [TestMethod]
@@ -2570,7 +2573,7 @@ public class MatrixArrayTests
         //    { 7, 8 }
         //};
 
-        Exception exception = null;
+        Exception? exception = null;
         try
         {
             var actual_minor = new double[a.GetLength(0) - 1, a.GetLength(1) - 1];
@@ -2584,7 +2587,7 @@ public class MatrixArrayTests
         }
 #pragma warning restore CA1031 // Do not catch general exception types
         Assert.IsNotNull(exception);
-        Assert.IsInstanceOfType(exception, typeof(ArgumentNullException));
+        Assert.IsInstanceOfType<ArgumentNullException>(exception);
         Assert.AreEqual("matrix", ((ArgumentNullException)exception).ParamName);
 
         exception = null;
@@ -2601,7 +2604,7 @@ public class MatrixArrayTests
         }
 #pragma warning restore CA1031 // Do not catch general exception types
         Assert.IsNotNull(exception);
-        Assert.IsInstanceOfType(exception, typeof(ArgumentNullException));
+        Assert.IsInstanceOfType<ArgumentNullException>(exception);
         Assert.AreEqual("result", ((ArgumentNullException)exception).ParamName);
 
         exception = null;
@@ -2617,7 +2620,7 @@ public class MatrixArrayTests
         }
 #pragma warning restore CA1031 // Do not catch general exception types
         Assert.IsNotNull(exception);
-        Assert.IsInstanceOfType(exception, typeof(ArgumentOutOfRangeException));
+        Assert.IsInstanceOfType<ArgumentOutOfRangeException>(exception);
         Assert.AreEqual("n", ((ArgumentOutOfRangeException)exception).ParamName);
         Assert.AreEqual(-1, ((ArgumentOutOfRangeException)exception).ActualValue);
 
@@ -2634,7 +2637,7 @@ public class MatrixArrayTests
         }
 #pragma warning restore CA1031 // Do not catch general exception types
         Assert.IsNotNull(exception);
-        Assert.IsInstanceOfType(exception, typeof(ArgumentOutOfRangeException));
+        Assert.IsInstanceOfType<ArgumentOutOfRangeException>(exception);
         Assert.AreEqual("n", ((ArgumentOutOfRangeException)exception).ParamName);
         Assert.AreEqual(3, ((ArgumentOutOfRangeException)exception).ActualValue);
 
@@ -2651,7 +2654,7 @@ public class MatrixArrayTests
         }
 #pragma warning restore CA1031 // Do not catch general exception types
         Assert.IsNotNull(exception);
-        Assert.IsInstanceOfType(exception, typeof(ArgumentOutOfRangeException));
+        Assert.IsInstanceOfType<ArgumentOutOfRangeException>(exception);
         Assert.AreEqual("m", ((ArgumentOutOfRangeException)exception).ParamName);
         Assert.AreEqual(-1, ((ArgumentOutOfRangeException)exception).ActualValue);
 
@@ -2668,7 +2671,7 @@ public class MatrixArrayTests
         }
 #pragma warning restore CA1031 // Do not catch general exception types
         Assert.IsNotNull(exception);
-        Assert.IsInstanceOfType(exception, typeof(ArgumentOutOfRangeException));
+        Assert.IsInstanceOfType<ArgumentOutOfRangeException>(exception);
         Assert.AreEqual("m", ((ArgumentOutOfRangeException)exception).ParamName);
         Assert.AreEqual(3, ((ArgumentOutOfRangeException)exception).ActualValue);
 
@@ -2685,7 +2688,7 @@ public class MatrixArrayTests
         }
 #pragma warning restore CA1031 // Do not catch general exception types
         Assert.IsNotNull(exception);
-        Assert.IsInstanceOfType(exception, typeof(ArgumentException));
+        Assert.IsInstanceOfType<ArgumentException>(exception);
         Assert.AreEqual("result", ((ArgumentException)exception).ParamName);
 
         exception = null;
@@ -2701,16 +2704,19 @@ public class MatrixArrayTests
         }
 #pragma warning restore CA1031 // Do not catch general exception types
         Assert.IsNotNull(exception);
-        Assert.IsInstanceOfType(exception, typeof(ArgumentException));
+        Assert.IsInstanceOfType<ArgumentException>(exception);
         Assert.AreEqual("result", ((ArgumentException)exception).ParamName);
     }
 
     [TestMethod]
     public void Operator_BiliniarMultiply_Matrix_ArgumentNullException_x_Test() => Assert.ThrowsExactly<ArgumentNullException>(() => Matrix.Array.Operator.BiliniarMultiply(null, new double[5, 5], new double[5, 5]));
+
     [TestMethod]
     public void Operator_BiliniarMultiply_Matrix_ArgumentNullException_a_Test() => Assert.ThrowsExactly<ArgumentNullException>(() => Matrix.Array.Operator.BiliniarMultiply(new double[5, 5], null, new double[5, 5]));
+
     [TestMethod]
     public void Operator_BiliniarMultiply_Matrix_ArgumentNullException_y_Test() => Assert.ThrowsExactly<ArgumentNullException>(() => Matrix.Array.Operator.BiliniarMultiply(new double[5, 5], new double[5, 5], null));
+
     [TestMethod]
     public void Operator_BiliniarMultiply_Matrix_ArgumentException_x_Length_Test() => Assert.ThrowsExactly<ArgumentException>(() => Matrix.Array.Operator.BiliniarMultiply(new double[4, 6], new double[5, 3], new double[3, 7]));
 
@@ -2851,11 +2857,14 @@ public class MatrixArrayTests
     }
 
     [TestMethod]
-    public void Operator_BiliniarMultiplyAuto_Vector_ArgumentNullException_x_Test() => Assert.ThrowsExactly<ArgumentNullException>(() => Matrix.Array.Operator.BiliniarMultiplyAuto((double[])null, new double[5, 5]));
+    public void Operator_BiliniarMultiplyAuto_Vector_ArgumentNullException_x_Test() => Assert.ThrowsExactly<ArgumentNullException>(() => Matrix.Array.Operator.BiliniarMultiplyAuto((double[]?)null, new double[5, 5]));
+
     [TestMethod]
     public void Operator_BiliniarMultiplyAuto_Vector_ArgumentNullException_a_Test() => Assert.ThrowsExactly<ArgumentNullException>(() => Matrix.Array.Operator.BiliniarMultiplyAuto(new double[5], null));
+
     [TestMethod]
     public void Operator_BiliniarMultiplyAuto_Vector_ArgumentException_a_Test() => Assert.ThrowsExactly<ArgumentException>(() => Matrix.Array.Operator.BiliniarMultiplyAuto(new double[5], new double[3, 5]));
+
     [TestMethod]
     public void Operator_BiliniarMultiplyAuto_Vector_ArgumentException_x_Test() => Assert.ThrowsExactly<ArgumentException>(() => Matrix.Array.Operator.BiliniarMultiplyAuto(new double[7], new double[5, 5]));
 
@@ -2873,7 +2882,7 @@ public class MatrixArrayTests
             { 1,2,3,4,5 }
         };
 
-        var b0 = 975d;
+        const double b0 = 975d;
 
         var b = Matrix.Array.Operator.BiliniarMultiplyAuto(x, a);
 
@@ -2988,11 +2997,11 @@ public class MatrixArrayTests
         var actual_Y = Matrix.Array.Operator.AXAt(A, X);
         var expected_Y = Matrix.Array.Operator.Multiply(A, Matrix.Array.Operator.Multiply(X, At));
 
-        Assert.Instance.Value(actual_Y)
+        Assert.That.Value(actual_Y)
            .Where(y => y.GetLength(0)).CheckEquals(expected_Y.GetLength(0))
            .Where(y => y.GetLength(1)).CheckEquals(expected_Y.GetLength(1));
 
-        CollectionAssert.Instance.Collection(actual_Y)
+        CollectionAssert.That.Collection(actual_Y)
            .IsEqualTo(expected_Y)
            .IsEqualTo(expected_Y0);
     }
@@ -3047,7 +3056,7 @@ public class MatrixArrayTests
 
         var C = Matrix.Array.Operator.MultiplyAtB(A, B);
 
-        Assert.Instance.Collection(C).IsEqualTo(expected_C);
+        Assert.That.Collection(C).IsEqualTo(expected_C);
     }
 
     [TestMethod]
@@ -3067,7 +3076,7 @@ public class MatrixArrayTests
 
         var C = Matrix.Array.Operator.MultiplyABt(A, B);
 
-        Assert.Instance.Collection(C).IsEqualTo(new double[,]
+        Assert.That.Collection(C).IsEqualTo(new double[,]
         {
             { 55, 35 },
             { 35, 55 },
@@ -3098,7 +3107,7 @@ public class MatrixArrayTests
         double[] y = [1, 2, 3, 4, 5];
 
         var M = Matrix.Array.Operator.MultiplyRowToColMatrix(x, y);
-        Assert.Instance.Collection(M).IsEqualTo(new double[,]
+        Assert.That.Collection(M).IsEqualTo(new double[,]
         {
             { 1, 02, 03 },
             { 2, 04, 06 },
