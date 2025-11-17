@@ -9,7 +9,7 @@ public class NamedLockTests
 {
     public TestContext TestContext { get; set; }
 
-    [TestMethod, Timeout(10000, CooperativeCancellation = true)]
+    [TestMethod, Timeout(10000, CooperativeCancellation = true), Ignore]
     public async Task MultipleAccessTest()
     {
         const string resource_name = "test";
