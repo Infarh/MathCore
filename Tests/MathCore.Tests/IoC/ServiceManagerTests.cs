@@ -260,7 +260,7 @@ public class ServiceManagerTests
     }
 
     [TestMethod]
-    public async Task ServiceRegistration_SingletonByThread_Simple()
+    public void ServiceRegistration_SingletonByThread_Simple()
     {
         var service_manager = new ServiceManager();
 
@@ -268,9 +268,11 @@ public class ServiceManagerTests
 
         var instance = service_manager.Get<Service_GetHashCode>();
 
-        await Task.Yield().ConfigureAwait(false);
+        Service_GetHashCode? instance2 = null;
 
-        var instance2 = service_manager.Get<Service_GetHashCode>();
+        var get_service_thread = new Thread(() => instance2 = service_manager.Get<Service_GetHashCode>());
+        get_service_thread.Start();
+        get_service_thread.Join();
 
         Assert.IsNotNull(instance2);
         var is_same = ReferenceEquals(instance, instance2);
