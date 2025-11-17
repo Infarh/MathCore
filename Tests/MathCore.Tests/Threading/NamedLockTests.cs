@@ -7,6 +7,8 @@ namespace MathCore.Tests.Threading;
 [TestClass]
 public class NamedLockTests
 {
+    public TestContext TestContext { get; set; }
+
     [TestMethod, Timeout(10000, CooperativeCancellation = true)]
     public async Task MultipleAccessTest()
     {
@@ -21,59 +23,59 @@ public class NamedLockTests
         var access_task1 = Task.Run(async () =>
         {
             start_action.WaitOne();
-            await resource_lock.LockAsync(resource_name);
+            await resource_lock.LockAsync(resource_name, TestContext.CancellationToken);
 
-            await Task.Delay(200).ConfigureAwait(false);
+            await Task.Delay(200, TestContext.CancellationToken).ConfigureAwait(false);
             result_list.Add("R-1.0");
 
-            await Task.Delay(200).ConfigureAwait(false);
+            await Task.Delay(200, TestContext.CancellationToken).ConfigureAwait(false);
             result_list.Add("R-1.1");
 
-            await Task.Delay(200).ConfigureAwait(false);
+            await Task.Delay(200, TestContext.CancellationToken).ConfigureAwait(false);
             result_list.Add("R-1.2");
 
-            await resource_lock.UnlockAsync(resource_name);
-        });
+            await resource_lock.UnlockAsync(resource_name, TestContext.CancellationToken);
+        }, TestContext.CancellationToken);
 
         var access_task2 = Task.Run(async () =>
         {
             start_action.WaitOne();
 
-            await Task.Delay(100).ConfigureAwait(false);
+            await Task.Delay(100, TestContext.CancellationToken).ConfigureAwait(false);
 
-            await resource_lock.LockAsync(resource_name);
+            await resource_lock.LockAsync(resource_name, TestContext.CancellationToken);
 
-            await Task.Delay(50).ConfigureAwait(false);
+            await Task.Delay(50, TestContext.CancellationToken).ConfigureAwait(false);
             result_list.Add("R-2.0");
 
-            await Task.Delay(50).ConfigureAwait(false);
+            await Task.Delay(50, TestContext.CancellationToken).ConfigureAwait(false);
             result_list.Add("R-2.1");
 
-            await Task.Delay(50).ConfigureAwait(false);
+            await Task.Delay(50, TestContext.CancellationToken).ConfigureAwait(false);
             result_list.Add("R-2.2");
 
-            await resource_lock.UnlockAsync(resource_name);
-        });
+            await resource_lock.UnlockAsync(resource_name, TestContext.CancellationToken);
+        }, TestContext.CancellationToken);
 
         var access_task3 = Task.Run(async () =>
         {
             start_action.WaitOne();
 
-            await Task.Delay(50).ConfigureAwait(false);
+            await Task.Delay(50, TestContext.CancellationToken).ConfigureAwait(false);
 
-            await resource_lock.LockAsync(resource_name);
+            await resource_lock.LockAsync(resource_name, TestContext.CancellationToken);
 
-            await Task.Delay(75).ConfigureAwait(false);
+            await Task.Delay(75, TestContext.CancellationToken).ConfigureAwait(false);
             result_list.Add("R-3.0");
 
-            await Task.Delay(75).ConfigureAwait(false);
+            await Task.Delay(75, TestContext.CancellationToken).ConfigureAwait(false);
             result_list.Add("R-3.1");
 
-            await Task.Delay(75).ConfigureAwait(false);
+            await Task.Delay(75, TestContext.CancellationToken).ConfigureAwait(false);
             result_list.Add("R-3.2");
 
-            await resource_lock.UnlockAsync(resource_name);
-        });
+            await resource_lock.UnlockAsync(resource_name, TestContext.CancellationToken);
+        }, TestContext.CancellationToken);
 
         start_action.Set();
 
