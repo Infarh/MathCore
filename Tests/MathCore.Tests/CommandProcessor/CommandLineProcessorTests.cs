@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Linq.Reactive;
-using MathCore.Annotations;
+
 using MathCore.CommandProcessor;
 
 using Moq;
@@ -69,7 +69,7 @@ public class CommandLineProcessorTests
     public void Test()
     {
         Prompt = "> ";
-        Work   = true;
+        Work = true;
 
         var processor = new CommandLineProcessor();
 
@@ -95,7 +95,7 @@ public class CommandLineProcessorTests
         processor[__ExitCommandName] += (_, _, _) => Work = false;
         processor[__HelpCommandName] += (_, _, _) => processor.GetRegisteredCommands().Foreach(_Logger.WriteLine);
 
-        processor.CommandProcess   += ExecuteCommand;
+        processor.CommandProcess += ExecuteCommand;
         processor.UnhandledCommand += UnknownCommandInformator;
 
         while (Work)
@@ -108,15 +108,15 @@ public class CommandLineProcessorTests
     /// <summary>Обработчик необработанных команд</summary>
     /// <param name="Sender">Источник события</param>
     /// <param name="e">Аргумент, содержащий информацию о необработанной команде</param>
-    private void UnknownCommandInformator(object Sender, [NotNull] CommandEventArgs e) =>
+    private void UnknownCommandInformator(object? Sender, CommandEventArgs e) =>
         _Logger.WriteLine(e.Command.ToFormattedString("Unknown command \"{0}\""));
 
     /// <summary>Обработчик команды</summary>
     /// <param name="sender">Источник события</param>
     /// <param name="e">Аргумент, содержащий информацию о команде</param>
-    private void ExecuteCommand(object sender, [NotNull] CommandEventArgs e)
+    private void ExecuteCommand(object? sender, CommandEventArgs e)
     {
-        var processor = (CommandLineProcessor)sender;
+        var processor = (CommandLineProcessor)sender!;
         switch (e.Command.Name.ToLower())
         {
             case "clear":

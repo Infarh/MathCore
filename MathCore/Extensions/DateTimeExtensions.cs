@@ -4,8 +4,6 @@
 
 using System.Runtime.InteropServices;
 
-using MathCore.Extensions;
-
 namespace System;
 
 /// <summary>Класс методов-расширений для даты-времени <see cref="DateTime"/></summary>
@@ -22,8 +20,8 @@ public static class DateTimeExtensions
     /// <param name="Offset">Смещение в массиве байт</param>
     public static void ToByteArray(this DateTime Time, byte[] Data, int Offset = 0)
     {
-        if(Offset < 0) throw new ArgumentOutOfRangeException(nameof(Offset), Offset, "Смещение в массиве не может быть меньше нуля");
-        if(Data.Length - Offset < 8) throw new InvalidOperationException("Процесс копирования данных выходит за пределы массива");
+        if (Offset < 0) throw new ArgumentOutOfRangeException(nameof(Offset), Offset, "Смещение в массиве не может быть меньше нуля");
+        if (Data.Length - Offset < 8) throw new InvalidOperationException("Процесс копирования данных выходит за пределы массива");
 
 #if NET8_0_OR_GREATER
         MemoryMarshal.Cast<DateTime, byte>(new(ref Time)).CopyTo(Data.AsSpan(Offset));
@@ -48,4 +46,45 @@ public static class DateTimeExtensions
         return DateTime.FromBinary(BitConverter.ToInt64(Data, Offset));
 #endif
     }
+
+    extension(DateTime)
+    {
+        public static DateTime NowMSK => TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
+        public static DateTime NowUTC => DateTime.UtcNow;
+    }
+
+    public static int GetCount(this DateTime FromTime, DateTime ToTime, DayOfWeek Day)
+    {
+        if (FromTime > ToTime) return 0;
+
+        var count = 0;
+        for (var dt = FromTime; dt <= ToTime; dt = dt.AddDays(1))
+            if (dt.DayOfWeek == Day)
+                count++;
+        return count;
+    }
+
+    public static int GetCount(this DateTimeOffset FromTime, DateTimeOffset ToTime, DayOfWeek Day)
+    {
+        if (FromTime > ToTime) return 0;
+
+        var count = 0;
+        for (var dt = FromTime; dt <= ToTime; dt = dt.AddDays(1))
+            if (dt.DayOfWeek == Day)
+                count++;
+        return count;
+    }
+
+
+#if NET8_0_OR_GREATER
+    public static int GetCount(this DateOnly FromDate, DateOnly ToDate, DayOfWeek Day)
+    {
+        if (FromDate > ToDate) return 0;
+        var count = 0;
+        for (var dt = FromDate; dt <= ToDate; dt = dt.AddDays(1))
+            if (dt.DayOfWeek == Day)
+                count++;
+        return count;
+    }
+#endif
 }

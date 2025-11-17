@@ -7,7 +7,7 @@ public class HashStream : Stream
     protected readonly Stream _Source;
     protected readonly HashAlgorithm _Hasher;
 
-    public byte[] Hash => _Hasher.Hash;
+    public byte[] Hash => _Hasher.Hash!;
 
     public override bool CanRead => _Source.CanRead;
 
@@ -50,7 +50,7 @@ public class HashStream : Stream
     public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken Cancel)
     {
         var readed = await _Source.ReadAsync(buffer, offset, count, Cancel);
-        if(readed > 0)
+        if (readed > 0)
             _Hasher.TransformBlock(buffer, offset, readed, buffer, offset);
         return readed;
     }

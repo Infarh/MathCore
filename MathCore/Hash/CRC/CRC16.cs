@@ -52,7 +52,7 @@ public class CRC16(ushort Polynomial)
     public static ushort Hash(
         byte[] data,
         Mode mode = Mode.XMODEM,
-        ushort crc = 0xFFFF, 
+        ushort crc = 0xFFFF,
         ushort xor = 0xFFFF,
         bool RefIn = false,
         bool RefOut = false)
@@ -62,14 +62,14 @@ public class CRC16(ushort Polynomial)
 
         var poly = (ushort)mode;
 
-        if(RefIn)
+        if (RefIn)
             foreach (var b in data)
                 crc = (ushort)(crc << 8 ^ Table(crc >> 8 ^ b.ReverseBits(), poly));
         else
             foreach (var b in data)
                 crc = (ushort)(crc << 8 ^ Table(crc >> 8 ^ b, poly));
 
-        return RefOut ? ((ushort)(crc ^ xor)).ReverseBits() :  ((ushort)(crc ^ xor));
+        return RefOut ? ((ushort)(crc ^ xor)).ReverseBits() : ((ushort)(crc ^ xor));
 
         static ushort Table(int i, ushort poly)
         {
@@ -95,7 +95,7 @@ public class CRC16(ushort Polynomial)
 
     public bool UpdateState { get; set; }
 
-    public ushort XOR { get; set; } = 0;
+    public ushort XOR { get; set; } = 0xFFFF;
 
     public bool RefIn { get; set; }
 
@@ -105,7 +105,7 @@ public class CRC16(ushort Polynomial)
 
     public ushort ContinueCompute(ushort crc, byte[] bytes)
     {
-        if(RefIn)
+        if (RefIn)
             foreach (var b in bytes)
                 crc = (ushort)(crc << 8 ^ _Table[crc >> 8 ^ b.ReverseBits()]);
         else

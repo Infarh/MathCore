@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System.Collections;
-
 using MathCore.Values;
 
 // ReSharper disable UnusedMember.Global
@@ -18,12 +16,15 @@ namespace System.Linq;
 
 public static partial class IEnumerableExtensions
 {
+    /// <summary>Вычисляет среднее значение и дисперсию последовательности</summary>
+    /// <param name="values">Последовательность чисел</param>
+    /// <returns>Среднее значение и дисперсия</returns>
     public static (double Average, double Dispersion) AverageAndDispersion(this IEnumerable<double> values)
     {
         var avg = 0d;
         var d = 0d;
 
-        foreach(var x in values)
+        foreach (var x in values)
         {
             avg += x;
             d += x * x;
@@ -32,6 +33,9 @@ public static partial class IEnumerableExtensions
         return (avg, d - avg * avg);
     }
 
+    /// <summary>Вычисляет среднее значение и стандартное отклонение последовательности</summary>
+    /// <param name="values">Последовательность чисел</param>
+    /// <returns>Среднее значение и стандартное отклонение</returns>
     public static (double Average, double Sigma) AverageAndSigma(this IEnumerable<double> values)
     {
         var (avg, d) = values.AverageAndDispersion();
@@ -72,7 +76,7 @@ public static partial class IEnumerableExtensions
     /// <exception cref="ArgumentOutOfRangeException">При <paramref name="WindowLength"/> &lt; 1</exception>
     public static IEnumerable<double> AverageMedian(this IEnumerable<double> samples, int WindowLength)
     {
-        if(samples is null) throw new ArgumentNullException(nameof(samples));
+        if (samples is null) throw new ArgumentNullException(nameof(samples));
         switch (WindowLength)
         {
             case < 1: throw new ArgumentOutOfRangeException(nameof(WindowLength), WindowLength, "Длина окна должна быть больше 0");
@@ -114,7 +118,7 @@ public static partial class IEnumerableExtensions
                 while (j < i && buffer[j] <= x)
                     j++;
 
-                if (j == i) 
+                if (j == i)
                     buffer[i] = x;
                 else
                 {
@@ -129,8 +133,8 @@ public static partial class IEnumerableExtensions
                     buffer[j + 1] = tmp;
                 }
 
-                yield return i % 2 == 1 
-                    ? (buffer[i / 2] + buffer[i / 2 + 1]) / 2 
+                yield return i % 2 == 1
+                    ? (buffer[i / 2] + buffer[i / 2 + 1]) / 2
                     : buffer[i / 2];
 
                 if (!element.MoveNext())
@@ -182,6 +186,9 @@ public static partial class IEnumerableExtensions
         }
     }
 
+    /// <summary>Вычисляет квартили и медиану последовательности</summary>
+    /// <param name="samples">Последовательность чисел</param>
+    /// <returns>Квартиль Q1, медиана, квартиль Q3</returns>
     public static (double Q1, double Median, double Q3) GetQ1Q3(this IEnumerable<double> samples)
     {
         var buffer = samples.ToArray();

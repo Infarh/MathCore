@@ -45,7 +45,7 @@ public class LimitedStreamTests
 
         var limited = new LimitedStream(source, stream_offset, stream_length);
 
-        var error = Assert.ThrowsException<IOException>(() => limited.Seek(offset, SeekOrigin.Begin));
+        var error = Assert.ThrowsExactly<IOException>(() => limited.Seek(offset, SeekOrigin.Begin));
 
         Assert.That.Value(error.Message)
            .IsEqual("An attempt was made to move the position before the beginning of the stream.");
@@ -106,7 +106,7 @@ public class LimitedStreamTests
 
         var limited = new LimitedStream(source, stream_offset, stream_length);
 
-        var error = Assert.ThrowsException<IOException>(() => limited.Seek(offset, SeekOrigin.End));
+        var error = Assert.ThrowsExactly<IOException>(() => limited.Seek(offset, SeekOrigin.End));
 
         Assert.That.Value(error.Message)
            .IsEqual("An attempt was made to move the position before the beginning of the stream.");

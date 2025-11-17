@@ -19,7 +19,7 @@ public class StudentTests
 
 #pragma warning disable CS0618 // Type or member is obsolete
         var hi_with_p_greater_than_05 = QuantileHi2Approximation(0.95, 8);
-        var hi_with_p_less_than_05    = QuantileHi2Approximation(0.05, 8);
+        var hi_with_p_less_than_05 = QuantileHi2Approximation(0.05, 8);
 #pragma warning restore CS0618 // Type or member is obsolete
 
         hi_with_p_greater_than_05.AssertEquals(15.506278896843497);
@@ -59,7 +59,7 @@ public class StudentTests
     }
 
     private const double __QuantileHi2ApproximationValuesTestAccuracy = 4.7e-3;
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0.95, 14, 23.682709800618273, 1.0e-24, DisplayName = "p:0.95, k:14")]
     [DataRow(0.95, 8, 15.507313055865437, 1.035e-3, DisplayName = "p:0.95, k:8 - p > 0.5")]
     [DataRow(0.05, 8, 2.732636793499664, 3.01e-3, DisplayName = "p:0.05, k:8 - p < 0.5")]
@@ -82,7 +82,7 @@ public class StudentTests
 #pragma warning restore CS0618 // Type or member is obsolete
 
     private const double __QuantileHi2ValuesTestAccuracy = 2.14e-14;
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0.95, 14, 23.682709800618273, 2.09e-3, DisplayName = "p:0.95, k:14")]
     [DataRow(0.95, 8, 15.507313055865437, __QuantileHi2ValuesTestAccuracy, DisplayName = "p:0.95, k:8 - p > 0.5")]
     [DataRow(0.05, 8, 2.732636793499664, __QuantileHi2ValuesTestAccuracy, DisplayName = "p:0.05, k:8 - p < 0.5")]
@@ -201,13 +201,13 @@ public class StudentTests
             for (var j = 0; j < pp.Length; j++)
             {
                 var n = nn[i];
-                var p              = pp[j];
+                var p = pp[j];
                 var expected_value = q_chi_sq[i, j];
-                
+
 #pragma warning disable CS0618 // Type or member is obsolete
                 var actual_value = QuantileHi2Approximation(p, n);
 #pragma warning restore CS0618 // Type or member is obsolete
-                
+
                 const double accuracy = 1e-20;
                 actual_value.AssertEquals(expected_value, accuracy, $"p:{p};k:{n}");
             }

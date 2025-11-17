@@ -19,6 +19,6 @@ public class MaybeTests
 
         Assert.That.Value(one()).IsEqual(1);
         Assert.That.Value(two()).IsEqual(2);
-        Assert.ThrowsException<InvalidOperationException>(() => nothing2());
+        Assert.ThrowsExactly<InvalidOperationException>(() => nothing2());
     }
 }

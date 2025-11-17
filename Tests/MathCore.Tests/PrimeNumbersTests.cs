@@ -54,5 +54,5 @@ public class PrimeNumbersTests : UnitTest
     [TestMethod, Priority(1), Description("Тестирование метода получения простых чисел")]
     public void GetPrimeNumbersTest() =>
         PrimeNumbers.GetNumbersTo(GetRNDInt(50, 1500))
-           .Foreach(n => Assert.IsTrue(n.IsPrime(), "{0} не является простым", n));
+           .Foreach(n => Assert.IsTrue(n.IsPrime(), $"{n} не является простым"));
 }

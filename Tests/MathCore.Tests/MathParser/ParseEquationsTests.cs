@@ -12,12 +12,12 @@ public class ParseEquationsTests
     [TestMethod, Priority(0), Description("Тестирование процесса разбора выражения на блоки")]
     public void TermsParsing_Test()
     {
-        var asm            = typeof(ExpressionParser).Assembly;
+        var asm = typeof(ExpressionParser).Assembly;
         var BlockTerm_type = asm.GetType("MathCore.MathParser.BlockTerm");
         IsNotNull(BlockTerm_type);
 
         const string expression_str = "sin(5x)/(5x)+y-7cos(-2pi*(y-z)-3.2)";
-        var          block          = BlockTerm_type.CreateObject(expression_str);
+        var block = BlockTerm_type.CreateObject(expression_str);
         IsNotNull(block);
 
         var Terms_property = BlockTerm_type.GetProperty("Terms");
@@ -25,121 +25,121 @@ public class ParseEquationsTests
 
         var terms = Terms_property.GetValue(block) as object[];
         IsNotNull(terms);
-        AreEqual(8, terms.Length);
+        HasCount(8, terms);
 
         var check_term = terms[0];
         IsNotNull(check_term);
         AreEqual("MathCore.MathParser.FunctionTerm", check_term.GetType().FullName);
         var FunctionTerm_type = asm.GetType("MathCore.MathParser.FunctionTerm");
         IsNotNull(FunctionTerm_type);
-        AreEqual("sin", (string)FunctionTerm_type.GetProperty("Name").GetValue(check_term));
+        AreEqual("sin", (string)FunctionTerm_type.GetProperty("Name").GetValue(check_term)!);
         check_term = FunctionTerm_type.GetProperty("Block").GetValue(check_term);
         IsNotNull(check_term);
-        AreEqual("(", (string)BlockTerm_type.GetProperty("OpenBracket").GetValue(check_term));
-        AreEqual(")", (string)BlockTerm_type.GetProperty("CloseBracket").GetValue(check_term));
+        AreEqual("(", (string)BlockTerm_type.GetProperty("OpenBracket").GetValue(check_term)!);
+        AreEqual(")", (string)BlockTerm_type.GetProperty("CloseBracket").GetValue(check_term)!);
         var terms2 = Terms_property.GetValue(check_term) as object[];
         IsNotNull(terms2);
-        AreEqual(2, terms2.Length);
+        HasCount(2, terms2);
         AreEqual("MathCore.MathParser.NumberTerm", terms2[0].GetType().FullName);
-        AreEqual(5, (int)terms2[0].GetType().GetProperty("Value").GetValue(terms2[0]));
+        AreEqual(5, (int)terms2[0].GetType().GetProperty("Value").GetValue(terms2[0])!);
         AreEqual("MathCore.MathParser.StringTerm", terms2[1].GetType().FullName);
-        AreEqual("x", (string)terms2[1].GetType().GetProperty("Name").GetValue(terms2[1]));
+        AreEqual("x", (string)terms2[1].GetType().GetProperty("Name").GetValue(terms2[1])!);
 
         IsNotNull(check_term = terms[1]);
         AreEqual("MathCore.MathParser.CharTerm", check_term.GetType().FullName);
-        AreEqual('/', (char)check_term.GetType().GetProperty("Value").GetValue(check_term));
+        AreEqual('/', (char)check_term.GetType().GetProperty("Value").GetValue(check_term)!);
 
         IsNotNull(check_term = terms[2]);
         AreEqual(BlockTerm_type, check_term.GetType());
-        AreEqual("(", (string)BlockTerm_type.GetProperty("OpenBracket").GetValue(check_term));
-        AreEqual(")", (string)BlockTerm_type.GetProperty("CloseBracket").GetValue(check_term));
+        AreEqual("(", (string)BlockTerm_type.GetProperty("OpenBracket").GetValue(check_term)!);
+        AreEqual(")", (string)BlockTerm_type.GetProperty("CloseBracket").GetValue(check_term)!);
         terms2 = Terms_property.GetValue(check_term) as object[];
         IsNotNull(terms2);
-        AreEqual(2, terms2.Length);
+        HasCount(2, terms2);
         AreEqual("MathCore.MathParser.NumberTerm", terms2[0].GetType().FullName);
-        AreEqual(5, (int)terms2[0].GetType().GetProperty("Value").GetValue(terms2[0]));
+        AreEqual(5, (int)terms2[0].GetType().GetProperty("Value").GetValue(terms2[0])!);
         AreEqual("MathCore.MathParser.StringTerm", terms2[1].GetType().FullName);
-        AreEqual("x", (string)terms2[1].GetType().GetProperty("Name").GetValue(terms2[1]));
+        AreEqual("x", (string)terms2[1].GetType().GetProperty("Name").GetValue(terms2[1])!);
 
         IsNotNull(check_term = terms[3]);
         AreEqual("MathCore.MathParser.CharTerm", check_term.GetType().FullName);
-        AreEqual('+', (char)check_term.GetType().GetProperty("Value").GetValue(check_term));
+        AreEqual('+', (char)check_term.GetType().GetProperty("Value").GetValue(check_term)!);
 
         IsNotNull(check_term = terms[4]);
         AreEqual("MathCore.MathParser.StringTerm", check_term.GetType().FullName);
-        AreEqual("y", (string)check_term.GetType().GetProperty("Name").GetValue(check_term));
+        AreEqual("y", (string)check_term.GetType().GetProperty("Name").GetValue(check_term)!);
 
         IsNotNull(check_term = terms[5]);
         AreEqual("MathCore.MathParser.CharTerm", check_term.GetType().FullName);
-        AreEqual('-', (char)check_term.GetType().GetProperty("Value").GetValue(check_term));
+        AreEqual('-', (char)check_term.GetType().GetProperty("Value").GetValue(check_term)!);
 
         IsNotNull(check_term = terms[6]);
         AreEqual("MathCore.MathParser.NumberTerm", check_term.GetType().FullName);
-        AreEqual(7, (int)check_term.GetType().GetProperty("Value").GetValue(check_term));
+        AreEqual(7, (int)check_term.GetType().GetProperty("Value").GetValue(check_term)!);
 
         IsNotNull(check_term = terms[7]);
         AreEqual("MathCore.MathParser.FunctionTerm", check_term.GetType().FullName);
-        AreEqual("cos", (string)check_term.GetType().GetProperty("Name").GetValue(check_term));
+        AreEqual("cos", (string)check_term.GetType().GetProperty("Name").GetValue(check_term)!);
         check_term = FunctionTerm_type.GetProperty("Block").GetValue(check_term);
         IsNotNull(check_term);
-        AreEqual("(", (string)BlockTerm_type.GetProperty("OpenBracket").GetValue(check_term));
-        AreEqual(")", (string)BlockTerm_type.GetProperty("CloseBracket").GetValue(check_term));
+        AreEqual("(", (string)BlockTerm_type.GetProperty("OpenBracket").GetValue(check_term)!);
+        AreEqual(")", (string)BlockTerm_type.GetProperty("CloseBracket").GetValue(check_term)!);
 
         //-2pi*(y-z)-3.2
         IsNotNull(terms2 = Terms_property.GetValue(check_term) as object[]);
-        AreEqual(9, terms2.Length);
+        HasCount(9, terms2);
         AreEqual("MathCore.MathParser.CharTerm", terms2[0].GetType().FullName);
-        AreEqual('-', (char)terms2[0].GetType().GetProperty("Value").GetValue(terms2[0]));
+        AreEqual('-', (char)terms2[0].GetType().GetProperty("Value").GetValue(terms2[0])!);
         AreEqual("MathCore.MathParser.NumberTerm", terms2[1].GetType().FullName);
-        AreEqual(2, (int)terms2[1].GetType().GetProperty("Value").GetValue(terms2[1]));
+        AreEqual(2, (int)terms2[1].GetType().GetProperty("Value").GetValue(terms2[1])!);
 
         AreEqual("MathCore.MathParser.StringTerm", terms2[2].GetType().FullName);
-        AreEqual("pi", (string)terms2[2].GetType().GetProperty("Name").GetValue(terms2[2]));
+        AreEqual("pi", (string)terms2[2].GetType().GetProperty("Name").GetValue(terms2[2])!);
 
         AreEqual("MathCore.MathParser.CharTerm", terms2[3].GetType().FullName);
-        AreEqual('*', (char)terms2[3].GetType().GetProperty("Value").GetValue(terms2[3]));
+        AreEqual('*', (char)terms2[3].GetType().GetProperty("Value").GetValue(terms2[3])!);
 
         AreEqual("MathCore.MathParser.BlockTerm", terms2[4].GetType().FullName);
-        object[] terms3;
+        object[]? terms3;
         IsNotNull(terms3 = Terms_property.GetValue(terms2[4]) as object[]);
-        AreEqual(3, terms3.Length);
+        HasCount(3, terms3);
 
         AreEqual("MathCore.MathParser.StringTerm", terms3[0].GetType().FullName);
-        AreEqual("y", (string)terms3[0].GetType().GetProperty("Name").GetValue(terms3[0]));
+        AreEqual("y", (string)terms3[0].GetType().GetProperty("Name").GetValue(terms3[0])!);
 
         AreEqual("MathCore.MathParser.CharTerm", terms3[1].GetType().FullName);
-        AreEqual('-', (char)terms3[1].GetType().GetProperty("Value").GetValue(terms3[1]));
+        AreEqual('-', (char)terms3[1].GetType().GetProperty("Value").GetValue(terms3[1])!);
 
         AreEqual("MathCore.MathParser.StringTerm", terms3[2].GetType().FullName);
-        AreEqual("z", (string)terms3[2].GetType().GetProperty("Name").GetValue(terms3[2]));
+        AreEqual("z", (string)terms3[2].GetType().GetProperty("Name").GetValue(terms3[2])!);
 
         AreEqual("MathCore.MathParser.CharTerm", terms2[5].GetType().FullName);
-        AreEqual('-', (char)terms2[5].GetType().GetProperty("Value").GetValue(terms2[5]));
+        AreEqual('-', (char)terms2[5].GetType().GetProperty("Value").GetValue(terms2[5])!);
 
         AreEqual("MathCore.MathParser.NumberTerm", terms2[6].GetType().FullName);
-        AreEqual(3, (int)terms2[6].GetType().GetProperty("Value").GetValue(terms2[6]));
+        AreEqual(3, (int)terms2[6].GetType().GetProperty("Value").GetValue(terms2[6])!);
 
         AreEqual("MathCore.MathParser.CharTerm", terms2[7].GetType().FullName);
-        AreEqual('.', (char)terms2[7].GetType().GetProperty("Value").GetValue(terms2[7]));
+        AreEqual('.', (char)terms2[7].GetType().GetProperty("Value").GetValue(terms2[7])!);
 
         AreEqual("MathCore.MathParser.NumberTerm", terms2[8].GetType().FullName);
-        AreEqual(2, (int)terms2[8].GetType().GetProperty("Value").GetValue(terms2[8]));
+        AreEqual(2, (int)terms2[8].GetType().GetProperty("Value").GetValue(terms2[8])!);
     }
 
     /// <summary>Тестирование процесса генерации дерева выражения</summary>
     [TestMethod, Priority(10), Description("Тестирование процесса генерации дерева выражения")]
     public void ExpressionTreeGeneration_Test()
     {
-        var asm            = typeof(ExpressionParser).Assembly;
+        var asm = typeof(ExpressionParser).Assembly;
         var BlockTerm_type = asm.GetType("MathCore.MathParser.BlockTerm");
         IsNotNull(BlockTerm_type);
 
         const string expression_str = "sin(5x)/(5x)+y-7cos(arg:-2pi*{-y^2+sin(x:z>5?z:-z)*atan2(y:5x,x:7-y)}-3.2)";
-        var          block          = BlockTerm_type.CreateObject(expression_str);
+        var block = BlockTerm_type.CreateObject(expression_str);
         IsNotNull(block);
 
         var expression = new MathExpression();
-        var parser     = new ExpressionParser();
+        var parser = new ExpressionParser();
 
         var root = block
                .GetType()
@@ -148,19 +148,19 @@ public class ParseEquationsTests
             as ExpressionTreeNode;
         IsNotNull(root);
 
-        IsInstanceOfType(root, typeof(AdditionOperatorNode));
+        IsInstanceOfType<AdditionOperatorNode>(root);
         IsTrue(root.IsRoot); AreEqual(0, root.Depth);
         AreEqual(AdditionOperatorNode.NodeName, ((AdditionOperatorNode)root).Name);
         IsNotNull(root.Left); IsNotNull(root.Right);
-        IsInstanceOfType(root.Left, typeof(DivisionOperatorNode));
-        IsInstanceOfType(root.Right, typeof(subtractionOperatorNode));
+        IsInstanceOfType<DivisionOperatorNode>(root.Left);
+        IsInstanceOfType<subtractionOperatorNode>(root.Right);
 
         var node = root.Left;
         IsFalse(node.IsRoot); AreEqual(1, node.Depth);
         AreEqual(DivisionOperatorNode.NodeName, ((DivisionOperatorNode)node).Name);
         IsNotNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(FunctionNode));
-        IsInstanceOfType(node.Right, typeof(ComputedBracketNode));
+        IsInstanceOfType<FunctionNode>(node.Left);
+        IsInstanceOfType<ComputedBracketNode>(node.Right);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(2, node.Depth);
@@ -171,12 +171,12 @@ public class ParseEquationsTests
         IsNotNull(func.Arguments);
         AreEqual(1, ((FunctionNode)node).Arguments.Count());
         IsNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Right, typeof(FunctionArgumentNode));
+        IsInstanceOfType<FunctionArgumentNode>(node.Right);
 
         node = node.Right;
         IsFalse(node.IsRoot); AreEqual(3, node.Depth);
         IsNotNull(node.Left); IsNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(FunctionArgumentNameNode));
+        IsInstanceOfType<FunctionArgumentNameNode>(node.Left);
         IsNull(((FunctionArgumentNode)node).ArgumentName);
         IsNotNull(node.Left?.Right);
         AreEqual(node.Left?.Right, ((FunctionArgumentNode)node).ArgumentSubtree);
@@ -184,7 +184,7 @@ public class ParseEquationsTests
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(4, node.Depth);
         IsNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Right, typeof(MultiplicationOperatorNode));
+        IsInstanceOfType<MultiplicationOperatorNode>(node.Right);
         IsNull(((FunctionArgumentNameNode)node).ArgumentName);
         AreEqual(node.Right, ((FunctionArgumentNameNode)node).ArgumentNode);
 
@@ -192,8 +192,8 @@ public class ParseEquationsTests
         IsFalse(node.IsRoot); AreEqual(5, node.Depth);
         AreEqual(MultiplicationOperatorNode.NodeName, ((MultiplicationOperatorNode)node).Name);
         IsNotNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(ConstValueNode));
-        IsInstanceOfType(node.Right, typeof(VariableValueNode));
+        IsInstanceOfType<ConstValueNode>(node.Left);
+        IsInstanceOfType<VariableValueNode>(node.Right);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(6, node.Depth);
@@ -202,7 +202,7 @@ public class ParseEquationsTests
 
         node = node["./r"];
         IsNotNull(node);
-        IsInstanceOfType(node, typeof(VariableValueNode));
+        IsInstanceOfType<VariableValueNode>(node);
         IsFalse(node.IsRoot); AreEqual(6, node.Depth);
         IsNull(node.Left); IsNull(node.Right);
         AreEqual("x", ((VariableValueNode)node).Name);
@@ -215,21 +215,21 @@ public class ParseEquationsTests
 
         node = node.Parents[4];
         IsNotNull(node);
-        IsInstanceOfType(node, typeof(DivisionOperatorNode));
+        IsInstanceOfType<DivisionOperatorNode>(node);
         IsFalse(node.IsRoot); AreEqual(1, node.Depth);
 
         node = node.Right;
         IsNotNull(node);
-        IsInstanceOfType(node, typeof(ComputedBracketNode));
+        IsInstanceOfType<ComputedBracketNode>(node);
         IsFalse(node.IsRoot); AreEqual(2, node.Depth);
         IsNotNull(node.Left); IsNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(MultiplicationOperatorNode));
+        IsInstanceOfType<MultiplicationOperatorNode>(node.Left);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(3, node.Depth);
         IsNotNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(ConstValueNode));
-        IsInstanceOfType(node.Right, typeof(VariableValueNode));
+        IsInstanceOfType<ConstValueNode>(node.Left);
+        IsInstanceOfType<VariableValueNode>(node.Right);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(4, node.Depth);
@@ -251,14 +251,14 @@ public class ParseEquationsTests
         AreEqual(3, var_x_2.Value);
         AreEqual(3, var_x_1.Value);
         AreEqual(3, ((VariableValueNode)node).Value);
-        AreEqual(3, ((VariableValueNode)node["./././l/r/l/r/r"]).Value);
+        AreEqual(3, ((VariableValueNode)node["./././l/r/l/r/r"]!).Value);
 
         node = node.Root.Right;
         IsNotNull(node);
-        IsInstanceOfType(node, typeof(subtractionOperatorNode));
+        IsInstanceOfType<subtractionOperatorNode>(node);
         IsNotNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(VariableValueNode));
-        IsInstanceOfType(node.Right, typeof(MultiplicationOperatorNode));
+        IsInstanceOfType<VariableValueNode>(node.Left);
+        IsInstanceOfType<MultiplicationOperatorNode>(node.Right);
 
         node = node.Left;
         var var_y_1_node = (VariableValueNode)node;
@@ -271,10 +271,10 @@ public class ParseEquationsTests
         node = node.Parent?.Right;
         IsNotNull(node);
         IsFalse(node.IsRoot); AreEqual(2, node.Depth);
-        IsInstanceOfType(node, typeof(MultiplicationOperatorNode));
+        IsInstanceOfType<MultiplicationOperatorNode>(node);
         IsNotNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(ConstValueNode));
-        IsInstanceOfType(node.Right, typeof(FunctionNode));
+        IsInstanceOfType<ConstValueNode>(node.Left);
+        IsInstanceOfType<FunctionNode>(node.Right);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(3, node.Depth);
@@ -284,26 +284,26 @@ public class ParseEquationsTests
         node = node.Parent?.Right;
         IsNotNull(node);
         IsFalse(node.IsRoot); AreEqual(3, node.Depth);
-        IsInstanceOfType(node, typeof(FunctionNode));
+        IsInstanceOfType<FunctionNode>(node);
         IsNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Right, typeof(FunctionArgumentNode));
+        IsInstanceOfType<FunctionArgumentNode>(node.Right);
         AreEqual("cos", ((FunctionNode)node).Name);
         AreEqual("cos", ((FunctionNode)node).Function.Name);
-        AreEqual(1, ((FunctionNode)node).ArgumentsNames.Length);
+        HasCount(1, ((FunctionNode)node).ArgumentsNames);
         AreEqual("arg", ((FunctionNode)node).ArgumentsNames[0]);
-        AreEqual(1, ((FunctionNode)node).Function.Arguments.Count);
+        HasCount(1, ((FunctionNode)node).Function.Arguments);
         AreEqual("arg", ((FunctionNode)node).Function.Arguments[0]);
 
         node = node.Right;
         IsFalse(node.IsRoot); AreEqual(4, node.Depth);
         IsNotNull(node.Left); IsNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(FunctionArgumentNameNode));
+        IsInstanceOfType<FunctionArgumentNameNode>(node.Left);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(5, node.Depth);
         IsNotNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(StringNode));
-        IsInstanceOfType(node.Right, typeof(subtractionOperatorNode));
+        IsInstanceOfType<StringNode>(node.Left);
+        IsInstanceOfType<subtractionOperatorNode>(node.Right);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(6, node.Depth);
@@ -313,10 +313,10 @@ public class ParseEquationsTests
         node = node.Parent?.Right;
         IsNotNull(node);
         IsFalse(node.IsRoot); AreEqual(6, node.Depth);
-        IsInstanceOfType(node, typeof(subtractionOperatorNode));
+        IsInstanceOfType<subtractionOperatorNode>(node);
         IsNotNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(subtractionOperatorNode));
-        IsInstanceOfType(node.Right, typeof(ConstValueNode));
+        IsInstanceOfType<subtractionOperatorNode>(node.Left);
+        IsInstanceOfType<ConstValueNode>(node.Right);
 
         node = node.Right;
         IsFalse(node.IsRoot); AreEqual(7, node.Depth);
@@ -326,21 +326,21 @@ public class ParseEquationsTests
         node = node.Parent?.Left;
         IsNotNull(node);
         IsFalse(node.IsRoot); AreEqual(7, node.Depth);
-        IsInstanceOfType(node, typeof(subtractionOperatorNode));
+        IsInstanceOfType<subtractionOperatorNode>(node);
         IsNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Right, typeof(MultiplicationOperatorNode));
+        IsInstanceOfType<MultiplicationOperatorNode>(node.Right);
 
         node = node.Right;
         IsFalse(node.IsRoot); AreEqual(8, node.Depth);
         IsNotNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(MultiplicationOperatorNode));
-        IsInstanceOfType(node.Right, typeof(ComputedBracketNode));
+        IsInstanceOfType<MultiplicationOperatorNode>(node.Left);
+        IsInstanceOfType<ComputedBracketNode>(node.Right);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(9, node.Depth);
         IsNotNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(ConstValueNode));
-        IsInstanceOfType(node.Right, typeof(VariableValueNode));
+        IsInstanceOfType<ConstValueNode>(node.Left);
+        IsInstanceOfType<VariableValueNode>(node.Right);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(10, node.Depth);
@@ -349,7 +349,7 @@ public class ParseEquationsTests
 
         node = node["./r"];
         IsNotNull(node);
-        IsInstanceOfType(node, typeof(VariableValueNode));
+        IsInstanceOfType<VariableValueNode>(node);
         IsFalse(node.IsRoot); AreEqual(10, node.Depth);
         IsNull(node.Left); IsNull(node.Right);
         AreEqual("pi", ((VariableValueNode)node).Name);
@@ -360,29 +360,29 @@ public class ParseEquationsTests
 
         node = node["././r"];
         IsNotNull(node);
-        IsInstanceOfType(node, typeof(ComputedBracketNode));
+        IsInstanceOfType<ComputedBracketNode>(node);
         IsFalse(node.IsRoot); AreEqual(9, node.Depth);
         AreEqual("{", ((ComputedBracketNode)node).Bracket.Start);
         AreEqual("}", ((ComputedBracketNode)node).Bracket.Stop);
         IsNotNull(node.Left); IsNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(AdditionOperatorNode));
+        IsInstanceOfType<AdditionOperatorNode>(node.Left);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(10, node.Depth);
         IsNotNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(PowerOperatorNode));
-        IsInstanceOfType(node.Right, typeof(MultiplicationOperatorNode));
+        IsInstanceOfType<PowerOperatorNode>(node.Left);
+        IsInstanceOfType<MultiplicationOperatorNode>(node.Right);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(11, node.Depth);
         IsNotNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(subtractionOperatorNode));
-        IsInstanceOfType(node.Right, typeof(ConstValueNode));
+        IsInstanceOfType<subtractionOperatorNode>(node.Left);
+        IsInstanceOfType<ConstValueNode>(node.Right);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(12, node.Depth);
         IsNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Right, typeof(VariableValueNode));
+        IsInstanceOfType<VariableValueNode>(node.Right);
 
         node = node.Right;
         IsFalse(node.IsRoot); AreEqual(13, node.Depth);
@@ -396,36 +396,36 @@ public class ParseEquationsTests
 
         node = node[n => n.Parent].First(n => n is AdditionOperatorNode).Right;
         IsNotNull(node);
-        IsInstanceOfType(node, typeof(MultiplicationOperatorNode));
+        IsInstanceOfType<MultiplicationOperatorNode>(node);
         IsFalse(node.IsRoot); AreEqual(11, node.Depth);
         IsNotNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(FunctionNode));
-        IsInstanceOfType(node.Right, typeof(FunctionNode));
+        IsInstanceOfType<FunctionNode>(node.Left);
+        IsInstanceOfType<FunctionNode>(node.Right);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(12, node.Depth);
         IsNull(node.Left); IsNotNull(node.Right);
         AreEqual("sin", ((FunctionNode)node).Name);
         AreEqual("sin", ((FunctionNode)node).Function.Name);
-        AreNotEqual(((FunctionNode)node["../l/l"]).Function, ((FunctionNode)node).Function);
-        AreEqual(1, ((FunctionNode)node).ArgumentsNames.Length);
+        AreNotEqual(((FunctionNode)node["../l/l"]!).Function, ((FunctionNode)node).Function);
+        HasCount(1, ((FunctionNode)node).ArgumentsNames);
         AreEqual("x", ((FunctionNode)node).ArgumentsNames[0]);
-        IsInstanceOfType(node.Right, typeof(FunctionArgumentNode));
+        IsInstanceOfType<FunctionArgumentNode>(node.Right);
 
         node = node.Right;
         IsFalse(node.IsRoot); AreEqual(13, node.Depth);
         AreEqual("x", ((FunctionArgumentNode)node).ArgumentName);
         IsNotNull(node.Left); IsNull(node.Right);
         AreEqual(node.Left.Right, ((FunctionArgumentNode)node).ArgumentSubtree);
-        IsInstanceOfType(node.Left, typeof(FunctionArgumentNameNode));
+        IsInstanceOfType<FunctionArgumentNameNode>(node.Left);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(14, node.Depth);
         IsNotNull(node.Left); IsNotNull(node.Right);
         AreEqual("x", ((FunctionArgumentNameNode)node).ArgumentName);
         AreEqual(node.Right, ((FunctionArgumentNameNode)node).ArgumentNode);
-        IsInstanceOfType(node.Left, typeof(StringNode));
-        IsInstanceOfType(node.Right, typeof(SelectorOperatorNode));
+        IsInstanceOfType<StringNode>(node.Left);
+        IsInstanceOfType<SelectorOperatorNode>(node.Right);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(15, node.Depth);
@@ -434,17 +434,17 @@ public class ParseEquationsTests
 
         node = node.Parent?.Right;
         IsNotNull(node);
-        IsInstanceOfType(node, typeof(SelectorOperatorNode));
+        IsInstanceOfType<SelectorOperatorNode>(node);
         IsFalse(node.IsRoot); AreEqual(15, node.Depth);
         IsNotNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(GreaterThenOperatorNode));
-        IsInstanceOfType(node.Right, typeof(VariantOperatorNode));
+        IsInstanceOfType<GreaterThenOperatorNode>(node.Left);
+        IsInstanceOfType<VariantOperatorNode>(node.Right);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(16, node.Depth);
         IsNotNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(VariableValueNode));
-        IsInstanceOfType(node.Right, typeof(ConstValueNode));
+        IsInstanceOfType<VariableValueNode>(node.Left);
+        IsInstanceOfType<ConstValueNode>(node.Right);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(17, node.Depth);
@@ -457,18 +457,18 @@ public class ParseEquationsTests
 
         node = node["./r"];
         IsNotNull(node);
-        IsInstanceOfType(node, typeof(ConstValueNode));
+        IsInstanceOfType<ConstValueNode>(node);
         IsFalse(node.IsRoot); AreEqual(17, node.Depth);
         AreEqual(5, ((ConstValueNode)node).Value);
         IsNull(node.Left); IsNull(node.Right);
 
         node = node["././r"];
         IsNotNull(node);
-        IsInstanceOfType(node, typeof(VariantOperatorNode));
+        IsInstanceOfType<VariantOperatorNode>(node);
         IsFalse(node.IsRoot); AreEqual(16, node.Depth);
         IsNotNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(VariableValueNode));
-        IsInstanceOfType(node.Right, typeof(subtractionOperatorNode));
+        IsInstanceOfType<VariableValueNode>(node.Left);
+        IsInstanceOfType<subtractionOperatorNode>(node.Right);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(17, node.Depth);
@@ -478,37 +478,37 @@ public class ParseEquationsTests
         node = node["./r"];
         IsNotNull(node);
         IsFalse(node.IsRoot); AreEqual(17, node.Depth);
-        IsInstanceOfType(node, typeof(subtractionOperatorNode));
+        IsInstanceOfType<subtractionOperatorNode>(node);
         IsNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Right, typeof(VariableValueNode));
+        IsInstanceOfType<VariableValueNode>(node.Right);
 
         node = node[n => n.Parent].First(n => n is MultiplicationOperatorNode).Right;
         IsNotNull(node);
-        IsInstanceOfType(node, typeof(FunctionNode));
+        IsInstanceOfType<FunctionNode>(node);
         IsFalse(node.IsRoot); AreEqual(12, node.Depth);
         IsNull(node.Left); IsNotNull(node.Right);
         AreEqual("atan2", ((FunctionNode)node).Name);
         AreEqual("atan2", ((FunctionNode)node).Function.Name);
-        AreEqual(2, ((FunctionNode)node).Function.Arguments.Count);
+        HasCount(2, ((FunctionNode)node).Function.Arguments);
         AreEqual("y", ((FunctionNode)node).Function.Arguments[0]);
         AreEqual("x", ((FunctionNode)node).Function.Arguments[1]);
-        IsInstanceOfType(node.Right, typeof(FunctionArgumentNode));
+        IsInstanceOfType<FunctionArgumentNode>(node.Right);
 
         node = node.Right;
         IsFalse(node.IsRoot); AreEqual(13, node.Depth);
         IsNotNull(node.Left); IsNotNull(node.Right);
         AreEqual("y", ((FunctionArgumentNode)node).ArgumentName);
         AreEqual(node.Left.Right, ((FunctionArgumentNode)node).ArgumentSubtree);
-        IsInstanceOfType(node.Left, typeof(FunctionArgumentNameNode));
-        IsInstanceOfType(node.Right, typeof(FunctionArgumentNode));
+        IsInstanceOfType<FunctionArgumentNameNode>(node.Left);
+        IsInstanceOfType<FunctionArgumentNode>(node.Right);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(14, node.Depth);
         IsNotNull(node.Left); IsNotNull(node.Right);
         AreEqual("y", ((FunctionArgumentNameNode)node).ArgumentName);
         AreEqual(node.Right, ((FunctionArgumentNameNode)node).ArgumentNode);
-        IsInstanceOfType(node.Left, typeof(StringNode));
-        IsInstanceOfType(node.Right, typeof(MultiplicationOperatorNode));
+        IsInstanceOfType<StringNode>(node.Left);
+        IsInstanceOfType<MultiplicationOperatorNode>(node.Right);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(15, node.Depth);
@@ -517,11 +517,11 @@ public class ParseEquationsTests
 
         node = node["./r"];
         IsNotNull(node);
-        IsInstanceOfType(node, typeof(MultiplicationOperatorNode));
+        IsInstanceOfType<MultiplicationOperatorNode>(node);
         IsFalse(node.IsRoot); AreEqual(15, node.Depth);
         IsNotNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(ConstValueNode));
-        IsInstanceOfType(node.Right, typeof(VariableValueNode));
+        IsInstanceOfType<ConstValueNode>(node.Left);
+        IsInstanceOfType<VariableValueNode>(node.Right);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(16, node.Depth);
@@ -530,27 +530,27 @@ public class ParseEquationsTests
 
         node = node["./r"];
         IsNotNull(node);
-        IsInstanceOfType(node, typeof(VariableValueNode));
+        IsInstanceOfType<VariableValueNode>(node);
         IsFalse(node.IsRoot); AreEqual(16, node.Depth);
         IsNull(node.Left); IsNull(node.Right);
         AreEqual(var_x_1, ((VariableValueNode)node).Variable);
 
         node = node["./././r"];
         IsNotNull(node);
-        IsInstanceOfType(node, typeof(FunctionArgumentNode));
+        IsInstanceOfType<FunctionArgumentNode>(node);
         IsFalse(node.IsRoot); AreEqual(14, node.Depth);
         IsNotNull(node.Left); IsNull(node.Right);
         AreEqual("x", ((FunctionArgumentNode)node).ArgumentName);
         AreEqual(node.Left.Right, ((FunctionArgumentNode)node).ArgumentSubtree);
-        IsInstanceOfType(node.Left, typeof(FunctionArgumentNameNode));
+        IsInstanceOfType<FunctionArgumentNameNode>(node.Left);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(15, node.Depth);
         IsNotNull(node.Left); IsNotNull(node.Right);
         AreEqual("x", ((FunctionArgumentNameNode)node).ArgumentName);
         AreEqual(node.Right, ((FunctionArgumentNameNode)node).ArgumentNode);
-        IsInstanceOfType(node.Left, typeof(StringNode));
-        IsInstanceOfType(node.Right, typeof(subtractionOperatorNode));
+        IsInstanceOfType<StringNode>(node.Left);
+        IsInstanceOfType<subtractionOperatorNode>(node.Right);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(16, node.Depth);
@@ -559,11 +559,11 @@ public class ParseEquationsTests
 
         node = node["./r"];
         IsNotNull(node);
-        IsInstanceOfType(node, typeof(subtractionOperatorNode));
+        IsInstanceOfType<subtractionOperatorNode>(node);
         IsFalse(node.IsRoot); AreEqual(16, node.Depth);
         IsNotNull(node.Left); IsNotNull(node.Right);
-        IsInstanceOfType(node.Left, typeof(ConstValueNode));
-        IsInstanceOfType(node.Right, typeof(VariableValueNode));
+        IsInstanceOfType<ConstValueNode>(node.Left);
+        IsInstanceOfType<VariableValueNode>(node.Right);
 
         node = node.Left;
         IsFalse(node.IsRoot); AreEqual(17, node.Depth);
@@ -572,7 +572,7 @@ public class ParseEquationsTests
 
         node = node["./r"];
         IsNotNull(node);
-        IsInstanceOfType(node, typeof(VariableValueNode));
+        IsInstanceOfType<VariableValueNode>(node);
         IsFalse(node.IsRoot); AreEqual(17, node.Depth);
         AreEqual(var_y_1, ((VariableValueNode)node).Variable);
     }

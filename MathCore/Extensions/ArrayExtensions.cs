@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 using MathCore;
@@ -44,15 +45,20 @@ public static class ArrayExtensions
         return array;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string ToBase64(this byte[] bytes) => Convert.ToBase64String(bytes);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string ToBase64(this byte[] bytes, int offset, int length) => Convert.ToBase64String(bytes, offset, length);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string ToBase64(this byte[] bytes, Base64FormattingOptions options) => Convert.ToBase64String(bytes, options);
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string ToBase64(this byte[] bytes, int offset, int length, Base64FormattingOptions options) =>
         Convert.ToBase64String(bytes, offset, length, options);
 
     public static int BinarySearch<T>(this T[] array, T value) => Array.BinarySearch(array, value);
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int[] InitializeRange(this int[] array, int StartValue = 0, int Step = 1)
     {
         for (var i = 0; i < array.Length; i++)
@@ -60,6 +66,7 @@ public static class ArrayExtensions
         return array;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double[] InitializeRange(this double[] array, double StartValue = 0, double Step = 1)
     {
         for (var i = 0; i < array.Length; i++)
@@ -67,6 +74,7 @@ public static class ArrayExtensions
         return array;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Complex[] InitializeRange(this Complex[] array, Complex StartValue, Complex Step)
     {
         for (var i = 0; i < array.Length; i++)
@@ -104,6 +112,7 @@ public static class ArrayExtensions
     /// <param name="N">Число строк (первое измерение)</param>
     /// <param name="M">Число столбцов (второе измерение)</param>
     /// <typeparam name="T">Тип элементов массива</typeparam>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Deconstruct<T>(this T[,] array, out int N, out int M)
     {
         N = array.GetLength(0);
@@ -116,6 +125,7 @@ public static class ArrayExtensions
     /// <param name="M">Число столбцов (второе измерение)</param>
     /// <param name="K">Глубина (третье измерение)</param>
     /// <typeparam name="T">Тип элементов массива</typeparam>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Deconstruct<T>(this T[,,] array, out int N, out int M, out int K)
     {
         N = array.GetLength(0);
@@ -213,6 +223,7 @@ public static class ArrayExtensions
     /// <param name="value">Искомый элемент</param>
     /// <typeparam name="T">Тип элементов массива</typeparam>
     /// <returns>Истина, если элемент найден</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Exist<T>(this T[] array, T value) => Array.IndexOf(array, value, 0, array.Length) >= 0;
 
     /// <summary>Проверка на отсутствие элемента в массиве</summary>
@@ -220,6 +231,7 @@ public static class ArrayExtensions
     /// <param name="value">Искомый элемент</param>
     /// <typeparam name="T">Тип элементов массива</typeparam>
     /// <returns>Истина, если элемент в массиве отсутствует</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool NotExist<T>(this T[] array, T value) => Array.IndexOf(array, value, 0, array.Length) < 0;
 
     /// <summary>Разделить входной массив на подмассивы указанным методом</summary>
@@ -436,6 +448,7 @@ public static class ArrayExtensions
     ///<typeparam name="TArray">Тип элементов массива</typeparam>
     ///<returns>Массив из объединенных элементов</returns>
     [DST]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TArray[] Concatenate<TArray>(this TArray[] A, params TArray[] B)
     {
         var result = new TArray[A.Length + B.Length];
@@ -449,6 +462,7 @@ public static class ArrayExtensions
     /// <param name="A">Исходный массив</param>
     /// <param name="B">Присоединяемые массивы</param>
     /// <returns>Массив, содержащий все элементы объединяемых массивов</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TArray[] Concatenate<TArray>(this TArray[] A, params TArray[][] B)
     {
         var result = new TArray[A.Length + B.Sum(l => l.Length)];
@@ -501,6 +515,7 @@ public static class ArrayExtensions
     ///<param name="action">Выполняемой действие</param>
     ///<typeparam name="TArray">Тип элементов массива</typeparam>
     [DST]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Foreach<TArray>(
         this TArray[] array,
         Action<TArray> action)
@@ -512,6 +527,7 @@ public static class ArrayExtensions
     ///<param name="ErrorHandler">Обработчик исключения</param>
     ///<typeparam name="TArray">Тип элементов массива</typeparam>
     [DST]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Foreach<TArray>(
         this TArray[] array,
         Action<TArray> action,
@@ -552,6 +568,7 @@ public static class ArrayExtensions
     ///<typeparam name="TOut">Тип элементов массива области значения</typeparam>
     ///<returns>Массив значений функции</returns>
     [DST]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TOut[] Function<TIn, TOut>(this TIn[] array, Func<TIn, TOut> f) => array.Select(f).ToArray();
 
     /// <summary>Получить массив, индексы элементов которого имеют обратный порядок</summary>
@@ -559,6 +576,7 @@ public static class ArrayExtensions
     /// <param name="array">Переворачиваемый массив</param>
     /// <returns>Перевёрнутый массив</returns>
     [DST]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TArray[] GetReversed<TArray>(this TArray[] array)
     {
         var len    = array.Length;
@@ -578,6 +596,7 @@ public static class ArrayExtensions
     /// начиная с указанного <paramref name="Start"/> положения и указанной длины <paramref name="Length"/>
     /// </returns>
     [DST]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TArray[] GetSubArray<TArray>(this TArray[] array, int Length, int Start = 0)
     {
         var result = new TArray[Length];
@@ -594,6 +613,7 @@ public static class ArrayExtensions
     /// </param>
     /// <returns>Инициализированный массив</returns>
     [DST]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TArray[] Initialize<TArray>(
         this TArray[] array,
         Func<int, TArray> Initializer
@@ -610,6 +630,7 @@ public static class ArrayExtensions
     /// <param name="value">Значение, размещаемое во всех элементах массива</param>
     /// <returns>Инициализированный массив</returns>
     [DST]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TArray[] Initialize<TArray>(
         this TArray[] array,
         TArray value
@@ -996,6 +1017,7 @@ public static class ArrayExtensions
     /// <param name="Values">Значения, Которые требуется внести с <paramref name="array"/></param>
     /// <typeparam name="TArray">Тип ячеек массива</typeparam>
     [DST]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void SetValues<TArray>(
         this TArray[] array,
         int StartIndex,
@@ -2609,7 +2631,7 @@ public static class ArrayExtensions
     }
 
     [NotImplemented]
-    public static double[] ResamplingLinear(this double[] array, int NewLength)
+    private static double[] ResamplingLinear(this double[] array, int NewLength)
     {
         var old_length = array.Length;
 

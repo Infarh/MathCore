@@ -44,4 +44,33 @@ public static class AssemblyEx
         public void Dispose() => context?.Unload();
     }
 #endif
+
+    extension(Assembly asm)
+    {
+        public Version GetVersion(string? EnvVersionVarName = null)
+        {
+            string? version;
+            if (EnvVersionVarName is { Length: > 0 })
+            {
+                version = Environment.GetEnvironmentVariable(EnvVersionVarName);
+                if (version is { Length: > 0 })
+                    return Version.Parse(version);
+            }
+
+            var executing_assembly = Assembly.GetExecutingAssembly();
+
+            var version_attribute = executing_assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+            version = version_attribute?.InformationalVersion;
+            if (version is not { Length: > 0 })
+                version = executing_assembly.GetName().Version?.ToString();
+            else
+            if (version.IndexOf('+') is > 0 and var plus_index)
+                version = version[..plus_index];
+
+            if (EnvVersionVarName is { Length: > 0 })
+                Environment.SetEnvironmentVariable(EnvVersionVarName, version);
+
+            return Version.Parse(version ?? "0.0.0");
+        }
+    }
 }

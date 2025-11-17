@@ -20,8 +20,8 @@ public static class EnumExtensions
     public static TAttribute[]? GetValueAttribute<TAttribute>(this Enum value) where TAttribute : Attribute
     {
         var attribute_type = typeof(TAttribute);
-        var value_type     = value.GetType();
-        var field          = value_type.GetField(value.ToString());
+        var value_type = value.GetType();
+        var field = value_type.GetField(value.ToString());
         return (TAttribute[]?)field.GetCustomAttributes(attribute_type, false);
     }
 
@@ -43,6 +43,7 @@ public static class EnumExtensions
             ? string.Join(Environment.NewLine, descriptions)
             : string.Empty;
 
+    /// <summary>Возвращает коллекцию описаний, полученных из атрибутов <see cref="DescriptionAttribute"/> для значения перечисления</summary>
     public static IEnumerable<string> GetDescriptions(this Enum value) => value.GetAttributeValues<DescriptionAttribute, string>(a => a.Description);
 
     /// <summary>Получить описание поля - значение атрибута <see cref="DisplayNameAttribute"/></summary>

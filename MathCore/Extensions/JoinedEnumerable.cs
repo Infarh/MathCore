@@ -8,8 +8,10 @@ using System.Collections;
 // ReSharper disable once CheckNamespace
 namespace System.Linq;
 
+/// <summary>Перечисление, поддерживающее признак внешнего соединения</summary>
 public class JoinedEnumerable<T>(IEnumerable<T> source) : IEnumerable<T>
 {
+    /// <summary>Признак внешнего соединения</summary>
     public bool IsOuter { get; set; }
 
     IEnumerator<T> IEnumerable<T>.GetEnumerator() => source.GetEnumerator();
@@ -41,10 +43,20 @@ public class JoinedEnumerable<T>(IEnumerable<T> source) : IEnumerable<T>
 /// </remarks>
 public static class JoinedEnumerable
 {
+    /// <summary>Оборачивает перечисление для внутреннего соединения</summary>
+    /// <param name="source">Исходное перечисление</param>
+    /// <returns>Обёрнутое перечисление для внутреннего соединения</returns>
     public static JoinedEnumerable<T> Inner<T>(this IEnumerable<T> source) => Wrap(source, false);
 
+    /// <summary>Оборачивает перечисление для внешнего соединения</summary>
+    /// <param name="source">Исходное перечисление</param>
+    /// <returns>Обёрнутое перечисление для внешнего соединения</returns>
     public static JoinedEnumerable<T> Outer<T>(this IEnumerable<T> source) => Wrap(source, true);
 
+    /// <summary>Оборачивает перечисление с указанием типа соединения</summary>
+    /// <param name="source">Исходное перечисление</param>
+    /// <param name="IsOuter">Признак внешнего соединения</param>
+    /// <returns>Обёрнутое перечисление с признаком соединения</returns>
     public static JoinedEnumerable<T> Wrap<T>(IEnumerable<T> source, bool IsOuter)
     {
         var joined_source = source as JoinedEnumerable<T> ?? new JoinedEnumerable<T>(source);
@@ -52,6 +64,14 @@ public static class JoinedEnumerable
         return joined_source;
     }
 
+    /// <summary>Выполняет соединение двух перечислений с учетом типа соединения</summary>
+    /// <param name="outer">Внешнее перечисление</param>
+    /// <param name="inner">Внутреннее перечисление</param>
+    /// <param name="OuterKeySelector">Функция выбора ключа внешнего элемента</param>
+    /// <param name="InnerKeySelector">Функция выбора ключа внутреннего элемента</param>
+    /// <param name="ResultSelector">Функция формирования результата</param>
+    /// <param name="comparer">Компаратор ключей</param>
+    /// <returns>Результирующее перечисление соединённых элементов</returns>
     public static IEnumerable<TResult> Join<TOuter, TInner, TKey, TResult>(
         this JoinedEnumerable<TOuter> outer,
         IEnumerable<TInner> inner,
@@ -80,6 +100,14 @@ public static class JoinedEnumerable
             : Enumerable.Join(outer, inner, OuterKeySelector, InnerKeySelector, ResultSelector, comparer);
     }
 
+    /// <summary>Выполняет левое внешнее соединение двух перечислений</summary>
+    /// <param name="outer">Внешнее перечисление</param>
+    /// <param name="inner">Внутреннее перечисление</param>
+    /// <param name="OuterKeySelector">Функция выбора ключа внешнего элемента</param>
+    /// <param name="InnerKeySelector">Функция выбора ключа внутреннего элемента</param>
+    /// <param name="ResultSelector">Функция формирования результата</param>
+    /// <param name="comparer">Компаратор ключей</param>
+    /// <returns>Результирующее перечисление соединённых элементов</returns>
     public static IEnumerable<TResult> LeftOuterJoin<TOuter, TInner, TKey, TResult>(
         this IEnumerable<TOuter> outer,
         IEnumerable<TInner> inner,
@@ -95,6 +123,14 @@ public static class JoinedEnumerable
                 yield return ResultSelector(outer_item, inner_item);
     }
 
+    /// <summary>Выполняет правое внешнее соединение двух перечислений</summary>
+    /// <param name="outer">Внешнее перечисление</param>
+    /// <param name="inner">Внутреннее перечисление</param>
+    /// <param name="OuterKeySelector">Функция выбора ключа внешнего элемента</param>
+    /// <param name="InnerKeySelector">Функция выбора ключа внутреннего элемента</param>
+    /// <param name="ResultSelector">Функция формирования результата</param>
+    /// <param name="comparer">Компаратор ключей</param>
+    /// <returns>Результирующее перечисление соединённых элементов</returns>
     public static IEnumerable<TResult> RightOuterJoin<TOuter, TInner, TKey, TResult>(
         this IEnumerable<TOuter> outer,
         IEnumerable<TInner> inner,
@@ -110,6 +146,14 @@ public static class JoinedEnumerable
                 yield return ResultSelector(outer_item, inner_item);
     }
 
+    /// <summary>Выполняет полное внешнее соединение двух перечислений</summary>
+    /// <param name="outer">Внешнее перечисление</param>
+    /// <param name="inner">Внутреннее перечисление</param>
+    /// <param name="OuterKeySelector">Функция выбора ключа внешнего элемента</param>
+    /// <param name="InnerKeySelector">Функция выбора ключа внутреннего элемента</param>
+    /// <param name="ResultSelector">Функция формирования результата</param>
+    /// <param name="comparer">Компаратор ключей</param>
+    /// <returns>Результирующее перечисление соединённых элементов</returns>
     public static IEnumerable<TResult> FullOuterJoin<TOuter, TInner, TKey, TResult>(
         this IEnumerable<TOuter> outer,
         IEnumerable<TInner> inner,

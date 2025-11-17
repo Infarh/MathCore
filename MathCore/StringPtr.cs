@@ -107,11 +107,11 @@ public readonly ref partial struct StringPtr
 
     public bool IsInBracket(string Open, string Close)
     {
-        var open_length  = Open.Length;
+        var open_length = Open.Length;
         var close_length = Close.Length;
-        var length       = Length;
-        var pos          = Pos;
-        var source        = Source;
+        var length = Length;
+        var pos = Pos;
+        var source = Source;
         return length >= open_length + close_length
             && string.Compare(source, pos, Open, 0, open_length) == 0
             && string.Compare(source, pos + length - close_length, Close, 0, close_length) == 0;
@@ -323,6 +323,11 @@ public readonly ref partial struct StringPtr
         return len == -1 && x == 0;
     }
 
+    /// <summary>
+    /// Определяет 
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
     public bool Equals(double x) => Length > 0 && TryParseDouble() == x;
 
     public bool Equals(char c) => Length == 1 && char.Equals(this[0], c);
@@ -331,7 +336,7 @@ public readonly ref partial struct StringPtr
     {
         if (Length != 1) return false;
 
-        if(Comparison is StringComparison.OrdinalIgnoreCase or StringComparison.InvariantCultureIgnoreCase or StringComparison.CurrentCultureIgnoreCase)
+        if (Comparison is StringComparison.OrdinalIgnoreCase or StringComparison.InvariantCultureIgnoreCase or StringComparison.CurrentCultureIgnoreCase)
             return char.Equals(char.ToUpper(this[0]), char.ToUpper(c));
         return Equals(c);
     }
@@ -1096,7 +1101,7 @@ var start = Pos;
 
         if (str.IsEmpty) return false;
 
-        if (!str.Equals("true", StringComparison.OrdinalIgnoreCase)) 
+        if (!str.Equals("true", StringComparison.OrdinalIgnoreCase))
             return str.Equals("false", StringComparison.OrdinalIgnoreCase);
 
         value = true;

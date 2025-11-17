@@ -39,8 +39,8 @@ public class ServiceManagerTests
         private readonly int _ThreadId = Thread.CurrentThread.ManagedThreadId;
 
         public int GetValue() => _ThreadId;
-    }                                                                 
-        
+    }
+
     private class Service_GetTaskId : IService
     {
         private readonly int _TaskId = Task.CurrentId ?? -1;
@@ -75,7 +75,7 @@ public class ServiceManagerTests
     public void DefaultManager()
     {
         var expected = ServiceManager.Default;
-        var actual   = ServiceManager.Default;
+        var actual = ServiceManager.Default;
 
         Assert.IsNotNull(expected);
         Assert.IsNotNull(actual);
@@ -88,7 +88,7 @@ public class ServiceManagerTests
     {
         var service_manager = new ServiceManager();
         service_manager.Register<IService, Service_42>();
-        var expected1 = service_manager.Get(typeof(IService));
+        var expected1 = service_manager.Get<IService>();
         var expected2 = service_manager.Get<IService>();
 
         var actual = service_manager[typeof(IService)];
@@ -99,8 +99,8 @@ public class ServiceManagerTests
         Assert.AreEqual(expected1, actual);
         Assert.AreEqual(expected2, actual);
 
-        Assert.IsInstanceOfType(actual, typeof(IService));
-        Assert.IsInstanceOfType(actual, typeof(Service_42));
+        Assert.IsInstanceOfType<IService>(actual);
+        Assert.IsInstanceOfType<Service_42>(actual);
     }
 
     [TestMethod]
@@ -125,10 +125,10 @@ public class ServiceManagerTests
 
         var service = service_manager.Get<IService>();
         Assert.IsNotNull(service);
-        Assert.IsInstanceOfType(service, typeof(IService));
-        Assert.IsInstanceOfType(service, typeof(Service_42));
+        Assert.IsInstanceOfType<IService>(service);
+        Assert.IsInstanceOfType<Service_42>(service);
 
-        var       actual   = service.GetValue();
+        var actual = service.GetValue();
         const int expected = 42;
         Assert.AreEqual(expected, actual);
     }
@@ -156,19 +156,19 @@ public class ServiceManagerTests
 
         var service = service_manager.Get<IService>();
         Assert.IsNotNull(service);
-        Assert.IsInstanceOfType(service, typeof(IService));
-        Assert.IsInstanceOfType(service, typeof(Service_Value));
+        Assert.IsInstanceOfType<IService>(service);
+        Assert.IsInstanceOfType<Service_Value>(service);
 
-        var actual   = service.GetValue();
+        var actual = service.GetValue();
         var expected = counter;
         Assert.AreEqual(expected, actual);
 
         service = service_manager.Get<IService>();
         Assert.IsNotNull(service);
-        Assert.IsInstanceOfType(service, typeof(IService));
-        Assert.IsInstanceOfType(service, typeof(Service_Value));
+        Assert.IsInstanceOfType<IService>(service);
+        Assert.IsInstanceOfType<Service_Value>(service);
 
-        actual   = service.GetValue();
+        actual = service.GetValue();
         expected = counter;
         Assert.AreEqual(expected, actual);
     }
@@ -210,11 +210,11 @@ public class ServiceManagerTests
 
         var main_instance1 = manager.Service;
 
-        IService thread1_instance1 = null;
-        IService thread1_instance2 = null;
+        IService? thread1_instance1 = null;
+        IService? thread1_instance2 = null;
 
-        IService thread2_instance1 = null;
-        IService thread2_instance2 = null;
+        IService? thread2_instance1 = null;
+        IService? thread2_instance2 = null;
 
         var starter = new ManualResetEvent(false);
         var waiter1 = new ManualResetEvent(false);
@@ -260,7 +260,7 @@ public class ServiceManagerTests
     }
 
     [TestMethod]
-    public async Task ServiceRegistration_SingletonByThread_Simple()
+    public void ServiceRegistration_SingletonByThread_Simple()
     {
         var service_manager = new ServiceManager();
 
@@ -268,12 +268,15 @@ public class ServiceManagerTests
 
         var instance = service_manager.Get<Service_GetHashCode>();
 
-        await Task.Yield().ConfigureAwait(false);
+        Service_GetHashCode? instance2 = null;
 
-        var instance2 = service_manager.Get<Service_GetHashCode>();
+        var get_service_thread = new Thread(() => instance2 = service_manager.Get<Service_GetHashCode>());
+        get_service_thread.Start();
+        get_service_thread.Join();
 
         Assert.IsNotNull(instance2);
-        Assert.IsFalse(ReferenceEquals(instance, instance2));
+        var is_same = ReferenceEquals(instance, instance2);
+        Assert.IsFalse(is_same);
         Assert.AreNotEqual(instance, instance2);
     }
 
@@ -287,11 +290,11 @@ public class ServiceManagerTests
 
         var main_instance1 = manager.Service;
 
-        Service_GetThreadId thread1_instance1 = null;
-        Service_GetThreadId thread1_instance2 = null;
+        Service_GetThreadId? thread1_instance1 = null;
+        Service_GetThreadId? thread1_instance2 = null;
 
-        Service_GetThreadId thread2_instance1 = null;
-        Service_GetThreadId thread2_instance2 = null;
+        Service_GetThreadId? thread2_instance1 = null;
+        Service_GetThreadId? thread2_instance2 = null;
 
         var starter = new ManualResetEvent(false);
         var waiter1 = new ManualResetEvent(false);
@@ -343,10 +346,10 @@ public class ServiceManagerTests
         service_manager.Register<IService, Service_GetHashCode>();
 
         var expected = service_manager.Get<IService>();
-        var actual   = service_manager.Get<IService>();
+        var actual = service_manager.Get<IService>();
 
-        Assert.IsInstanceOfType(expected, typeof(Service_GetHashCode));
-        Assert.IsInstanceOfType(actual, typeof(Service_GetHashCode));
+        Assert.IsInstanceOfType<Service_GetHashCode>(expected);
+        Assert.IsInstanceOfType<Service_GetHashCode>(actual);
         Assert.IsTrue(ReferenceEquals(expected, actual));
     }
 
@@ -354,12 +357,12 @@ public class ServiceManagerTests
     public void ServiceRegistration_Singleton_Instance()
     {
         var service_manager = new ServiceManager();
-        var expected        = new Service_GetHashCode();
+        var expected = new Service_GetHashCode();
         service_manager.RegisterSingleton<IService>(expected);
 
         var actual = service_manager.Get<IService>();
-        Assert.IsInstanceOfType(actual, typeof(IService));
-        Assert.IsInstanceOfType(actual, typeof(Service_GetHashCode));
+        Assert.IsInstanceOfType<IService>(actual);
+        Assert.IsInstanceOfType<Service_GetHashCode>(actual);
 
         Assert.AreEqual(expected, actual);
     }
@@ -377,9 +380,9 @@ public class ServiceManagerTests
     public void ServiceRegistered_ByType()
     {
         var service_manager = new ServiceManager();
-        Assert.IsFalse(service_manager.ServiceRegistered(typeof(IService)));
+        Assert.IsFalse(service_manager.ServiceRegistered<IService>());
         service_manager.Register<IService, Service_42>();
-        Assert.IsTrue(service_manager.ServiceRegistered(typeof(IService)));
+        Assert.IsTrue(service_manager.ServiceRegistered<IService>());
     }
 
     [TestMethod]
@@ -390,13 +393,13 @@ public class ServiceManagerTests
         service_manager.RegisterSingleton<IService, Service_TwoInterfaces>();
         service_manager.RegisterSingleton<IService2, Service_TwoInterfaces>();
 
-        var instance_i_service  = service_manager.Get<IService>();
+        var instance_i_service = service_manager.Get<IService>();
         var instance_i_service2 = service_manager.Get<IService2>();
 
-        Assert.IsInstanceOfType(instance_i_service, typeof(IService));
-        Assert.IsInstanceOfType(instance_i_service, typeof(Service_TwoInterfaces));
-        Assert.IsInstanceOfType(instance_i_service2, typeof(IService2));
-        Assert.IsInstanceOfType(instance_i_service, typeof(Service_TwoInterfaces));
+        Assert.IsInstanceOfType<IService>(instance_i_service);
+        Assert.IsInstanceOfType<Service_TwoInterfaces>(instance_i_service);
+        Assert.IsInstanceOfType<IService2>(instance_i_service2);
+        Assert.IsInstanceOfType<Service_TwoInterfaces>(instance_i_service);
 
         Assert.IsTrue(ReferenceEquals(instance_i_service, instance_i_service2));
     }
@@ -417,14 +420,14 @@ public class ServiceManagerTests
         var service2 = service_manager.Get<IService>();
         Assert.IsNotNull(service1);
         Assert.IsNotNull(service2);
-        Assert.IsInstanceOfType(service1, typeof(Service_42));
-        Assert.IsInstanceOfType(service2, typeof(Service_42));
+        Assert.IsInstanceOfType<Service_42>(service1);
+        Assert.IsInstanceOfType<Service_42>(service2);
         Assert.IsTrue(ReferenceEquals(service1, service2));
 
         Thread.Sleep(1000);
         var service3 = service_manager.Get<IService>();
         Assert.IsNotNull(service3);
-        Assert.IsInstanceOfType(service3, typeof(Service_42));
+        Assert.IsInstanceOfType<Service_42>(service3);
         //Assert.IsFalse(ReferenceEquals(service1, service3));
     }
 
@@ -453,7 +456,7 @@ public class ServiceManagerTests
 #pragma warning restore CA1031 // Do not catch general exception types
         Assert.IsTrue(exception_throwed);
         Assert.IsNotNull(registration.LastException);
-        Assert.IsInstanceOfType(registration.LastException, typeof(ApplicationException));
+        Assert.IsInstanceOfType<ApplicationException>(registration.LastException);
         Assert.AreEqual("1", registration.LastException.Message);
 
         exception_throwed = false;
@@ -469,7 +472,7 @@ public class ServiceManagerTests
 #pragma warning restore CA1031 // Do not catch general exception types
         Assert.IsTrue(exception_throwed);
         Assert.IsNotNull(registration.LastException);
-        Assert.IsInstanceOfType(registration.LastException, typeof(ApplicationException));
+        Assert.IsInstanceOfType<ApplicationException>(registration.LastException);
         Assert.AreEqual("2", registration.LastException.Message);
     }
 
@@ -499,7 +502,7 @@ public class ServiceManagerTests
         Assert.IsTrue(exception_throwed);
         var last_exception = registration.LastException;
         Assert.IsNotNull(last_exception);
-        Assert.IsInstanceOfType(last_exception, typeof(ApplicationException));
+        Assert.IsInstanceOfType<ApplicationException>(last_exception);
         Assert.AreEqual("1", last_exception.Message);
 
         exception_throwed = false;
@@ -515,7 +518,7 @@ public class ServiceManagerTests
 #pragma warning restore CA1031 // Do not catch general exception types
         Assert.IsTrue(exception_throwed);
         Assert.IsNotNull(registration.LastException);
-        Assert.IsInstanceOfType(registration.LastException, typeof(ApplicationException));
+        Assert.IsInstanceOfType<ApplicationException>(registration.LastException);
         Assert.AreEqual("1", registration.LastException.Message);
         Assert.IsTrue(ReferenceEquals(last_exception, registration.LastException));
     }

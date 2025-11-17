@@ -30,13 +30,13 @@ public static class DirectoryInfoExtensions
             : new ZipArchive(file.Create(), ZipArchiveMode.Create, false);
 
         const int buffer_size = Consts.DataLength.Bytes.MB;
-        var       buffer      = new byte[buffer_size];
+        var buffer = new byte[buffer_size];
         using (var zip = GetArchive(ArchiveFile))
             foreach (var file in Directory.EnumerateFiles("*.*", SearchOption.AllDirectories))
             {
-                var       path        = Path.Combine(file.Directory!.GetRelativePosition(Directory)!, file.Name);
-                var       entry       = zip.CreateEntry(path, CompressionLevel.Optimal);
-                using var zip_stream  = entry.Open();
+                var path = Path.Combine(file.Directory!.GetRelativePosition(Directory)!, file.Name);
+                var entry = zip.CreateEntry(path, CompressionLevel.Optimal);
+                using var zip_stream = entry.Open();
                 using var file_stream = file.Open(FileMode.Open);
                 file_stream.CopyToStream(zip_stream, buffer);
             }
@@ -56,15 +56,15 @@ public static class DirectoryInfoExtensions
             : new ZipArchive(file.Create(), ZipArchiveMode.Create, false);
 
         const int buffer_size = Consts.DataLength.Bytes.MB;
-        var       buffer      = new byte[buffer_size];
+        var buffer = new byte[buffer_size];
         try
         {
             using var zip = GetArchive(ArchiveFile);
             foreach (var file in Directory.EnumerateFiles("*.*", SearchOption.AllDirectories))
             {
-                var       path        = Path.Combine(file.Directory!.GetRelativePosition(Directory)!, file.Directory!.Name, file.Name);
-                var       entry       = zip.CreateEntry(path, CompressionLevel.Optimal);
-                using var zip_stream  = entry.Open();
+                var path = Path.Combine(file.Directory!.GetRelativePosition(Directory)!, file.Directory!.Name, file.Name);
+                var entry = zip.CreateEntry(path, CompressionLevel.Optimal);
+                using var zip_stream = entry.Open();
                 using var file_stream = file.Open(FileMode.Open);
                 await file_stream.CopyToAsync(zip_stream, buffer, Cancel).ConfigureAwait(false);
             }
@@ -86,8 +86,8 @@ public static class DirectoryInfoExtensions
     public static DirectoryInfo ThrowIfNotFound(this DirectoryInfo? Dir, string? Message = null)
     {
         var dir = Dir.NotNull("Отсутствует ссылка на директории");
-        return !dir.Exists 
-            ? throw new DirectoryNotFoundException(Message ?? $"Директория {dir.FullName} не найдена") 
+        return !dir.Exists
+            ? throw new DirectoryNotFoundException(Message ?? $"Директория {dir.FullName} не найдена")
             : dir;
     }
 
@@ -144,14 +144,14 @@ public static class DirectoryInfoExtensions
     /// <param name="directory">Родительская директория</param>
     /// <param name="FileRelativePath">Относительный путь к файлу внутри директории</param>
     /// <returns>Фал по указанному пути внутри директории</returns>
-    public static FileInfo CreateFileInfo(this DirectoryInfo directory, string FileRelativePath) => 
+    public static FileInfo CreateFileInfo(this DirectoryInfo directory, string FileRelativePath) =>
         new(Path.Combine(directory.FullName, FileRelativePath.Replace(':', '.')));
 
     /// <summary>Создать объект с информацией о поддиректории</summary>
     /// <param name="directory">Родительская директория</param>
     /// <param name="DirectoryRelativePath">Относительный путь к дочерней директории</param>
     /// <returns>Дочерняя директория</returns>
-    public static DirectoryInfo CreateDirectoryInfo(this DirectoryInfo directory, string DirectoryRelativePath) => 
+    public static DirectoryInfo CreateDirectoryInfo(this DirectoryInfo directory, string DirectoryRelativePath) =>
         new(Path.Combine(directory.FullName, DirectoryRelativePath.Replace(':', '.')));
 
     /// <summary>Определить число всех вложенных файлов</summary>
@@ -171,7 +171,7 @@ public static class DirectoryInfoExtensions
     /// <param name="Directory">Исследуемая директория</param>
     /// <returns>Число байт всех вложенных файлов</returns>
     [DST]
-    public static long GetSize(this DirectoryInfo Directory) => 
+    public static long GetSize(this DirectoryInfo Directory) =>
         Directory.EnumerateFiles("*.*", SearchOption.AllDirectories).Sum(f => f.Length);
     //{
     //    var result = 0L;
@@ -192,7 +192,7 @@ public static class DirectoryInfoExtensions
     [DST]
     public static long GetSubdirectoriesCount(this DirectoryInfo Directory)
     {
-        var num   = 0L;
+        var num = 0L;
         var queue = new Queue<DirectoryInfo>();
         queue.Enqueue(Directory);
         do
@@ -200,7 +200,7 @@ public static class DirectoryInfoExtensions
             var directories = queue.Dequeue().GetDirectories();
             num += directories.Length;
             directories.Foreach(queue.Enqueue);
-        } while(queue.Count != 0);
+        } while (queue.Count != 0);
         return num;
     }
 
@@ -234,7 +234,7 @@ public static class DirectoryInfoExtensions
     public static bool ContainsFile(this DirectoryInfo directory, string file) => File.Exists(Path.Combine(directory.FullName, file));
 
     public static bool ContainsFileMask(this DirectoryInfo directory, string mask) => directory.EnumerateFiles(mask).Any();
-        
+
     public static bool IsParentOf(this DirectoryInfo parent, DirectoryInfo directory) => directory.IsSubDirectoryOf(parent);
 
     public static IEnumerable<FileInfo> FindFiles(this DirectoryInfo dir, string mask) =>
@@ -251,7 +251,7 @@ public static class DirectoryInfoExtensions
         if (string.IsNullOrWhiteSpace(SubDirectoryPath)) throw new ArgumentException("Не указан путь дочернего каталога", nameof(SubDirectoryPath));
 
         var sub_dir_path = Path.Combine(ParentDirectory.FullName, SubDirectoryPath);
-        var sub_dir      = new DirectoryInfo(sub_dir_path);
+        var sub_dir = new DirectoryInfo(sub_dir_path);
         if (sub_dir.Exists) return sub_dir;
         sub_dir.Create();
         sub_dir.Refresh();
@@ -293,5 +293,48 @@ public static class DirectoryInfoExtensions
         dir.Create();
         dir.Refresh();
         return dir;
+    }
+
+    /// <summary>Возвращает относительный путь директории относительно базовой директории</summary>
+    /// <param name="dir">Директория, для которой необходимо получить относительный путь.</param>
+    /// <param name="BaseDirPath">Базовая директория.</param>
+    /// <returns>Относительный путь директории, если базовая директория является родительской, иначе полный путь директории.</returns>
+    public static string GetRelatedPath(this DirectoryInfo dir, string BaseDirPath, StringComparison Comparison = StringComparison.OrdinalIgnoreCase)
+    {
+        // Удаляем пробелы и символы слеша в конце базового пути
+        var base_dir_path = BaseDirPath.Trim().TrimEnd('\\', '/');
+
+        // Получаем полный путь директории
+        var dir_path = dir.FullName;
+
+        // Проверяем, начинается ли полный путь директории с базового пути
+        return dir_path.StartsWith(base_dir_path, Comparison)
+            // Если да, возвращаем относительный путь
+            ? dir_path[base_dir_path.Length..]
+            // Если нет, возвращаем полный путь директории
+            : dir_path;
+    }
+
+    /// <summary>Проверяет, равны ли пути двух директорий</summary>
+    /// <param name="dir">Первая директория.</param>
+    /// <param name="other">Вторая директория.</param>
+    /// <returns>true, если пути директорий равны, иначе false.</returns>
+    public static bool PathEquals(this DirectoryInfo? dir, DirectoryInfo? other, StringComparison Comparison = StringComparison.Ordinal)
+    {
+        // Проверяем, не являются ли обе директории null
+        if (dir is null || other is null)
+            return false;
+
+        // Удаляем символы слеша в конце путей директорий
+#if NET9_0_OR_GREATER
+        var dir_path = dir.FullName.AsSpan().TrimEnd(['/', '\\']);
+        var other_path = other.FullName.AsSpan().TrimEnd(['/', '\\']);
+#else
+        var dir_path = dir.FullName.TrimEnd(['/', '\\']);
+        var other_path = other.FullName.TrimEnd(['/', '\\']);
+#endif
+
+        // Сравниваем пути директорий
+        return dir_path.Equals(other_path, Comparison);
     }
 }

@@ -79,12 +79,11 @@ public class FListTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
     public void PrivateParameterlessConstructorThrowInvalidOperationException()
     {
         var ctor    = typeof(FList<int>).GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, null, [], null);
         var creator = ctor.NewExpression().CreateLambda<Func<FList<int>>>().Compile();
-        var list    = creator();
+        Assert.ThrowsExactly<InvalidOperationException>(() => creator());
     }
 
     [TestMethod]

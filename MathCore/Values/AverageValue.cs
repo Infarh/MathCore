@@ -63,8 +63,8 @@ public class AverageValue : ISerializable, IValue<double>, IResettable
     /// <param name="Length">Размер окна усреднения</param>
     public AverageValue(int Length = -1)
     {
-        _Length     = Length;
-        _N          = 0;
+        _Length = Length;
+        _N = 0;
         _StartValue = double.NaN;
     }
 
@@ -72,10 +72,10 @@ public class AverageValue : ISerializable, IValue<double>, IResettable
     /// <param name="StartValue">Начальное значение для усреднения</param>
     public AverageValue(double StartValue)
     {
-        _Length     = -1;
-        _N          = 1;
+        _Length = -1;
+        _N = 1;
         _StartValue = StartValue;
-        _Value      = _StartValue;
+        _Value = _StartValue;
     }
 
     /// <summary>Инициализация нового скользящего среднего</summary>
@@ -83,14 +83,18 @@ public class AverageValue : ISerializable, IValue<double>, IResettable
     /// <param name="Length">Размер окна усреднения</param>
     public AverageValue(double StartValue, int Length)
     {
-        _Length     = Length;
-        _N          = 1;
+        _Length = Length;
+        _N = 1;
         _StartValue = StartValue;
-        _Value      = _StartValue;
+        _Value = _StartValue;
     }
 
 
     /* --------------------------------------------------------------------------------------------- */
+
+    /// <summary>Добавить значение к усреднению</summary>
+    /// <param name="value">Добавляемое значение</param>
+    public void Add(double value) => AddValue(value);
 
     /// <summary>Добавить значение к усреднению</summary>
     /// <param name="value">Добавляемое значение</param>
@@ -99,7 +103,7 @@ public class AverageValue : ISerializable, IValue<double>, IResettable
         if (_N >= 1)
         {
             // Если указано количество итераций усреднения
-            _Value  += (value - _Value) / (_N + 1);
+            _Value += (value - _Value) / (_N + 1);
             _Value2 += (value * value - _Value2) / (_N + 1);
             if (_Length < 0 || _N < _Length) _N++;
 
@@ -131,12 +135,12 @@ public class AverageValue : ISerializable, IValue<double>, IResettable
         _Value2 = 0;
         if (double.IsNaN(_StartValue))
         {
-            _N     = 0;
+            _N = 0;
             _Value = 0;
         }
         else
         {
-            _N     = 1;
+            _N = 1;
             _Value = _StartValue;
         }
 
@@ -159,7 +163,7 @@ public class AverageValue : ISerializable, IValue<double>, IResettable
 
     public void Deconstruct(out double Mean, out double Variance)
     {
-        Mean     = _Value;
+        Mean = _Value;
         Variance = _Value2;
     }
 
@@ -185,9 +189,9 @@ public class AverageValue : ISerializable, IValue<double>, IResettable
     protected AverageValue(SerializationInfo info, StreamingContext context)
     {
         if (info is null) throw new ArgumentNullException(nameof(info));
-        
+
         _Value = info.GetDouble("Value");
-        _N     = info.GetInt32("N");
+        _N = info.GetInt32("N");
         Length = info.GetInt32("Length");
     }
 

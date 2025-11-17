@@ -1,4 +1,5 @@
 ﻿using System.Xml.Linq;
+
 using MathCore.Xml;
 
 namespace MathCore.Tests.Xml;
@@ -60,7 +61,7 @@ public class LambdaXmlSerializerTests
                    .Attribute("SureName", s => s.SureName)
                    .Attribute("Name", s => s.Name)
                    .Attribute("Patronymic", s => s.Patronymic)
-                   .Element("Ratings", s => s.Ratings, s=>s.Average() > 2, rating => rating
+                   .Element("Ratings", s => s.Ratings, s => s.Average() > 2, rating => rating
                        .Attribute("Min", r => r.Min())
                        .Attribute("Max", r => r.Max())
                        .Attribute("Avg", rr => rr.Average())
@@ -71,7 +72,7 @@ public class LambdaXmlSerializerTests
         var xml = serializer.Serialize(group);
 
         Assert.That.Value(xml.Name).IsEqual(nameof(Group));
-        Assert.That.Value((string)xml.Attribute("Name")).IsEqual("04-216");
+        Assert.That.Value((string?)xml.Attribute("Name")).IsEqual("04-216");
         Assert.That.Value(xml.XPathString("@Leader")).IsEqual(group.Students.First().SureName);
 
         CollectionAssert.That

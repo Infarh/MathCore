@@ -37,12 +37,12 @@ public class PolynomArray
 
     #endregion
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    [TestMethod]
     public void GetValue_doubleX_doubleA_Throw_ArgumentNullException()
     {
         const double x = 0;
-        double[] a = null;
-        Polynom.Array.GetValue(x, a!);
+        double[]? a = null;
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(x, a!));
     }
 
     [TestMethod]
@@ -57,12 +57,12 @@ public class PolynomArray
         Assert.That.Value(y).IsEqual(ExpectedY);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    [TestMethod]
     public void GetValue_ComplexX_doubleA_Throw_ArgumentNullException()
     {
         Complex x = 0;
-        double[] a = null;
-        Polynom.Array.GetValue(x, a!);
+        double[]? a = null;
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(x, a!));
     }
 
     [TestMethod]
@@ -78,12 +78,12 @@ public class PolynomArray
         Assert.That.Value(y).IsEqual(ExpectedY);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    [TestMethod]
     public void GetValue_duobleX_ComplexA_Throw_ArgumentNullException()
     {
         const double x = 0;
-        Complex[] a = null;
-        Polynom.Array.GetValue(x, a!);
+        Complex[]? a = null;
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(x, a!));
     }
 
     [TestMethod]
@@ -99,12 +99,12 @@ public class PolynomArray
         Assert.That.Value(y).IsEqual(ExpectedY);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    [TestMethod]
     public void GetValue_ComplexX_ComplexA_Throw_ArgumentNullException()
     {
         Complex x = 0;
-        Complex[] a = null;
-        Polynom.Array.GetValue(x, a!);
+        Complex[]? a = null;
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(x, a!));
     }
 
     [TestMethod]
@@ -123,12 +123,12 @@ public class PolynomArray
 
     /* ---------------------------------------------------------------------------- */
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    [TestMethod]
     public void GetValue_doubleX_doubleListA_Throw_ArgumentNullException()
     {
         const double x = 0;
-        IList<double> a = null;
-        Polynom.Array.GetValue(x, a!);
+        IList<double>? a = null;
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(x, a!));
     }
 
     [TestMethod]
@@ -143,12 +143,12 @@ public class PolynomArray
         Assert.That.Value(y).IsEqual(ExpectedY);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    [TestMethod]
     public void GetValue_ComplexX_doubleListA_Throw_ArgumentNullException()
     {
         Complex x = 0;
-        IList<double> a = null;
-        Polynom.Array.GetValue(x, a!);
+        IList<double>? a = null;
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(x, a!));
     }
 
     [TestMethod]
@@ -163,12 +163,12 @@ public class PolynomArray
         Assert.That.Value(y).IsEqual(ExpectedY);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    [TestMethod]
     public void GetValue_doubleX_ComplexListA_Throw_ArgumentNullException()
     {
         const double x = 0;
-        IList<Complex> a = null;
-        Polynom.Array.GetValue(x, a!);
+        IList<Complex>? a = null;
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(x, a!));
     }
 
     [TestMethod]
@@ -183,12 +183,12 @@ public class PolynomArray
         Assert.That.Value(y).IsEqual(ExpectedY);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    [TestMethod]
     public void GetValue_ComplexX_ComplexListA_Throw_ArgumentNullException()
     {
         Complex x = 0;
-        IList<Complex> a = null;
-        Polynom.Array.GetValue(x, a!);
+        IList<Complex>? a = null;
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(x, a!));
     }
 
     [TestMethod]
@@ -205,12 +205,12 @@ public class PolynomArray
 
     /* ---------------------------------------------------------------------------- */
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    [TestMethod]
     public void GetValue_doubleX_doubleEnumerable_Throw_ArgumentNullException()
     {
         double x = 0;
-        IEnumerable<double> A = null;
-        Polynom.Array.GetValue(x, A!);
+        IEnumerable<double>? A = null;
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(x, A!));
     }
 
     [TestMethod]
@@ -223,12 +223,12 @@ public class PolynomArray
         Assert.That.Value(y).IsEqual(Y);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    [TestMethod]
     public void GetValue_ComplexX_doubleEnumerable_Throw_ArgumentNullException()
     {
         Complex x = 0;
-        IEnumerable<double> A = null;
-        Polynom.Array.GetValue(x, A!);
+        IEnumerable<double>? A = null;
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(x, A!));
     }
 
     [TestMethod]
@@ -241,12 +241,12 @@ public class PolynomArray
         Assert.That.Value(y).IsEqual(Y);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    [TestMethod]
     public void GetValue_doubleX_ComplexEnumerable_Throw_ArgumentNullException()
     {
         double x = 0;
-        IEnumerable<Complex> A = null;
-        Polynom.Array.GetValue(x, A!);
+        IEnumerable<Complex>? A = null;
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(x, A!));
     }
 
     [TestMethod]
@@ -259,12 +259,12 @@ public class PolynomArray
         Assert.That.Value(y).IsEqual(Y);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    [TestMethod]
     public void GetValue_ComplexX_ComplexEnumerable_Throw_ArgumentNullException()
     {
         Complex x = 0;
-        IEnumerable<Complex> A = null;
-        Polynom.Array.GetValue(x, A!);
+        IEnumerable<Complex>? A = null;
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(x, A!));
     }
 
     [TestMethod]
@@ -279,13 +279,13 @@ public class PolynomArray
 
     /* ---------------------------------------------------------------------------- */
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    [TestMethod]
     public void GetValue_doubleX_doubleA_With_dy_throw_ArgumentNullException()
     {
         double x = 1;
-        double[] a = null;
+        double[]? a = null;
 
-        Polynom.Array.GetValue(x, out _, a!);
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(x, out _, a!));
     }
 
     [TestMethod]
@@ -302,13 +302,13 @@ public class PolynomArray
         Assert.That.Value(dy).IsEqual(dY);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    [TestMethod]
     public void GetValue_ComplexX_doubleA_With_dy_throw_ArgumentNullException()
     {
         Complex x = 1;
-        double[] a = null;
+        double[]? a = null;
 
-        Polynom.Array.GetValue(x, out _, a!);
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(x, out _, a!));
     }
 
     [TestMethod]
@@ -325,13 +325,13 @@ public class PolynomArray
         Assert.That.Value(dy).IsEqual(dY);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    [TestMethod]
     public void GetValue_doubleX_ComplexA_With_dy_throw_ArgumentNullException()
     {
         double x = 1;
-        Complex[] a = null;
+        Complex[]? a = null;
 
-        Polynom.Array.GetValue(x, out _, a!);
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(x, out _, a!));
     }
 
     [TestMethod]
@@ -348,13 +348,13 @@ public class PolynomArray
         Assert.That.Value(dy).IsEqual(dY);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    [TestMethod]
     public void GetValue_ComplexX_ComplexA_With_dy_throw_ArgumentNullException()
     {
         Complex x = 1;
-        Complex[] a = null;
+        Complex[]? a = null;
 
-        Polynom.Array.GetValue(x, out _, a!);
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(x, out _, a!));
     }
 
     [TestMethod]
@@ -371,13 +371,13 @@ public class PolynomArray
         Assert.That.Value(dy).IsEqual(dY);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    [TestMethod]
     public void GetValue_doubleX_doubleA_With_d2y_throw_ArgumentNullException()
     {
         double x = 1;
-        double[] a = null;
+        double[]? a = null;
 
-        Polynom.Array.GetValue(x, out _, out _, a!);
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(x, out _, out _, a!));
     }
 
     [TestMethod]
@@ -395,13 +395,13 @@ public class PolynomArray
         Assert.That.Value(d2y).IsEqual(d2Y);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    [TestMethod]
     public void GetValue_doubleX_ComplexA_With_d2y_throw_ArgumentNullException()
     {
         double x = 1;
-        Complex[] a = null;
+        Complex[]? a = null;
 
-        Polynom.Array.GetValue(x, out _, out _, a!);
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(x, out _, out _, a!));
     }
 
     [TestMethod]
@@ -419,13 +419,13 @@ public class PolynomArray
         Assert.That.Value(d2y).IsEqual(d2Y);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    [TestMethod]
     public void GetValue_ComplexX_doubleA_With_d2y_throw_ArgumentNullException()
     {
         Complex x = 1;
-        double[] a = null;
+        double[]? a = null;
 
-        Polynom.Array.GetValue(x, out _, out _, a!);
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(x, out _, out _, a!));
     }
 
     [TestMethod]
@@ -443,13 +443,13 @@ public class PolynomArray
         Assert.That.Value(d2y).IsEqual(d2Y);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    [TestMethod]
     public void GetValue_ComplexX_ComplexA_With_d2y_throw_ArgumentNullException()
     {
         Complex x = 1;
-        Complex[] a = null;
+        Complex[]? a = null;
 
-        Polynom.Array.GetValue(x, out _, out _, a!);
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(x, out _, out _, a!));
     }
 
     [TestMethod]
@@ -622,10 +622,10 @@ public class PolynomArray
     [TestMethod]
     public void GetCoefficients_Exceptions()
     {
-        var null_exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetCoefficients(((double[])null)!));
+        var null_exception = Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetCoefficients(((double[]?)null)!));
         Assert.That.Value(null_exception).Where(e => e.ParamName).CheckEquals("Root");
 
-        var empty_exception = Assert.ThrowsException<ArgumentException>(() => Polynom.Array.GetCoefficients(Array.Empty<double>()));
+        var empty_exception = Assert.ThrowsExactly<ArgumentException>(() => Polynom.Array.GetCoefficients(Array.Empty<double>()));
         Assert.That.Value(empty_exception).Where(e => e.ParamName).CheckEquals("Root");
     }
 
@@ -646,10 +646,10 @@ public class PolynomArray
     [TestMethod]
     public void GetCoefficientsInverted_Exceptions()
     {
-        Exception exception = null;
+        Exception? exception = null;
         try
         {
-            double[] roots = null;
+            double[]? roots = null;
             Polynom.Array.GetCoefficientsInverted(roots!);
         }
         catch (Exception e)
@@ -657,7 +657,7 @@ public class PolynomArray
             exception = e;
         }
         Assert.IsNotNull(exception);
-        Assert.IsInstanceOfType(exception, typeof(ArgumentNullException));
+        Assert.IsInstanceOfType<ArgumentNullException>(exception);
         Assert.AreEqual("Root", ((ArgumentNullException)exception).ParamName);
 
         exception = null;
@@ -671,7 +671,7 @@ public class PolynomArray
             exception = e;
         }
         Assert.IsNotNull(exception);
-        Assert.IsInstanceOfType(exception, typeof(ArgumentException));
+        Assert.IsInstanceOfType<ArgumentException>(exception);
         Assert.AreEqual("Root", ((ArgumentException)exception).ParamName);
     }
 
@@ -710,7 +710,7 @@ public class PolynomArray
     [TestMethod]
     public void GetCoefficients_Complex_Exceptions()
     {
-        Assert.That.Method((Complex[])null, Polynom.Array.GetCoefficients)
+        Assert.That.Method((Complex[]?)null, Polynom.Array.GetCoefficients!)
            .Throw<ArgumentNullException>()
            .Where(e => e.ParamName).IsEqual("Root");
 
@@ -736,8 +736,8 @@ public class PolynomArray
     [TestMethod]
     public void GetCoefficientsInverted_Complex_Exceptions()
     {
-        Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetCoefficientsInverted(((Complex[])null)!));
-        Assert.ThrowsException<ArgumentException>(() => Polynom.Array.GetCoefficientsInverted(Array.Empty<Complex>()));
+        Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetCoefficientsInverted(((Complex[]?)null)!));
+        Assert.ThrowsExactly<ArgumentException>(() => Polynom.Array.GetCoefficientsInverted(Array.Empty<Complex>()));
     }
 
     /* ---------------------------------------------------------------------------- */
@@ -745,10 +745,10 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_doubleArrays_Throw_ArgumentNullException_p()
     {
-        double[] p = null;
+        double[]? p = null;
         double[] result = [];
         const int order = 1;
-        var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, result, order));
+        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, result, order));
         Assert.That.Value(exception.ParamName).IsEqual("p");
     }
 
@@ -756,9 +756,9 @@ public class PolynomArray
     public void GetDifferential_doubleArrays_Throw_ArgumentNullException_Result()
     {
         double[] p = [];
-        double[] result = null;
+        double[]? result = null;
         const int order = 1;
-        var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, result, order));
+        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, result, order));
         Assert.That.Value(exception.ParamName).IsEqual("Result");
     }
 
@@ -782,7 +782,7 @@ public class PolynomArray
         var result = new double[p.Length - 2];
         const int order = 1;
 
-        var exception = Assert.ThrowsException<ArgumentException>(() => Polynom.Array.GetDifferential(p, result, order));
+        var exception = Assert.ThrowsExactly<ArgumentException>(() => Polynom.Array.GetDifferential(p, result, order));
         Assert.That.Value(exception.Data)
            .Where(e => e["p.Length"]).CheckEquals(p.Length)
            .Where(e => e["Result.Length"]).CheckEquals(result.Length)
@@ -820,10 +820,10 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_ComplexArrays_Throw_ArgumentNullException_p()
     {
-        Complex[] p = null;
+        Complex[]? p = null;
         Complex[] result = [];
         const int order = 1;
-        var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, result, order));
+        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, result, order));
         Assert.That.Value(exception.ParamName).IsEqual("p");
     }
 
@@ -831,9 +831,9 @@ public class PolynomArray
     public void GetDifferential_ComplexArrays_Throw_ArgumentNullException_Result()
     {
         Complex[] p = [];
-        Complex[] result = null;
+        Complex[]? result = null;
         const int order = 1;
-        var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, result, order));
+        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, result, order));
         Assert.That.Value(exception.ParamName).IsEqual("Result");
     }
 
@@ -857,7 +857,7 @@ public class PolynomArray
         var result = new Complex[p.Length - 2];
         const int order = 1;
 
-        var exception = Assert.ThrowsException<ArgumentException>(() => Polynom.Array.GetDifferential(p, result, order));
+        var exception = Assert.ThrowsExactly<ArgumentException>(() => Polynom.Array.GetDifferential(p, result, order));
         Assert.That.Value(exception.Data)
            .Where(e => e["p.Length"]).CheckEquals(p.Length)
            .Where(e => e["Result.Length"]).CheckEquals(result.Length)
@@ -897,10 +897,10 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_doubleArray_throw_ArgumentNullException_p()
     {
-        double[] p = null;
+        double[]? p = null;
         const int order = 1;
 
-        var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, order));
+        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, order));
         Assert.That.Value(exception.ParamName).IsEqual("p");
     }
 
@@ -910,7 +910,7 @@ public class PolynomArray
         double[] p = [1, 3, 5, 7, 9, 12, 14];
         const int order = 21;
 
-        var exception = Assert.ThrowsException<ArgumentOutOfRangeException>(() => Polynom.Array.GetDifferential(p, order));
+        var exception = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Polynom.Array.GetDifferential(p, order));
         Assert.That.Value(exception)
            .Where(e => e.ParamName).CheckEquals("Order")
            .Where(e => e.ActualValue).CheckEquals(order);
@@ -978,10 +978,10 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_ComplexArray_throw_ArgumentNullException_p()
     {
-        Complex[] p = null;
+        Complex[]? p = null;
         const int order = 1;
 
-        var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, order));
+        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, order));
         Assert.That.Value(exception.ParamName).IsEqual("p");
     }
 
@@ -991,7 +991,7 @@ public class PolynomArray
         Complex[] p = [1, 3, 5, 7, 9, 12, 14];
         const int order = 21;
 
-        var exception = Assert.ThrowsException<ArgumentOutOfRangeException>(() => Polynom.Array.GetDifferential(p, order));
+        var exception = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Polynom.Array.GetDifferential(p, order));
         Assert.That.Value(exception)
            .Where(e => e.ParamName).CheckEquals("Order")
            .Where(e => e.ActualValue).CheckEquals(order);
@@ -1063,8 +1063,7 @@ public class PolynomArray
     [DataRow(1, 157510d, DisplayName = "DifferentialValue Order 1")]
     [DataRow(2, 87916d, DisplayName = "DifferentialValue Order 2")]
     [DataRow(3, 36834d, DisplayName = "DifferentialValue Order 3")]
-    [DataRow(3, 36834d, DisplayName = "DifferentialValue Order 4")]
-    [DataRow(4, 10296, DisplayName = "DifferentialValue Order 5")]
+    [DataRow(4, 10296, DisplayName = "DifferentialValue Order 4")]
     public void GetDifferentialValue(int Order, double ExpectedValue)
     {
         double[] a = [1, 3, 5, 7, 9, 12];
@@ -1094,8 +1093,8 @@ public class PolynomArray
         Assert.That.Collection(actual_differential_3).IsEqualTo(expected_differential_3);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-    public void GetDifferential_ArgumentNullException() => Polynom.Array.GetDifferential(((double[])null!)!);
+    [TestMethod]
+    public void GetDifferential_ArgumentNullException() => Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetDifferential(((double[]?)null!)!));
 
     [TestMethod]
     public void GetDifferential_Complex()
@@ -1117,8 +1116,8 @@ public class PolynomArray
         Assert.That.Value(actual_differential).IsReferenceEquals(a);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-    public void GetDifferential_Complex_ArgumentNullException() => Polynom.Array.GetDifferential(((Complex[])null)!);
+    [TestMethod]
+    public void GetDifferential_Complex_ArgumentNullException() => Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetDifferential(((Complex[]?)null)!));
 
     [TestMethod]
     public void GetIntegral()
@@ -1144,8 +1143,8 @@ public class PolynomArray
         CollectionAssert.AreEqual(expected_integral, a);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-    public void GetIntegral_Exceptions() => Polynom.Array.GetIntegral(((double[])null)!);
+    [TestMethod]
+    public void GetIntegral_Exceptions() => Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetIntegral(((double[]?)null)!));
 
     [TestMethod]
     public void GetIntegral_Complex()
@@ -1159,8 +1158,8 @@ public class PolynomArray
         CollectionAssert.AreEqual(expected_integral, integral);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-    public void GetIntegral_Complex_Exceptions() => Polynom.Array.GetIntegral(((Complex[])null)!);
+    [TestMethod]
+    public void GetIntegral_Complex_Exceptions() => Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetIntegral(((Complex[]?)null)!));
 
 
     [TestMethod]
@@ -1177,11 +1176,11 @@ public class PolynomArray
         CollectionAssert.AreEqual(expected_sum, actual_sum);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-    public void Sum_ArgumentNullException_p() => Polynom.Array.Sum(null!, new double[5]);
+    [TestMethod]
+    public void Sum_ArgumentNullException_p() => Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.Sum(null!, new double[5]));
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-    public void Sum_ArgumentNullException_q() => Polynom.Array.Sum(new double[5], null!);
+    [TestMethod]
+    public void Sum_ArgumentNullException_q() => Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.Sum(new double[5], null!));
 
     [TestMethod]
     public void subtract()
@@ -1198,11 +1197,11 @@ public class PolynomArray
         CollectionAssert.That.Collection(actual_subtract).IsEqualTo(expected_subtract);
     }
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-    public void subtract_ArgumentNullException_p() => Polynom.Array.Subtract(null!, new double[5]);
+    [TestMethod]
+    public void subtract_ArgumentNullException_p() => Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.Subtract(null!, new double[5]));
 
-    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-    public void subtract_ArgumentNullException_q() => Polynom.Array.Subtract(new double[5], null!);
+    [TestMethod]
+    public void subtract_ArgumentNullException_q() => Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.Subtract(new double[5], null!));
 
     /* --------------------------------------------------------------------------------------------- */
 
@@ -1235,7 +1234,7 @@ public class PolynomArray
     [TestMethod]
     public void GetValue_DoubleX_DoubleArray_with_null_thrown_ArgumentNullException_A()
     {
-        var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetValue(0d, ((double[])null)!));
+        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue(0d, ((double[]?)null)!));
         Assert.That.Value(exception.ParamName).IsEqual("A");
     }
 
@@ -1273,7 +1272,7 @@ public class PolynomArray
     [TestMethod]
     public void GetValue_ComplexX_DoubleArray_with_null_thrown_ArgumentNullException_A()
     {
-        var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetValue((Complex)0, ((double[])null)!));
+        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue((Complex)0, ((double[]?)null)!));
         Assert.That.Value(exception.ParamName).IsEqual("A");
     }
 
@@ -1323,7 +1322,7 @@ public class PolynomArray
     [TestMethod]
     public void GetValue_ComplexX_ComplexArray_with_null_thrown_ArgumentNullException_Z()
     {
-        var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetValue((Complex)0, ((Complex[])null)!));
+        var exception = Assert.ThrowsExactly<ArgumentNullException>(() => Polynom.Array.GetValue((Complex)0, ((Complex[]?)null)!));
         Assert.That.Value(exception.ParamName).IsEqual("A");
     }
 

@@ -11,12 +11,15 @@ namespace System.ComponentModel;
 // ReSharper disable once InconsistentNaming
 public static class INotifyCollectionChangedExtensions
 {
+    /// <summary>Абстрактный подписчик на изменения коллекции</summary>
     public abstract class CollectionChangesSubscriber(
         INotifyCollectionChanged Obj,
         NotifyCollectionChangedAction ChangeType)
     {
+        /// <summary>Событие, возникающее при изменении коллекции</summary>
         private event NotifyCollectionChangedEventHandler? OnCollectionChangedEventHandlers;
 
+        /// <summary>Событие, возникающее при изменении коллекции</summary>
         public event NotifyCollectionChangedEventHandler? OnCollectionChangedEvent
         {
             add
@@ -31,7 +34,9 @@ public static class INotifyCollectionChangedExtensions
             }
         }
         
+        /// <summary>Событие, возникающее при изменении типа действия коллекции</summary>
         private event Action<NotifyCollectionChangedAction>? CollectionChangedHandlers;
+        /// <summary>Событие, возникающее при изменении типа действия коллекции</summary>
         public event Action<NotifyCollectionChangedAction>? CollectionChanged //todo: разобраться с событиями!
         {
             add
@@ -46,7 +51,9 @@ public static class INotifyCollectionChangedExtensions
             }
         }
 
+        /// <summary>Событие, возникающее при изменении значения коллекции</summary>
         private event Action? ValueChangeEventHandlers;
+        /// <summary>Событие, возникающее при изменении значения коллекции</summary>
         public event Action? ValueChangeEvent
         {
             add
@@ -61,21 +68,26 @@ public static class INotifyCollectionChangedExtensions
             }
         }
 
+        /// <summary>Слабая ссылка на коллекцию</summary>
         protected readonly WeakReference<INotifyCollectionChanged> _Collection = new(Obj);
 
+        /// <summary>Проверяет, есть ли подписчики на события</summary>
         public virtual bool IsEmpty => OnCollectionChangedEventHandlers is null && CollectionChangedHandlers is null && ValueChangeEventHandlers is null;
 
+        /// <summary>Коллекция, на которую осуществляется подписка</summary>
         public INotifyCollectionChanged Collection => 
             _Collection.TryGetTarget(out var collection)
                 ? collection
                 : throw new InvalidOperationException("Попытка доступа к объекту, который был удалён из памяти");
 
+        /// <summary>Обработчик события изменения коллекции</summary>
         private void OnCollectionChangedHandler(object? Sender, NotifyCollectionChangedEventArgs E)
         {
             if (E.Action != ChangeType) return;
             OnCollectionChanged(Sender, E);
         }
 
+        /// <summary>Виртуальный метод обработки изменения коллекции</summary>
         protected virtual void OnCollectionChanged(object? Sender, NotifyCollectionChangedEventArgs E)
         {
             OnCollectionChangedEventHandlers?.Invoke(Sender, E);
@@ -83,9 +95,12 @@ public static class INotifyCollectionChangedExtensions
             ValueChangeEventHandlers?.Invoke();
         }
 
+        /// <summary>Подписка на событие CollectionChanged</summary>
         protected void Subscribe() => Collection.CollectionChanged += OnCollectionChangedHandler;
+        /// <summary>Отписка от события CollectionChanged</summary>
         protected void Unsubscribe() => Collection.CollectionChanged -= OnCollectionChangedHandler;
 
+        /// <summary>Очистка всех обработчиков событий</summary>
         internal virtual void ClearHandlers()
         {
             OnCollectionChangedEventHandlers = null;
@@ -94,10 +109,13 @@ public static class INotifyCollectionChangedExtensions
         }
     }
 
+    /// <summary>Подписчик на изменения коллекции определённого типа</summary>
     public sealed class CollectionChangesSubscriber<TCollection, TItem> : CollectionChangesSubscriber
         where TCollection : ICollection<TItem>, INotifyCollectionChanged
     {
+        /// <summary>Событие, возникающее при изменении коллекции определённого типа</summary>
         private event Action<ICollection<TItem>>? OnCollectionChangedEventHandlers;
+        /// <summary>Событие, возникающее при изменении коллекции определённого типа</summary>
         public new event Action<ICollection<TItem>>? OnCollectionChangedEvent //todo: разобраться с событиями!
         {
             add
@@ -112,10 +130,13 @@ public static class INotifyCollectionChangedExtensions
             }
         }
 
+        /// <summary>Проверяет, есть ли подписчики на события</summary>
         public override bool IsEmpty => base.IsEmpty && OnCollectionChangedEventHandlers is null;
 
+        /// <summary>Конструктор подписчика на изменения коллекции</summary>
         internal CollectionChangesSubscriber(TCollection Obj, NotifyCollectionChangedAction ChangeType) : base(Obj, ChangeType) { }
 
+        /// <summary>Обработка изменения коллекции</summary>
         protected override void OnCollectionChanged(object? Sender, NotifyCollectionChangedEventArgs E)
         {
             base.OnCollectionChanged(Sender, E);
@@ -133,6 +154,7 @@ public static class INotifyCollectionChangedExtensions
             handlers.Invoke(collection!);
         }
 
+        /// <summary>Очистка всех обработчиков событий</summary>
         internal override void ClearHandlers()
         {
             base.ClearHandlers();
@@ -140,8 +162,10 @@ public static class INotifyCollectionChangedExtensions
         }
     }
 
+    /// <summary>Словарь подписчиков на коллекции</summary>
     private static readonly Dictionary<INotifyCollectionChanged, Dictionary<NotifyCollectionChangedAction, CollectionChangesSubscriber>> __Subscribers = [];
 
+    /// <summary>Подписка на событие изменения коллекции с автоматической отпиской</summary>
     public static IDisposable UsingSubscribeToProperty<T, TItem>(
         this T obj,
         NotifyCollectionChangedAction ChangeType,
@@ -152,6 +176,7 @@ public static class INotifyCollectionChangedExtensions
         return new LambdaDisposable(() => obj.UnsubscribeFrom(ChangeType, Handler));
     }
 
+    /// <summary>Подписка на событие изменения коллекции</summary>
     public static void OnCollectionChanged<T, TItem>(
         this T obj,
         NotifyCollectionChangedAction ChangeType,
@@ -166,6 +191,7 @@ public static class INotifyCollectionChangedExtensions
         }
     }
 
+    /// <summary>Отписка от события изменения коллекции</summary>
     public static void UnsubscribeFrom(
         this INotifyCollectionChanged obj,
         NotifyCollectionChangedAction ChangeType,
@@ -184,6 +210,7 @@ public static class INotifyCollectionChangedExtensions
         }
     }
 
+    /// <summary>Получение подписчика на изменения коллекции</summary>
     public static CollectionChangesSubscriber<T, TItem> SubscribeCollectionTo<T, TItem>(
         this T obj,
         NotifyCollectionChangedAction ChangeType)
@@ -196,6 +223,7 @@ public static class INotifyCollectionChangedExtensions
         }
     }
 
+    /// <summary>Очистка обработчиков событий коллекции</summary>
     public static void ClearEventHandlers(
         this INotifyCollectionChanged obj,
         NotifyCollectionChangedAction? ChangeType = null)
@@ -224,14 +252,17 @@ public static class INotifyCollectionChangedExtensions
         }
     }
 
+    /// <summary>Откладывает обработку событий изменения коллекции</summary>
     public static IDisposable DeferChanges(this INotifyCollectionChanged collection, NotifyCollectionChangedEventHandler EventHandler) => new CollectionEventDeferer(collection, EventHandler);
 
+    /// <summary>Класс, реализующий отложенную обработку событий изменения коллекции</summary>
     private class CollectionEventDeferer : IDisposable
     {
         private readonly INotifyCollectionChanged _Collection;
         private readonly NotifyCollectionChangedEventHandler _EventHandler;
         private readonly List<NotifyCollectionChangedEventArgs> _Events = new(1000);
 
+        /// <summary>Конструктор класса CollectionEventDeferer</summary>
         public CollectionEventDeferer(INotifyCollectionChanged collection, NotifyCollectionChangedEventHandler EventHandler)
         {
             _Collection                   =  collection ?? throw new ArgumentNullException(nameof(collection));
@@ -240,6 +271,7 @@ public static class INotifyCollectionChangedExtensions
             _Collection.CollectionChanged += OnCollectionChanged;
         }
 
+        /// <summary>Выполняет обработку накопленных событий и отписывается от коллекции</summary>
         public void Dispose()
         {
             _Collection.CollectionChanged -= OnCollectionChanged;
@@ -248,9 +280,11 @@ public static class INotifyCollectionChangedExtensions
             _Collection.CollectionChanged += _EventHandler;
         }
 
+        /// <summary>Обработчик события CollectionChanged, добавляющий событие в список</summary>
         private void OnCollectionChanged(object? Sender, NotifyCollectionChangedEventArgs e) => _Events.Add(e);
     }
 
+    /// <summary>Подписчик на изменения свойства элементов коллекции</summary>
     class CollectionItemPropertyChangedSubscriber<TCollection, TItem> : IDisposable
         where TCollection : INotifyCollectionChanged, IEnumerable<TItem>
         where TItem : INotifyPropertyChanged
@@ -259,6 +293,7 @@ public static class INotifyCollectionChangedExtensions
         private readonly string _PropertyName;
         private readonly EventHandler _OnPropertyChanged;
 
+        /// <summary>Конструктор подписчика на изменения свойства элементов коллекции</summary>
         public CollectionItemPropertyChangedSubscriber(TCollection Collection, string PropertyName, EventHandler OnPropertyChanged)
         {
             _Collection                  =  Collection;
@@ -267,6 +302,7 @@ public static class INotifyCollectionChangedExtensions
             Collection.CollectionChanged += OnCollectionChanged;
         }
 
+        /// <summary>Обработчик события изменения коллекции</summary>
         private void OnCollectionChanged(object? Sender, NotifyCollectionChangedEventArgs E)
         {
             switch (E.Action)
@@ -282,12 +318,14 @@ public static class INotifyCollectionChangedExtensions
             }
         }
 
+        /// <summary>Обработчик события изменения свойства элемента</summary>
         private void OnItemPropertyChanged(object? Sender, PropertyChangedEventArgs E)
         {
             if (E.PropertyName != _PropertyName) return;
             _OnPropertyChanged(Sender, EventArgs.Empty);
         }
 
+        /// <summary>Отписка от событий и очистка обработчиков</summary>
         public void Dispose()
         {
             OnCollectionChanged(_Collection, new(NotifyCollectionChangedAction.Remove, _Collection));
@@ -295,6 +333,7 @@ public static class INotifyCollectionChangedExtensions
         }
     }
 
+    /// <summary>Подписка на изменения свойства элементов коллекции</summary>
     public static IDisposable SubscribeToItemPropertyChanges<TCollection, TItem>(
         this TCollection collection, 
         string PropertyName,

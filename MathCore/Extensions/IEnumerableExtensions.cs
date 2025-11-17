@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq.Reactive;
 using System.Text;
 using System.Text.RegularExpressions;
+
 using MathCore;
 using MathCore.Annotations;
 using MathCore.Values;
@@ -24,11 +25,17 @@ namespace System.Linq;
 [PublicAPI]
 public static partial class IEnumerableExtensions
 {
+    /// <summary>Преобразует перечисление элементов в строку с форматированием</summary>
+    /// <typeparam name="T">Тип элементов перечисления</typeparam>
+    /// <param name="items">Перечисление элементов</param>
+    /// <param name="formatter">Функция форматирования элемента</param>
+    /// <param name="separator">Строка-разделитель элементов</param>
+    /// <returns>Строка, представляющая перечисление элементов</returns>
     public static string ToArrayFormattedString<T>(this IEnumerable<T> items, Func<T, string>? formatter = null, string? separator = ", ")
     {
         var result = new StringBuilder().Append('[');
 
-        if(formatter is null)
+        if (formatter is null)
         {
             if (separator is { Length: > 0 })
                 foreach (var item in items)
@@ -53,6 +60,9 @@ public static partial class IEnumerableExtensions
         return result.Append(']').ToString();
     }
 
+    /// <summary>Объединяет строки перечисления в одну строку</summary>
+    /// <param name="strings">Перечисление строк</param>
+    /// <returns>Строка, полученная объединением всех строк перечисления</returns>
     public static string Sum(this IEnumerable<string> strings)
     {
         var result = new StringBuilder();
@@ -68,7 +78,7 @@ public static partial class IEnumerableExtensions
     /// <returns>Истина если число элементов последовательности больше указанного</returns>
     public static bool CountGreater<T>(this IEnumerable<T> items, int Count)
     {
-        var       count      = Count;
+        var count = Count;
         using var enumerator = items.GetEnumerator();
         while (enumerator.MoveNext())
             if (count-- < 0)
@@ -76,7 +86,6 @@ public static partial class IEnumerableExtensions
 
         return count < 0;
     }
-
 
     /// <summary>Последовательность содержит число элементов больше указанного количества</summary>
     /// <typeparam name="T">Тип элементов последовательности</typeparam>
@@ -86,7 +95,7 @@ public static partial class IEnumerableExtensions
     /// <returns>Истина если число элементов последовательности больше указанного</returns>
     public static bool CountGreater<T>(this IEnumerable<T> items, int Count, Func<T, bool> Selector)
     {
-        var       count      = Count;
+        var count = Count;
         using var enumerator = items.GetEnumerator();
         while (enumerator.MoveNext())
             if (Selector(enumerator.Current) && count-- < 0)
@@ -102,7 +111,7 @@ public static partial class IEnumerableExtensions
     /// <returns>Истина если число элементов последовательности больше, либо равно указанному количеству</returns>
     public static bool CountGreaterOrEqual<T>(this IEnumerable<T> items, int Count)
     {
-        var       count      = Count;
+        var count = Count;
         using var enumerator = items.GetEnumerator();
         while (enumerator.MoveNext())
             if (count-- < 0)
@@ -119,7 +128,7 @@ public static partial class IEnumerableExtensions
     /// <returns>Истина если число элементов последовательности больше, либо равно указанному количеству</returns>
     public static bool CountGreaterOrEqual<T>(this IEnumerable<T> items, int Count, Func<T, bool> Selector)
     {
-        var       count      = Count;
+        var count = Count;
         using var enumerator = items.GetEnumerator();
         while (enumerator.MoveNext())
             if (Selector(enumerator.Current) && count-- < 0)
@@ -135,7 +144,7 @@ public static partial class IEnumerableExtensions
     /// <returns>Истина если число элементов последовательности меньше указанного</returns>
     public static bool CountLess<T>(this IEnumerable<T> items, int Count)
     {
-        var       count      = Count;
+        var count = Count;
         using var enumerator = items.GetEnumerator();
         while (enumerator.MoveNext())
             if (count-- < 0)
@@ -152,7 +161,7 @@ public static partial class IEnumerableExtensions
     /// <returns>Истина если число элементов последовательности меньше указанного</returns>
     public static bool CountLess<T>(this IEnumerable<T> items, int Count, Func<T, bool> Selector)
     {
-        var       count      = Count;
+        var count = Count;
         using var enumerator = items.GetEnumerator();
         while (enumerator.MoveNext())
             if (Selector(enumerator.Current) && count-- < 0)
@@ -168,7 +177,7 @@ public static partial class IEnumerableExtensions
     /// <returns>Истина если число элементов последовательности меньше, либо равно указанному количеству</returns>
     public static bool CountLessOrEqual<T>(this IEnumerable<T> items, int Count)
     {
-        var       count      = Count;
+        var count = Count;
         using var enumerator = items.GetEnumerator();
         while (enumerator.MoveNext())
             if (count-- < 0)
@@ -185,7 +194,7 @@ public static partial class IEnumerableExtensions
     /// <returns>Истина если число элементов последовательности меньше, либо равно указанному количеству</returns>
     public static bool CountLessOrEqual<T>(this IEnumerable<T> items, int Count, Func<T, bool> Selector)
     {
-        var       count      = Count;
+        var count = Count;
         using var enumerator = items.GetEnumerator();
         while (enumerator.MoveNext())
             if (Selector(enumerator.Current) && count-- < 0)
@@ -198,8 +207,14 @@ public static partial class IEnumerableExtensions
     /// <typeparam name="T">Тип элемента последовательности</typeparam>
     /// <param name="items">Последовательность элементов, для которой надо создать хеш-таблицу</param>
     /// <returns>Новая хеш-таблица, созданная из указанной последовательности элементов</returns>
-    public static HashSet<T> GetHashSet<T>(this IEnumerable<T> items) => [..items];
+    public static HashSet<T> GetHashSet<T>(this IEnumerable<T> items) => [.. items];
 
+    /// <summary>Преобразовать последовательность в хеш-таблицу</summary>
+    /// <typeparam name="T">Тип элемента последовательности</typeparam>
+    /// <param name="items">Последовательность элементов, для которой надо создать хеш-таблицу</param>
+    /// <param name="Comparer">Функция сравнения элементов</param>
+    /// <param name="Hasher">Функция вычисления хеш-кода элемента</param>
+    /// <returns>Новая хеш-таблица, созданная из указанной последовательности элементов</returns>
     public static HashSet<T> GetHashSet<T>(this IEnumerable<T> items, Func<T, T, bool> Comparer, Func<T, int> Hasher)
     {
         var set = new HashSet<T>(Comparer.Create(Hasher));
@@ -229,18 +244,18 @@ public static partial class IEnumerableExtensions
 
         double sum;
         double sum2;
-        long   count;
+        long count;
         switch (enumerable)
         {
             case List<double> list:
                 {
                     if (list.Count == 0) return double.NaN;
 
-                    sum  = 0d;
+                    sum = 0d;
                     sum2 = 0d;
                     foreach (var x in list)
                     {
-                        sum  += x;
+                        sum += x;
                         sum2 += x * x;
                     }
 
@@ -252,11 +267,11 @@ public static partial class IEnumerableExtensions
                 {
                     if (list.Count == 0) return double.NaN;
 
-                    sum  = 0d;
+                    sum = 0d;
                     sum2 = 0d;
                     foreach (var x in list)
                     {
-                        sum  += x;
+                        sum += x;
                         sum2 += x * x;
                     }
 
@@ -269,13 +284,13 @@ public static partial class IEnumerableExtensions
                     using var enumerator = enumerable.GetEnumerator();
                     if (!enumerator.MoveNext()) return double.NaN;
 
-                    sum   = enumerator.Current;
-                    sum2  = sum * sum;
+                    sum = enumerator.Current;
+                    sum2 = sum * sum;
                     count = 1;
                     while (enumerator.MoveNext())
                     {
                         var x = enumerator.Current;
-                        sum  += x;
+                        sum += x;
                         sum2 += x * x;
                         count++;
                     }
@@ -301,11 +316,11 @@ public static partial class IEnumerableExtensions
                 {
                     if (list.Length == 0) return double.NaN;
 
-                    sum  = 0;
+                    sum = 0;
                     sum2 = 0;
                     foreach (var x in list)
                     {
-                        sum  += x;
+                        sum += x;
                         sum2 += x * x;
                     }
 
@@ -317,11 +332,11 @@ public static partial class IEnumerableExtensions
                 {
                     if (list.Count == 0) return double.NaN;
 
-                    sum  = 0;
+                    sum = 0;
                     sum2 = 0;
                     foreach (var x in list)
                     {
-                        sum  += x;
+                        sum += x;
                         sum2 += x * x;
                     }
 
@@ -333,11 +348,11 @@ public static partial class IEnumerableExtensions
                 {
                     if (list.Count == 0) return double.NaN;
 
-                    sum  = 0;
+                    sum = 0;
                     sum2 = 0;
                     foreach (var x in list)
                     {
-                        sum  += x;
+                        sum += x;
                         sum2 += x * x;
                     }
 
@@ -350,13 +365,13 @@ public static partial class IEnumerableExtensions
                     using var enumerator = enumerable.GetEnumerator();
                     if (!enumerator.MoveNext()) return double.NaN;
 
-                    sum   = enumerator.Current;
-                    sum2  = sum * sum;
+                    sum = enumerator.Current;
+                    sum2 = sum * sum;
                     count = 1;
                     while (enumerator.MoveNext())
                     {
                         var x = enumerator.Current;
-                        sum  += x;
+                        sum += x;
                         sum2 += x * x;
                         count++;
                     }
@@ -382,11 +397,11 @@ public static partial class IEnumerableExtensions
                 {
                     if (list.Length == 0) return double.NaN;
 
-                    sum  = 0;
+                    sum = 0;
                     sum2 = 0;
                     foreach (var x in list)
                     {
-                        sum  += x;
+                        sum += x;
                         sum2 += x * x;
                     }
 
@@ -398,11 +413,11 @@ public static partial class IEnumerableExtensions
                 {
                     if (list.Count == 0) return double.NaN;
 
-                    sum  = 0;
+                    sum = 0;
                     sum2 = 0;
                     foreach (var x in list)
                     {
-                        sum  += x;
+                        sum += x;
                         sum2 += x * x;
                     }
 
@@ -414,11 +429,11 @@ public static partial class IEnumerableExtensions
                 {
                     if (list.Count == 0) return double.NaN;
 
-                    sum  = 0;
+                    sum = 0;
                     sum2 = 0;
                     foreach (var x in list)
                     {
-                        sum  += x;
+                        sum += x;
                         sum2 += x * x;
                     }
 
@@ -431,13 +446,13 @@ public static partial class IEnumerableExtensions
                     using var enumerator = enumerable.GetEnumerator();
                     if (!enumerator.MoveNext()) return double.NaN;
 
-                    sum   = enumerator.Current;
-                    sum2  = sum * sum;
+                    sum = enumerator.Current;
+                    sum2 = sum * sum;
                     count = 1;
                     while (enumerator.MoveNext())
                     {
                         var x = enumerator.Current;
-                        sum  += x;
+                        sum += x;
                         sum2 += x * x;
                         count++;
                     }
@@ -458,18 +473,18 @@ public static partial class IEnumerableExtensions
 
         double sum;
         double sum2;
-        long   count;
+        long count;
         switch (enumerable)
         {
             case T[] list:
                 {
                     if (list.Length == 0) return double.NaN;
-                    sum  = 0d;
+                    sum = 0d;
                     sum2 = 0d;
                     foreach (var x in list)
                     {
                         var y = Selector(x);
-                        sum  += y;
+                        sum += y;
                         sum2 += y * y;
                     }
 
@@ -481,12 +496,12 @@ public static partial class IEnumerableExtensions
                 {
                     if (list.Count == 0) return double.NaN;
 
-                    sum  = 0d;
+                    sum = 0d;
                     sum2 = 0d;
                     foreach (var x in list)
                     {
                         var y = Selector(x);
-                        sum  += y;
+                        sum += y;
                         sum2 += y * y;
                     }
 
@@ -498,12 +513,12 @@ public static partial class IEnumerableExtensions
                 {
                     if (list.Count == 0) return double.NaN;
 
-                    sum  = 0d;
+                    sum = 0d;
                     sum2 = 0d;
                     foreach (var x in list)
                     {
                         var y = Selector(x);
-                        sum  += y;
+                        sum += y;
                         sum2 += y * y;
                     }
 
@@ -516,13 +531,13 @@ public static partial class IEnumerableExtensions
                     using var enumerator = enumerable.GetEnumerator();
                     if (!enumerator.MoveNext()) return double.NaN;
 
-                    sum   = Selector(enumerator.Current);
-                    sum2  = sum * sum;
+                    sum = Selector(enumerator.Current);
+                    sum2 = sum * sum;
                     count = 1;
                     while (enumerator.MoveNext())
                     {
                         var y = Selector(enumerator.Current);
-                        sum  += y;
+                        sum += y;
                         sum2 += y * y;
                         count++;
                     }
@@ -564,9 +579,9 @@ public static partial class IEnumerableExtensions
     {
         switch (enumerable)
         {
-            case null:                  return DefaultValue;
-            case T[] { Length    : 0 }: return DefaultValue;
-            case List<T> { Count : 0 }: return DefaultValue;
+            case null: return DefaultValue;
+            case T[] { Length: 0 }: return DefaultValue;
+            case List<T> { Count: 0 }: return DefaultValue;
             case IList<T> { Count: 0 }: return DefaultValue;
 
             case T[] list:
@@ -605,9 +620,9 @@ public static partial class IEnumerableExtensions
     {
         switch (enumerable)
         {
-            case null:                  return DefaultValue;
-            case T[] { Length    : 0 }: return DefaultValue;
-            case List<T> { Count : 0 }: return DefaultValue;
+            case null: return DefaultValue;
+            case T[] { Length: 0 }: return DefaultValue;
+            case List<T> { Count: 0 }: return DefaultValue;
             case IList<T> { Count: 0 }: return DefaultValue;
 
             case T[] list:
@@ -653,9 +668,9 @@ public static partial class IEnumerableExtensions
     {
         switch (enumerable)
         {
-            case null:                  return DefaultValue;
-            case T[] { Length    : 0 }: return DefaultValue;
-            case List<T> { Count : 0 }: return DefaultValue;
+            case null: return DefaultValue;
+            case T[] { Length: 0 }: return DefaultValue;
+            case List<T> { Count: 0 }: return DefaultValue;
             case IList<T> { Count: 0 }: return DefaultValue;
 
             case T[] list:
@@ -736,13 +751,13 @@ public static partial class IEnumerableExtensions
         if (BlockSize <= 0)
             throw new ArgumentOutOfRangeException(nameof(BlockSize), "Размер блока должен быть положительным значением");
 
-        using var e     = enumerable.GetEnumerator();
-        var       block = new T?[BlockSize];
+        using var e = enumerable.GetEnumerator();
+        var block = new T?[BlockSize];
         while (e.MoveNext())
         {
             block[0] = e.Current;
 
-            var i                                                  = 1;
+            var i = 1;
             for (; i < block.Length && e.MoveNext(); i++) block[i] = e.Current;
 
             if (i == block.Length)
@@ -846,7 +861,7 @@ public static partial class IEnumerableExtensions
     /// <returns>Индекс последнего вхождения элемента в перечисление, либо -1 в случае, если он в ней отсутствует</returns>
     public static int LastIndexOf<T>(this IEnumerable<T?> enumerable, in T? item)
     {
-        var i     = 0;
+        var i = 0;
         var index = -1;
         switch (enumerable)
         {
@@ -1495,7 +1510,7 @@ public static partial class IEnumerableExtensions
                 {
                     if (first)
                     {
-                        last  = item;
+                        last = item;
                         first = false;
                         continue;
                     }
@@ -1582,10 +1597,10 @@ public static partial class IEnumerableExtensions
 
             default:
                 var last = default(T);
-                var any  = false;
+                var any = false;
                 foreach (var item in collection)
                 {
-                    any  = true;
+                    any = true;
                     last = item;
                     yield return last;
                 }
@@ -1687,7 +1702,7 @@ public static partial class IEnumerableExtensions
         public EnumerableHistory([MinValue(0)] int HistoryLength)
         {
             _HistoryLength = HistoryLength;
-            _Queue         = new(HistoryLength);
+            _Queue = new(HistoryLength);
         }
 
         /// <summary>Удаление лишних элементов из истории</summary>
@@ -1792,7 +1807,7 @@ public static partial class IEnumerableExtensions
             case T[] list:
                 foreach (var value in list)
                 {
-                    var f                    = selector(value);
+                    var f = selector(value);
                     if (min.AddValue(f)) Min = value;
                     if (max.AddValue(f)) Max = value;
                 }
@@ -1802,7 +1817,7 @@ public static partial class IEnumerableExtensions
             case List<T> list:
                 foreach (var value in list)
                 {
-                    var f                    = selector(value);
+                    var f = selector(value);
                     if (min.AddValue(f)) Min = value;
                     if (max.AddValue(f)) Max = value;
                 }
@@ -1812,7 +1827,7 @@ public static partial class IEnumerableExtensions
             case IList<T> list:
                 foreach (var value in list)
                 {
-                    var f                    = selector(value);
+                    var f = selector(value);
                     if (min.AddValue(f)) Min = value;
                     if (max.AddValue(f)) Max = value;
                 }
@@ -1821,7 +1836,7 @@ public static partial class IEnumerableExtensions
             default:
                 foreach (var value in collection)
                 {
-                    var f                    = selector(value);
+                    var f = selector(value);
                     if (min.AddValue(f)) Min = value;
                     if (max.AddValue(f)) Max = value;
                 }
@@ -1903,8 +1918,8 @@ public static partial class IEnumerableExtensions
     {
         var min = new MinValue();
         var max = new MaxValue();
-        Min      = default;
-        Max      = default;
+        Min = default;
+        Max = default;
         MinIndex = -1;
         MaxIndex = -1;
         switch (collection)
@@ -1915,15 +1930,15 @@ public static partial class IEnumerableExtensions
                     for (var i = 0; i < count; i++)
                     {
                         var item = list[i];
-                        var f    = selector(item);
+                        var f = selector(item);
                         if (min.AddValue(f))
                         {
-                            Min      = item;
+                            Min = item;
                             MinIndex = i;
                         }
                         if (max.AddValue(f))
                         {
-                            Max      = item;
+                            Max = item;
                             MaxIndex = i;
                         }
                     }
@@ -1936,15 +1951,15 @@ public static partial class IEnumerableExtensions
                     for (var i = 0; i < count; i++)
                     {
                         var item = list[i];
-                        var f    = selector(item);
+                        var f = selector(item);
                         if (min.AddValue(f))
                         {
-                            Min      = item;
+                            Min = item;
                             MinIndex = i;
                         }
                         if (max.AddValue(f))
                         {
-                            Max      = item;
+                            Max = item;
                             MaxIndex = i;
                         }
                     }
@@ -1957,15 +1972,15 @@ public static partial class IEnumerableExtensions
                     for (var i = 0; i < count; i++)
                     {
                         var item = list[i];
-                        var f    = selector(item);
+                        var f = selector(item);
                         if (min.AddValue(f))
                         {
-                            Min      = item;
+                            Min = item;
                             MinIndex = i;
                         }
                         if (max.AddValue(f))
                         {
-                            Max      = item;
+                            Max = item;
                             MaxIndex = i;
                         }
                     }
@@ -1980,12 +1995,12 @@ public static partial class IEnumerableExtensions
                         var f = selector(item);
                         if (min.AddValue(f))
                         {
-                            Min      = item;
+                            Min = item;
                             MinIndex = i;
                         }
                         if (max.AddValue(f))
                         {
-                            Max      = item;
+                            Max = item;
                             MaxIndex = i;
                         }
                         i++;
@@ -2012,8 +2027,8 @@ public static partial class IEnumerableExtensions
     {
         var min = new MinValue();
         var max = new MaxValue();
-        Min      = double.NaN;
-        Max      = double.NaN;
+        Min = double.NaN;
+        Max = double.NaN;
         MinIndex = -1;
         MaxIndex = -1;
         switch (collection)
@@ -2026,12 +2041,12 @@ public static partial class IEnumerableExtensions
                         var item = list[i];
                         if (min.AddValue(item))
                         {
-                            Min      = item;
+                            Min = item;
                             MinIndex = i;
                         }
                         if (max.AddValue(item))
                         {
-                            Max      = item;
+                            Max = item;
                             MaxIndex = i;
                         }
                     }
@@ -2046,12 +2061,12 @@ public static partial class IEnumerableExtensions
                         var item = list[i];
                         if (min.AddValue(item))
                         {
-                            Min      = item;
+                            Min = item;
                             MinIndex = i;
                         }
                         if (max.AddValue(item))
                         {
-                            Max      = item;
+                            Max = item;
                             MaxIndex = i;
                         }
                     }
@@ -2066,12 +2081,12 @@ public static partial class IEnumerableExtensions
                         var item = list[i];
                         if (min.AddValue(item))
                         {
-                            Min      = item;
+                            Min = item;
                             MinIndex = i;
                         }
                         if (max.AddValue(item))
                         {
-                            Max      = item;
+                            Max = item;
                             MaxIndex = i;
                         }
                     }
@@ -2085,12 +2100,12 @@ public static partial class IEnumerableExtensions
                     {
                         if (min.AddValue(item))
                         {
-                            Min      = item;
+                            Min = item;
                             MinIndex = i;
                         }
                         if (max.AddValue(item))
                         {
-                            Max      = item;
+                            Max = item;
                             MaxIndex = i;
                         }
                         i++;
@@ -2107,7 +2122,7 @@ public static partial class IEnumerableExtensions
     /// <returns>Максимальный элемент последовательности</returns>
     public static T? GetMax<T>(this IEnumerable<T> collection, Func<T, double> selector)
     {
-        var max    = new MaxValue();
+        var max = new MaxValue();
         var result = default(T);
         switch (collection)
         {
@@ -2143,7 +2158,7 @@ public static partial class IEnumerableExtensions
     /// <returns>Максимальный элемент последовательности</returns>
     public static double GetMax(this IEnumerable<double> collection)
     {
-        var max    = new MaxValue();
+        var max = new MaxValue();
         var result = double.NaN;
         switch (collection)
         {
@@ -2178,9 +2193,9 @@ public static partial class IEnumerableExtensions
     /// <returns>Максимальный элемент последовательности</returns>
     public static T? GetMax<T>(this IEnumerable<T> collection, Func<T, double> selector, out int index)
     {
-        var max    = new MaxValue();
+        var max = new MaxValue();
         var result = default(T);
-        var i      = 0;
+        var i = 0;
         index = -1;
         switch (collection)
         {
@@ -2190,7 +2205,7 @@ public static partial class IEnumerableExtensions
                     var item = list[i];
                     if (max.AddValue(selector(item)))
                     {
-                        index  = i;
+                        index = i;
                         result = item;
                     }
                 }
@@ -2202,7 +2217,7 @@ public static partial class IEnumerableExtensions
                     var item = list[i];
                     if (max.AddValue(selector(item)))
                     {
-                        index  = i;
+                        index = i;
                         result = item;
                     }
                 }
@@ -2214,7 +2229,7 @@ public static partial class IEnumerableExtensions
                     var item = list[i];
                     if (max.AddValue(selector(item)))
                     {
-                        index  = i;
+                        index = i;
                         result = item;
                     }
                 }
@@ -2225,7 +2240,7 @@ public static partial class IEnumerableExtensions
                 {
                     if (max.AddValue(selector(item)))
                     {
-                        index  = i;
+                        index = i;
                         result = item;
                     }
                     i++;
@@ -2241,9 +2256,9 @@ public static partial class IEnumerableExtensions
     /// <returns>Максимальный элемент последовательности</returns>
     public static double GetMax(this IEnumerable<double> collection, out int index)
     {
-        var max    = new MaxValue();
+        var max = new MaxValue();
         var result = double.NaN;
-        var i      = 0;
+        var i = 0;
         index = -1;
         switch (collection)
         {
@@ -2253,7 +2268,7 @@ public static partial class IEnumerableExtensions
                     var item = list[i];
                     if (max.AddValue(item))
                     {
-                        index  = i;
+                        index = i;
                         result = item;
                     }
                 }
@@ -2265,7 +2280,7 @@ public static partial class IEnumerableExtensions
                     var item = list[i];
                     if (max.AddValue(item))
                     {
-                        index  = i;
+                        index = i;
                         result = item;
                     }
                 }
@@ -2277,7 +2292,7 @@ public static partial class IEnumerableExtensions
                     var item = list[i];
                     if (max.AddValue(item))
                     {
-                        index  = i;
+                        index = i;
                         result = item;
                     }
                 }
@@ -2288,7 +2303,7 @@ public static partial class IEnumerableExtensions
                 {
                     if (max.AddValue(item))
                     {
-                        index  = i;
+                        index = i;
                         result = item;
                     }
                     i++;
@@ -2306,7 +2321,7 @@ public static partial class IEnumerableExtensions
     /// <returns>Минимальный элемент последовательности</returns>
     public static T? GetMin<T>(this IEnumerable<T> collection, Func<T, double> selector)
     {
-        var min    = new MinValue();
+        var min = new MinValue();
         var result = default(T);
         switch (collection)
         {
@@ -2340,7 +2355,7 @@ public static partial class IEnumerableExtensions
     /// <returns>Минимальный элемент последовательности</returns>
     public static double GetMin(this IEnumerable<double> collection)
     {
-        var min    = new MinValue();
+        var min = new MinValue();
         var result = double.NaN;
         switch (collection)
         {
@@ -2375,9 +2390,9 @@ public static partial class IEnumerableExtensions
     /// <returns>Минимальный элемент последовательности</returns>
     public static T? GetMin<T>(this IEnumerable<T> collection, Func<T, double> selector, out int index)
     {
-        var min    = new MinValue();
+        var min = new MinValue();
         var result = default(T);
-        var i      = 0;
+        var i = 0;
         index = -1;
         switch (collection)
         {
@@ -2387,7 +2402,7 @@ public static partial class IEnumerableExtensions
                     var item = list[i];
                     if (min.AddValue(selector(item)))
                     {
-                        index  = i;
+                        index = i;
                         result = item;
                     }
                 }
@@ -2399,7 +2414,7 @@ public static partial class IEnumerableExtensions
                     var item = list[i];
                     if (min.AddValue(selector(item)))
                     {
-                        index  = i;
+                        index = i;
                         result = item;
                     }
                 }
@@ -2411,7 +2426,7 @@ public static partial class IEnumerableExtensions
                     var item = list[i];
                     if (min.AddValue(selector(item)))
                     {
-                        index  = i;
+                        index = i;
                         result = item;
                     }
                 }
@@ -2422,7 +2437,7 @@ public static partial class IEnumerableExtensions
                 {
                     if (min.AddValue(selector(item)))
                     {
-                        index  = i;
+                        index = i;
                         result = item;
                     }
                     i++;
@@ -2438,9 +2453,9 @@ public static partial class IEnumerableExtensions
     /// <returns>Минимальный элемент последовательности</returns>
     public static double GetMin(this IEnumerable<double> collection, out int index)
     {
-        var min    = new MinValue();
+        var min = new MinValue();
         var result = double.NaN;
-        var i      = 0;
+        var i = 0;
         index = -1;
         switch (collection)
         {
@@ -2450,7 +2465,7 @@ public static partial class IEnumerableExtensions
                     var item = list[i];
                     if (min.AddValue(item))
                     {
-                        index  = i;
+                        index = i;
                         result = item;
                     }
                 }
@@ -2462,7 +2477,7 @@ public static partial class IEnumerableExtensions
                     var item = list[i];
                     if (min.AddValue(item))
                     {
-                        index  = i;
+                        index = i;
                         result = item;
                     }
                 }
@@ -2474,7 +2489,7 @@ public static partial class IEnumerableExtensions
                     var item = list[i];
                     if (min.AddValue(item))
                     {
-                        index  = i;
+                        index = i;
                         result = item;
                     }
                 }
@@ -2485,7 +2500,7 @@ public static partial class IEnumerableExtensions
                 {
                     if (min.AddValue(item))
                     {
-                        index  = i;
+                        index = i;
                         result = item;
                     }
                     i++;
@@ -3066,10 +3081,10 @@ public static partial class IEnumerableExtensions
     /// <returns>Истина, если последовательности равны с точностью до элементов</returns>
     public static bool ItemEquals<T>(this IEnumerable<T> A, IEnumerable<T> B)
     {
-        using var a      = A.GetEnumerator();
-        using var b      = B.GetEnumerator();
-        var       next_a = a.MoveNext();
-        var       next_b = b.MoveNext();
+        using var a = A.GetEnumerator();
+        using var b = B.GetEnumerator();
+        var next_a = a.MoveNext();
+        var next_b = b.MoveNext();
         while (next_a && next_b)
         {
             if (a.Current is null && b.Current != null) return false;
@@ -3088,8 +3103,8 @@ public static partial class IEnumerableExtensions
     public static IEnumerable<T> NotIntersection<T>(this IEnumerable<T> A, IEnumerable<T> B)
     {
         var b_list = B.ToListFast();
-        var b      = b_list.GetHashSet();
-        var a      = new HashSet<T>();
+        var b = b_list.GetHashSet();
+        var a = new HashSet<T>();
 
         foreach (var a_item in A)
         {
@@ -3128,12 +3143,12 @@ public static partial class IEnumerableExtensions
         var a = A.ToListFast();
         var b = B.ToListFast();
 
-        var missing_in_a_from_b_list  = new List<T>(a.Count + b.Count);
-        var missing_in_b_from_a_list  = new List<T>(a.Count + b.Count);
+        var missing_in_a_from_b_list = new List<T>(a.Count + b.Count);
+        var missing_in_b_from_a_list = new List<T>(a.Count + b.Count);
         var existing_in_a_from_b_list = new List<T>(a.Count + b.Count);
         var existing_in_b_from_a_list = new List<T>(a.Count + b.Count);
-        var intersection_list         = new List<T>(a.Count + b.Count);
-        var not_intersection_list     = new List<T>(a.Count + b.Count);
+        var intersection_list = new List<T>(a.Count + b.Count);
+        var not_intersection_list = new List<T>(a.Count + b.Count);
 
         var b_existing_in_a = new bool[b.Count];
         foreach (var a_item in a)
@@ -3178,10 +3193,10 @@ public static partial class IEnumerableExtensions
 
         ExistingInAFromB = [.. existing_in_a_from_b_list];
         ExistingInBFromA = [.. existing_in_b_from_a_list];
-        MissingInAFromB  = [.. missing_in_a_from_b_list];
-        MissingInBFromA  = [.. missing_in_b_from_a_list];
-        Intersection     = [.. intersection_list];
-        NotIntersection  = [.. not_intersection_list];
+        MissingInAFromB = [.. missing_in_a_from_b_list];
+        MissingInBFromA = [.. missing_in_b_from_a_list];
+        Intersection = [.. intersection_list];
+        NotIntersection = [.. not_intersection_list];
     }
 
     /// <summary>Преобразовать последовательность в строку с указанной строкой-разделителем</summary>
@@ -3221,7 +3236,7 @@ public static partial class IEnumerableExtensions
         var item = Items.GetEnumerator();
         try
         {
-            if (!item.MoveNext()) 
+            if (!item.MoveNext())
                 return default;
 
             var min = item.Current;
@@ -3289,15 +3304,15 @@ public static partial class IEnumerableExtensions
             while (item.MoveNext())
             {
                 var value = item.Current;
-                var x     = Selector(value);
+                var x = Selector(value);
                 if (x < min_value)
                 {
-                    min       = value;
+                    min = value;
                     min_value = x;
                 }
                 else if (x > max_value)
                 {
-                    max       = value;
+                    max = value;
                     max_value = x;
                 }
             }
@@ -3636,8 +3651,8 @@ public static partial class IEnumerableExtensions
         Polynom? result;
         switch (P)
         {
-            case Polynom[] { Length    : 0 }: return new(0);
-            case List<Polynom> { Count : 0 }: return new(0);
+            case Polynom[] { Length: 0 }: return new(0);
+            case List<Polynom> { Count: 0 }: return new(0);
             case IList<Polynom> { Count: 0 }: return new(0);
 
             case Polynom[] { Length: var count } pp:
@@ -3676,8 +3691,8 @@ public static partial class IEnumerableExtensions
         Polynom? result;
         switch (P)
         {
-            case Polynom[] { Length    : 0 }: return new(1);
-            case List<Polynom> { Count : 0 }: return new(1);
+            case Polynom[] { Length: 0 }: return new(1);
+            case List<Polynom> { Count: 0 }: return new(1);
             case IList<Polynom> { Count: 0 }: return new(1);
 
             case Polynom[] { Length: var count } pp:
@@ -3770,7 +3785,7 @@ public static partial class IEnumerableExtensions
                 break;
 
             default:
-                var last        = default(T);
+                var last = default(T);
                 var first_taken = false;
                 foreach (var item in enumerable)
                     if (!first_taken)
@@ -3922,8 +3937,8 @@ public static partial class IEnumerableExtensions
                     exceptions.Add(err);
                 }
             }
-        
-        if(exceptions.Count == 0)
+
+        if (exceptions.Count == 0)
             return;
 
         throw new AggregateException("Ошибка в ходе вызова освобождения ресурсов", exceptions.ToArray());

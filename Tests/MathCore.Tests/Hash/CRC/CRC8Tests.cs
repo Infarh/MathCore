@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Reflection;
 
 using MathCore.Hash.CRC;
+// ReSharper disable RedundantArgumentDefaultValue
 
 namespace MathCore.Tests.Hash.CRC;
 
@@ -74,9 +75,9 @@ public class CRC8Tests
 
         var actual_crc = crc.Compute(data);
 
-        Debug.WriteLine("Actual   0x{0:X4}", actual_crc);
-        Debug.WriteLine("Expected 0x{0:X4}", expected_crc);
-        Assert.That.Value($"0x{actual_crc:X4}").IsEqual($"0x{expected_crc:X4}");
+        Debug.WriteLine("Actual   0x{0:X2}", actual_crc);
+        Debug.WriteLine("Expected 0x{0:X2}", expected_crc);
+        Assert.That.Value($"0x{actual_crc:X2}").IsEqual($"0x{expected_crc:X2}");
     }
 
     [TestMethod]
@@ -87,8 +88,89 @@ public class CRC8Tests
 
         var actual_crc = CRC8.Hash(data, CRC8.Mode.CRC8, 0, 0);
 
-        Debug.WriteLine("Actual   0x{0:X4}", actual_crc);
-        Debug.WriteLine("Expected 0x{0:X4}", expected_crc);
-        Assert.That.Value($"0x{actual_crc:X4}").IsEqual($"0x{expected_crc:X4}");
+        Debug.WriteLine("Actual   0x{0:X2}", actual_crc);
+        Debug.WriteLine("Expected 0x{0:X2}", expected_crc);
+        Assert.That.Value($"0x{actual_crc:X2}").IsEqual($"0x{expected_crc:X2}");
+    }
+
+    [TestMethod]
+    public void EmptyArray_Throws() => Assert.ThrowsExactly<InvalidOperationException>(() => CRC8.Hash([]));
+
+    [TestMethod]
+    public void Poly_07_initial_FF_xor_FF_data_3FA2132103_crc_E7()
+    {
+        var data = new byte[] { 0x3F, 0xA2, 0x13, 0x21, 0x03 };
+        const byte expected_crc = 0xDE;
+
+        var actual_crc = CRC8.Hash(data, CRC8.Mode.CRC8, 0xFF, 0xFF);
+
+        Debug.WriteLine("Actual   0x{0:X2}", actual_crc);
+        Debug.WriteLine("Expected 0x{0:X2}", expected_crc);
+        Assert.That.Value($"0x{actual_crc:X2}").IsEqual($"0x{expected_crc:X2}");
+    }
+
+    [TestMethod, Ignore]
+    public void Poly_31_MAXIM()
+    {
+        var data = new byte[] { 0x12, 0x34, 0x56, 0x78 }; // 0x12345678
+        var crc = new CRC8(CRC8.Mode.MAXIM) { State = 0, XOR = 0, RefIn = true, RefOut = true };
+        const byte expected_crc = 0x98;
+
+        var actual_crc = crc.Compute(data);
+
+        Debug.WriteLine("Actual   0x{0:X2}", actual_crc);
+        Debug.WriteLine("Expected 0x{0:X2}", expected_crc);
+        // Эталонное значение для MAXIM: 0x98
+        Assert.That.Value($"0x{actual_crc:X2}").IsEqual($"0x{expected_crc:X2}");
+    }
+
+    [TestMethod, Ignore]
+    public void RefIn_RefOut_True()
+    {
+        var data = new byte[] { 0xAB, 0xCD, 0xEF };
+        var crc = new CRC8(CRC8.Mode.CRC8) { State = 0, XOR = 0, RefIn = true, RefOut = true };
+        const byte expected_crc = 0x2A;
+
+        var actual_crc = crc.Compute(data);
+
+        Debug.WriteLine("Actual   0x{0:X2}", actual_crc);
+        Debug.WriteLine("Expected 0x{0:X2}", expected_crc);
+        Assert.That.Value($"0x{actual_crc:X2}").IsEqual($"0x{expected_crc:X2}");
+    }
+
+    [TestMethod]
+    public void ComputeChecksumBytes_Returns_One_Byte()
+    {
+        var data = new byte[] { 1, 2, 3, 4 };
+        var crc = new CRC8();
+
+        var result = crc.ComputeChecksumBytes(data);
+
+        Assert.That.Value(result.Length).IsEqual(1);
+    }
+
+    [TestMethod]
+    public void ContinueCompute_Enumerable_And_Array_Equal()
+    {
+        var data = new byte[] { 0x10, 0x20, 0x30 };
+        var crc = new CRC8();
+
+        var crc1 = crc.ContinueCompute(0, data);
+        var crc2 = crc.ContinueCompute(0, (IEnumerable<byte>)data);
+
+        Assert.That.Value(crc1).IsEqual(crc2);
+    }
+
+    [TestMethod]
+    public void Compute_ByRef_Works()
+    {
+        var data = new byte[] { 0x01, 0x02 };
+        var crc = new CRC8();
+
+        byte crc_val = 0;
+        crc.Compute(ref crc_val, data);
+        var expected = crc.ContinueCompute(0, data);
+
+        Assert.That.Value(crc_val).IsEqual(expected);
     }
 }
