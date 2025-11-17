@@ -12,9 +12,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.93.2</Version>
+    <Version>0.0.94</Version>
     <PackageReleaseNotes>
-      Добавлен многомерный линейный интерполятор на основе дерева
+        Миграция на .NET 10.0
     </PackageReleaseNotes>
   </PropertyGroup>
 

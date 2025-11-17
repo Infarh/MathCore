@@ -262,27 +262,27 @@ public static class StringExtensions
     public static string JoinStrings(this IEnumerable<string> strings, string separator) => string.Join(separator, strings);
 
 #if NET5_0_OR_GREATER
-/// <summary>Объединяет строки с указанным символьным разделителем</summary>
-/// <param name="strings">Строки для объединения</param>
-/// <param name="separator">Символ-разделитель</param>
-/// <returns>Результирующая строка</returns>
-[MethodImpl(MethodImplOptions.AggressiveInlining)]
-public static string JoinStrings(this IEnumerable<string> strings, char separator) => string.Join(separator, strings);
+    /// <summary>Объединяет строки с указанным символьным разделителем</summary>
+    /// <param name="strings">Строки для объединения</param>
+    /// <param name="separator">Символ-разделитель</param>
+    /// <returns>Результирующая строка</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string JoinStrings(this IEnumerable<string> strings, char separator) => string.Join(separator, strings);
 #endif
 
-/// <summary>Вычисляет SHA256-хеш строки</summary>
-/// <param name="text">Исходная строка</param>
-/// <param name="encoding">Кодировка</param>
-/// <returns>Массив байт с хешем</returns>
-[MethodImpl(MethodImplOptions.AggressiveInlining)]
-public static byte[] ComputeSHA256(this string text, Encoding? encoding = null) => (encoding ?? Encoding.Default).GetBytes(text).ComputeSHA256();
+    /// <summary>Вычисляет SHA256-хеш строки</summary>
+    /// <param name="text">Исходная строка</param>
+    /// <param name="encoding">Кодировка</param>
+    /// <returns>Массив байт с хешем</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static byte[] ComputeSHA256(this string text, Encoding? encoding = null) => (encoding ?? Encoding.Default).GetBytes(text).ComputeSHA256();
 
-/// <summary>Вычисляет MD5-хеш строки</summary>
-/// <param name="text">Исходная строка</param>
-/// <param name="encoding">Кодировка</param>
-/// <returns>Массив байт с хешем</returns>
-[MethodImpl(MethodImplOptions.AggressiveInlining)]
-public static byte[] ComputeMD5(this string text, Encoding? encoding = null) => (encoding ?? Encoding.Default).GetBytes(text).ComputeMD5();
+    /// <summary>Вычисляет MD5-хеш строки</summary>
+    /// <param name="text">Исходная строка</param>
+    /// <param name="encoding">Кодировка</param>
+    /// <returns>Массив байт с хешем</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static byte[] ComputeMD5(this string text, Encoding? encoding = null) => (encoding ?? Encoding.Default).GetBytes(text).ComputeMD5();
 
     /// <summary>Перечисление подстрок, разделяемых указанным строковым шаблоном</summary>
     /// <param name="Str">Разбиваемая строка</param>
@@ -726,7 +726,7 @@ public static byte[] ComputeMD5(this string text, Encoding? encoding = null) => 
 #if NET8_0_OR_GREATER
         if (str.Contains('.'))
 #else
-        if (str.IndexOf('.') >= 0) 
+        if (str.IndexOf('.') >= 0)
 #endif
             return double.Parse(str, CultureInfo.InvariantCulture);
         return double.Parse(str, CultureInfo.GetCultureInfo("ru-RU"));
@@ -892,4 +892,97 @@ public static byte[] ComputeMD5(this string text, Encoding? encoding = null) => 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Stream ToByteStream(this string str, Encoding? encoding = null) => new StringByteStream(str, encoding ?? Encoding.UTF8);
+
+#if NET8_0_OR_GREATER
+
+    /// <summary>Гарантирует, что строка начинается с заданного символа</summary>
+    /// <remarks>
+    /// Если строка уже начинается с символа с учётом Comparison, возвращается исходная строка
+    /// Иначе символ добавляется в начало
+    /// </remarks>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="c">Требуемый начальный символ</param>
+    /// <param name="Comparison">Тип сравнения</param>
+    public static string EnsureStartWith(this string str, char c, StringComparison Comparison = StringComparison.Ordinal) => str.AsSpan().StartsWith([c], Comparison) ? str : $"{c}{str}";
+
+    /// <summary>Гарантирует, что строка кончается заданным символом</summary>
+    /// <remarks>
+    /// Если строка уже кончается символом с учётом Comparison, возвращается исходная строка
+    /// Иначе символ добавляется в конец
+    /// </remarks>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="c">Требуемый конечный символ</param>
+    /// <param name="Comparison">Тип сравнения</param>
+    public static string EnsureEndWith(this string str, char c, StringComparison Comparison = StringComparison.Ordinal) => str.AsSpan().EndsWith([c], Comparison) ? str : $"{str}{c}";
+
+#else
+
+    /// <summary>Гарантирует, что строка начинается с заданного символа</summary>
+    /// <remarks>
+    /// Если строка уже начинается с символа с учётом Comparison, возвращается исходная строка
+    /// Иначе символ добавляется в начало
+    /// </remarks>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="c">Требуемый начальный символ</param>
+    /// <param name="Comparison">Тип сравнения</param>
+    public static string EnsureStartWith(this string str, char c, StringComparison Comparison = StringComparison.Ordinal) =>
+        str.Length == 0
+        ? str
+        : Comparison switch
+        {
+            StringComparison.Ordinal => str[0] == c ? str : $"{c}{str}",
+            StringComparison.OrdinalIgnoreCase => char.ToUpperInvariant(str[0]) == char.ToUpperInvariant(c) ? str : $"{c}{str}",
+            StringComparison.InvariantCulture => str[0].ToString().Equals(c.ToString(), StringComparison.InvariantCulture) ? str : $"{c}{str}",
+            StringComparison.InvariantCultureIgnoreCase => str[0].ToString().Equals(c.ToString(), StringComparison.InvariantCultureIgnoreCase) ? str : $"{c}{str}",
+            StringComparison.CurrentCulture => str[0].ToString().Equals(c.ToString(), StringComparison.CurrentCulture) ? str : $"{c}{str}",
+            StringComparison.CurrentCultureIgnoreCase => str[0].ToString().Equals(c.ToString(), StringComparison.CurrentCultureIgnoreCase) ? str : $"{c}{str}",
+            _ => str[0].Equals(c) ? str : $"{c}{str}",
+        };
+    //str.AsSpan().StartsWith([c], Comparison) ? str : $"{c}{str}";
+
+    /// <summary>Гарантирует, что строка кончается заданным символом</summary>
+    /// <remarks>
+    /// Если строка уже кончается символом с учётом Comparison, возвращается исходная строка
+    /// Иначе символ добавляется в конец
+    /// </remarks>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="c">Требуемый конечный символ</param>
+    /// <param name="Comparison">Тип сравнения</param>
+    public static string EnsureEndWith(this string str, char c, StringComparison Comparison = StringComparison.Ordinal) =>
+        str.Length == 0
+        ? str
+        : Comparison switch
+        {
+            StringComparison.Ordinal => str[^1] == c ? str : $"{str}{c}",
+            StringComparison.OrdinalIgnoreCase => char.ToUpperInvariant(str[^1]) == char.ToUpperInvariant(c) ? str : $"{str}{c}",
+            StringComparison.InvariantCulture => str[^1].ToString().Equals(c.ToString(), StringComparison.InvariantCulture) ? str : $"{str}{c}",
+            StringComparison.InvariantCultureIgnoreCase => str[^1].ToString().Equals(c.ToString(), StringComparison.InvariantCultureIgnoreCase) ? str : $"{str}{c}",
+            StringComparison.CurrentCulture => str[^1].ToString().Equals(c.ToString(), StringComparison.CurrentCulture) ? str : $"{str}{c}",
+            StringComparison.CurrentCultureIgnoreCase => str[^1].ToString().Equals(c.ToString(), StringComparison.CurrentCultureIgnoreCase) ? str : $"{str}{c}",
+            _ => str[^1].Equals(c) ? str : $"{str}{c}",
+        };
+
+#endif
+
+    /// <summary>Гарантирует, что строка начинается с заданной подстроки</summary>
+    /// <remarks>
+    /// Если строка уже начинается с подстроки с учётом Comparison, возвращается исходная строка
+    /// Иначе подстрока добавляется в начало
+    /// </remarks>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="s">Требуемая начальная подстрока</param>
+    /// <param name="Comparison">Тип сравнения</param>
+    public static string EnsureStartWith(this string str, string s, StringComparison Comparison = StringComparison.Ordinal) => str.StartsWith(s, Comparison) ? str : $"{s}{str}";
+
+
+    /// <summary>Гарантирует, что строка кончается заданной подстрокой</summary>
+    /// <remarks>
+    /// Если строка уже кончается подстрокой с учётом Comparison, возвращается исходная строка
+    /// Иначе подстрока добавляется в конец
+    /// </remarks>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="s">Требуемая конечная подстрока</param>
+    /// <param name="Comparison">Тип сравнения</param>
+    public static string EnsureEndWith(this string str, string s, StringComparison Comparison = StringComparison.Ordinal) => str.EndsWith(s, Comparison) ? str : $"{str}{s}";
+
 }

@@ -49,7 +49,7 @@ public static class StringBuilderExtensions
     /// <summary>Создает объект чтения строк</summary>
     /// <param name="str">Объект <see cref="StringBuilder"/></param>
     /// <returns>Объект <see cref="StringReader"/></returns>
-    public static StringReader CreateReader(this StringBuilder str) => new((str.NotNull()).ToString());
+    public static StringReader CreateReader(this StringBuilder str) => new(str.NotNull().ToString());
 
     /// <summary>Создает объект записи строк</summary>
     /// <param name="builder">Объект <see cref="StringBuilder"/></param>
@@ -245,9 +245,11 @@ public static class StringBuilderExtensions
 #if NET8_0_OR_GREATER
 
     public static StringBuilder LN(this StringBuilder builder, ref StringBuilder.AppendInterpolatedStringHandler handler) => builder.Append(ref handler).LN();
+
     public static StringBuilder LN(this StringBuilder builder, bool If, ref StringBuilder.AppendInterpolatedStringHandler handler) => If ? builder.Append(ref handler).LN() : builder;
 
     public static StringBuilder Append(this StringBuilder builder, ref StringBuilder.AppendInterpolatedStringHandler handler) => builder.Append(ref handler);
+
     public static StringBuilder Append(this StringBuilder builder, bool If, ref StringBuilder.AppendInterpolatedStringHandler handler) => If ? builder.Append(ref handler) : builder;
 
 #endif
@@ -281,7 +283,7 @@ public static class StringBuilderExtensions
                 return true;
 
             default:
-                for(var i = 0; i < start_len; i++)
+                for (var i = 0; i < start_len; i++)
                     if (start[i] != str[i])
                         return false;
                 return true;
@@ -356,4 +358,53 @@ public static class StringBuilderExtensions
 
         return str;
     }
+
+    /// <summary>Убедиться что строка начинается с указанного префикса</summary>
+    /// <param name="str">Проверяемая строка</param>
+    /// <param name="start">Искомый префикс</param>
+    /// <param name="comparison">Вариант сравнения строк</param>
+    /// <returns>Строка, начинающаяся с указанного прфикса</returns>
+    public static StringBuilder EnsureStartWith(this StringBuilder str, string? start, StringComparison comparison = StringComparison.Ordinal)
+    {
+        if (str.StartWith(start, comparison))
+            return str;
+
+        if (start is { Length: > 0 })
+            str.Insert(0, start);
+
+        return str;
+    }
+
+    /// <summary>Убедиться что строка заканчивается указанным суффиксом</summary>
+    /// <param name="str">Проверяемая строка</param>
+    /// <param name="s">Искомый суффикс</param>
+    /// <param name="comparison">Вариант сравнения строк</param>
+    /// <returns>Строка, завершающаяся указанным суффиксом</returns>
+    public static StringBuilder EnsureEndWith(this StringBuilder str, string? s, StringComparison comparison = StringComparison.Ordinal)
+    {
+        if (str.EndWith(s, comparison))
+            return str;
+
+        if (s is { Length: > 0 })
+            str.Append(s);
+
+        return str;
+    }
+
+    /// <summary>Удаляет начальную и конечную часть строки, если они совпадают с заданной</summary>
+    /// <param name="str">Объект <see cref="StringBuilder"/></param>
+    /// <param name="end">Удаляемая часть</param>
+    /// <param name="comparison">Тип сравнения</param>
+    /// <returns>Объект <see cref="StringBuilder"/></returns>
+    public static StringBuilder Trim(this StringBuilder str, string s, StringComparison comparison = StringComparison.Ordinal) => str.TrimStart(s, comparison).TrimEnd(s, comparison);
+
+#if NET8_0_OR_GREATER
+
+    public static string ToString(this StringBuilder str, Range range)
+    {
+        var (start, end) = range.ToIndexes(str.Length);
+        return str.ToString(start, end - start);
+    }
+
+#endif
 }
