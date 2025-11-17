@@ -41,7 +41,7 @@ public class NamedLockTests
         {
             start_action.WaitOne();
 
-            await Task.Delay(100, TestContext.CancellationToken).ConfigureAwait(false);
+            await Task.Delay(500, TestContext.CancellationToken).ConfigureAwait(false);
 
             await resource_lock.LockAsync(resource_name, TestContext.CancellationToken);
 
@@ -65,13 +65,13 @@ public class NamedLockTests
 
             await resource_lock.LockAsync(resource_name, TestContext.CancellationToken);
 
-            await Task.Delay(75, TestContext.CancellationToken).ConfigureAwait(false);
+            await Task.Delay(300, TestContext.CancellationToken).ConfigureAwait(false);
             result_list.Add("R-3.0");
 
-            await Task.Delay(75, TestContext.CancellationToken).ConfigureAwait(false);
+            await Task.Delay(300, TestContext.CancellationToken).ConfigureAwait(false);
             result_list.Add("R-3.1");
 
-            await Task.Delay(75, TestContext.CancellationToken).ConfigureAwait(false);
+            await Task.Delay(300, TestContext.CancellationToken).ConfigureAwait(false);
             result_list.Add("R-3.2");
 
             await resource_lock.UnlockAsync(resource_name, TestContext.CancellationToken);
