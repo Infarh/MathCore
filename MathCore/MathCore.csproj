@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.94</Version>
+    <Version>0.0.94.1</Version>
     <PackageReleaseNotes>
         Миграция на .NET 10.0
     </PackageReleaseNotes>

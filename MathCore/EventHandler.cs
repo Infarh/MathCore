@@ -27,6 +27,7 @@ public delegate void EventHandlerArgs<in TSender, in TArgs>(TSender Sender, TArg
 [Serializable]
 public delegate TResult EventHandlerArgs<out TResult, in TSender, in TArgs>(TSender Sender, TArgs Args) where TArgs : EventArgs;
 
+#if !NET10_0_OR_GREATER
 /// <summary>Делегат обработчика события</summary>
 /// <typeparam name="TSender">Тип источника события</typeparam>
 /// <typeparam name="TParameter">Тип параметра аргумента события</typeparam>
@@ -34,6 +35,7 @@ public delegate TResult EventHandlerArgs<out TResult, in TSender, in TArgs>(TSen
 /// <param name="Args">Аргумент события</param>
 [Serializable]
 public delegate void EventHandler<in TSender, TParameter>(TSender Sender, EventArgs<TParameter> Args);
+#endif
 
 /// <summary>Делегат обработчика события</summary>
 /// <typeparam name="TSender">Тип источника события</typeparam>
