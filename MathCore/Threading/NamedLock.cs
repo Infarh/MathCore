@@ -3,6 +3,16 @@
 /// <summary>Блокировщик асинхронного доступа к именованному ресурсу</summary>
 public sealed class NamedLock : IDisposable
 {
+    /// <summary>Информация о блокировке ресурса</summary>
+    private sealed class ResourceLockInfo
+    {
+        /// <summary>Семафор для блокировки доступа</summary>
+        public required SemaphoreSlim Semaphore { get; init; }
+
+        /// <summary>Счетчик активных блокировок</summary>
+        public int ActiveLocks { get; set; }
+    }
+
     /// <summary>Контроль блокировки</summary>
     /// <remarks>Инициализация нового контроллера блокировки ресурса</remarks>
     /// <param name="Lock">Блокировщик доступа</param>
@@ -32,7 +42,7 @@ public sealed class NamedLock : IDisposable
     private SemaphoreSlim _Lock = new(1, 1);
 
     /// <summary>Словарь семафоров заблокированных именованных ресурсов</summary>
-    private readonly Dictionary<string, SemaphoreSlim> _Resources = [];
+    private readonly Dictionary<string, ResourceLockInfo> _Resources = [];
 
     /// <summary>Заблокировать ресурс и получить контроллер блокировки для конструкции using</summary>
     /// <param name="ResourceName">Имя блокируемого ресурса</param>
@@ -52,14 +62,15 @@ public sealed class NamedLock : IDisposable
     {
         _Lock.Wait();
 
-        if (_Resources.TryGetValue(Resource, out var resource_lock))
+        if (_Resources.TryGetValue(Resource, out var lock_info))
         {
+            lock_info.ActiveLocks++;
             _Lock.Release();
-            resource_lock.Wait();
+            lock_info.Semaphore.Wait();
         }
         else
         {
-            _Resources.Add(Resource, new(0, 1));
+            _Resources.Add(Resource, new() { Semaphore = new(0, 1), ActiveLocks = 1 });
             _Lock.Release();
         }
     }
@@ -72,14 +83,15 @@ public sealed class NamedLock : IDisposable
     {
         await _Lock.WaitAsync(Cancel).ConfigureAwait(false);
 
-        if (_Resources.TryGetValue(Resource, out var resource_lock))
+        if (_Resources.TryGetValue(Resource, out var lock_info))
         {
+            lock_info.ActiveLocks++;
             _Lock.Release();
-            await resource_lock.WaitAsync(Cancel).ConfigureAwait(false);
+            await lock_info.Semaphore.WaitAsync(Cancel).ConfigureAwait(false);
         }
         else
         {
-            _Resources.Add(Resource, new(0, 1));
+            _Resources.Add(Resource, new() { Semaphore = new(0, 1), ActiveLocks = 1 });
             _Lock.Release();
         }
     }
@@ -90,21 +102,28 @@ public sealed class NamedLock : IDisposable
     {
         _Lock.Wait();
 
-        if (!_Resources.TryGetValue(Resource, out var resource_lock))
+        if (!_Resources.TryGetValue(Resource, out var lock_info))
         {
             _Lock.Release();
             return;
         }
 
-        resource_lock.Release();
+        lock_info.ActiveLocks--;
+        var should_remove = lock_info.ActiveLocks == 0;
 
-        if (_Lock.CurrentCount == 1)
+        if (should_remove)
         {
             _Resources.Remove(Resource);
-            resource_lock.Dispose();
         }
 
         _Lock.Release();
+
+        lock_info.Semaphore.Release();
+
+        if (should_remove)
+        {
+            lock_info.Semaphore.Dispose();
+        }
     }
 
     /// <summary>Разблокировать указанный именованный ресурс асинхронно</summary>
@@ -113,23 +132,30 @@ public sealed class NamedLock : IDisposable
     /// <returns>Задача завершения процесса разблокировки указанного ресурса</returns>
     public async Task UnlockAsync(string Resource, CancellationToken Cancel = default)
     {
-        await _Lock.WaitAsync(Cancel).ConfigureAwait(false);
+        _Lock.Wait();
 
-        if (!_Resources.TryGetValue(Resource, out var resource_lock))
+        if (!_Resources.TryGetValue(Resource, out var lock_info))
         {
             _Lock.Release();
             return;
         }
 
-        resource_lock.Release();
+        lock_info.ActiveLocks--;
+        var should_remove = lock_info.ActiveLocks == 0;
 
-        if (_Lock.CurrentCount == 1)
+        if (should_remove)
         {
             _Resources.Remove(Resource);
-            resource_lock.Dispose();
         }
 
         _Lock.Release();
+
+        lock_info.Semaphore.Release();
+
+        if (should_remove)
+        {
+            lock_info.Semaphore.Dispose();
+        }
     }
 
     /// <summary>Уничтожить блокировщик ресурсов и освободить все блокировки</summary>
@@ -137,10 +163,10 @@ public sealed class NamedLock : IDisposable
     {
         _Lock.Wait();
 
-        foreach (var resource_lock in _Resources.Values)
+        foreach (var lock_info in _Resources.Values)
         {
-            resource_lock.Release();
-            resource_lock.Dispose();
+            lock_info.Semaphore.Release();
+            lock_info.Semaphore.Dispose();
         }
 
         _Resources.Clear();

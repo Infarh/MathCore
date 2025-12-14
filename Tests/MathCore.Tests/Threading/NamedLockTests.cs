@@ -9,8 +9,10 @@ public class NamedLockTests
 {
     public TestContext TestContext { get; set; }
 
-    [TestMethod, Timeout(10000, CooperativeCancellation = true), Ignore]
-    public async Task MultipleAccessTest()
+    [TestMethod, Timeout(30000, CooperativeCancellation = true)]
+    public Task MultipleAccessTest() => Task.WhenAll(Enumerable.Range(0, 25).Select(RunSingleTest));
+
+    private async Task RunSingleTest(int iteration)
     {
         const string resource_name = "test";
 
