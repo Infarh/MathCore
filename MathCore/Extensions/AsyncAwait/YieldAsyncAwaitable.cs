@@ -9,20 +9,25 @@ using System.Security;
 namespace System.Threading.Tasks;
 
 [StructLayout(LayoutKind.Sequential, Size = 1)]
-public struct YieldAsyncAwaitable
+/// <summary>Структура, представляющая awaitable для планирования продолжения через пул потоков</summary>
+public readonly struct YieldAsyncAwaitable
 {
-    public YieldAsyncAwaiter GetAwaiter() => new();
+    /// <summary>Возвращает awaiter для этого awaitable</summary>
+    /// <returns>Экземпляр `YieldAsyncAwaiter` для ожидания</returns>
+    public readonly YieldAsyncAwaiter GetAwaiter() => new();
 
     [StructLayout(LayoutKind.Sequential, Size = 1)]
     //[HostProtection(SecurityAction.LinkDemand, ExternalThreading = true, Synchronization = true)]
     // ReSharper disable once RedundantExtendsListEntry
-    public struct YieldAsyncAwaiter : ICriticalNotifyCompletion, INotifyCompletion
+    /// <summary>Awaiter для `YieldAsyncAwaitable`, планирующий продолжение в пуле потоков</summary>
+    public readonly struct YieldAsyncAwaiter : ICriticalNotifyCompletion, INotifyCompletion
     {
         private static readonly WaitCallback __WaitCallbackRunAction = RunAction;
         // ReSharper disable once UnusedMember.Local
-        private static readonly SendOrPostCallback __SendOrPostCallbackRunAction = RunAction;
+        //private static readonly SendOrPostCallback __SendOrPostCallbackRunAction = RunAction;
 
-        public bool IsCompleted => false;
+        /// <summary>Всегда возвращает false, чтобы заставить асинхронный метод отложить продолжение</summary>
+        public readonly bool IsCompleted => false;
 
         private static void RunAction(object? action) => ((Action)action)();
 
@@ -37,12 +42,19 @@ public struct YieldAsyncAwaitable
                 ThreadPool.UnsafeQueueUserWorkItem(__WaitCallbackRunAction, continuation);
         }
 
+        /// <summary>Планирует продолжение с сохранением текущего контекста исполнения</summary>
+        /// <param name="continuation">Делегат, представляющий продолжение</param>
+        /// <exception cref="ArgumentNullException">Если `continuation` равен null</exception>
         [SecuritySafeCritical]
         public void OnCompleted(Action continuation) => QueueContinuation(continuation, true);
 
+        /// <summary>Планирует продолжение без сохранения контекста исполнения</summary>
+        /// <param name="continuation">Делегат, представляющий продолжение</param>
+        /// <exception cref="ArgumentNullException">Если `continuation` равен null</exception>
         [SecurityCritical]
         public void UnsafeOnCompleted(Action continuation) => QueueContinuation(continuation, false);
 
+        /// <summary>Завершает awaiter без возвращаемого значения</summary>
         public void GetResult() { }
     }
 }
