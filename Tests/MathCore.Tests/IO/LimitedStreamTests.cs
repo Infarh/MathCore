@@ -14,6 +14,26 @@ public class LimitedStreamTests
     }
 
     [TestMethod]
+    public void Constructor_NegativeOffset_ThrowsArgumentOutOfRangeException()
+    {
+        var source = CreateSourceStream();
+        
+        var error = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new LimitedStream(source, -5, 10));
+        
+        Assert.That.Value(error.ParamName).IsEqual("Offset");
+    }
+
+    [TestMethod]
+    public void Constructor_NegativeDataLength_ThrowsArgumentOutOfRangeException()
+    {
+        var source = CreateSourceStream();
+        
+        var error = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new LimitedStream(source, 5, -10));
+        
+        Assert.That.Value(error.ParamName).IsEqual("DataLength");
+    }
+
+    [TestMethod]
     public void Seek_Origin_Begin_InLimit()
     {
         var source = CreateSourceStream();
@@ -34,8 +54,8 @@ public class LimitedStreamTests
         Assert.That.Value(actual_source_position).IsEqual(stream_offset + expected_seek);
     }
 
-    [TestMethod, Ignore]
-    public void Seek_Origin_Begin_LessLimit_Throw_IOException()
+    [TestMethod]
+    public void Seek_Origin_Begin_LessLimit_Throw_ArgumentOutOfRangeException()
     {
         var source = CreateSourceStream();
 
@@ -45,11 +65,10 @@ public class LimitedStreamTests
 
         var limited = new LimitedStream(source, stream_offset, stream_length);
 
-        var error = Assert.ThrowsExactly<IOException>(() => limited.Seek(offset, SeekOrigin.Begin));
+        var error = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => limited.Seek(offset, SeekOrigin.Begin));
 
-        Assert.That.Value(error.Message)
-           .IsEqual("An attempt was made to move the position before the beginning of the stream.");
-        Assert.That.Value(error.Data["offset"]).IsEqual(offset);
+        Assert.That.Value(error.Message).Contains("Выполнена попытка позиционирования до начала потока");
+        Assert.That.Value(error.ParamName).IsEqual("offset");
     }
 
     [TestMethod]
@@ -95,8 +114,8 @@ public class LimitedStreamTests
         Assert.That.Value(source.Position).IsEqual(expected_source_position);
     }
 
-    [TestMethod, Ignore]
-    public void Seek_Origin_End_LessLimit_Throw_IOException()
+    [TestMethod]
+    public void Seek_Origin_End_LessLimit_Throw_ArgumentOutOfRangeException()
     {
         var source = CreateSourceStream();
             
@@ -106,11 +125,27 @@ public class LimitedStreamTests
 
         var limited = new LimitedStream(source, stream_offset, stream_length);
 
-        var error = Assert.ThrowsExactly<IOException>(() => limited.Seek(offset, SeekOrigin.End));
+        var error = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => limited.Seek(offset, SeekOrigin.End));
 
-        Assert.That.Value(error.Message)
-           .IsEqual("An attempt was made to move the position before the beginning of the stream.");
-        Assert.That.Value(error.Data["offset"]).IsEqual(offset);
+        Assert.That.Value(error.Message).Contains("Выполнена попытка позиционирования до начала потока");
+        Assert.That.Value(error.ParamName).IsEqual("offset");
+    }
+
+    [TestMethod]
+    public void WriteByte_WritesToCorrectPosition()
+    {
+        var source = new MemoryStream(new byte[20]);
+        const int  stream_offset = 5;
+        const int  stream_length = 10;
+        const byte test_value    = 42;
+
+        var limited = new LimitedStream(source, stream_offset, stream_length) { CanExpand = false };
+        
+        limited.WriteByte(test_value);
+        
+        Assert.That.Value(limited.Position).IsEqual(1);
+        Assert.That.Value(source.Position).IsEqual(stream_offset + 1);
+        Assert.That.Value(source.ToArray()[stream_offset]).IsEqual(test_value);
     }
 
     //[TestMethod]

@@ -1,32 +1,46 @@
 ﻿namespace MathCore.IO;
 
+/// <summary>Ограниченный поток, предоставляющий доступ к части базового потока</summary>
 public class LimitedStream(Stream BaseStream, long Offset, long DataLength) : Stream
 {
+    /// <summary>Создает ограниченный поток на основе всего базового потока</summary>
+    /// <param name="BaseStream">Базовый поток</param>
     public LimitedStream(Stream BaseStream) : this(BaseStream, 0, BaseStream.Length) { }
+    
+    /// <summary>Создает ограниченный поток с указанным смещением до конца базового потока</summary>
+    /// <param name="BaseStream">Базовый поток</param>
+    /// <param name="Offset">Смещение начала в базовом потоке</param>
     public LimitedStream(Stream BaseStream, long Offset) : this(BaseStream, Offset, BaseStream.Length - Offset) { }
 
     /// <summary>Поток-источник данных</summary>
     private readonly Stream _BaseStream = BaseStream.NotNull();
 
-    /// <summary>Смещение потока относительного исходного</summary>
-    private long _DataOffset = Offset;
+    /// <summary>Смещение потока относительно исходного</summary>
+    private long _DataOffset = Offset >= 0 
+        ? Offset 
+        : throw new ArgumentOutOfRangeException(nameof(Offset), Offset, "Смещение не может быть меньше нуля");
 
     /// <summary>Количество байт данных в потоке</summary>
-    private long _DataLength = DataLength;
+    private long _DataLength = DataLength >= 0 
+        ? DataLength 
+        : throw new ArgumentOutOfRangeException(nameof(DataLength), DataLength, "Длина данных не может быть меньше нуля");
 
     /// <summary>Возможность растягивать исходный поток</summary>
     private bool _CanExpand;
     private bool? _CanRead;
     private bool? _CanWrite;
 
+    /// <summary>Переопределение возможности чтения из потока</summary>
     public bool? StreamCanRead { get => _CanRead; set => _CanRead = value; }
+    
+    /// <summary>Переопределение возможности записи в поток</summary>
     public bool? StreamCanWrite { get => _CanWrite; set => _CanWrite = value; }
 
     /// <summary>Поток-источник данных</summary>
     public Stream BaseStream => _BaseStream;
 
-    /// <summary>Смещение потока относительного исходного</summary>
-    /// <exception cref="ArgumentOutOfRangeException" accessor="set">Если передано значение меньше нуля.</exception>
+    /// <summary>Смещение потока относительно исходного</summary>
+    /// <exception cref="ArgumentOutOfRangeException" accessor="set">Если передано значение меньше нуля</exception>
     public long DataOffset
     {
         get => _DataOffset;
@@ -37,10 +51,10 @@ public class LimitedStream(Stream BaseStream, long Offset, long DataLength) : St
         }
     }
 
+    /// <summary>Создает поток только для чтения на основе текущего</summary>
     public Stream AsReadOnly => new LimitedStream(this) { _CanWrite = false };
 
     #region Stream inherits
-
 
     /// <inheritdoc />
     public override bool CanRead => _CanRead ?? _BaseStream.CanRead;
@@ -48,11 +62,10 @@ public class LimitedStream(Stream BaseStream, long Offset, long DataLength) : St
     /// <inheritdoc />
     public override bool CanSeek => _BaseStream.CanSeek;
 
-
     /// <inheritdoc />
     public override bool CanWrite => _CanWrite ?? _BaseStream.CanWrite;
 
-    /// <summary>Возможность растягивать исходный поток</summary>
+    /// <summary>Возможность растягивать исходный поток при записи за пределы длины</summary>
     public bool CanExpand { get => _CanExpand; set => _CanExpand = value; }
 
     /// <inheritdoc />
@@ -64,7 +77,7 @@ public class LimitedStream(Stream BaseStream, long Offset, long DataLength) : St
         get => Math.Max(0, _BaseStream.Position - _DataOffset);
         set
         {
-            if (value < 0) throw new ArgumentOutOfRangeException(nameof(value), "Ожидается положительное значениее");
+            if (value < 0) throw new ArgumentOutOfRangeException(nameof(value), "Ожидается положительное значение");
             _BaseStream.Position = _DataOffset + value;
         }
     }
@@ -72,8 +85,6 @@ public class LimitedStream(Stream BaseStream, long Offset, long DataLength) : St
     /// <inheritdoc />
     public override long Seek(long offset, SeekOrigin origin)
     {
-        if (_DataOffset == 0) return _BaseStream.Seek(offset, origin);
-
         const SeekOrigin begin   = SeekOrigin.Begin;
         const SeekOrigin current = SeekOrigin.Current;
         const SeekOrigin end     = SeekOrigin.End;
@@ -93,12 +104,14 @@ public class LimitedStream(Stream BaseStream, long Offset, long DataLength) : St
                 return _BaseStream.Seek(offset, current) - _DataOffset;
 
             case end:
-                return _BaseStream.Seek(_DataOffset + Length + offset, begin) - _DataOffset;
+                var target_position = _DataOffset + Length + offset;
+                if (target_position < _DataOffset)
+                    throw new ArgumentOutOfRangeException(nameof(offset), "Выполнена попытка позиционирования до начала потока");
+                return _BaseStream.Seek(target_position, begin) - _DataOffset;
 
             default:
                 throw new ArgumentOutOfRangeException(nameof(origin), origin, null);
         }
-
     }
 
     /// <inheritdoc />
@@ -155,10 +168,13 @@ public class LimitedStream(Stream BaseStream, long Offset, long DataLength) : St
             _DataLength += _CanExpand
                 ? base_pos - (_DataOffset + _DataLength)
                 : throw new InvalidOperationException("Поток не подлежит расширению");
-        base.WriteByte(value);
+        _BaseStream.WriteByte(value);
     }
 
+    /// <summary>Событие, возникающее перед освобождением ресурсов</summary>
     public event EventHandler Disposing;
+    
+    /// <summary>Событие, возникающее после освобождения ресурсов</summary>
     public event EventHandler Disposed;
 
     /// <inheritdoc />
