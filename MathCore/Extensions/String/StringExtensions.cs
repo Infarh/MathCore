@@ -520,9 +520,11 @@ public static class StringExtensions
 #pragma warning disable SYSLIB0022
     private static Rijndael CreateRijndael(string Password, byte[]? Salt = null)
     {
+#pragma warning disable SYSLIB0060 // Используется для совместимости с ранее зашифрованными данными
 #pragma warning disable SYSLIB0041
         var pdb = new Rfc2898DeriveBytes(Password, Salt ?? []);
 #pragma warning restore SYSLIB0041
+#pragma warning restore SYSLIB0060
         var algorithm = Rijndael.Create();
         algorithm.Key = pdb.GetBytes(32);
         algorithm.IV = pdb.GetBytes(16);
