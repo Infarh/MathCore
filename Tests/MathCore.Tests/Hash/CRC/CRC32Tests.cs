@@ -1,8 +1,8 @@
 ﻿using System.Globalization;
-using System.Reflection;
 using System.Text;
 
 using MathCore.Hash.CRC;
+
 // ReSharper disable RedundantArgumentDefaultValue
 // ReSharper disable InconsistentNaming
 
@@ -12,6 +12,7 @@ namespace MathCore.Tests.Hash.CRC;
 public class CRC32Tests
 {
     // https://microsin.net/programming/arm/crc32-demystified.html
+    // https://crccalc.com/
 
     private const string __Table_poly_0x4C11DB7_str = """ 
         0x00000000 0x04c11db7 0x09823b6e 0x0d4326d9 0x130476dc 0x17c56b6b 0x1a864db2 0x1e475005
@@ -48,152 +49,18 @@ public class CRC32Tests
         0xafb010b1 0xab710d06 0xa6322bdf 0xa2f33668 0xbcb4666d 0xb8757bda 0xb5365d03 0xb1f740b4
         """;
 
-    private const string __Table_poly_0xEDB88320_ref_in_out_str = """ 
-        0x00000000 0x77073096 0xee0e612c 0x990951ba 0x076dc419 0x706af48f 0xe963a535 0x9e6495a3
-        0x0edb8832 0x79dcb8a4 0xe0d5e91e 0x97d2d988 0x09b64c2b 0x7eb17cbd 0xe7b82d07 0x90bf1d91
-        0x1db71064 0x6ab020f2 0xf3b97148 0x84be41de 0x1adad47d 0x6ddde4eb 0xf4d4b551 0x83d385c7
-        0x136c9856 0x646ba8c0 0xfd62f97a 0x8a65c9ec 0x14015c4f 0x63066cd9 0xfa0f3d63 0x8d080df5
-        0x3b6e20c8 0x4c69105e 0xd56041e4 0xa2677172 0x3c03e4d1 0x4b04d447 0xd20d85fd 0xa50ab56b
-        0x35b5a8fa 0x42b2986c 0xdbbbc9d6 0xacbcf940 0x32d86ce3 0x45df5c75 0xdcd60dcf 0xabd13d59
-        0x26d930ac 0x51de003a 0xc8d75180 0xbfd06116 0x21b4f4b5 0x56b3c423 0xcfba9599 0xb8bda50f
-        0x2802b89e 0x5f058808 0xc60cd9b2 0xb10be924 0x2f6f7c87 0x58684c11 0xc1611dab 0xb6662d3d
-        0x76dc4190 0x01db7106 0x98d220bc 0xefd5102a 0x71b18589 0x06b6b51f 0x9fbfe4a5 0xe8b8d433
-        0x7807c9a2 0x0f00f934 0x9609a88e 0xe10e9818 0x7f6a0dbb 0x086d3d2d 0x91646c97 0xe6635c01
-        0x6b6b51f4 0x1c6c6162 0x856530d8 0xf262004e 0x6c0695ed 0x1b01a57b 0x8208f4c1 0xf50fc457
-        0x65b0d9c6 0x12b7e950 0x8bbeb8ea 0xfcb9887c 0x62dd1ddf 0x15da2d49 0x8cd37cf3 0xfbd44c65
-        0x4db26158 0x3ab551ce 0xa3bc0074 0xd4bb30e2 0x4adfa541 0x3dd895d7 0xa4d1c46d 0xd3d6f4fb
-        0x4369e96a 0x346ed9fc 0xad678846 0xda60b8d0 0x44042d73 0x33031de5 0xaa0a4c5f 0xdd0d7cc9
-        0x5005713c 0x270241aa 0xbe0b1010 0xc90c2086 0x5768b525 0x206f85b3 0xb966d409 0xce61e49f
-        0x5edef90e 0x29d9c998 0xb0d09822 0xc7d7a8b4 0x59b33d17 0x2eb40d81 0xb7bd5c3b 0xc0ba6cad
-        0xedb88320 0x9abfb3b6 0x03b6e20c 0x74b1d29a 0xead54739 0x9dd277af 0x04db2615 0x73dc1683
-        0xe3630b12 0x94643b84 0x0d6d6a3e 0x7a6a5aa8 0xe40ecf0b 0x9309ff9d 0x0a00ae27 0x7d079eb1
-        0xf00f9344 0x8708a3d2 0x1e01f268 0x6906c2fe 0xf762575d 0x806567cb 0x196c3671 0x6e6b06e7
-        0xfed41b76 0x89d32be0 0x10da7a5a 0x67dd4acc 0xf9b9df6f 0x8ebeeff9 0x17b7be43 0x60b08ed5
-        0xd6d6a3e8 0xa1d1937e 0x38d8c2c4 0x4fdff252 0xd1bb67f1 0xa6bc5767 0x3fb506dd 0x48b2364b
-        0xd80d2bda 0xaf0a1b4c 0x36034af6 0x41047a60 0xdf60efc3 0xa867df55 0x316e8eef 0x4669be79
-        0xcb61b38c 0xbc66831a 0x256fd2a0 0x5268e236 0xcc0c7795 0xbb0b4703 0x220216b9 0x5505262f
-        0xc5ba3bbe 0xb2bd0b28 0x2bb45a92 0x5cb36a04 0xc2d7ffa7 0xb5d0cf31 0x2cd99e8b 0x5bdeae1d
-        0x9b64c2b0 0xec63f226 0x756aa39c 0x026d930a 0x9c0906a9 0xeb0e363f 0x72076785 0x05005713
-        0x95bf4a82 0xe2b87a14 0x7bb12bae 0x0cb61b38 0x92d28e9b 0xe5d5be0d 0x7cdcefb7 0x0bdbdf21
-        0x86d3d2d4 0xf1d4e242 0x68ddb3f8 0x1fda836e 0x81be16cd 0xf6b9265b 0x6fb077e1 0x18b74777
-        0x88085ae6 0xff0f6a70 0x66063bca 0x11010b5c 0x8f659eff 0xf862ae69 0x616bffd3 0x166ccf45
-        0xa00ae278 0xd70dd2ee 0x4e048354 0x3903b3c2 0xa7672661 0xd06016f7 0x4969474d 0x3e6e77db
-        0xaed16a4a 0xd9d65adc 0x40df0b66 0x37d83bf0 0xa9bcae53 0xdebb9ec5 0x47b2cf7f 0x30b5ffe9
-        0xbdbdf21c 0xcabac28a 0x53b39330 0x24b4a3a6 0xbad03605 0xcdd70693 0x54de5729 0x23d967bf
-        0xb3667a2e 0xc4614ab8 0x5d681b02 0x2a6f2b94 0xb40bbe37 0xc30c8ea1 0x5a05df1b 0x2d02ef8d
-        """;
-
-    private const string __Table_poly_0xEDB88320_str = """ 
-        0x00000000 0xedb88320 0x36c98560 0xdb710640 0x6d930ac0 0x802b89e0 0x5b5a8fa0 0xb6e20c80
-        0xdb261580 0x369e96a0 0xedef90e0 0x005713c0 0xb6b51f40 0x5b0d9c60 0x807c9a20 0x6dc41900
-        0x5bf4a820 0xb64c2b00 0x6d3d2d40 0x8085ae60 0x3667a2e0 0xdbdf21c0 0x00ae2780 0xed16a4a0
-        0x80d2bda0 0x6d6a3e80 0xb61b38c0 0x5ba3bbe0 0xed41b760 0x00f93440 0xdb883200 0x3630b120
-        0xb7e95040 0x5a51d360 0x8120d520 0x6c985600 0xda7a5a80 0x37c2d9a0 0xecb3dfe0 0x010b5cc0
-        0x6ccf45c0 0x8177c6e0 0x5a06c0a0 0xb7be4380 0x015c4f00 0xece4cc20 0x3795ca60 0xda2d4940
-        0xec1df860 0x01a57b40 0xdad47d00 0x376cfe20 0x818ef2a0 0x6c367180 0xb74777c0 0x5afff4e0
-        0x373bede0 0xda836ec0 0x01f26880 0xec4aeba0 0x5aa8e720 0xb7106400 0x6c616240 0x81d9e160
-        0x826a23a0 0x6fd2a080 0xb4a3a6c0 0x591b25e0 0xeff92960 0x0241aa40 0xd930ac00 0x34882f20
-        0x594c3620 0xb4f4b500 0x6f85b340 0x823d3060 0x34df3ce0 0xd967bfc0 0x0216b980 0xefae3aa0
-        0xd99e8b80 0x342608a0 0xef570ee0 0x02ef8dc0 0xb40d8140 0x59b50260 0x82c40420 0x6f7c8700
-        0x02b89e00 0xef001d20 0x34711b60 0xd9c99840 0x6f2b94c0 0x829317e0 0x59e211a0 0xb45a9280
-        0x358373e0 0xd83bf0c0 0x034af680 0xeef275a0 0x58107920 0xb5a8fa00 0x6ed9fc40 0x83617f60
-        0xeea56660 0x031de540 0xd86ce300 0x35d46020 0x83366ca0 0x6e8eef80 0xb5ffe9c0 0x58476ae0
-        0x6e77dbc0 0x83cf58e0 0x58be5ea0 0xb506dd80 0x03e4d100 0xee5c5220 0x352d5460 0xd895d740
-        0xb551ce40 0x58e94d60 0x83984b20 0x6e20c800 0xd8c2c480 0x357a47a0 0xee0b41e0 0x03b3c2c0
-        0xe96cc460 0x04d44740 0xdfa54100 0x321dc220 0x84ffcea0 0x69474d80 0xb2364bc0 0x5f8ec8e0
-        0x324ad1e0 0xdff252c0 0x04835480 0xe93bd7a0 0x5fd9db20 0xb2615800 0x69105e40 0x84a8dd60
-        0xb2986c40 0x5f20ef60 0x8451e920 0x69e96a00 0xdf0b6680 0x32b3e5a0 0xe9c2e3e0 0x047a60c0
-        0x69be79c0 0x8406fae0 0x5f77fca0 0xb2cf7f80 0x042d7300 0xe995f020 0x32e4f660 0xdf5c7540
-        0x5e859420 0xb33d1700 0x684c1140 0x85f49260 0x33169ee0 0xdeae1dc0 0x05df1b80 0xe86798a0
-        0x85a381a0 0x681b0280 0xb36a04c0 0x5ed287e0 0xe8308b60 0x05880840 0xdef90e00 0x33418d20
-        0x05713c00 0xe8c9bf20 0x33b8b960 0xde003a40 0x68e236c0 0x855ab5e0 0x5e2bb3a0 0xb3933080
-        0xde572980 0x33efaaa0 0xe89eace0 0x05262fc0 0xb3c42340 0x5e7ca060 0x850da620 0x68b52500
-        0x6b06e7c0 0x86be64e0 0x5dcf62a0 0xb077e180 0x0695ed00 0xeb2d6e20 0x305c6860 0xdde4eb40
-        0xb020f240 0x5d987160 0x86e97720 0x6b51f400 0xddb3f880 0x300b7ba0 0xeb7a7de0 0x06c2fec0
-        0x30f24fe0 0xdd4accc0 0x063bca80 0xeb8349a0 0x5d614520 0xb0d9c600 0x6ba8c040 0x86104360
-        0xebd45a60 0x066cd940 0xdd1ddf00 0x30a55c20 0x864750a0 0x6bffd380 0xb08ed5c0 0x5d3656e0
-        0xdcefb780 0x315734a0 0xea2632e0 0x079eb1c0 0xb17cbd40 0x5cc43e60 0x87b53820 0x6a0dbb00
-        0x07c9a200 0xea712120 0x31002760 0xdcb8a440 0x6a5aa8c0 0x87e22be0 0x5c932da0 0xb12bae80
-        0x871b1fa0 0x6aa39c80 0xb1d29ac0 0x5c6a19e0 0xea881560 0x07309640 0xdc419000 0x31f91320
-        0x5c3d0a20 0xb1858900 0x6af48f40 0x874c0c60 0x31ae00e0 0xdc1683c0 0x07678580 0xeadf06a0
-        """;
-
     private static uint[] Table_poly_0x4C11DB7 => __Table_poly_0x4C11DB7_str
       .EnumLines()
       .SelectMany(line => line.Split(' '))
       .ToArray(s => uint.Parse(s.AsSpan(2), NumberStyles.HexNumber));
 
-    private static uint[] Table_poly_0xEDB88320_ref_in_out => __Table_poly_0xEDB88320_ref_in_out_str
-      .EnumLines()
-      .SelectMany(line => line.Split(' '))
-      .ToArray(s => uint.Parse(s.AsSpan(2), NumberStyles.HexNumber));
-
-    private static uint[] Table_poly_0xEDB88320 => __Table_poly_0xEDB88320_str
-        .EnumLines()
-        .SelectMany(line => line.Split(' '))
-        .ToArray(s => uint.Parse(s.AsSpan(2), NumberStyles.HexNumber));
-
-    //[TestMethod]
-    //public void GetTableNormalBits_poly_0xEDB88320_ref_in_out()
-    //{
-    //    const uint poly = 0xEDB88320;
-    //    var expected_table = Table_poly_0xEDB88320_ref_in_out;
-
-    //    var actual_table = CRC32.GetTableNormalBits(poly);
-
-    //    for (var i = 0; i < actual_table.Length; i++)
-    //        if (actual_table[i] != expected_table[i])
-    //            Assert.Fail($"""
-    //                 Значение 
-    //                   Actual[{i}]=0x{actual_table[i]:x8} !=
-    //                 Expected[{i}]=0x{expected_table[i]:x8}
-    //                 """);
-    //}
-
     [TestMethod]
-    public void ForwardBackward()
+    public void GetTable_Poly_0x04C11DB7_RefIn_False()
     {
-        //// Нормальная форма:
-        //crc = table[((crc >> 24) ^ *data++) & 0xFF] ^ (crc << 8);
-        //// Отраженная форма:
-        //crc = table[(crc ^ *data++) & 0xFF] ^ (crc >> 8);
+        const uint poly = 0x04C11DB7;
+        var expected_table = Table_poly_0x4C11DB7;
 
-        const uint poly_norm = 0x04C11DB7;
-        const uint poly_ref = 0xEDB88320;
-
-        var table_0x4C11DB7_norm = Table_poly_0x4C11DB7;
-        var table_0xEDB88320_norm = Table_poly_0xEDB88320;
-        var table_0xEDB88320_norm_ref = Table_poly_0xEDB88320_ref_in_out;
-
-
-        return;
-
-        //static uint CRC_Normal(uint[] table, uint crc, ReadOnlySpan<byte> bytes)
-        //{
-        //    foreach (var b in bytes)
-        //        crc = table[((crc >> 24) ^ b) & 0xFF] ^ (crc << 8);
-        //    return crc;
-        //}
-
-        //static uint CRC_Ref(uint[] table, uint crc, ReadOnlySpan<byte> bytes)
-        //{
-        //    foreach (var b in bytes)
-        //        crc = table[(crc ^ b) & 0xFF] ^ (crc >> 8);
-        //    return crc;
-        //}
-    }
-
-    [TestMethod, Ignore]
-    public void TableCheck_POSIX()
-    {
-        // https://github.com/Michaelangel007/crc32
-
-        const uint poly = 0xEDB88320;
-        var expected_table = Table_poly_0xEDB88320;
-
-        var crc = new CRC32(poly);
-        var crc_table_info = crc.GetType().GetField("_Table", BindingFlags.Instance | BindingFlags.NonPublic)!;
-        var actual_table = (uint[])crc_table_info.GetValue(crc)!;
+        var actual_table = CRC32.GetTable(poly, RefIn: false);
 
         actual_table.Length.AssertEquals(expected_table.Length);
 
@@ -206,69 +73,393 @@ public class CRC32Tests
                      """);
     }
 
-    //[TestMethod]
-    //public void Poly_0x04C11DB7_initial_0xFFFFFFFF_data_0x313233343536373839()
-    //{
-    //    // обнаружение одинарных, двойных, пакетных и всех нечетных ошибок
-    //    //https://ru.wikibooks.org/wiki/Реализации_алгоритмов/Циклический_избыточный_код
-    //    //https://crccalc.com/?crc=123456789&method=CRC-32/ISO-HDLC&datatype=0&outtype=0
+    [TestMethod]
+    public void StaticHash_123456789_Standard_CRC32()
+    {
+        // CRC-32/ISO-HDLC стандарт: https://crccalc.com/?crc=123456789&method=CRC-32/ISO-HDLC
+        var data = "123456789"u8.ToArray();
+        const uint expected = 0xCBF43926;
 
-    //    var data = "123456789"u8.ToArray();
-    //    const uint expected = 0xCBF43926;
+        // Используем отраженный полином для стандартного CRC32
+        const uint poly = 0xEDB88320; // Отраженный вариант 0x04C11DB7
+        const uint init = 0xFFFFFFFF;
+        const uint xor = 0xFFFFFFFF;
 
-    //    //0xFC891918
-    //    const uint poly = 0x04C11DB7;
-    //    //const uint poly = 0xEDB88320;
-    //    const uint init = 0xFFFFFFFF;
-    //    const uint xor = 0xFFFFFFFF;
+        var result = CRC32.Hash(data, poly, init, RefIn: true, RefOut: false, xor);
 
-    //    var result = CRC32.Hash(data, poly, init, xor, RefIn: true, RefOut: true);
+        result.AssertEquals(expected);
+    }
 
-    //    var crc32_str = result.ToString("X8"); //
+    [TestMethod]
+    public void InstanceCompute_123456789_Standard_CRC32()
+    {
+        var data = "123456789"u8.ToArray();
+        const uint expected = 0xCBF43926;
 
-    //    result.AssertEquals(expected);
-    //}
+        var crc = new CRC32(
+            Polynomial: 0xEDB88320, // Отраженный полином
+            InitialValue: 0xFFFFFFFF,
+            XOROut: 0xFFFFFFFF,
+            RefIn: true,
+            RefOut: false);
 
-    //[TestMethod]
-    //public void Poly_0x04C11DB7_initial_0x00000000_data_0x3FA2132103_crc_0x2AB29C5EU()
-    //{
-    //    // https://crccalc.com/?crc=3FA2132103&method=CRC-32/POSIX&datatype=hex&outtype=0
-    //    var data = new byte[] { 0x3F, 0xA2, 0x13, 0x21, 0x03 };
-    //    //const uint expected_crc = 0xD54D63A1 ^ 0xFFFFFFFF;
-    //    const uint expected_crc = 0x2AB29C5EU;
+        var result = crc.Compute(data);
 
-    //    var crc = new CRC32(CRC32.Mode.POSIX);
+        result.AssertEquals(expected);
+    }
 
-    //    var actual_crc = crc.Compute(data);
-    //    //var inv_crc  = actual_crc ^ 0xFFFFFFFF;
+    [TestMethod]
+    public void IncrementalCompute_Split_Data()
+    {
+        var full_data = "123456789"u8.ToArray();
+        var part1 = "12345"u8.ToArray();
+        var part2 = "6789"u8.ToArray();
 
-    //    Debug.WriteLine("Actual   0x{0:X4}", actual_crc);
-    //    Debug.WriteLine("Expected 0x{0:X4}", expected_crc);
+        const uint expected = 0xCBF43926;
 
-    //    $"0x{actual_crc:X4}".AssertEquals($"0x{expected_crc:X4}");
-    //}
+        var crc = new CRC32(
+            Polynomial: 0xEDB88320, // Отраженный полином
+            InitialValue: 0xFFFFFFFF,
+            XOROut: 0xFFFFFFFF,
+            RefIn: true,
+            RefOut: false);
 
-    //[TestMethod]
-    //public void StaticHash()
-    //{
-    //    var data = "Hello World!"u8.ToArray();
-    //    const uint expected_crc = 0x7AC1161F;
+        crc.ContinueCompute(part1);
+        crc.ContinueCompute(part2);
+        var result = crc.GetResult();
 
-    //    var poly = CRC32.Mode.Zip;
-    //    var initial_crc = 0xFFFFFFFF;
-    //    var xor = 0xFFFFFFFF;
+        result.AssertEquals(expected);
+    }
 
-    //    var actual_crc = CRC32.Hash(data, poly, initial_crc, xor);
-    //    var crc_coder = new CRC32(poly) { State = initial_crc, XOR = xor };
-    //    var computed_crc = crc_coder.Compute(data);
+    [TestMethod]
+    public void Reset_ClearsState()
+    {
+        var data = "123456789"u8.ToArray();
+        const uint expected = 0xCBF43926;
 
-    //    var crc32_actual = $"0x{actual_crc:X8}";
-    //    var crc32_computed = $"0x{computed_crc:X8}";
-    //    var crc32_expected = $"0x{expected_crc:X8}";
-    //    crc32_actual.ToDebug();
-    //    crc32_computed.ToDebug();
-    //    crc32_expected.ToDebug();
+        var crc = new CRC32(
+            Polynomial: 0xEDB88320, // Отраженный полином
+            InitialValue: 0xFFFFFFFF,
+            XOROut: 0xFFFFFFFF,
+            RefIn: true,
+            RefOut: false);
 
-    //    crc32_actual.AssertEquals(crc32_expected);
-    //}
+        var result1 = crc.Compute(data);
+        crc.Reset();
+        var result2 = crc.Compute(data);
+
+        result1.AssertEquals(expected);
+        result2.AssertEquals(expected);
+        result1.AssertEquals(result2);
+    }
+
+    [TestMethod]
+    public void ComputeChecksumBytes_Returns_4_Bytes()
+    {
+        var data = "123456789"u8.ToArray();
+        var crc = new CRC32(
+            Polynomial: 0xEDB88320, // Отраженный полином
+            InitialValue: 0xFFFFFFFF,
+            XOROut: 0xFFFFFFFF,
+            RefIn: true,
+            RefOut: false);
+
+        var checksum_bytes = crc.ComputeChecksumBytes(data);
+
+        checksum_bytes.Length.AssertEquals(4);
+    }
+
+    [TestMethod]
+    public void EmptyArray_Gives_InitialValue_XOR()
+    {
+        var empty_data = Array.Empty<byte>();
+        const uint expected = 0x00000000; // 0xFFFFFFFF ^ 0xFFFFFFFF
+
+        var crc = new CRC32(
+            Polynomial: 0xEDB88320,
+            InitialValue: 0xFFFFFFFF,
+            XOROut: 0xFFFFFFFF,
+            RefIn: true,
+            RefOut: false);
+
+        var result = crc.Compute(empty_data);
+
+        result.AssertEquals(expected);
+    }
+
+    [TestMethod]
+    public void Mode_ZIP_HelloWorld()
+    {
+        // CRC-32 (ZIP) для "Hello World!" - используем отраженный полином
+        var data = "Hello World!"u8.ToArray();
+        const uint expected = 0x1C291CA3;
+
+        var crc = new CRC32(
+            Polynomial: 0xEDB88320, // Отраженный полином для ZIP
+            InitialValue: 0xFFFFFFFF,
+            XOROut: 0xFFFFFFFF,
+            RefIn: true,
+            RefOut: false);
+
+        var result = crc.Compute(data);
+
+        result.AssertEquals(expected);
+    }
+
+    [TestMethod]
+    public void Mode_POSIX_Test()
+    {
+        // CRC-32/POSIX для "123456789"
+        var data = "123456789"u8.ToArray();
+        const uint expected = 0x765E7680;
+
+        var result = CRC32.Hash(
+            data,
+            Polynomial: (uint)CRC32.Mode.POSIX,
+            InitialCRC: 0x00000000,
+            RefIn: false,
+            RefOut: false,
+            XOROut: 0xFFFFFFFF);
+
+        result.AssertEquals(expected);
+    }
+
+    [TestMethod]
+    public void Properties_AreCorrect()
+    {
+        const uint poly = 0x04C11DB7;
+        const uint init_value = 0xFFFFFFFF;
+        const uint xor_out = 0xFFFFFFFF;
+        const bool ref_in = true;
+        const bool ref_out = true;
+
+        var crc = new CRC32(poly, init_value, xor_out, ref_in, ref_out);
+
+        crc.Polynomial.AssertEquals(poly);
+        crc.InitialValue.AssertEquals(init_value);
+        crc.XOROut.AssertEquals(xor_out);
+        crc.RefIn.AssertEquals(ref_in);
+        crc.RefOut.AssertEquals(ref_out);
+    }
+
+    [TestMethod]
+    public void State_CanBeModified()
+    {
+        var crc = new CRC32();
+        const uint new_state = 0x12345678;
+
+        crc.State = new_state;
+
+        crc.State.AssertEquals(new_state);
+    }
+
+    [TestMethod]
+    public void MultipleCompute_Same_Results()
+    {
+        var data = "Test Data"u8.ToArray();
+        var crc = new CRC32(
+            Polynomial: 0xEDB88320,
+            InitialValue: 0xFFFFFFFF,
+            XOROut: 0xFFFFFFFF,
+            RefIn: true,
+            RefOut: false);
+
+        var result1 = crc.Compute(data);
+        var result2 = crc.Compute(data);
+
+        result1.AssertEquals(result2);
+    }
+
+    [TestMethod]
+    public void ContinueCompute_WithReset_Same_As_Compute()
+    {
+        var data = "Test Data"u8.ToArray();
+        var crc1 = new CRC32(
+            Polynomial: 0xEDB88320,
+            InitialValue: 0xFFFFFFFF,
+            XOROut: 0xFFFFFFFF,
+            RefIn: true,
+            RefOut: false);
+        
+        var crc2 = new CRC32(
+            Polynomial: 0xEDB88320,
+            InitialValue: 0xFFFFFFFF,
+            XOROut: 0xFFFFFFFF,
+            RefIn: true,
+            RefOut: false);
+
+        var result_compute = crc1.Compute(data);
+        
+        crc2.Reset();
+        crc2.ContinueCompute(data);
+        var result_continue = crc2.GetResult();
+
+        result_compute.AssertEquals(result_continue);
+    }
+
+#if NET5_0_OR_GREATER
+    [TestMethod]
+    public void Compute_Stream_Same_As_Array()
+    {
+        var data = "Test Stream Data"u8.ToArray();
+        
+        var crc_array = new CRC32(
+            Polynomial: 0xEDB88320,
+            InitialValue: 0xFFFFFFFF,
+            XOROut: 0xFFFFFFFF,
+            RefIn: true,
+            RefOut: false);
+
+        var crc_stream = new CRC32(
+            Polynomial: 0xEDB88320,
+            InitialValue: 0xFFFFFFFF,
+            XOROut: 0xFFFFFFFF,
+            RefIn: true,
+            RefOut: false);
+
+        var result_array = crc_array.Compute(data);
+
+        using var stream = new MemoryStream(data);
+        var result_stream = crc_stream.Compute(stream);
+
+        result_array.AssertEquals(result_stream);
+    }
+
+    [TestMethod]
+    public async Task ComputeAsync_Stream_Same_As_Sync()
+    {
+        var data = "Test Stream Data Async"u8.ToArray();
+        
+        var crc_sync = new CRC32(
+            Polynomial: 0xEDB88320,
+            InitialValue: 0xFFFFFFFF,
+            XOROut: 0xFFFFFFFF,
+            RefIn: true,
+            RefOut: false);
+
+        var crc_async = new CRC32(
+            Polynomial: 0xEDB88320,
+            InitialValue: 0xFFFFFFFF,
+            XOROut: 0xFFFFFFFF,
+            RefIn: true,
+            RefOut: false);
+
+        using var stream_sync = new MemoryStream(data);
+        var result_sync = crc_sync.Compute(stream_sync);
+
+        using var stream_async = new MemoryStream(data);
+        var result_async = await crc_async.ComputeAsync(stream_async);
+
+        result_sync.AssertEquals(result_async);
+    }
+
+    [TestMethod]
+    public async Task StaticHashAsync_Works()
+    {
+        var data = "123456789"u8.ToArray();
+        const uint expected_crc = 0xCBF43926; // Стандартный CRC32 для "123456789"
+
+        using var stream = new MemoryStream(data);
+        var result = await CRC32.HashAsync(
+            stream,
+            Polynomial: 0xEDB88320, // Отраженный полином
+            InitialCRC: 0xFFFFFFFF,
+            RefIn: true,
+            RefOut: false,
+            XOROut: 0xFFFFFFFF);
+
+        result.AssertEquals(expected_crc);
+    }
+
+    [TestMethod]
+    public void StaticHash_Stream_Works()
+    {
+        var data = "123456789"u8.ToArray();
+        const uint expected = 0xCBF43926;
+
+        using var stream = new MemoryStream(data);
+        var result = CRC32.Hash(
+            stream,
+            Polynomial: 0xEDB88320, // Отраженный полином
+            InitialCRC: 0xFFFFFFFF,
+            RefIn: true,
+            RefOut: false,
+            XOROut: 0xFFFFFFFF);
+
+        result.AssertEquals(expected);
+    }
+
+    [TestMethod]
+    public void Compute_Span_Works()
+    {
+        var data = "123456789"u8.ToArray();
+        const uint expected = 0xCBF43926;
+
+        var crc = new CRC32(
+            Polynomial: 0xEDB88320, // Отраженный полином
+            InitialValue: 0xFFFFFFFF,
+            XOROut: 0xFFFFFFFF,
+            RefIn: true,
+            RefOut: false);
+
+        var result = crc.Compute(data.AsSpan());
+
+        result.AssertEquals(expected);
+    }
+#endif
+
+    [TestMethod]
+    public void DefaultConstructor_Uses_ZipInv()
+    {
+        var crc = new CRC32();
+
+        crc.Polynomial.AssertEquals((uint)CRC32.Mode.ZipInv);
+    }
+
+    [TestMethod]
+    public void TableCache_Reuses_Tables()
+    {
+        const uint poly = 0x04C11DB7;
+        
+        var table1 = CRC32.GetTable(poly, RefIn: false);
+        var table2 = CRC32.GetTable(poly, RefIn: false);
+
+        // Кэш переиспользует одну и ту же таблицу
+        Assert.That.Value(ReferenceEquals(table1, table2)).IsTrue();
+    }
+
+    [TestMethod]
+    public void LargeData_Incremental_Same_As_Single()
+    {
+        var large_data = new byte[10000];
+        for (var i = 0; i < large_data.Length; i++)
+            large_data[i] = (byte)(i % 256);
+
+        var crc_single = new CRC32(
+            Polynomial: 0xEDB88320,
+            InitialValue: 0xFFFFFFFF,
+            XOROut: 0xFFFFFFFF,
+            RefIn: true,
+            RefOut: false);
+
+        var crc_incremental = new CRC32(
+            Polynomial: 0xEDB88320,
+            InitialValue: 0xFFFFFFFF,
+            XOROut: 0xFFFFFFFF,
+            RefIn: true,
+            RefOut: false);
+
+        var result_single = crc_single.Compute(large_data);
+
+        for (var i = 0; i < large_data.Length; i += 100)
+        {
+            var chunk_size = Math.Min(100, large_data.Length - i);
+            var chunk = new byte[chunk_size];
+            Array.Copy(large_data, i, chunk, 0, chunk_size);
+            crc_incremental.ContinueCompute(chunk);
+        }
+        var result_incremental = crc_incremental.GetResult();
+
+        result_single.AssertEquals(result_incremental);
+    }
 }
