@@ -1,6 +1,6 @@
 ﻿#nullable enable
-using System.Runtime.CompilerServices;
 using System.Text;
+
 using MathCore.Hash.CRC;
 
 namespace System;
@@ -11,14 +11,12 @@ public static partial class StringExtensions
     /// <param name="text">Исходная строка</param>
     /// <param name="encoding">Кодировка</param>
     /// <returns>Массив байт с хешем</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte[] ComputeSHA256(this string text, Encoding? encoding = null) => (encoding ?? Encoding.Default).GetBytes(text).ComputeSHA256();
 
     /// <summary>Вычисляет MD5-хеш строки</summary>
     /// <param name="text">Исходная строка</param>
     /// <param name="encoding">Кодировка</param>
     /// <returns>Массив байт с хешем</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte[] ComputeMD5(this string text, Encoding? encoding = null) => (encoding ?? Encoding.Default).GetBytes(text).ComputeMD5();
 
     /// <summary>Вычисляет CRC-8 строки</summary>
@@ -30,7 +28,6 @@ public static partial class StringExtensions
     /// <param name="RefOut">Отражение выходного значения</param>
     /// <param name="XOROut">Значение для XOR с окончательным CRC</param>
     /// <returns>Вычисленное значение CRC-8</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte ComputeCRC8(
         this string text,
         Encoding? encoding = null,
@@ -50,7 +47,6 @@ public static partial class StringExtensions
     /// <param name="RefOut">Отражение выходного значения</param>
     /// <param name="XOROut">Значение для XOR с окончательным CRC</param>
     /// <returns>Вычисленное значение CRC-16</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ushort ComputeCRC16(
         this string text,
         Encoding? encoding = null,
@@ -70,7 +66,6 @@ public static partial class StringExtensions
     /// <param name="RefOut">Отражение выходного значения</param>
     /// <param name="XOROut">Значение для XOR с окончательным CRC</param>
     /// <returns>Вычисленное значение CRC-32</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static uint ComputeCRC32(
         this string text,
         Encoding? encoding = null,
@@ -90,7 +85,6 @@ public static partial class StringExtensions
     /// <param name="RefOut">Отражение выходного значения</param>
     /// <param name="XOROut">Значение для XOR с окончательным CRC</param>
     /// <returns>Вычисленное значение CRC-64</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ulong ComputeCRC64(
         this string text,
         Encoding? encoding = null,
