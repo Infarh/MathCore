@@ -6,8 +6,6 @@
   <Folder Name="/.Service/">
     <File Path=".editorconfig" />
     <File Path=".github/copilot-instructions.md" />
-    <File Path=".github/workflows/publish.yml" />
-    <File Path=".github/workflows/testing.yml" />
     <File Path="BuildAndPublish.bat" />
     <File Path="BuildAndTest.bat" />
     <File Path="BuildRelease.bat" />
@@ -19,6 +17,12 @@
   <Folder Name="/.Service/.github/workflows/">
     <File Path=".github/workflows/publish.yml" />
     <File Path=".github/workflows/testing.yml" />
+  </Folder>
+  <Folder Name="/.Service/Scripts/">
+    <File Path=".scripts/nuget-ver-remote.cs" />
+    <File Path=".scripts/nuget-ver-wait.cs" />
+    <File Path=".scripts/xml-xpath.cs" />
+    <File Path="publish-nuget.bat" />
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="Tests/Benchmarks/Benchmarks.csproj">
