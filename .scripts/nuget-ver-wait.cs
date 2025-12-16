@@ -1,4 +1,4 @@
-﻿#!/usr/local/share/dotnet/dotnet run
+﻿#!/usr/local/bin/dotnet run
 // Файл file-based app скрипта для ожидания появления указанной версии NuGet пакета на сервере.
 // Использование: dotnet run .scripts/nuget-ver-wait.cs <package-name> <target-version> [-n <tries>] [-t <timeout-ms>]
 

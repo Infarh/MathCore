@@ -1,4 +1,4 @@
-﻿#!/usr/local/share/dotnet/dotnet run
+﻿#!/usr/local/bin/dotnet run
 // Файл file-based app скрипта для определения текущей версии NuGet пакета из удаленного репозитория.
 // Использование: dotnet run .scripts/nuget-ver-remote.cs <package-name>
 

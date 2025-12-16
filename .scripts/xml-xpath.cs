@@ -1,4 +1,4 @@
-﻿#!/usr/local/share/dotnet/dotnet run
+﻿#!/usr/local/bin/dotnet run
 // Файл file-based app скрипта для выполнения XPath запросов к XML файлам.
 // запуск через команду: dotnet run .scripts/xml-xpath.cs <xml-file> <xpath-query>
 
