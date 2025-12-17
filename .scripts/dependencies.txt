@@ -1,0 +1,3 @@
+..\MathCore.WPF
+..\MathCore.DSP
+..\MathCore.AI

@@ -5,25 +5,55 @@ using System.Text;
 
 namespace MathCore.Values;
 
+/// <summary>Фабрика для создания экземпляров <see cref="RollingMax{T}"/></summary>
 public static class RollingMax
 {
+    /// <summary>Создаёт новый экземпляр скользящего максимума с заполнением элементами</summary>
+    /// <typeparam name="T">Тип элементов</typeparam>
+    /// <param name="Count">Максимальное количество элементов в скользящем окне</param>
+    /// <param name="items">Начальные элементы для заполнения</param>
+    /// <returns>Новый экземпляр <see cref="RollingMax{T}"/> с добавленными элементами</returns>
     public static RollingMax<T> New<T>(int Count, IEnumerable<T> items) where T : IComparable<T> => new RollingMax<T>(Count) + items;
 
+    /// <summary>Создаёт построитель для создания скользящего максимума с пользовательским компаратором</summary>
+    /// <typeparam name="T">Тип элементов</typeparam>
+    /// <param name="Count">Максимальное количество элементов в скользящем окне</param>
+    /// <param name="items">Начальные элементы для заполнения</param>
+    /// <returns>Построитель <see cref="RollingMaxBuilder{T}"/></returns>
     public static RollingMaxBuilder<T> Build<T>(int Count, IEnumerable<T> items) => new(Count, items);
 
+    /// <summary>Построитель для создания скользящего максимума с пользовательским компаратором</summary>
+    /// <typeparam name="T">Тип элементов</typeparam>
+    /// <param name="Count">Максимальное количество элементов</param>
+    /// <param name="items">Коллекция элементов для добавления</param>
     public readonly ref struct RollingMaxBuilder<T>(int Count, IEnumerable<T> items)
     {
+        /// <summary>Создаёт новый экземпляр скользящего максимума с указанным компаратором</summary>
+        /// <param name="comparer">Функция сравнения элементов</param>
+        /// <returns>Новый экземпляр <see cref="RollingMax{T}"/> с добавленными элементами</returns>
         public RollingMax<T> New(Comparison<T> comparer) => new RollingMax<T>(Count, comparer) + items;
-
     }
 }
 
+/// <summary>Структура данных для отслеживания N максимальных элементов в скользящем окне</summary>
+/// <typeparam name="T">Тип элементов</typeparam>
+/// <param name="Buffer">Буфер для хранения элементов</param>
+/// <param name="Comparer">Компаратор для сравнения элементов</param>
+/// <param name="Inverted">Инвертировать порядок сравнения (для поиска минимумов)</param>
 public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inverted = false) : IEnumerable<T>
 {
+    /// <summary>Создаёт новый экземпляр скользящего максимума</summary>
+    /// <param name="MaxCount">Максимальное количество элементов в скользящем окне</param>
+    /// <param name="Comparer">Компаратор для сравнения элементов</param>
+    /// <param name="Inverted">Инвертировать порядок сравнения (для поиска минимумов)</param>
     public RollingMax(int MaxCount, IComparer<T>? Comparer = null, bool Inverted = false)
         :this(new T[MaxCount > 0 ? MaxCount : throw new ArgumentOutOfRangeException(nameof(MaxCount), MaxCount, $"{nameof(MaxCount)} должно быть больше 0")], Comparer, Inverted)
     { }
 
+    /// <summary>Создаёт новый экземпляр скользящего максимума с функцией сравнения</summary>
+    /// <param name="MaxCount">Максимальное количество элементов в скользящем окне</param>
+    /// <param name="comparison">Функция сравнения элементов</param>
+    /// <param name="Inverted">Инвертировать порядок сравнения (для поиска минимумов)</param>
     public RollingMax(int MaxCount, Comparison<T> comparison, bool Inverted = false)
         : this(MaxCount, Comparer<T>.Create(comparison), Inverted) { }
 
@@ -38,14 +68,20 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
         _ => Buffer
     };
 
+    /// <summary>Текущее количество элементов в скользящем окне</summary>
     public int Count => _Count;
 
+    /// <summary>Максимальное количество элементов в скользящем окне</summary>
     public int MaxCount => _Buffer.Length;
 
+    /// <summary>Инвертирован ли порядок сравнения (true для поиска минимумов)</summary>
     public bool Inverted { get; } = Inverted;
 
+    /// <summary>Интервал между максимальным и минимальным элементами в окне</summary>
     public Interval<T> Interval => new(this[-1], this[0]);
 
+    /// <summary>Доступ к элементам по индексу (0 - максимальный, -1 - минимальный)</summary>
+    /// <param name="index">Индекс элемента</param>
     public T this[int index]
     {
         get => _Buffer[GetIndex(index < 0 ? _Count + index : index, _Index, _Buffer.Length)];
@@ -53,8 +89,15 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)/*, DST*/]
-    private static int GetIndex(int Index, int BaseIndex, int MaxCount) => (MaxCount + (BaseIndex - Index) % MaxCount) % MaxCount;
+    private static int GetIndex(int Index, int BaseIndex, int MaxCount)
+    {
+        var offset = (BaseIndex - Index) % MaxCount;
+        return offset >= 0 ? offset : offset + MaxCount;
+    }
 
+    /// <summary>Добавляет элемент в скользящее окно и возвращает вытесненный максимальный элемент</summary>
+    /// <param name="value">Добавляемое значение</param>
+    /// <returns>Текущий максимальный элемент окна</returns>
     public T Add(T value)
     {
         if (_Count == 0)
@@ -102,7 +145,7 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
                             }
 
                         if (!set)
-                            this[1] = value;
+                            this[-1] = value;
 
                         break;
                 }
@@ -150,7 +193,7 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
                             }
 
                         if(!set)
-                            this[1] = value;
+                            this[-1] = value;
 
                         break;
                 }
@@ -178,6 +221,8 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
         return true;
     }
 
+    /// <summary>Добавляет коллекцию элементов в скользящее окно</summary>
+    /// <param name="items">Коллекция добавляемых элементов</param>
     public void Add(params IEnumerable<T> items)
     {
         foreach (var item in items)
@@ -185,15 +230,20 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
     }
 
 #if NET8_0_OR_GREATER
+    /// <summary>Добавляет элементы из span в скользящее окно</summary>
+    /// <param name="span">Span с элементами для добавления</param>
     public void Add(ReadOnlySpan<T> span)
     {
         foreach (var item in span)
             Add(item);
     }
 
+    /// <summary>Добавляет элементы из memory в скользящее окно</summary>
+    /// <param name="memory">Memory с элементами для добавления</param>
     public void Add(ReadOnlyMemory<T> memory) => Add(memory.Span);
 #endif
 
+    /// <summary>Очищает скользящее окно, удаляя все элементы</summary>
     public void Clear()
     {
         _Count = 0;
@@ -201,6 +251,7 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
         Array.Clear(_Buffer, 0, _Buffer.Length);
     }
 
+    /// <summary>Возвращает строковое представление скользящего окна</summary>
     public override string ToString() => _Count == 0 ? "[]" : this
         .Aggregate(
             new StringBuilder(2 + _Count * 4).Append('['),
@@ -209,18 +260,22 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
         .ToString();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    
+    /// <summary>Возвращает перечислитель для итерации по элементам скользящего окна</summary>
     public IEnumerator<T> GetEnumerator()
     {
         for (var i = 0; i < _Count; i++)
             yield return this[i];
     }
 
+    /// <summary>Добавляет элемент в скользящее окно</summary>
     public static RollingMax<T> operator +(RollingMax<T> max, T value)
     {
         max.Add(value);
         return max;
     }
 
+    /// <summary>Добавляет массив элементов в скользящее окно</summary>
     public static RollingMax<T> operator +(RollingMax<T> max, T[] value)
     {
 #if NET8_0_OR_GREATER
@@ -231,6 +286,7 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
         return max;
     }
 
+    /// <summary>Добавляет коллекцию элементов в скользящее окно</summary>
     public static RollingMax<T> operator +(RollingMax<T> max, IEnumerable<T> value)
     {
         max.Add(value);
@@ -238,12 +294,14 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
     }
 
 #if NET8_0_OR_GREATER
+    /// <summary>Добавляет элементы из span в скользящее окно</summary>
     public static RollingMax<T> operator +(RollingMax<T> max, ReadOnlySpan<T> value)
     {
         max.Add(value);
         return max;
     }
 
+    /// <summary>Добавляет элементы из memory в скользящее окно</summary>
     public static RollingMax<T> operator +(RollingMax<T> max, ReadOnlyMemory<T> value)
     {
         max.Add(value);

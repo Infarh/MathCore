@@ -12,6 +12,14 @@ namespace System.Threading.Tasks;
 
 public static class TaskEx
 {
+    extension(Task)
+    {
+        /// <summary>Создаёт ожидание для переключения выполнения в поток из пула потоков</summary>
+        /// <param name="LockContext">Если true, продолжение будет выполнено в исходном контексте синхронизации</param>
+        /// <returns>YieldAwaitableThreadPool, представляющий операцию ожидания</returns>
+        public static YieldAwaitableThreadPool Yield(bool LockContext) => new(LockContext);
+    }
+
     /// <summary>Проверка на пустоту результата выполнения задачи</summary>
     /// <typeparam name="T">Тип значения задачи</typeparam>
     /// <param name="task">Выполняемая задача</param>

@@ -6,15 +6,16 @@ namespace MathCore.Hash.CRC;
 
 // https://microsin.net/programming/arm/crc32-demystified.html
 
-public class CRC32(uint poly = (uint)CRC32.Mode.ZipInv)
+/// <summary>Класс для вычисления контрольной суммы CRC-32</summary>
+public class CRC32
 {
     [PublicAPI]
     public enum Mode : uint
     {
         /// <summary>Инвертированный полином относительно <see cref="P0x04C11DB7"/></summary>
-        P0xEDB88320 = 0xEDB88320, // 0b11101101_10111000_10000011_00100000,
+        P0xEDB88320 = 0xEDB88320,
         /// <summary>Нормальный полином относительно <see cref="P0xEDB88320"/></summary>
-        P0x04C11DB7 = 0x04C11DB7, // 0b00000100_11000001_00011101_10110111 = x32+x26+x23+x22+x16+x12+x11+x10+x8+x7+x5+x4+x2+x1+x0
+        P0x04C11DB7 = 0x04C11DB7,
         P0x1EDC6F41 = 0x1EDC6F41,
         P0xA833982B = 0xA833982B,
         P0x814141AB = 0x814141AB,
@@ -23,10 +24,202 @@ public class CRC32(uint poly = (uint)CRC32.Mode.ZipInv)
         ZipInv = P0x04C11DB7,
         Zip = P0xEDB88320,
         POSIX = P0x04C11DB7,
-        CRC32C = P0x1EDC6F41,
-        CRC32D = P0xA833982B,
-        CRC32Q = P0x814141AB,
-        XFER = P0x000000AF,
+        CRC32C = 0x1EDC6F41,
+        CRC32D = 0xA833982B,
+        CRC32Q = 0x814141AB,
+        XFER = 0x000000AF,
+    }
+
+    private static readonly ConcurrentDictionary<(uint Polynomial, bool RefIn), uint[]> __CRCTableCache = [];
+
+    private readonly uint _Polynomial;
+    private readonly uint[] _Table;
+    private readonly bool _RefIn;
+    private readonly bool _RefOut;
+    private readonly uint _InitialValue;
+    private readonly uint _XOROut;
+    
+    private uint _State;
+
+    /// <summary>Полином для вычисления CRC</summary>
+    public uint Polynomial => _Polynomial;
+
+    /// <summary>Отражение входных байтов</summary>
+    public bool RefIn => _RefIn;
+
+    /// <summary>Отражение выходного значения</summary>
+    public bool RefOut => _RefOut;
+
+    /// <summary>Начальное значение CRC</summary>
+    public uint InitialValue => _InitialValue;
+
+    /// <summary>Значение для XOR с окончательным CRC</summary>
+    public uint XOROut => _XOROut;
+
+    /// <summary>Текущее состояние вычисления CRC</summary>
+    public uint State
+    {
+        get => _State;
+        set => _State = value;
+    }
+
+    /// <summary>Инициализирует экземпляр CRC32 с заданным полиномом</summary>
+    /// <param name="Polynomial">Полином для вычисления CRC</param>
+    /// <param name="InitialValue">Начальное значение CRC (по умолчанию 0xFFFFFFFF)</param>
+    /// <param name="XOROut">Значение для XOR с окончательным CRC (по умолчанию 0xFFFFFFFF)</param>
+    /// <param name="RefIn">Отражение входных байтов (по умолчанию false)</param>
+    /// <param name="RefOut">Отражение выходного значения (по умолчанию false)</param>
+    public CRC32(
+        uint Polynomial = (uint)Mode.ZipInv,
+        uint InitialValue = 0xFFFFFFFF,
+        uint XOROut = 0xFFFFFFFF,
+        bool RefIn = false,
+        bool RefOut = false)
+    {
+        _Polynomial = Polynomial;
+        _InitialValue = InitialValue;
+        _XOROut = XOROut;
+        _RefIn = RefIn;
+        _RefOut = RefOut;
+        _State = InitialValue;
+
+        _Table = __CRCTableCache.GetOrAdd(
+            (Polynomial, RefIn),
+            key => CreateTable(key.Polynomial, key.RefIn));
+    }
+
+    /// <summary>Сбрасывает состояние CRC к начальному значению</summary>
+    public void Reset() => _State = _InitialValue;
+
+    /// <summary>Вычисляет CRC для данных и сбрасывает состояние</summary>
+    /// <param name="Data">Массив данных</param>
+    /// <returns>Вычисленное значение CRC</returns>
+    public uint Compute(byte[] Data)
+    {
+        Data.NotNull();
+        Reset();
+        ContinueCompute(Data);
+        return GetResult();
+    }
+
+#if NET5_0_OR_GREATER
+    /// <summary>Вычисляет CRC для данных и сбрасывает состояние</summary>
+    /// <param name="Data">Диапазон данных</param>
+    /// <returns>Вычисленное значение CRC</returns>
+    public uint Compute(ReadOnlySpan<byte> Data)
+    {
+        Reset();
+        ContinueCompute(Data);
+        return GetResult();
+    }
+
+    /// <summary>Вычисляет CRC для данных из потока</summary>
+    /// <param name="Stream">Поток данных</param>
+    /// <returns>Вычисленное значение CRC</returns>
+    public uint Compute(Stream Stream)
+    {
+        Stream.NotNull();
+        Reset();
+        ContinueCompute(Stream);
+        return GetResult();
+    }
+
+    /// <summary>Вычисляет CRC для данных из потока асинхронно</summary>
+    /// <param name="Stream">Поток данных</param>
+    /// <param name="Cancel">Токен отмены</param>
+    /// <returns>Вычисленное значение CRC</returns>
+    public async Task<uint> ComputeAsync(Stream Stream, CancellationToken Cancel = default)
+    {
+        Stream.NotNull();
+        Reset();
+        await ContinueComputeAsync(Stream, Cancel).ConfigureAwait(false);
+        return GetResult();
+    }
+#endif
+
+    /// <summary>Продолжает вычисление CRC для новых данных</summary>
+    /// <param name="Data">Массив данных</param>
+    public void ContinueCompute(byte[] Data)
+    {
+        Data.NotNull();
+
+        if (_RefIn)
+            foreach (var b in Data)
+                _State = _Table[(_State ^ b) & 0xFF] ^ (_State >> 8);
+        else
+            foreach (var b in Data)
+            {
+                var index = ((_State >> 24) ^ b) & 0xFF;
+                _State = (_State << 8) ^ _Table[index];
+            }
+    }
+
+#if NET5_0_OR_GREATER
+    /// <summary>Продолжает вычисление CRC для новых данных</summary>
+    /// <param name="Data">Диапазон данных</param>
+    public void ContinueCompute(ReadOnlySpan<byte> Data)
+    {
+        if (_RefIn)
+            foreach (var b in Data)
+                _State = _Table[(_State ^ b) & 0xFF] ^ (_State >> 8);
+        else
+            foreach (var b in Data)
+            {
+                var index = ((_State >> 24) ^ b) & 0xFF;
+                _State = (_State << 8) ^ _Table[index];
+            }
+    }
+
+    /// <summary>Продолжает вычисление CRC для данных из потока</summary>
+    /// <param name="Stream">Поток данных</param>
+    public void ContinueCompute(Stream Stream)
+    {
+        Stream.NotNull();
+
+        int bytes_read;
+        Span<byte> buffer = stackalloc byte[8192];
+
+        while ((bytes_read = Stream.Read(buffer)) > 0)
+            ContinueCompute(buffer[..bytes_read]);
+    }
+
+    /// <summary>Продолжает вычисление CRC для данных из потока асинхронно</summary>
+    /// <param name="Stream">Поток данных</param>
+    /// <param name="Cancel">Токен отмены</param>
+    public async Task ContinueComputeAsync(Stream Stream, CancellationToken Cancel = default)
+    {
+        Stream.NotNull();
+
+        int bytes_read;
+        var buffer = new byte[8192];
+
+        while ((bytes_read = await Stream.ReadAsync(buffer, Cancel).ConfigureAwait(false)) > 0)
+            ContinueCompute(buffer.AsSpan(0, bytes_read));
+    }
+#endif
+
+    /// <summary>Получает итоговое значение CRC</summary>
+    /// <returns>Вычисленное значение CRC</returns>
+    public uint GetResult()
+    {
+        var crc = _State;
+        if (_RefOut)
+            crc = ReflectUInt(crc);
+        return crc ^ _XOROut;
+    }
+
+    /// <summary>Получает итоговое значение CRC в виде массива байтов</summary>
+    /// <returns>Массив из 4 байтов с вычисленным значением CRC</returns>
+    public byte[] ComputeChecksumBytes(byte[] Data)
+    {
+        var crc = Compute(Data);
+        return
+        [
+            (byte)(crc >> 24),
+            (byte)(crc >> 16),
+            (byte)(crc >> 8),
+            (byte)crc
+        ];
     }
 
     /// <summary>Отражение байта</summary>
@@ -55,173 +248,174 @@ public class CRC32(uint poly = (uint)CRC32.Mode.ZipInv)
         return x;
     }
 
-    /// <summary>Генерирует таблицу коэффициентов для вычисления CRC</summary>
-    /// <param name="poly">Полином для вычисления CRC</param>
-    /// <param name="RefIn">Отражение входных байтов</param>
-    /// <returns>Таблица коэффициентов для вычисления CRC</returns>
-    public static uint[] GetTable(uint poly, bool RefIn) => FillTable(new uint[256], poly, RefIn);
-
-    /// <summary>Заполняет таблицу коэффициентов для вычисления CRC</summary>
-    /// <param name="table">Таблица для заполнения</param>
-    /// <param name="poly">Полином для вычисления CRC</param>
-    /// <param name="RefIn">Отражение входных байтов</param>
-    /// <returns>Заполненная таблица коэффициентов для вычисления CRC</returns>
-    public static uint[] FillTable(uint[] table, uint poly, bool RefIn)
+    private static uint[] CreateTable(uint polynomial, bool refIn)
     {
-        for (uint i = 0; i < 256; i++)
-        {
-            ref var entry = ref table[i];
-            entry = RefIn ? ReflectUInt(i) : i;
-
-            entry <<= 24;
-            for (var j = 0; j < 8; j++)
-                entry = (entry & 0x80000000) != 0
-                    ? (entry << 1) ^ poly
-                    : entry << 1;
-
-            if (RefIn)
-                entry = ReflectUInt(entry);
-        }
-
-        return table;
+        var table = new uint[256];
+        return FillTable(table, polynomial, refIn);
     }
 
-    private static readonly ConcurrentDictionary<(uint Polynomial, bool RefIn), uint[]> __CRCTableCache = [];
+    /// <summary>Генерирует таблицу коэффициентов для вычисления CRC</summary>
+    /// <param name="Polynomial">Полином для вычисления CRC</param>
+    /// <param name="RefIn">Отражение входных байтов</param>
+    /// <returns>Таблица коэффициентов для вычисления CRC</returns>
+    public static uint[] GetTable(uint Polynomial, bool RefIn) =>
+        __CRCTableCache.GetOrAdd(
+            (Polynomial, RefIn),
+            key => CreateTable(key.Polynomial, key.RefIn));
 
-    /// <summary>Синхронный метод-расширение для вычисления CRC-32 для потока</summary>
-    /// <param name="stream">Поток, для которого вычисляется CRC-32</param>
-    /// <param name="poly">Полином для вычисления CRC-32</param>
-    /// <param name="CRC">Начальное значение суммы</param>
+    /// <summary>Заполняет таблицу коэффициентов для вычисления CRC</summary>
+    /// <param name="Table">Таблица для заполнения</param>
+    /// <param name="Polynomial">Полином для вычисления CRC</param>
+    /// <param name="RefIn">Отражение входных байтов</param>
+    /// <returns>Заполненная таблица коэффициентов для вычисления CRC</returns>
+    public static uint[] FillTable(uint[] Table, uint Polynomial, bool RefIn)
+    {
+        if (RefIn)
+        {
+            for (uint i = 0; i < 256; i++)
+            {
+                var crc = i;
+                for (var j = 0; j < 8; j++)
+                    crc = (crc & 1) != 0
+                        ? (crc >> 1) ^ Polynomial
+                        : crc >> 1;
+                Table[i] = crc;
+            }
+        }
+        else
+        {
+            for (uint i = 0; i < 256; i++)
+            {
+                var crc = i << 24;
+                for (var j = 0; j < 8; j++)
+                    crc = (crc & 0x80000000) != 0
+                        ? (crc << 1) ^ Polynomial
+                        : crc << 1;
+                Table[i] = crc;
+            }
+        }
+
+        return Table;
+    }
+
+    /// <summary>Статический метод для вычисления CRC-32 для массива байт</summary>
+    /// <param name="Data">Массив данных</param>
+    /// <param name="Polynomial">Полином для вычисления CRC-32</param>
+    /// <param name="InitialCRC">Начальное значение суммы</param>
     /// <param name="RefIn">Отражение входных байтов</param>
     /// <param name="RefOut">Отражение выходного значения CRC</param>
     /// <param name="XOROut">Значение для выполнения XOR с окончательным CRC</param>
     /// <returns>Значение CRC-32</returns>
     public static uint Hash(
-        byte[] data,
-        uint poly = 0x04C11DB7,
-        uint CRC = 0xFFFFFF,
+        byte[] Data,
+        uint Polynomial = 0x04C11DB7,
+        uint InitialCRC = 0xFFFFFFFF,
         bool RefIn = false,
         bool RefOut = false,
-        uint XOROut = 0xFFFFFF)
+        uint XOROut = 0xFFFFFFFF)
     {
-        data.NotNull();
+        Data.NotNull();
 
-        var table = __CRCTableCache
-            .GetOrAdd(
-                (poly, RefIn),
-                key => GetTable(key.Polynomial, key.RefIn));
+        var table = GetTable(Polynomial, RefIn);
+        var crc = InitialCRC;
 
         if (RefIn)
-            foreach (var b in data)
-            {
-                var index = ((CRC ^ (uint)(ReflectByte(b) << 24)) & 0xFF000000) >> 24;
-                CRC = (CRC << 8) ^ table[index];
-            }
+            foreach (var b in Data)
+                crc = table[(crc ^ b) & 0xFF] ^ (crc >> 8);
         else
-            foreach (var b in data)
+            foreach (var b in Data)
             {
-                var index = ((CRC ^ (uint)(b << 24)) & 0xFF000000) >> 24;
-                CRC = (CRC << 8) ^ table[index];
+                var index = ((crc >> 24) ^ b) & 0xFF;
+                crc = (crc << 8) ^ table[index];
             }
 
         if (RefOut)
-            CRC = ReflectUInt(CRC);
+            crc = ReflectUInt(crc);
 
-        return CRC ^ XOROut;
+        return crc ^ XOROut;
     }
 
 #if NET5_0_OR_GREATER
-    /// <summary>Синхронный метод-расширение для вычисления CRC-32 для потока</summary>
-    /// <param name="stream">Поток, для которого вычисляется CRC-32</param>
-    /// <param name="poly">Полином для вычисления CRC-32</param>
-    /// <param name="CRC">Начальное значение суммы</param>
+    /// <summary>Статический метод для вычисления CRC-32 для потока</summary>
+    /// <param name="Stream">Поток, для которого вычисляется CRC-32</param>
+    /// <param name="Polynomial">Полином для вычисления CRC-32</param>
+    /// <param name="InitialCRC">Начальное значение суммы</param>
     /// <param name="RefIn">Отражение входных байтов</param>
     /// <param name="RefOut">Отражение выходного значения CRC</param>
     /// <param name="XOROut">Значение для выполнения XOR с окончательным CRC</param>
     /// <returns>Значение CRC-32</returns>
     public static uint Hash(
-        Stream stream,
-        uint poly = 0x04C11DB7,
-        uint CRC = 0xFFFFFF,
+        Stream Stream,
+        uint Polynomial = 0x04C11DB7,
+        uint InitialCRC = 0xFFFFFFFF,
         bool RefIn = false,
         bool RefOut = false,
-        uint XOROut = 0xFFFFFF)
+        uint XOROut = 0xFFFFFFFF)
     {
-        stream.NotNull();
+        Stream.NotNull();
 
-        var table = __CRCTableCache
-            .GetOrAdd(
-                (poly, RefIn),
-                key => GetTable(key.Polynomial, key.RefIn));
-
+        var table = GetTable(Polynomial, RefIn);
+        var crc = InitialCRC;
         int bytes_read;
         Span<byte> buffer = stackalloc byte[8192];
 
-        while ((bytes_read = stream.Read(buffer)) > 0)
+        while ((bytes_read = Stream.Read(buffer)) > 0)
             if (RefIn)
                 for (var i = 0; i < bytes_read; i++)
-                {
-                    var index = ((CRC ^ (uint)(ReflectByte(buffer[i]) << 24)) & 0xFF000000) >> 24;
-                    CRC = (CRC << 8) ^ table[index];
-                }
+                    crc = table[(crc ^ buffer[i]) & 0xFF] ^ (crc >> 8);
             else
                 for (var i = 0; i < bytes_read; i++)
                 {
-                    var index = ((CRC ^ (uint)(buffer[i] << 24)) & 0xFF000000) >> 24;
-                    CRC = (CRC << 8) ^ table[index];
+                    var index = ((crc >> 24) ^ buffer[i]) & 0xFF;
+                    crc = (crc << 8) ^ table[index];
                 }
 
         if (RefOut)
-            CRC = ReflectUInt(CRC);
+            crc = ReflectUInt(crc);
 
-        return CRC ^ XOROut;
+        return crc ^ XOROut;
     }
 
-    /// <summary>Метод-расширение для вычисления CRC-32 для потока</summary>
-    /// <param name="stream">Поток, для которого вычисляется CRC-32</param>
-    /// <param name="CRC">Начальное значение суммы</param>
-    /// <param name="poly">Полином для вычисления CRC-32</param>
+    /// <summary>Асинхронный метод для вычисления CRC-32 для потока</summary>
+    /// <param name="Stream">Поток, для которого вычисляется CRC-32</param>
+    /// <param name="Polynomial">Полином для вычисления CRC-32</param>
+    /// <param name="InitialCRC">Начальное значение суммы</param>
     /// <param name="RefIn">Отражение входных байтов</param>
     /// <param name="RefOut">Отражение выходного значения CRC</param>
-    /// <param name="XorOut">Значение для выполнения XOR с окончательным CRC</param>
-    /// <param name="Cancel">Отмена операции</param>
+    /// <param name="XOROut">Значение для выполнения XOR с окончательным CRC</param>
+    /// <param name="Cancel">Токен отмены операции</param>
     /// <returns>Значение CRC-32</returns>
-    public static async Task<uint> GetCRC32Async(
-        Stream stream,
-        uint CRC = 0xFFFFFFFF,
-        uint poly = 0x04C11DB7,
+    public static async Task<uint> HashAsync(
+        Stream Stream,
+        uint Polynomial = 0x04C11DB7,
+        uint InitialCRC = 0xFFFFFFFF,
         bool RefIn = false,
         bool RefOut = false,
-        uint XorOut = 0xFFFFFFFF,
+        uint XOROut = 0xFFFFFFFF,
         CancellationToken Cancel = default)
     {
-        stream.NotNull();
+        Stream.NotNull();
 
-        var table = __CRCTableCache.GetOrAdd(
-            (poly, RefIn),
-            key => GetTable(key.Polynomial, key.RefIn));
-
+        var table = GetTable(Polynomial, RefIn);
+        var crc = InitialCRC;
         int bytes_read;
         var buffer = new byte[8192];
 
-        while ((bytes_read = await stream.ReadAsync(buffer, Cancel).ConfigureAwait(false)) > 0)
+        while ((bytes_read = await Stream.ReadAsync(buffer, Cancel).ConfigureAwait(false)) > 0)
             if (RefIn)
                 for (var i = 0; i < bytes_read; i++)
-                {
-                    var index = ((CRC ^ (uint)(ReflectByte(buffer[i]) << 24)) & 0xFF000000) >> 24;
-                    CRC = (CRC << 8) ^ table[index];
-                }
+                    crc = table[(crc ^ buffer[i]) & 0xFF] ^ (crc >> 8);
             else
                 for (var i = 0; i < bytes_read; i++)
                 {
-                    var index = ((CRC ^ (uint)(buffer[i] << 24)) & 0xFF000000) >> 24;
-                    CRC = (CRC << 8) ^ table[index];
+                    var index = ((crc >> 24) ^ buffer[i]) & 0xFF;
+                    crc = (crc << 8) ^ table[index];
                 }
 
         if (RefOut)
-            CRC = ReflectUInt(CRC);
+            crc = ReflectUInt(crc);
 
-        return CRC ^ XorOut;
+        return crc ^ XOROut;
     }
 #endif
 }

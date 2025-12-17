@@ -12,9 +12,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.94.1</Version>
+    <Version>0.0.94.3</Version>
     <PackageReleaseNotes>
-        Миграция на .NET 10.0
+        Оптимизация работы, комментарии
     </PackageReleaseNotes>
   </PropertyGroup>
 

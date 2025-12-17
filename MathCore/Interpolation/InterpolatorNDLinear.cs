@@ -21,8 +21,10 @@ public class InterpolatorNDLinear
         bool Header = true,
         char Separator = ';',
         bool SkipWrongLines = true,
-        Func<double[], double, bool>? ValueSelector = null)
-        => LoadCSV(new FileInfo(FilePath), Header, Separator, SkipWrongLines, ValueSelector);
+        Func<double[], double, bool>? ValueSelector = null,
+        bool ShapeResult = false
+        )
+        => LoadCSV(new FileInfo(FilePath), Header, Separator, SkipWrongLines, ValueSelector, ShapeResult);
 
     /// <summary>Загрузить интерполятор из CSV файла</summary>
     /// <param name="file">Файл</param>
@@ -36,7 +38,8 @@ public class InterpolatorNDLinear
         bool Header = true,
         char Separator = ';',
         bool SkipWrongLines = true,
-        Func<double[], double, bool>? ValueSelector = null)
+        Func<double[], double, bool>? ValueSelector = null,
+        bool ShapeResult = false)
     {
         if (string.Equals(file.Extension, ".zip", StringComparison.OrdinalIgnoreCase))
         {
@@ -62,7 +65,7 @@ public class InterpolatorNDLinear
         }
 
         using (var reader = file.OpenText())
-            return LoadCSV(reader, Header, Separator, SkipWrongLines, ValueSelector);
+            return LoadCSV(reader, Header, Separator, SkipWrongLines, ValueSelector, ShapeResult);
     }
 
     /// <summary>Загрузить интерполятор из CSV файла</summary>
@@ -77,7 +80,8 @@ public class InterpolatorNDLinear
         bool Header = true,
         char Separator = ';',
         bool SkipWrongLines = true,
-        Func<double[], double, bool>? ValueSelector = null)
+        Func<double[], double, bool>? ValueSelector = null,
+        bool ShapeResult = false)
     {
         if (Header)
             if (reader.ReadLine() is null)
@@ -155,11 +159,14 @@ public class InterpolatorNDLinear
             ValueTreeNode.Add(nodes, argument, value);
         }
 
-        return new(arguments_count, nodes);
+        return new(arguments_count, nodes, ShapeResult);
     }
 
     private readonly int _ArgumentsCount;
     private readonly List<ValueTreeNode> _Nodes;
+    private readonly bool _ShapeResult;
+    private readonly double _MinValue;
+    private readonly double _MaxValue;
 
     /// <summary>Внутренний класс для представления узла дерева значений</summary>
     private class ValueTreeNode(double Value, List<ValueTreeNode>? Childs = null) :
@@ -303,10 +310,21 @@ public class InterpolatorNDLinear
     /// <summary>Конструктор интерполятора</summary>
     /// <param name="ArgumentsCount">Количество аргументов</param>
     /// <param name="nodes">Список узлов</param>
-    private InterpolatorNDLinear(int ArgumentsCount, List<ValueTreeNode> nodes)
+    private InterpolatorNDLinear(int ArgumentsCount, List<ValueTreeNode> nodes, bool ShapeResult = false)
     {
         _ArgumentsCount = ArgumentsCount;
         _Nodes = nodes;
+        _ShapeResult = ShapeResult;
+
+        _MinValue = double.PositiveInfinity;
+        _MaxValue = double.NegativeInfinity;
+
+        foreach (var node in nodes)
+        {
+            var value = node.Value;
+            _MinValue = Math.Min(value, _MinValue);
+            _MaxValue = Math.Max(value, _MaxValue);
+        }
     }
 
     /// <summary>Получить значение по аргументам</summary>
@@ -323,7 +341,7 @@ public class InterpolatorNDLinear
         var index = nodes.SearchBinaryValue(x);
 
         if (index >= 0)
-            return nodes[index].GetValue(xx);
+            return Shape(nodes[index].GetValue(xx));
 
         var i1 = Math.Max(0, ~index - 1);
         var i2 = Math.Min(nodes.Count - 1, i1 + 1);
@@ -334,7 +352,7 @@ public class InterpolatorNDLinear
         var a = node1.Value;
         var b = node2.Value;
 
-        if (a == b) return node1.GetValue(xx);
+        if (a == b) return Shape(node1.GetValue(xx));
 
         var kx = (x - a) / (b - a);
 
@@ -342,6 +360,8 @@ public class InterpolatorNDLinear
         var y2 = node2.GetValue(xx);
 
         var y = y1 * (1 - kx) + y2 * kx;
-        return y;
+        return Shape(y);
     }
+
+    private double Shape(double value) => _ShapeResult ? Math.Min(_MaxValue, Math.Max(_MinValue, value)) : value;
 }

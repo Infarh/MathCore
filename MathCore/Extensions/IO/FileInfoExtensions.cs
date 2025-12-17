@@ -196,6 +196,10 @@ public static class FileInfoExtensions
         return hash;
     }
 
+    /// <summary>Асинхронно вычисляет хеш-сумму MD5</summary>
+    /// <param name="file">Файл, контрольную сумму которого надо вычислить</param>
+    /// <param name="Cancel">Токен отмены операции</param>
+    /// <returns>Массив байт контрольной суммы</returns>
     public static async Task<byte[]> ComputeMD5Async(this FileInfo file, CancellationToken Cancel = default)
     {
 #if NET8_0_OR_GREATER
@@ -206,6 +210,192 @@ public static class FileInfoExtensions
         var hash   = await MD5.ComputeAsync(stream, Cancel).ConfigureAwait(false);
         return hash;
     }
+
+#if NET5_0_OR_GREATER
+    /// <summary>Вычисляет CRC-8 для файла</summary>
+    /// <param name="file">Файл для вычисления CRC-8</param>
+    /// <param name="Polynomial">Полином для вычисления CRC-8 (по умолчанию 0x07)</param>
+    /// <param name="InitialValue">Начальное значение CRC (по умолчанию 0x00)</param>
+    /// <param name="XOROut">Значение для XOR с окончательным CRC (по умолчанию 0x00)</param>
+    /// <param name="RefIn">Отражение входных байтов (по умолчанию false)</param>
+    /// <param name="RefOut">Отражение выходного значения (по умолчанию false)</param>
+    /// <returns>Вычисленное значение CRC-8</returns>
+    public static byte ComputeCRC8(
+        this FileInfo file,
+        byte Polynomial = 0x07,
+        byte InitialValue = 0x00,
+        byte XOROut = 0x00,
+        bool RefIn = false,
+        bool RefOut = false)
+    {
+        using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
+        return CRC8.Hash(stream, Polynomial, InitialValue, RefIn, RefOut, XOROut);
+    }
+
+    /// <summary>Асинхронно вычисляет CRC-8 для файла</summary>
+    /// <param name="file">Файл для вычисления CRC-8</param>
+    /// <param name="Polynomial">Полином для вычисления CRC-8 (по умолчанию 0x07)</param>
+    /// <param name="InitialValue">Начальное значение CRC (по умолчанию 0x00)</param>
+    /// <param name="XOROut">Значение для XOR с окончательным CRC (по умолчанию 0x00)</param>
+    /// <param name="RefIn">Отражение входных байтов (по умолчанию false)</param>
+    /// <param name="RefOut">Отражение выходного значения (по умолчанию false)</param>
+    /// <param name="Cancel">Токен отмены операции</param>
+    /// <returns>Вычисленное значение CRC-8</returns>
+    public static async Task<byte> ComputeCRC8Async(
+        this FileInfo file,
+        byte Polynomial = 0x07,
+        byte InitialValue = 0x00,
+        byte XOROut = 0x00,
+        bool RefIn = false,
+        bool RefOut = false,
+        CancellationToken Cancel = default)
+    {
+#if NET8_0_OR_GREATER
+        await using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
+#else
+        using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
+#endif
+        return await CRC8.HashAsync(stream, Polynomial, InitialValue, RefIn, RefOut, XOROut, Cancel).ConfigureAwait(false);
+    }
+
+    /// <summary>Вычисляет CRC-16 для файла</summary>
+    /// <param name="file">Файл для вычисления CRC-16</param>
+    /// <param name="Polynomial">Полином для вычисления CRC-16 (по умолчанию 0x1021 - XMODEM)</param>
+    /// <param name="InitialValue">Начальное значение CRC (по умолчанию 0x0000)</param>
+    /// <param name="XOROut">Значение для XOR с окончательным CRC (по умолчанию 0x0000)</param>
+    /// <param name="RefIn">Отражение входных байтов (по умолчанию false)</param>
+    /// <param name="RefOut">Отражение выходного значения (по умолчанию false)</param>
+    /// <returns>Вычисленное значение CRC-16</returns>
+    public static ushort ComputeCRC16(
+        this FileInfo file,
+        ushort Polynomial = 0x1021,
+        ushort InitialValue = 0x0000,
+        ushort XOROut = 0x0000,
+        bool RefIn = false,
+        bool RefOut = false)
+    {
+        using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
+        return CRC16.Hash(stream, Polynomial, InitialValue, RefIn, RefOut, XOROut);
+    }
+
+    /// <summary>Асинхронно вычисляет CRC-16 для файла</summary>
+    /// <param name="file">Файл для вычисления CRC-16</param>
+    /// <param name="Polynomial">Полином для вычисления CRC-16 (по умолчанию 0x1021 - XMODEM)</param>
+    /// <param name="InitialValue">Начальное значение CRC (по умолчанию 0x0000)</param>
+    /// <param name="XOROut">Значение для XOR с окончательным CRC (по умолчанию 0x0000)</param>
+    /// <param name="RefIn">Отражение входных байтов (по умолчанию false)</param>
+    /// <param name="RefOut">Отражение выходного значения (по умолчанию false)</param>
+    /// <param name="Cancel">Токен отмены операции</param>
+    /// <returns>Вычисленное значение CRC-16</returns>
+    public static async Task<ushort> ComputeCRC16Async(
+        this FileInfo file,
+        ushort Polynomial = 0x1021,
+        ushort InitialValue = 0x0000,
+        ushort XOROut = 0x0000,
+        bool RefIn = false,
+        bool RefOut = false,
+        CancellationToken Cancel = default)
+    {
+#if NET8_0_OR_GREATER
+        await using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
+#else
+        using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
+#endif
+        return await CRC16.HashAsync(stream, Polynomial, InitialValue, RefIn, RefOut, XOROut, Cancel).ConfigureAwait(false);
+    }
+
+    /// <summary>Вычисляет CRC-32 для файла</summary>
+    /// <param name="file">Файл для вычисления CRC-32</param>
+    /// <param name="Polynomial">Полином для вычисления CRC-32 (по умолчанию 0x04C11DB7 - стандартный)</param>
+    /// <param name="InitialValue">Начальное значение CRC (по умолчанию 0xFFFFFFFF)</param>
+    /// <param name="XOROut">Значение для XOR с окончательным CRC (по умолчанию 0xFFFFFFFF)</param>
+    /// <param name="RefIn">Отражение входных байтов (по умолчанию false)</param>
+    /// <param name="RefOut">Отражение выходного значения (по умолчанию false)</param>
+    /// <returns>Вычисленное значение CRC-32</returns>
+    public static uint ComputeCRC32(
+        this FileInfo file,
+        uint Polynomial = 0x04C11DB7,
+        uint InitialValue = 0xFFFFFFFF,
+        uint XOROut = 0xFFFFFFFF,
+        bool RefIn = false,
+        bool RefOut = false)
+    {
+        using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
+        return CRC32.Hash(stream, Polynomial, InitialValue, RefIn, RefOut, XOROut);
+    }
+
+    /// <summary>Асинхронно вычисляет CRC-32 для файла</summary>
+    /// <param name="file">Файл для вычисления CRC-32</param>
+    /// <param name="Polynomial">Полином для вычисления CRC-32 (по умолчанию 0x04C11DB7 - стандартный)</param>
+    /// <param name="InitialValue">Начальное значение CRC (по умолчанию 0xFFFFFFFF)</param>
+    /// <param name="XOROut">Значение для XOR с окончательным CRC (по умолчанию 0xFFFFFFFF)</param>
+    /// <param name="RefIn">Отражение входных байтов (по умолчанию false)</param>
+    /// <param name="RefOut">Отражение выходного значения (по умолчанию false)</param>
+    /// <param name="Cancel">Токен отмены операции</param>
+    /// <returns>Вычисленное значение CRC-32</returns>
+    public static async Task<uint> ComputeCRC32Async(
+        this FileInfo file,
+        uint Polynomial = 0x04C11DB7,
+        uint InitialValue = 0xFFFFFFFF,
+        uint XOROut = 0xFFFFFFFF,
+        bool RefIn = false,
+        bool RefOut = false,
+        CancellationToken Cancel = default)
+    {
+#if NET8_0_OR_GREATER
+        await using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
+#else
+        using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
+#endif
+        return await CRC32.HashAsync(stream, Polynomial, InitialValue, RefIn, RefOut, XOROut, Cancel).ConfigureAwait(false);
+    }
+
+    /// <summary>Вычисляет CRC-64 для файла</summary>
+    /// <param name="file">Файл для вычисления CRC-64</param>
+    /// <param name="Polynomial">Полином для вычисления CRC-64 (по умолчанию 0x000000000000001B - ISO3309)</param>
+    /// <param name="InitialValue">Начальное значение CRC (по умолчанию 0x0000000000000000)</param>
+    /// <param name="XOROut">Значение для XOR с окончательным CRC (по умолчанию 0x0000000000000000)</param>
+    /// <param name="RefIn">Отражение входных байтов (по умолчанию false)</param>
+    /// <param name="RefOut">Отражение выходного значения (по умолчанию false)</param>
+    /// <returns>Вычисленное значение CRC-64</returns>
+    public static ulong ComputeCRC64(
+        this FileInfo file,
+        ulong Polynomial = 0x000000000000001B,
+        ulong InitialValue = 0x0000000000000000,
+        ulong XOROut = 0x0000000000000000,
+        bool RefIn = false,
+        bool RefOut = false)
+    {
+        using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
+        return CRC64.Hash(stream, Polynomial, InitialValue, RefIn, RefOut, XOROut);
+    }
+
+    /// <summary>Асинхронно вычисляет CRC-64 для файла</summary>
+    /// <param name="file">Файл для вычисления CRC-64</param>
+    /// <param name="Polynomial">Полином для вычисления CRC-64 (по умолчанию 0x000000000000001B - ISO3309)</param>
+    /// <param name="InitialValue">Начальное значение CRC (по умолчанию 0x0000000000000000)</param>
+    /// <param name="XOROut">Значение для XOR с окончательным CRC (по умолчанию 0x0000000000000000)</param>
+    /// <param name="RefIn">Отражение входных байтов (по умолчанию false)</param>
+    /// <param name="RefOut">Отражение выходного значения (по умолчанию false)</param>
+    /// <param name="Cancel">Токен отмены операции</param>
+    /// <returns>Вычисленное значение CRC-64</returns>
+    public static async Task<ulong> ComputeCRC64Async(
+        this FileInfo file,
+        ulong Polynomial = 0x000000000000001B,
+        ulong InitialValue = 0x0000000000000000,
+        ulong XOROut = 0x0000000000000000,
+        bool RefIn = false,
+        bool RefOut = false,
+        CancellationToken Cancel = default)
+    {
+#if NET8_0_OR_GREATER
+        await using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
+#else
+        using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
+#endif
+        return await CRC64.HashAsync(stream, Polynomial, InitialValue, RefIn, RefOut, XOROut, Cancel).ConfigureAwait(false);
+    }
+#endif
 
     public static IEnumerable<byte> ReadBytes(this FileInfo file)
     {
@@ -374,7 +564,7 @@ public static class FileInfoExtensions
     public static Process? Execute(this FileInfo File, string Args = "", bool UseShellExecute = true) => Process.Start(new ProcessStartInfo(UseShellExecute ? File.ToString() : File.FullName, Args) { UseShellExecute = UseShellExecute });
 
     /// <summary>Получить перечисление строк файла без его загрузки в память целиком</summary>
-    /// <param name="File">Файл, строки которого требуется прочитать</param>
+    /// <param name="File">Файл, строки которых требуется прочитать</param>
     /// <returns>Перечисление строк файла</returns>
     public static IEnumerable<string?> GetStringLines(this FileInfo File)
     {

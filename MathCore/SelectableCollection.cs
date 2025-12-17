@@ -308,7 +308,7 @@ public class SelectableCollection<T> :
 
     bool IList.IsReadOnly => (_Collection as IList)?.IsReadOnly ?? true;
 
-    object IList.this[int index] { get => this[index]; set => this[index] = (T)value; }
+    object? IList.this[int index] { get => this[index]; set => this[index] = (T)value; }
 
     int IList.Add(object? value)
     {
@@ -335,14 +335,14 @@ public class SelectableCollection<T> :
         if (value is { } && !value.GetType().IsAssignableFrom(typeof(T)))
             throw new InvalidCastException($"Значение типа {value.GetType()} не может быть присвоено переменной типа {typeof(T)}");
 
-        switch (_Collection)
+        return _Collection switch
         {
-            default: throw new NotSupportedException($"Коллекция {_Collection.GetType()} не поддерживает операцию ILIst.Contains(object)");
-            case T[] array: return array.Contains((T?)value);
-            case List<T> list: return list.Contains((T?)value);
-            case IList<T> list: return list.Contains((T?)value);
-            case IList list: return list.Contains((T?)value);
-        }
+            T[] array => array.Contains((T?)value),
+            List<T> list => list.Contains((T?)value),
+            IList<T> list => list.Contains((T?)value),
+            IList list => list.Contains((T?)value),
+            _ => throw new NotSupportedException($"Коллекция {_Collection.GetType()} не поддерживает операцию ILIst.Contains(object)"),
+        };
     }
 
     int IList.IndexOf(object? value)
@@ -350,14 +350,14 @@ public class SelectableCollection<T> :
         if (value is { } && !value.GetType().IsAssignableFrom(typeof(T)))
             throw new InvalidCastException($"Значение типа {value.GetType()} не может быть присвоено переменной типа {typeof(T)}");
 
-        switch (_Collection)
+        return _Collection switch
         {
-            default: throw new NotSupportedException($"Коллекция {_Collection.GetType()} не поддерживает операцию ILIst.Contains(object)");
-            case T[] array: return Array.IndexOf(array, value);
-            case List<T> list: return list.IndexOf((T?)value);
-            case IList<T> list: return list.IndexOf((T?)value);
-            case IList list: return list.IndexOf((T?)value);
-        }
+            T[] array => Array.IndexOf(array, value),
+            List<T> list => list.IndexOf((T?)value),
+            IList<T> list => list.IndexOf((T?)value),
+            IList list => list.IndexOf((T?)value),
+            _ => throw new NotSupportedException($"Коллекция {_Collection.GetType()} не поддерживает операцию ILIst.Contains(object)"),
+        };
     }
 
     void IList.Insert(int index, object? value)

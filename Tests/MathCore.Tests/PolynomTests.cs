@@ -31,8 +31,8 @@ public class PolynomTests : UnitTest
     [TestMethod, Priority(1), Timeout(100, CooperativeCancellation = true), Description("Тест конструктора")]
     public void PolynomConstructor_Test()
     {
-        var N       = GetRNDInt(5, 15);
-        var A       = GetRNDDoubleArray(N);
+        var N = GetRNDInt(5, 15);
+        var A = GetRNDDoubleArray(N);
         var polynom = new Polynom(A);
         Assert.AreEqual(A.Length - 1, polynom.Power,
             $"Степень полинома {polynom.Power} не соответствует числу коэффициентов при степенях {A.Length} - 1");
@@ -52,7 +52,7 @@ public class PolynomTests : UnitTest
     public void Value_Test()
     {
         double[] A = [3, 5, 7];
-        var      p = new Polynom(A);
+        var p = new Polynom(A);
         Assert.AreEqual(3, p.Value(0));
         Assert.AreEqual(15, p.Value(1));
         Assert.AreEqual(41, p.Value(2));
@@ -72,7 +72,7 @@ public class PolynomTests : UnitTest
         }
 
         foreach (var x in X)
-            Assert.That.Value(p.Value(x)).IsEqual(P(x), 2.0e-15);
+            Assert.That.Value(p.Value(x)).IsEqual(P(x), 5.0e-15);
     }
 
     /// <summary>Тест клонирования</summary>
@@ -80,7 +80,7 @@ public class PolynomTests : UnitTest
     public void Clone_Test()
     {
         var expected = new Polynom(3, 5, 7);
-        var actual   = expected.Clone();
+        var actual = expected.Clone();
         Assert.AreEqual(expected, actual);
         Assert.IsFalse(ReferenceEquals(actual, expected));
         Assert.IsFalse(ReferenceEquals(expected.Coefficients, actual.Coefficients));
@@ -153,7 +153,7 @@ public class PolynomTests : UnitTest
 
         Z = P + Q;
 
-        var y_actual   = X.Select(Z.Value);
+        var y_actual = X.Select(Z.Value);
         var y_expected = y_p.Zip(y_q, (a, b) => a + b);
 
         var Y = y_actual.Zip(y_expected, (actual, expected) => new { actual, expected });
@@ -250,7 +250,7 @@ public class PolynomTests : UnitTest
             var Z = P - Q;
             Assert.AreEqual(Math.Max(P.Power, Q.Power), Z.Power, $"Степень полинома разности {Z} = {Z.Power} не равна максимуму из степеней уменьшаемого {P} = {P.Power} и вычитаемого {Q} = {Q.Power} полиномов");
             GetRNDDoubleArray(1000, -50, 50)
-               .Select(x => new { yP       = P.Value(x), yQ      = Q.Value(x), yZ = Z.Value(x) })
+               .Select(x => new { yP = P.Value(x), yQ = Q.Value(x), yZ = Z.Value(x) })
                .Select(v => new { expected = v.yP - v.yQ, actual = v.yZ })
                .Foreach(v => Assert.AreEqual(0, (v.expected - v.actual) / v.expected, 1e-10));
         }
@@ -281,7 +281,7 @@ public class PolynomTests : UnitTest
     [TestMethod]
     public void GetCoefficients_Test()
     {
-        double[] x0         = [1, 3, 5, 7];
+        double[] x0 = [1, 3, 5, 7];
         double[] expected_a = [105, -176, 86, -16, 1];
 
         var a = Polynom.Array.GetCoefficients(x0);

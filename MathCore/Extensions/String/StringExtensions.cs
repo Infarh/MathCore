@@ -15,7 +15,7 @@ using MathCore;
 namespace System;
 
 /// <summary>Методы-расширения класса <see cref="T:System.String">строк</see></summary>
-public static class StringExtensions
+public static partial class StringExtensions
 {
     /// <summary>Подсчитывает количество вхождений символа в строке</summary>
     /// <param name="s">Исходная строка</param>
@@ -270,20 +270,6 @@ public static class StringExtensions
     public static string JoinStrings(this IEnumerable<string> strings, char separator) => string.Join(separator, strings);
 #endif
 
-    /// <summary>Вычисляет SHA256-хеш строки</summary>
-    /// <param name="text">Исходная строка</param>
-    /// <param name="encoding">Кодировка</param>
-    /// <returns>Массив байт с хешем</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static byte[] ComputeSHA256(this string text, Encoding? encoding = null) => (encoding ?? Encoding.Default).GetBytes(text).ComputeSHA256();
-
-    /// <summary>Вычисляет MD5-хеш строки</summary>
-    /// <param name="text">Исходная строка</param>
-    /// <param name="encoding">Кодировка</param>
-    /// <returns>Массив байт с хешем</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static byte[] ComputeMD5(this string text, Encoding? encoding = null) => (encoding ?? Encoding.Default).GetBytes(text).ComputeMD5();
-
     /// <summary>Перечисление подстрок, разделяемых указанным строковым шаблоном</summary>
     /// <param name="Str">Разбиваемая строка</param>
     /// <param name="EndPattern">Строковый шаблон разбиения</param>
@@ -520,9 +506,11 @@ public static class StringExtensions
 #pragma warning disable SYSLIB0022
     private static Rijndael CreateRijndael(string Password, byte[]? Salt = null)
     {
+#pragma warning disable SYSLIB0060 // Используется для совместимости с ранее зашифрованными данными
 #pragma warning disable SYSLIB0041
         var pdb = new Rfc2898DeriveBytes(Password, Salt ?? []);
 #pragma warning restore SYSLIB0041
+#pragma warning restore SYSLIB0060
         var algorithm = Rijndael.Create();
         algorithm.Key = pdb.GetBytes(32);
         algorithm.IV = pdb.GetBytes(16);

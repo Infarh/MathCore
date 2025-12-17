@@ -7,13 +7,13 @@ namespace MathCore.Tests.Hash.CRC;
 [TestClass]
 public class CRC16Tests
 {
-    [TestMethod, Ignore]
+    [TestMethod]
     public void Poly_1021_initial_0000_data_3FA2132103_crc_718E()
     {
         var data = new byte[] { 0x3F, 0xA2, 0x13, 0x21, 0x03 };
         const ushort expected_crc = 0x718E;
 
-        var crc = new CRC16(CRC16.Mode.XMODEM);
+        var crc = new CRC16(0x1021);
 
         var actual_crc = crc.Compute(data);
 
@@ -28,7 +28,7 @@ public class CRC16Tests
         var data = new byte[] { 0x3F, 0xA2, 0x13, 0x21, 0x03 };
         const ushort expected_crc = 0x718E;
 
-        var actual_crc = CRC16.Hash(data, CRC16.Mode.XMODEM, 0, 0);
+        var actual_crc = CRC16.Hash(data, 0x1021, 0, false, false, 0);
 
         var expected_hash = $"0x{expected_crc:X4}";
         var actual_hash = $"0x{actual_crc:X4}";

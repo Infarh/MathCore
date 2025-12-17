@@ -1,0 +1,39 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Folder Name="/.Service/">
+    <File Path=".editorconfig" />
+    <File Path=".github/copilot-instructions.md" />
+    <File Path="BuildAndPublish.bat" />
+    <File Path="BuildAndTest.bat" />
+    <File Path="BuildRelease.bat" />
+    <File Path="Directory.Build.props" />
+  </Folder>
+  <Folder Name="/.Service/.github/">
+    <File Path=".github/copilot-instructions.md" />
+  </Folder>
+  <Folder Name="/.Service/.github/workflows/">
+    <File Path=".github/workflows/publish.yml" />
+    <File Path=".github/workflows/testing.yml" />
+  </Folder>
+  <Folder Name="/.Service/Scripts/">
+    <File Path=".scripts/nuget-ver-remote.cs" />
+    <File Path=".scripts/nuget-ver-wait.cs" />
+    <File Path=".scripts/xml-xpath.cs" />
+    <File Path="publish-nuget.bat" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Tests/Benchmarks/Benchmarks.csproj">
+      <BuildType Solution="Debug|Any CPU" Project="Release" />
+    </Project>
+    <Project Path="Tests/ConsoleTest/ConsoleTest.csproj">
+      <Platform Solution="*|x64" Project="x64" />
+    </Project>
+    <Project Path="Tests/MathCore.Algorithms/MathCore.Algorithms.csproj" />
+    <Project Path="Tests/MathCore.Tests.WPF/MathCore.Tests.WPF.csproj" />
+    <Project Path="Tests/MathCore.Tests/MathCore.Tests.csproj" />
+  </Folder>
+  <Project Path="MathCore/MathCore.csproj" />
+</Solution>
