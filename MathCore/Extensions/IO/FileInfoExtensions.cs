@@ -149,7 +149,7 @@ public static class FileInfoExtensions
     }
 
     /// <summary>Вычислить хеш-сумму SHA256</summary>
-    /// <param name="file">Файл, контрольную сумму которого надо вычислить</param>
+    /// <param name="file">Файл, контрольную_sumму которого надо вычислить</param>
     /// <returns>Массив байт контрольной суммы</returns>
     public static async Task<byte[]> ComputeSHA256Async(this FileInfo file, CancellationToken Cancel = default)
     {
@@ -306,18 +306,18 @@ public static class FileInfoExtensions
 
     /// <summary>Вычисляет CRC-32 для файла</summary>
     /// <param name="file">Файл для вычисления CRC-32</param>
-    /// <param name="Polynomial">Полином для вычисления CRC-32 (по умолчанию 0x04C11DB7 - стандартный)</param>
+    /// <param name="Polynomial">Полином для вычисления CRC-32 (по умолчанию соответствует ZIP)</param>
     /// <param name="InitialValue">Начальное значение CRC (по умолчанию 0xFFFFFFFF)</param>
     /// <param name="XOROut">Значение для XOR с окончательным CRC (по умолчанию 0xFFFFFFFF)</param>
-    /// <param name="RefIn">Отражение входных байтов (по умолчанию false)</param>
-    /// <param name="RefOut">Отражение выходного значения (по умолчанию false)</param>
+    /// <param name="RefIn">Отражение входных байтов (по умолчанию true для ZIP)</param>
+    /// <param name="RefOut">Отражение выходного значения (по умолчанию false для ZIP)</param>
     /// <returns>Вычисленное значение CRC-32</returns>
     public static uint ComputeCRC32(
         this FileInfo file,
-        uint Polynomial = 0x04C11DB7,
+        uint Polynomial = (uint)CRC32.Mode.Zip,
         uint InitialValue = 0xFFFFFFFF,
         uint XOROut = 0xFFFFFFFF,
-        bool RefIn = false,
+        bool RefIn = true,
         bool RefOut = false)
     {
         using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
@@ -326,19 +326,19 @@ public static class FileInfoExtensions
 
     /// <summary>Асинхронно вычисляет CRC-32 для файла</summary>
     /// <param name="file">Файл для вычисления CRC-32</param>
-    /// <param name="Polynomial">Полином для вычисления CRC-32 (по умолчанию 0x04C11DB7 - стандартный)</param>
+    /// <param name="Polynomial">Полином для вычисления CRC-32 (по умолчанию соответствует ZIP)</param>
     /// <param name="InitialValue">Начальное значение CRC (по умолчанию 0xFFFFFFFF)</param>
     /// <param name="XOROut">Значение для XOR с окончательным CRC (по умолчанию 0xFFFFFFFF)</param>
-    /// <param name="RefIn">Отражение входных байтов (по умолчанию false)</param>
-    /// <param name="RefOut">Отражение выходного значения (по умолчанию false)</param>
+    /// <param name="RefIn">Отражение входных байтов (по умолчанию true для ZIP)</param>
+    /// <param name="RefOut">Отражение выходного значения (по умолчанию false для ZIP)</param>
     /// <param name="Cancel">Токен отмены операции</param>
     /// <returns>Вычисленное значение CRC-32</returns>
     public static async Task<uint> ComputeCRC32Async(
         this FileInfo file,
-        uint Polynomial = 0x04C11DB7,
+        uint Polynomial = (uint)CRC32.Mode.Zip,
         uint InitialValue = 0xFFFFFFFF,
         uint XOROut = 0xFFFFFFFF,
-        bool RefIn = false,
+        bool RefIn = true,
         bool RefOut = false,
         CancellationToken Cancel = default)
     {
@@ -377,7 +377,7 @@ public static class FileInfoExtensions
     /// <param name="XOROut">Значение для XOR с окончательным CRC (по умолчанию 0x0000000000000000)</param>
     /// <param name="RefIn">Отражение входных байтов (по умолчанию false)</param>
     /// <param name="RefOut">Отражение выходного значения (по умолчанию false)</param>
-    /// <param name="Cancel">Токен отмены операции</param>
+    /// <param name="Cancel">Токен cancellations операции</param>
     /// <returns>Вычисленное значение CRC-64</returns>
     public static async Task<ulong> ComputeCRC64Async(
         this FileInfo file,
