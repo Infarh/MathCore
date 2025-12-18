@@ -11,12 +11,11 @@ public class InterpolatorNDLinearTests
 
     public TestContext? TestContext { get; set; }
 
-    private FileInfo DataFile
+    private static FileInfo DataFile
     {
         get
         {
-            var base_dir = AppDomain.CurrentDomain.BaseDirectory;
-            var full_path = Path.Combine(base_dir, __DataFilePath);
+            var full_path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, __DataFilePath);
             var file = new FileInfo(full_path);
 
             return file.ThrowIfNotFound(FullPathInMessage: true);
