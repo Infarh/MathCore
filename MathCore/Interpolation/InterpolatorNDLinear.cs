@@ -213,6 +213,9 @@ public class InterpolatorNDLinear
                 nodes.Insert(~index, new(head_arg, [new(value)]));
         }
 
+        /// <summary>Дочерние узлы</summary>
+        public List<ValueTreeNode>? Childs { get; } = Childs;
+
         /// <summary>Значение узла</summary>
         public double Value { get; } = Value;
 
@@ -229,6 +232,11 @@ public class InterpolatorNDLinear
             var childs = Childs;
             if (args.Length == 0 || childs is null)
                 return childs?[0].Value ?? double.NaN;
+
+            // если остался один аргумент и у дочерних узлов нет своих потомков,
+            // то на этом уровне уже хранятся только значения функции
+            if (args.Length == 1 && childs.Count > 0 && childs[0].Childs is null)
+                return childs[0].Value;
 
             var (x, xx) = args;
 
@@ -307,7 +315,7 @@ public class InterpolatorNDLinear
     /// <param name="args">Аргументы</param>
     public double this[params double[] args] => GetValue(args);
 
-    /// <summary>Конструктор интерполятора</summary>
+    /// <summary>Конструктор интерполятара</summary>
     /// <param name="ArgumentsCount">Количество аргументов</param>
     /// <param name="nodes">Список узлов</param>
     private InterpolatorNDLinear(int ArgumentsCount, List<ValueTreeNode> nodes, bool ShapeResult = false)
