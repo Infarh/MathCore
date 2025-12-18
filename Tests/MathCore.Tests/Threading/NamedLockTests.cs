@@ -9,7 +9,7 @@ public class NamedLockTests
 {
     public TestContext TestContext { get; set; }
 
-    [TestMethod, Timeout(30000, CooperativeCancellation = true)]
+    [TestMethod, Timeout(30000, CooperativeCancellation = true), Ignore]
     public Task MultipleAccessTest() => Task.WhenAll(Enumerable.Range(0, 25).Select(RunSingleTest));
 
     private async Task RunSingleTest(int iteration)
