@@ -1,10 +1,13 @@
-﻿using System.IO;
+﻿using System.IO.Compression;
 
 namespace MathCore.Tests.Extensions.IO;
 
 [TestClass]
 public class FileInfoExtensionsCRCTests
 {
+    public TestContext TestContext { get; set; }
+
+
 #if NET5_0_OR_GREATER
     private FileInfo CreateTestFile(string FileName, byte[] Data)
     {
@@ -322,5 +325,125 @@ public class FileInfoExtensionsCRCTests
             CleanupTestFile(file);
         }
     }
+
+    [TestMethod]
+    public void ComputeCRC32_MatchesZipEntryCRC32()
+    {
+        var test_data = "Hello World!"u8.ToArray();
+        var test_file = CreateTestFile("test_zip_crc32.txt", test_data);
+        var zip_file_path = Path.Combine(Path.GetTempPath(), "test_zip_crc32.zip");
+
+        try
+        {
+            // Вычисляем CRC32 файла через расширение
+            var file_crc32 = test_file.ComputeCRC32();
+
+            // Создаём ZIP-архив и получаем CRC32 из записи архива
+            if (File.Exists(zip_file_path))
+                File.Delete(zip_file_path);
+
+            using (var zip = ZipFile.Open(zip_file_path, ZipArchiveMode.Create))
+            {
+                zip.CreateEntryFromFile(test_file.FullName, test_file.Name, CompressionLevel.Optimal);
+            }
+
+            uint zip_entry_crc32;
+            using (var zip = new ZipArchive(File.OpenRead(zip_file_path), ZipArchiveMode.Read))
+            {
+                var entry = zip.GetEntry(test_file.Name);
+                zip_entry_crc32 = entry.Crc32;
+            }
+
+            // Проверяем совпадение
+            file_crc32.AssertEquals(zip_entry_crc32,
+                $"CRC32 файла ({file_crc32:X8}) должен совпадать с CRC32 записи в ZIP ({zip_entry_crc32:X8})");
+        }
+        finally
+        {
+            CleanupTestFile(test_file);
+            if (File.Exists(zip_file_path))
+                File.Delete(zip_file_path);
+        }
+    }
+
+    [TestMethod]
+    public void ComputeCRC32_DefaultParameters_MatchesZipStandard()
+    {
+        var test_data = "123456789"u8.ToArray();
+        var test_file = CreateTestFile("test_default_crc32.bin", test_data);
+        var zip_file_path = Path.Combine(Path.GetTempPath(), "test_default_crc32.zip");
+
+        try
+        {
+            // Вызываем без параметров (должен использовать ZIP по умолчанию)
+            var file_crc32 = test_file.ComputeCRC32();
+
+            // Создаём ZIP и получаем его CRC32
+            if (File.Exists(zip_file_path))
+                File.Delete(zip_file_path);
+
+            using (var zip = ZipFile.Open(zip_file_path, ZipArchiveMode.Create))
+            {
+                zip.CreateEntryFromFile(test_file.FullName, test_file.Name, CompressionLevel.Optimal);
+            }
+
+            uint zip_entry_crc32;
+            using (var zip = new ZipArchive(File.OpenRead(zip_file_path), ZipArchiveMode.Read))
+            {
+                var entry = zip.GetEntry(test_file.Name);
+                zip_entry_crc32 = entry.Crc32;
+            }
+
+            file_crc32.AssertEquals(zip_entry_crc32,
+                $"CRC32 по умолчанию ({file_crc32:X8}) должен совпадать с ZIP CRC32 ({zip_entry_crc32:X8})");
+        }
+        finally
+        {
+            CleanupTestFile(test_file);
+            if (File.Exists(zip_file_path))
+                File.Delete(zip_file_path);
+        }
+    }
+
+    [TestMethod]
+    public async Task ComputeCRC32Async_MatchesZipEntryCRC32()
+    {
+        var test_data = "Async Test Data"u8.ToArray();
+        var test_file = CreateTestFile("test_zip_crc32_async.txt", test_data);
+        var zip_file_path = Path.Combine(Path.GetTempPath(), "test_zip_crc32_async.zip");
+
+        try
+        {
+            // Вычисляем CRC32 файла асинхронно
+            var file_crc32 = await test_file.ComputeCRC32Async(Cancel: TestContext.CancellationToken);
+
+            // Создаём ZIP-архив и получаем CRC32 из записи архива
+            if (File.Exists(zip_file_path))
+                File.Delete(zip_file_path);
+
+            using (var zip = ZipFile.Open(zip_file_path, ZipArchiveMode.Create))
+            {
+                zip.CreateEntryFromFile(test_file.FullName, test_file.Name, CompressionLevel.Optimal);
+            }
+
+            uint zip_entry_crc32;
+            using (var zip = new ZipArchive(File.OpenRead(zip_file_path), ZipArchiveMode.Read))
+            {
+                var entry = zip.GetEntry(test_file.Name);
+                zip_entry_crc32 = entry.Crc32;
+            }
+
+            // Проверяем совпадение
+            file_crc32.AssertEquals(zip_entry_crc32,
+                $"Async CRC32 файла ({file_crc32:X8}) должен совпадать с CRC32 записи в ZIP ({zip_entry_crc32:X8})");
+        }
+        finally
+        {
+            CleanupTestFile(test_file);
+            if (File.Exists(zip_file_path))
+                File.Delete(zip_file_path);
+        }
+    }
+
 #endif
 }
