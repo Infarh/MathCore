@@ -9,14 +9,14 @@ public class FileInfoExtensionsCRCTests
 
 
 #if NET5_0_OR_GREATER
-    private FileInfo CreateTestFile(string FileName, byte[] Data)
+    private static FileInfo CreateTestFile(string FileName, byte[] Data)
     {
         var file = new FileInfo(Path.Combine(Path.GetTempPath(), FileName));
         File.WriteAllBytes(file.FullName, Data);
         return file;
     }
 
-    private void CleanupTestFile(FileInfo file)
+    private static void CleanupTestFile(FileInfo file)
     {
         if (file.Exists)
             file.Delete();
@@ -50,7 +50,7 @@ public class FileInfoExtensionsCRCTests
         var file = CreateTestFile("test_crc8_async.bin", data);
         try
         {
-            var actual_crc = await file.ComputeCRC8Async();
+            var actual_crc = await file.ComputeCRC8Async(Cancel: TestContext.CancellationToken);
 
             actual_crc.AssertEquals(expected_crc);
         }
@@ -88,7 +88,7 @@ public class FileInfoExtensionsCRCTests
         var file = CreateTestFile("test_crc16_async.bin", data);
         try
         {
-            var actual_crc = await file.ComputeCRC16Async();
+            var actual_crc = await file.ComputeCRC16Async(Cancel: TestContext.CancellationToken);
 
             actual_crc.AssertEquals(expected_crc);
         }
@@ -136,7 +136,8 @@ public class FileInfoExtensionsCRCTests
                 InitialValue: 0xFFFFFFFF,
                 XOROut: 0xFFFFFFFF,
                 RefIn: true,
-                RefOut: false);
+                RefOut: false,
+                Cancel: TestContext.CancellationToken);
 
             actual_crc.AssertEquals(expected_crc);
         }
@@ -157,7 +158,7 @@ public class FileInfoExtensionsCRCTests
             var actual_crc = file.ComputeCRC64();
 
             // Проверяем, что результат вычислен
-            Assert.IsTrue(actual_crc >= 0);
+            Assert.IsGreaterThanOrEqualTo(0UL, actual_crc);
         }
         finally
         {
@@ -173,10 +174,10 @@ public class FileInfoExtensionsCRCTests
         var file = CreateTestFile("test_crc64_async.bin", data);
         try
         {
-            var actual_crc = await file.ComputeCRC64Async();
+            var actual_crc = await file.ComputeCRC64Async(Cancel: TestContext.CancellationToken);
 
             // Проверяем, что результат вычислен
-            Assert.IsTrue(actual_crc >= 0);
+            Assert.IsGreaterThanOrEqualTo(0UL, actual_crc);
         }
         finally
         {
@@ -203,7 +204,7 @@ public class FileInfoExtensionsCRCTests
                 RefOut: false);
 
             // Проверяем, что CRC вычислен
-            Assert.IsTrue(crc > 0);
+            Assert.IsGreaterThan<uint>(0, crc);
         }
         finally
         {
@@ -233,7 +234,7 @@ public class FileInfoExtensionsCRCTests
                 Cancel: cts.Token);
 
             // Проверяем, что CRC вычислен
-            Assert.IsTrue(crc > 0);
+            Assert.IsGreaterThan<uint>(0, crc);
         }
         finally
         {
@@ -263,20 +264,20 @@ public class FileInfoExtensionsCRCTests
         try
         {
             var crc8 = file.ComputeCRC8();
-            Assert.IsTrue(crc8 >= 0);
+            Assert.IsGreaterThanOrEqualTo(0, crc8);
 
             var crc16 = file.ComputeCRC16();
-            Assert.IsTrue(crc16 >= 0);
+            Assert.IsGreaterThanOrEqualTo(0, crc16);
 
             var crc32 = file.ComputeCRC32(0xEDB88320, 0xFFFFFFFF, 0xFFFFFFFF, true, false);
-            Assert.IsTrue(crc32 > 0);
+            Assert.IsGreaterThan(0UL, crc32);
 
             var crc64 = file.ComputeCRC64();
-            Assert.IsTrue(crc64 >= 0);
+            Assert.IsGreaterThanOrEqualTo(0UL, crc64);
 
             // Все CRC должны быть разными для разных размеров
-            Assert.AreNotEqual((ulong)crc8, (ulong)crc16);
-            Assert.AreNotEqual((ulong)crc16, (ulong)crc32);
+            Assert.AreNotEqual(crc8, (ulong)crc16);
+            Assert.AreNotEqual(crc16, (ulong)crc32);
             Assert.AreNotEqual(crc32, (uint)crc64);
         }
         finally
