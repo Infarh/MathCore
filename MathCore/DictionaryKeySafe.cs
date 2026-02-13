@@ -32,9 +32,9 @@ public class DictionaryKeySafe<TKey, TValue> : IDictionary<TKey, TValue>, IXmlSe
     /// <summary>Элемент словаря, либо default, если ключ отсутствует</summary>
     /// <param name="key">Ключ требуемого значения</param>
     /// <returns>Значение словаря по указанному ключу, либо default</returns>
-    public TValue? this[TKey key]
+    public TValue this[TKey key]
     {
-        get => _Dictionary.TryGetValue(key, out var v) ? v : default;
+        get => _Dictionary.TryGetValue(key, out var v) ? v : default!;
         set => _Dictionary[key] = value!;
     }
 
@@ -82,7 +82,7 @@ public class DictionaryKeySafe<TKey, TValue> : IDictionary<TKey, TValue>, IXmlSe
     public bool ContainsKey(TKey key) => _Dictionary.ContainsKey(key);
 
     /// <inheritdoc />
-    public bool TryGetValue(TKey key, out TValue? value) => _Dictionary.TryGetValue(key, out value);
+    public bool TryGetValue(TKey key, out TValue value) => _Dictionary.TryGetValue(key, out value!);
 
     /// <inheritdoc />
     public void CopyTo(KeyValuePair<TKey, TValue>[] array, int Index) => _Dictionary.CopyTo(array, Index);
@@ -101,7 +101,7 @@ public class DictionaryKeySafe<TKey, TValue> : IDictionary<TKey, TValue>, IXmlSe
 
     #endregion
 
-    public static implicit operator DictionaryKeySafe<TKey, TValue>(Dictionary<TKey, TValue> d) => new(d);
+    public static implicit operator DictionaryKeySafe<TKey, TValue>(Dictionary<TKey, TValue> d) => [.. d];
 
     public static implicit operator Dictionary<TKey, TValue>(DictionaryKeySafe<TKey, TValue> d) => d._Dictionary as Dictionary<TKey, TValue> ?? new Dictionary<TKey, TValue>(d._Dictionary);
 
@@ -118,7 +118,7 @@ public class DictionaryKeySafe<TKey, TValue> : IDictionary<TKey, TValue>, IXmlSe
     /// <inheritdoc />
     void IXmlSerializable.ReadXml(XmlReader reader)
     {
-        var key_serializer   = GetSerializer(typeof(TKey));
+        var key_serializer = GetSerializer(typeof(TKey));
         var value_serializer = GetSerializer(typeof(TValue));
 
         var was_empty = reader.IsEmptyElement;
@@ -128,13 +128,13 @@ public class DictionaryKeySafe<TKey, TValue> : IDictionary<TKey, TValue>, IXmlSe
 
         while (reader.NodeType != XmlNodeType.EndElement)
         {
-            var key   = default(TKey);
-            var value = default(TValue);
+            var key = default(TKey?);
+            var value = default(TValue?);
 
             if (key_serializer is null)
-                key = (TKey)Convert.ChangeType(reader.GetAttribute("key"), typeof(TKey));
+                key = (TKey?)Convert.ChangeType(reader.GetAttribute("key"), typeof(TKey));
             if (value_serializer is null)
-                value = (TValue)Convert.ChangeType(reader.GetAttribute("value"), typeof(TValue));
+                value = (TValue?)Convert.ChangeType(reader.GetAttribute("value"), typeof(TValue));
 
             if (reader.HasValue)
             {
@@ -143,21 +143,21 @@ public class DictionaryKeySafe<TKey, TValue> : IDictionary<TKey, TValue>, IXmlSe
                 if (key_serializer != null)
                 {
                     reader.ReadStartElement("key");
-                    key = (TKey)key_serializer.Deserialize(reader);
+                    key = (TKey?)key_serializer.Deserialize(reader);
                     reader.ReadEndElement();
                 }
 
                 if (value_serializer != null)
                 {
                     reader.ReadStartElement("value");
-                    value = (TValue)value_serializer.Deserialize(reader);
+                    value = (TValue?)value_serializer.Deserialize(reader);
                     reader.ReadEndElement();
                 }
                 reader.ReadEndElement();
             }
             else reader.Skip();
 
-            if (key != null) Add(key, value);
+            if (key != null) Add(key, value!);
 
             reader.MoveToContent();
         }
@@ -168,7 +168,7 @@ public class DictionaryKeySafe<TKey, TValue> : IDictionary<TKey, TValue>, IXmlSe
     /// <inheritdoc />
     void IXmlSerializable.WriteXml(XmlWriter writer)
     {
-        var key_serializer   = GetSerializer(typeof(TKey));
+        var key_serializer = GetSerializer(typeof(TKey));
         var value_serializer = GetSerializer(typeof(TValue));
 
         foreach (var key in Keys)

@@ -18,7 +18,7 @@ public class DifferentialVisitor : ExpressionVisitorEx
 
     private static void CheckValueType(Type type)
     {
-        if(!CheckNumType(type)) throw new NotSupportedException($"Неподдерживаемый тип данных {type}");
+        if (!CheckNumType(type)) throw new NotSupportedException($"Неподдерживаемый тип данных {type}");
     }
 
     protected override Expression VisitConstant(ConstantExpression c)
@@ -48,19 +48,19 @@ public class DifferentialVisitor : ExpressionVisitorEx
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
 
-        if(l is null && r is null) return b;
-        
-        if(l != null && r != null)
+        if (l is null && r is null) return b;
+
+        if (l != null && r != null)
             return b.NodeType == ExpressionType.Add
                 ? Expression.Constant((double)l.Value! + (double)r.Value!)
                 : Expression.Constant((double)l.Value! - (double)r.Value!);
 
-        if(l != null && l.Value.Equals(0.0))
+        if (l != null && l.Value!.Equals(0.0))
             return b.NodeType == ExpressionType.Add
                 ? b.Right
                 : Expression.MakeUnary(ExpressionType.Negate, b.Right, b.Right.Type);
-    
-        return r != null && r.Value.Equals(0.0) ? b.Left : b;
+
+        return r != null && r.Value!.Equals(0.0) ? b.Left : b;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -73,12 +73,12 @@ public class DifferentialVisitor : ExpressionVisitorEx
     {
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
-        if(l is null && r is null) return b;
-        if(l != null && r != null) return Expression.Constant((double)l.Value! * (double)r.Value!);
-        if (l?.Value.Equals(0.0) == true) return l;
-        if (l?.Value.Equals(1.0) == true) return b.Right;
-        if (r?.Value.Equals(0.0) == true) return r;
-        if (r?.Value.Equals(1.0) == true) return b.Left;
+        if (l is null && r is null) return b;
+        if (l != null && r != null) return Expression.Constant((double)l.Value! * (double)r.Value!);
+        if (l?.Value!.Equals(0.0) == true) return l;
+        if (l?.Value!.Equals(1.0) == true) return b.Right;
+        if (r?.Value!.Equals(0.0) == true) return r;
+        if (r?.Value!.Equals(1.0) == true) return b.Left;
         return b;
     }
 
@@ -89,12 +89,12 @@ public class DifferentialVisitor : ExpressionVisitorEx
     {
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
-        if(l is null && r is null) return b;
-        if(l != null && r != null) return Expression.Constant((double)l.Value! / (double)r.Value!);
-        if(l?.Value.Equals(0.0) == true) return l;
-        if(l?.Value.Equals(1.0) == true) return b;
-        if(r?.Value.Equals(0.0) == true) return Expression.Constant(double.PositiveInfinity);
-        if(r?.Value.Equals(1.0) == true) return b.Left;
+        if (l is null && r is null) return b;
+        if (l != null && r != null) return Expression.Constant((double)l.Value! / (double)r.Value!);
+        if (l?.Value!.Equals(0.0) == true) return l;
+        if (l?.Value!.Equals(1.0) == true) return b;
+        if (r?.Value!.Equals(0.0) == true) return Expression.Constant(double.PositiveInfinity);
+        if (r?.Value!.Equals(1.0) == true) return b.Left;
         return b;
     }
 
@@ -104,11 +104,11 @@ public class DifferentialVisitor : ExpressionVisitorEx
     {
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
-        if(l is null && r is null) return b;
-        if(l != null && r != null) return Expression.Constant(Math.Pow((double)l.Value!, (double)r.Value!));
-        if(l != null && (l.Value.Equals(0.0) || l.Value.Equals(1.0))) return l;
-        if(r?.Value.Equals(0.0) == true) return Expression.Constant(1.0);
-        if(r?.Value.Equals(1.0) == true) return b.Left;
+        if (l is null && r is null) return b;
+        if (l != null && r != null) return Expression.Constant(Math.Pow((double)l.Value!, (double)r.Value!));
+        if (l != null && (l.Value!.Equals(0.0) || l.Value!.Equals(1.0))) return l;
+        if (r?.Value!.Equals(0.0) == true) return Expression.Constant(1.0);
+        if (r?.Value!.Equals(1.0) == true) return b.Left;
         return b;
     }
 
@@ -125,7 +125,7 @@ public class DifferentialVisitor : ExpressionVisitorEx
 
     protected override Expression VisitBinary(BinaryExpression b)
     {
-        switch(b.NodeType)
+        switch (b.NodeType)
         {
             case ExpressionType.Add:
             case ExpressionType.AddChecked:
@@ -141,10 +141,10 @@ public class DifferentialVisitor : ExpressionVisitorEx
             case ExpressionType.Multiply:
             case ExpressionType.MultiplyChecked:
                 {
-                    var left    = b.Left;
-                    var right   = b.Right;
-                    var left_d  = Visit(left);
-                    var right_d = Visit(right);
+                    var left = b.Left;
+                    var right = b.Right;
+                    var left_d = Visit(left)!;
+                    var right_d = Visit(right)!;
 
                     var l = sMultiply(left_d, right);
                     var r = sMultiply(left, right_d);
@@ -153,10 +153,10 @@ public class DifferentialVisitor : ExpressionVisitorEx
 
             case ExpressionType.Divide:
                 {
-                    var x  = b.Left;
-                    var y  = b.Right;
-                    var dx = Visit(x);
-                    var dy = Visit(y);
+                    var x = b.Left;
+                    var y = b.Right;
+                    var dx = Visit(x)!;
+                    var dy = Visit(y)!;
 
                     var l = sMultiply(dx, y);
                     var r = sMultiply(x, dy);
@@ -171,19 +171,19 @@ public class DifferentialVisitor : ExpressionVisitorEx
                 return base.VisitBinary(b);
             case ExpressionType.Power:
                 {
-                    var x  = b.Left;
-                    var y  = b.Right;
-                    var dx = Visit(x);
+                    var x = b.Left;
+                    var y = b.Right;
+                    var dx = Visit(x)!;
 
-                    var A  = sPower(x, sSubtract(y, 1));
-                    var B  = sMultiply(dx, y);
+                    var A = sPower(x, sSubtract(y, 1));
+                    var B = sMultiply(dx, y);
                     var AB = sMultiply(B, A);
 
-                    if(y is ConstantExpression) return AB;
-                    var dy = Visit(y);
-                    var C  = sPower(b);
-                    var d  = sCall(Expression.Call(typeof(Math), "Log", null, x));
-                    var D  = sMultiply(C, dy);
+                    if (y is ConstantExpression) return AB;
+                    var dy = Visit(y)!;
+                    var C = sPower(b);
+                    var d = sCall(Expression.Call(typeof(Math), "Log", null, x));
+                    var D = sMultiply(C, dy);
                     var CD = sMultiply(d, D);
                     return sAdd(AB, CD);
                 }
@@ -203,53 +203,53 @@ public class DifferentialVisitor : ExpressionVisitorEx
 
     protected Expression VisitMathMethodCall(MethodCallExpression m)
     {
-        switch(m.Method.Name)
+        switch (m.Method.Name)
         {
-            case "Pow": return Visit(sPower(Expression.Power(m.Arguments[0], m.Arguments[1])));
+            case "Pow": return Visit(sPower(Expression.Power(m.Arguments[0], m.Arguments[1])))!;
             case "Sin":
                 {
                     var x = m.Arguments[0];
-                    return sMultiply(Visit(x), MathMethod("Cos", x));
+                    return sMultiply(Visit(x)!, MathMethod("Cos", x));
                 }
             case "Cos":
                 {
                     var x = m.Arguments[0];
-                    return Expression.Negate(sMultiply(Visit(x), MathMethod("Sin", x)));
+                    return Expression.Negate(sMultiply(Visit(x)!, MathMethod("Sin", x)));
                 }
             case "Tan":
                 {
                     var x = m.Arguments[0];
-                    return sMultiply(Visit(x), sDivide(1, sPower(MathMethod("Cos", x), 2)));
+                    return sMultiply(Visit(x)!, sDivide(1, sPower(MathMethod("Cos", x), 2)));
                 }
             case "Asin":
                 {
                     var x = m.Arguments[0];
-                    return sMultiply(Visit(x), sDivide(1, MathMethod("Sqrt", sSubtract(1, sPower(x, 2)))));
+                    return sMultiply(Visit(x)!, sDivide(1, MathMethod("Sqrt", sSubtract(1, sPower(x, 2)))));
                 }
             case "Acos":
                 {
                     var x = m.Arguments[0];
-                    return Expression.Negate(sMultiply(Visit(x), sDivide(1, MathMethod("Sqrt", sSubtract(1, sPower(x, 2))))));
+                    return Expression.Negate(sMultiply(Visit(x)!, sDivide(1, MathMethod("Sqrt", sSubtract(1, sPower(x, 2))))));
                 }
             case "Atan":
                 {
                     var x = m.Arguments[0];
-                    return sMultiply(Visit(x), sDivide(1, sAdd(1, sPower(x, 2))));
+                    return sMultiply(Visit(x)!, sDivide(1, sAdd(1, sPower(x, 2))));
                 }
             case "Sinh":
                 {
                     var x = m.Arguments[0];
-                    return sMultiply(Visit(x), MathMethod("Cosh", x));
+                    return sMultiply(Visit(x)!, MathMethod("Cosh", x));
                 }
             case "Cosh":
                 {
                     var x = m.Arguments[0];
-                    return sMultiply(Visit(x), MathMethod("Sinh", x));
+                    return sMultiply(Visit(x)!, MathMethod("Sinh", x));
                 }
             case "Tanh":
                 {
                     var x = m.Arguments[0];
-                    return sMultiply(Visit(x), sDivide(1, sPower(sDivide(1, MathMethod("Tanh", x)), 2)));
+                    return sMultiply(Visit(x)!, sDivide(1, sPower(sDivide(1, MathMethod("Tanh", x)), 2)));
                 }
             case "Abs":
                 {
@@ -260,7 +260,7 @@ public class DifferentialVisitor : ExpressionVisitorEx
                         Expression.Constant(0.0),
                         Expression.Convert(MathMethod("Sign", x), typeof(double))
                     );
-                    return sMultiply(Visit(x), condition);
+                    return sMultiply(Visit(x)!, condition);
                 }
             case "Sign":
                 {
@@ -271,33 +271,33 @@ public class DifferentialVisitor : ExpressionVisitorEx
                         Expression.Constant(double.PositiveInfinity),
                         Expression.Constant(0.0)
                     );
-                    return sMultiply(Visit(x), condition);
+                    return sMultiply(Visit(x)!, condition);
                 }
             case "Sqrt":
                 return Visit(sPower(m.Arguments[0],
-                    Expression.Divide(Expression.Constant(1.0), Expression.Constant(2.0))));
+                    Expression.Divide(Expression.Constant(1.0), Expression.Constant(2.0))))!;
             case "Exp":
                 {
                     var x = m.Arguments[0];
-                    return sMultiply(Visit(x), MathMethod("Exp", x));
+                    return sMultiply(Visit(x)!, MathMethod("Exp", x));
                 }
             case "Log":
                 {
                     var x = m.Arguments[0];
-                    if(m.Arguments.Count > 1)
+                    if (m.Arguments.Count > 1)
                     {
-                        var a    = m.Arguments[1];
+                        var a = m.Arguments[1];
                         var expr = sDivide(MathMethod("Log", x), MathMethod("Log", a));
-                        return Visit(expr);
+                        return Visit(expr)!;
                     }
-                    var dx = Visit(x);
+                    var dx = Visit(x)!;
                     return sDivide(dx, x);
                 }
             case "Log10":
                 {
-                    var x    = m.Arguments[0];
+                    var x = m.Arguments[0];
                     var expr = MathMethod("Log", x, Expression.Constant(10.0));
-                    return Visit(expr);
+                    return Visit(expr)!;
                 }
             default:
                 throw new NotSupportedException();
@@ -325,10 +325,10 @@ public class DifferentialVisitor : ExpressionVisitorEx
     protected override Expression VisitMethodCall(MethodCallExpression m)
     {
         var result = OnMethodDifferential(m);
-        if(result != null) return result;
+        if (result != null) return result;
 
         var method = m.Method;
-        if(method.DeclaringType == typeof(Math))
+        if (method.DeclaringType == typeof(Math))
             return VisitMathMethodCall(m);
 
         throw new NotSupportedException();

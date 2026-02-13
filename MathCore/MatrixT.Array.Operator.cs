@@ -22,8 +22,8 @@ public partial class Matrix<T>
                 var s = default(T);
                 var N = v1.Length;
                 for (var i = 0; i < N; i++)
-                    s += v1[i] * v2[i];
-                return s;
+                    s = s! + v1[i] * v2[i];
+                return s!;
             }
 
             /// <summary>Длина вектора</summary>
@@ -36,8 +36,8 @@ public partial class Matrix<T>
 
                 var s = default(T);
                 for (var i = 0; i < v.Length; i++)
-                    s += v[i] * v[i];
-                return T.Sqrt(s);
+                    s = s! + v[i] * v[i];
+                return T.Sqrt(s!);
             }
 
             /// <summary>Умножение вектора на число</summary>
@@ -92,13 +92,13 @@ public partial class Matrix<T>
                 var N = v1.Length;
                 for (var i = 0; i < N; i++)
                 {
-                    m += v1[i] * v2[i];
-                    v2_length2 += v2[i] * v2[i];
+                    m = m! + v1[i] * v2[i];
+                    v2_length2 = v2_length2! + v2[i] * v2[i];
                 }
 
                 for (var i = 0; i < N; i++)
-                    result[i] = v2[i] * m / v2_length2;
-                return v2;
+                    result[i] = v2[i] * m! / v2_length2!;
+                return result;
             }
 
             /// <summary>Оператор вычисления суммы двумерного массива элементов матрицы с числом</summary>
@@ -416,8 +416,8 @@ public partial class Matrix<T>
 
                 var result = default(T);
                 for (var i = 0; i < row.Length; i++)
-                    result += row[i] * col[i];
-                return result;
+                    result = result! + row[i] * col[i];
+                return result!;
             }
 
             public static T[,] MultiplyRowToColMatrix(T[] row, T[] col) => MultiplyRowToColMatrix(row, col, new T[col.Length, row.Length]);
@@ -426,9 +426,12 @@ public partial class Matrix<T>
             {
                 if (row is null) throw new ArgumentNullException(nameof(row));
                 if (col is null) throw new ArgumentNullException(nameof(col));
+
                 var N = col.Length;
                 var M = row.Length;
+
                 GetLength(matrix, out var matrix_N, out var matrix_M);
+
                 if (matrix_N != N) throw new InvalidOperationException("Число строк матрицы не равно длине вектора col");
                 if (matrix_M != M) throw new InvalidOperationException("Число столбцов матрицы не равно длине вектора row");
 
@@ -460,8 +463,8 @@ public partial class Matrix<T>
                     {
                         var s = default(T);
                         for (var k = 0; k < A_M; k++)
-                            s += A[i, k] * B[k, j];
-                        result[i, j] = s;
+                            s = s! + A[i, k] * B[k, j];
+                        result[i, j] = s!;
                     }
 
                 return result;
@@ -473,6 +476,7 @@ public partial class Matrix<T>
             {
                 if (x is null) throw new ArgumentNullException(nameof(x));
                 if (y is null) throw new ArgumentNullException(nameof(y));
+
                 GetLength(At, out var A_M, out var A_N);
 
                 if (A_M != x.Length) throw new InvalidOperationException($"Число строк ({A_M}) матрицы A[{A_M}, {A_N}] не равно размеру вектора y.Length={y.Length}");
@@ -486,7 +490,7 @@ public partial class Matrix<T>
                     y[j] = s;
                 }
 
-                return y;
+                return y!;
             }
 
             /// <summary>Оператор вычисления произведения двух матриц (первая - транспонированная)</summary>
@@ -511,9 +515,9 @@ public partial class Matrix<T>
                     {
                         var s = default(T);
                         for (var k = 0; k < A_M; k++)
-                            s += At[k, i] * B[k, j];
+                            s = s! + At[k, i] * B[k, j];
 
-                        C[i, j] = s;
+                        C[i, j] = s!;
                     }
 
                 return C;
@@ -538,8 +542,8 @@ public partial class Matrix<T>
                     {
                         var s = default(T);
                         for (var k = 0; k < A_M; k++)
-                            s += A[i, k] * Bt[j, k];
-                        result[i, j] = s;
+                            s = s! + A[i, k] * Bt[j, k];
+                        result[i, j] = s!;
                     }
 
                 return result;
@@ -550,7 +554,9 @@ public partial class Matrix<T>
                 if (A is null) throw new ArgumentNullException(nameof(A));
                 if (X is null) throw new ArgumentNullException(nameof(X));
                 if (Y is null) throw new ArgumentNullException(nameof(Y));
+
                 GetLength(A, out var rows_count, out var cols_count);
+
                 if (rows_count != Y.Length) throw new ArgumentException($"Число строк матрицы ({rows_count}) не равно длине вектора результата Y ({Y.Length})");
                 if (cols_count != X.Length) throw new ArgumentException($"Число столбцов матрицы ({cols_count}) не равно длине вектора X ({X.Length})");
 
@@ -577,6 +583,7 @@ public partial class Matrix<T>
                 if (A is null) throw new ArgumentNullException(nameof(A));
                 if (X is null) throw new ArgumentNullException(nameof(X));
                 if (A.GetLength(1) != X.Length) throw new ArgumentException($"Число столбцов матрицы ({A.GetLength(1)}) не равно длине вектора X ({X.Length})");
+
                 return Multiply(A, X, new T[A.GetLength(0)]);
             }
 
@@ -604,12 +611,12 @@ public partial class Matrix<T>
                 for (var i = 0; i < A_N; i++)
                     for (var j = 0; j < B_M; j++)
                     {
-                        result[i, j] = default;
+                        result[i, j] = default!;
                         for (var k = 0; k < A_M; k++)
-                            result[i, j] += A[i, k] * B[k, j];
+                            result[i, j] = result[i, j]! + A[i, k] * B[k, j];
                     }
 
-                return result;
+                return result!;
             }
 
             /// <summary>Оператор деления двух матриц</summary>
@@ -686,11 +693,11 @@ public partial class Matrix<T>
                 {
                     var s = default(T);
                     for (var j = 0; j < M; j++)
-                        s += A[i, j] * y[j];
-                    result += x[i] * s;
+                        s = s! + A[i, j] * y[j];
+                    result = result! + x[i] * s!;
                 }
 
-                return result;
+                return result!;
             }
 
             /// <summary>Оператор вычисления билинейной формы с векторными операндами b = <paramref name="x"/>*<paramref name="a"/>*<paramref name="y"/></summary>
@@ -733,11 +740,11 @@ public partial class Matrix<T>
                         {
                             var s = default(T);
                             for (var j = 0; j < M; j++)
-                                s += a[i, j] * y[j, j0];
-                            s0 += x[i0, i] * s;
+                                s = s! + a[i, j] * y[j, j0];
+                            s0 = s0! + x[i0, i] * s!;
                         }
 
-                        result[i0, j0] = s0;
+                        result[i0, j0] = s0!;
                     }
 
                 return result;
@@ -771,11 +778,11 @@ public partial class Matrix<T>
                 {
                     var s = default(T);
                     for (var j = 0; j < M; j++)
-                        s += a[i, j] * x[j];
-                    result += x[i] * s;
+                        s = s! + a[i, j] * x[j];
+                    result = result! + x[i] * s!;
                 }
 
-                return result;
+                return result!;
             }
 
             /// <summary>Вычисление матрицы билинейной формы X*A*X^T</summary>
@@ -812,11 +819,11 @@ public partial class Matrix<T>
                         {
                             var s = default(T);
                             for (var j = 0; j < M; j++)
-                                s += a[i, j] * x[j0, j];
-                            s0 += x[i0, i] * s;
+                                s = s! + a[i, j] * x[j0, j];
+                            s0 = s0! + x[i0, i] * s!;
                         }
 
-                        result[i0, j0] = s0;
+                        result[i0, j0] = s0!;
                     }
 
                 return result;

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq.Reactive;
 using System.Reflection;
+
 using MathCore.Annotations;
 using MathCore.Extensions.Expressions;
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
@@ -50,10 +51,10 @@ public class Property<T> : ItemBase, INotifyPropertyChanged, IObservableEx<T>
     private readonly PropertyInfo _PropertyInfo;
 
     /// <summary>Метод чтения свойства</summary>
-    private readonly Func<T>? _Reader;
+    private readonly Func<T> _Reader = null!;
 
     /// <summary>Метод записи значения свойства</summary>
-    private readonly Action<T>? _Writer;
+    private readonly Action<T> _Writer = null!;
 
     private readonly SimpleObservableEx<T> _ObservableObject = new();
 
@@ -76,21 +77,21 @@ public class Property<T> : ItemBase, INotifyPropertyChanged, IObservableEx<T>
     {
         get
         {
-            if(!CanRead) throw new NotSupportedException();
+            if (!CanRead) throw new NotSupportedException();
             return _Reader();
         }
         set
         {
-            if(!CanWrite) throw new NotSupportedException();
+            if (!CanWrite) throw new NotSupportedException();
             _Writer(value);
         }
     }
 
     /// <summary>Свойство доступа к значению атрибута <see cref="ComponentModel.DescriptionAttribute"/></summary>
-    public string DescriptionAttribute { get; private set; }
+    public string DescriptionAttribute { get; private set; } = null!;
 
     /// <summary>Отображаемое имя</summary>
-    public string DisplayName { get; private set; }
+    public string DisplayName { get; private set; } = null!;
 
     /// <summary>Признак реализации объектом-хозяином свойства интерфейса <see cref="INotifyPropertyChanged"/></summary>
     public bool IsNotifyPropertyChanged { get; }
@@ -116,18 +117,18 @@ public class Property<T> : ItemBase, INotifyPropertyChanged, IObservableEx<T>
         LoadAttributes();
 
         var value_parameter = Expression.Parameter(_PropertyInfo.PropertyType, "value");
-        if(_PropertyInfo.CanRead)
+        if (_PropertyInfo.CanRead)
         {
             // ReSharper disable once AssignNullToNotNullAttribute
-            var body        = Expression.Property(null, Name);
+            var body = Expression.Property(null!, Name);
             var reader_expr = Expression.Lambda<Func<T>>(body);
             _Reader = reader_expr.Compile();
         }
 
-        if(_PropertyInfo.CanWrite)
+        if (_PropertyInfo.CanWrite)
         {
-            var set_method_info = _PropertyInfo.GetSetMethod(!IsPublicOnly);
-            var writer_expr     = Expression.Lambda<Action<T>>(Expression.Call(null, set_method_info, value_parameter), value_parameter);
+            var set_method_info = _PropertyInfo.GetSetMethod(!IsPublicOnly).NotNull();
+            var writer_expr = Expression.Lambda<Action<T>>(Expression.Call(null, set_method_info, value_parameter), value_parameter);
             _Writer = writer_expr.Compile();
             // ReSharper disable once UseNameofExpression
             _Writer += _ => OnPropertyChanged("Value");
@@ -150,38 +151,38 @@ public class Property<T> : ItemBase, INotifyPropertyChanged, IObservableEx<T>
     public Property(object Obj, PropertyInfo info, bool IsPublicOnly = true)
         : base(Obj, info.Name)
     {
-        _PropertyInfo = info;
+        _PropertyInfo = info.NotNull();
         Debug.Assert(_PropertyInfo != null, "_PropertyInfo != null");
         LoadAttributes();
 
-        var obj_constant    = Obj.ToExpression();
+        var obj_constant = Obj.ToExpression();
         var value_parameter = Expression.Parameter(info.PropertyType, "value");
-        if(_PropertyInfo.CanRead)
+        if (_PropertyInfo!.CanRead)
         {
-            var body       = Expression.Property(obj_constant, Name);
+            var body = Expression.Property(obj_constant, Name);
             var reader_expr = Expression.Lambda<Func<T>>(body);
             _Reader = reader_expr.Compile();
         }
 
-        if(_PropertyInfo.CanWrite)
+        if (_PropertyInfo.CanWrite)
         {
-            var set_method_info = _PropertyInfo.GetSetMethod(!IsPublicOnly);
-            var writer_expr     = Expression.Lambda<Action<T>>(Expression.Call(obj_constant, set_method_info, value_parameter), value_parameter);
+            var set_method_info = _PropertyInfo.GetSetMethod(!IsPublicOnly).NotNull();
+            var writer_expr = Expression.Lambda<Action<T>>(Expression.Call(obj_constant, set_method_info, value_parameter), value_parameter);
             _Writer = writer_expr.Compile();
             // ReSharper disable once UseNameofExpression
-            if(!IsNotifyPropertyChanged) _Writer += _ => OnPropertyChanged("Value");
+            if (!IsNotifyPropertyChanged) _Writer += _ => OnPropertyChanged("Value");
         }
 
         // ReSharper disable once AssignmentInConditionalExpression
-        if(IsNotifyPropertyChanged = Obj is INotifyPropertyChanged)
-            ((INotifyPropertyChanged)Obj).PropertyChanged += (_, e) => { if(e.PropertyName == _Name) OnPropertyChanged(nameof(Value)); };
+        if (IsNotifyPropertyChanged = Obj is INotifyPropertyChanged)
+            ((INotifyPropertyChanged)Obj).PropertyChanged += (_, e) => { if (e.PropertyName == _Name) OnPropertyChanged(nameof(Value)); };
     }
 
     /// <summary>Чтение сведений из атрибутов</summary>
     private void LoadAttributes()
     {
         var description_attributes = _PropertyInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
-        if(description_attributes.Length > 0)
+        if (description_attributes.Length > 0)
             DescriptionAttribute = ((DescriptionAttribute)description_attributes[0]).Description;
 
         var name_attributes = _PropertyInfo.GetCustomAttributes(typeof(DisplayNameAttribute), false);
@@ -216,10 +217,10 @@ public class Property : ItemBase, INotifyPropertyChanged, IObservable<object>
     private readonly PropertyInfo _PropertyInfo;
 
     /// <summary>Метод чтения свойства</summary>
-    private readonly Func<object>? _Reader;
+    private readonly Func<object> _Reader = null!;
 
     /// <summary>Метод записи значения свойства</summary>
-    private readonly Action<object>? _Writer;
+    private readonly Action<object> _Writer = null!;
 
     private readonly SimpleObservableEx<object> _ObservableObject = new();
 
@@ -238,10 +239,10 @@ public class Property : ItemBase, INotifyPropertyChanged, IObservable<object>
     public Func<object> Reader => _Reader;
 
     /// <summary>Свойство доступа к значению атрибута <see cref="ComponentModel.DescriptionAttribute"/></summary>
-    public string DescriptionAttribute { get; private set; }
+    public string DescriptionAttribute { get; private set; } = null!;
 
     /// <summary>Отображаемое имя</summary>
-    public string DisplayName { get; private set; }
+    public string DisplayName { get; private set; } = null!;
 
     /// <summary>Признак реализации объектом-хозяином свойства интерфейса <see cref="INotifyPropertyChanged"/></summary>
     public bool IsNotifyPropertyChanged { get; }
@@ -255,14 +256,14 @@ public class Property : ItemBase, INotifyPropertyChanged, IObservable<object>
     {
         get
         {
-            if(!CanRead) throw new NotSupportedException();
+            if (!CanRead) throw new NotSupportedException();
             return _Reader();
         }
         set
         {
-            if(!CanWrite) throw new NotSupportedException();
+            if (!CanWrite) throw new NotSupportedException();
             var value_type = value.GetType();
-            if(value_type != _PropertyInfo.PropertyType)
+            if (value_type != _PropertyInfo.PropertyType)
                 value = _PropertyInfo.PropertyType.GetCasterFrom(value_type)(value);
             _Writer(value);
         }
@@ -272,12 +273,12 @@ public class Property : ItemBase, INotifyPropertyChanged, IObservable<object>
     {
         get
         {
-            if(!CanRead) throw new NotSupportedException();
+            if (!CanRead) throw new NotSupportedException();
             return _Reader();
         }
         set
         {
-            if(!CanWrite) throw new NotSupportedException();
+            if (!CanWrite) throw new NotSupportedException();
             _Writer(value);
         }
     }
@@ -286,24 +287,24 @@ public class Property : ItemBase, INotifyPropertyChanged, IObservable<object>
     {
         get
         {
-            if(!CanRead) throw new NotSupportedException();
+            if (!CanRead) throw new NotSupportedException();
             return _Reader();
         }
         set
         {
-            if(!CanWrite) throw new NotSupportedException();
-            var value_type       = value.GetType();
+            if (!CanWrite) throw new NotSupportedException();
+            var value_type = value.GetType();
             var destination_type = PropertyType;
-            if(value_type != destination_type)
-                if(value_type != typeof(string))
+            if (value_type != destination_type)
+                if (value_type != typeof(string))
                     value = destination_type.GetCasterFrom(value_type)(value);
                 else
                 {
                     var converter = TypeDescriptor.GetConverter(destination_type);
-                    if(!converter.CanConvertFrom(value_type))
+                    if (!converter.CanConvertFrom(value_type))
                         throw new InvalidCastException(
                             $"Невозможно преобразовать значение типа {value_type} в {destination_type}");
-                    value = converter.ConvertTo(value, destination_type);
+                    value = converter.ConvertTo(value, destination_type).NotNull();
                 }
             _Writer(value);
         }
@@ -326,17 +327,17 @@ public class Property : ItemBase, INotifyPropertyChanged, IObservable<object>
         var p = Expression.Parameter(_PropertyInfo.PropertyType, "value");
 
         var object_type = typeof(object);
-        if(_PropertyInfo.CanRead)
+        if (_PropertyInfo.CanRead)
         {
             // ReSharper disable once AssignNullToNotNullAttribute
-            var body        = Expression.Property(null, Name);
+            var body = Expression.Property(null!, Name);
             var reader_expr = Expression.Lambda<Func<object>>(Expression.Convert(body, object_type));
             _Reader = reader_expr.Compile();
         }
 
-        if(_PropertyInfo.CanWrite)
+        if (_PropertyInfo.CanWrite)
         {
-            var set_method_info = _PropertyInfo.GetSetMethod(!IsPublicOnly);
+            var set_method_info = _PropertyInfo.GetSetMethod(!IsPublicOnly).NotNull();
             var writer_expr = Expression.Lambda<Action<object>>(Expression.Call(null, set_method_info, Expression.Convert(p, _PropertyInfo.PropertyType)), p);
             _Writer = writer_expr.Compile();
             // ReSharper disable UseNameofExpression
@@ -364,29 +365,29 @@ public class Property : ItemBase, INotifyPropertyChanged, IObservable<object>
     public Property(object Obj, PropertyInfo info, bool IsPublicOnly = true)
         : base(Obj, info.Name)
     {
-        _PropertyInfo = info;
+        _PropertyInfo = info.NotNull();
         Debug.Assert(_PropertyInfo != null, "_FieldInfo != null");
         LoadAttributes();
 
         var obj_constant = Expression.Constant(Obj);
         var object_type = typeof(object);
-        if(_PropertyInfo.CanRead)
+        if (_PropertyInfo!.CanRead)
         {
-            var body        = Expression.Property(obj_constant, Name);
+            var body = Expression.Property(obj_constant, Name);
             var reader_expr = Expression.Lambda<Func<object>>(Expression.Convert(body, object_type));
             _Reader = reader_expr.Compile();
         }
 
         //var q = typeof(double).Cast(4);
 
-        if(_PropertyInfo.CanWrite)
+        if (_PropertyInfo.CanWrite)
         {
             var set_method_info = IsPublicOnly ? info.GetSetMethod() ?? info.GetSetMethod(true) : info.GetSetMethod(true);
-            var p               = Expression.Parameter(typeof(object), "value");
-            var call            = Expression.Call(Expression.Constant(Obj), set_method_info, Expression.Convert(p, info.PropertyType));
-            var writer_expr     = Expression.Lambda<Action<object>>(call, p);
+            var p = Expression.Parameter(typeof(object), "value");
+            var call = Expression.Call(Expression.Constant(Obj), set_method_info.NotNull(), Expression.Convert(p, info.PropertyType));
+            var writer_expr = Expression.Lambda<Action<object>>(call, p);
             _Writer = writer_expr.Compile();
-            if(!IsNotifyPropertyChanged)
+            if (!IsNotifyPropertyChanged)
             {
                 // ReSharper disable UseNameofExpression
                 _Writer += _ => OnPropertyChanged("Value");
@@ -397,8 +398,8 @@ public class Property : ItemBase, INotifyPropertyChanged, IObservable<object>
         }
 
         // ReSharper disable once AssignmentInConditionalExpression
-        if(IsNotifyPropertyChanged = Obj is INotifyPropertyChanged)
-            ((INotifyPropertyChanged)Obj).PropertyChanged += (_, e) => { if(e.PropertyName == _Name) OnPropertyChanged(nameof(Value)); };
+        if (IsNotifyPropertyChanged = Obj is INotifyPropertyChanged)
+            ((INotifyPropertyChanged)Obj).PropertyChanged += (_, e) => { if (e.PropertyName == _Name) OnPropertyChanged(nameof(Value)); };
     }
 
 
@@ -406,7 +407,7 @@ public class Property : ItemBase, INotifyPropertyChanged, IObservable<object>
     private void LoadAttributes()
     {
         var description_attributes = _PropertyInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
-        if(description_attributes.Length > 0)
+        if (description_attributes.Length > 0)
             DescriptionAttribute = ((DescriptionAttribute)description_attributes[0]).Description;
 
         var name_attributes = _PropertyInfo.GetCustomAttributes(typeof(DisplayNameAttribute), false);

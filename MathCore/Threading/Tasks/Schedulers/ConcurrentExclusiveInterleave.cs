@@ -79,7 +79,7 @@ public sealed class ConcurrentExclusiveInterleave
 
     /// <summary>Инициализирует новый экземпляр <see cref="ConcurrentExclusiveInterleave"/></summary>
     /// <param name="ExclusiveProcessingIncludesChildren">Признак того, что эксклюзивная обработка должна учитывать дочерние задачи</param>
-    public ConcurrentExclusiveInterleave(bool ExclusiveProcessingIncludesChildren) 
+    public ConcurrentExclusiveInterleave(bool ExclusiveProcessingIncludesChildren)
         : this(TaskScheduler.Current, ExclusiveProcessingIncludesChildren) { }
 
     /// <summary>Инициализирует новый экземпляр <see cref="ConcurrentExclusiveInterleave"/></summary>
@@ -88,25 +88,18 @@ public sealed class ConcurrentExclusiveInterleave
     /// <exception cref="ArgumentNullException">Если <paramref name="TargetScheduler"/> равен <see langword="null"/></exception>
     public ConcurrentExclusiveInterleave(TaskScheduler TargetScheduler, bool ExclusiveProcessingIncludesChildren = false)
     {
-        // Планировщик должен быть задан
-        if (TargetScheduler is null) throw new ArgumentNullException(nameof(TargetScheduler));
-
         // Создаём состояние интерлива
-        _InternalLock                        = new();
+        _ParallelOptions = new() { TaskScheduler = TargetScheduler.NotNull() };
+        _InternalLock = new();
         _ExclusiveProcessingIncludesChildren = ExclusiveProcessingIncludesChildren;
-        _ParallelOptions                     = new() { TaskScheduler = TargetScheduler };
-        _ConcurrentTaskScheduler             = new(this, [], TargetScheduler.MaximumConcurrencyLevel);
-        _ExclusiveTaskScheduler              = new(this, [], 1);
+        _ConcurrentTaskScheduler = new(this, [], TargetScheduler.MaximumConcurrencyLevel);
+        _ExclusiveTaskScheduler = new(this, [], 1);
     }
 
-    /// <summary>
-    /// Планировщик, позволяющий выполнять задачи параллельно (возможны одновременные «читатели»)
-    /// </summary>
+    /// <summary>Планировщик, позволяющий выполнять задачи параллельно (возможны одновременные «читатели»)</summary>
     public TaskScheduler ConcurrentTaskScheduler => _ConcurrentTaskScheduler;
 
-    /// <summary>
-    /// Планировщик, требующий эксклюзивного выполнения задачи (один «писатель» и без «читателей»)
-    /// </summary>
+    /// <summary>Планировщик, требующий эксклюзивного выполнения задачи (один «писатель» и без «читателей»)</summary>
     public TaskScheduler ExclusiveTaskScheduler => _ExclusiveTaskScheduler;
 
     /// <summary>Количество задач, ожидающих эксклюзивного выполнения</summary>
@@ -115,9 +108,7 @@ public sealed class ConcurrentExclusiveInterleave
     private int ConcurrentTaskCount { get { lock (_InternalLock) return _ConcurrentTaskScheduler.Tasks.Count; } }
 
     /// <summary>Уведомляет интерлив о поступлении новой работы</summary>
-    /// <remarks>
-    /// Метод должен вызываться только при удержании внутренней блокировки
-    /// </remarks>
+    /// <remarks>Метод должен вызываться только при удержании внутренней блокировки</remarks>
     private void NotifyOfNewWork()
     {
         // Если обработчик уже запущен — выходим
@@ -126,17 +117,15 @@ public sealed class ConcurrentExclusiveInterleave
         // Иначе запускаем обработчик. Сначала сохраняем ссылку на задачу, затем стартуем,
         // чтобы присваивание произошло до начала выполнения тела
         _TaskExecuting = new(ConcurrentExclusiveInterleaveProcessor, CancellationToken.None, TaskCreationOptions.None);
-        _TaskExecuting.Start(_ParallelOptions.TaskScheduler);
+        _TaskExecuting.Start(_ParallelOptions.TaskScheduler.NotNull("Не задан планировщик задач"));
     }
 
     /// <summary>Тело обработчика очередей, выполняемое в единственном экземпляре задачи</summary>
-    /// <remarks>
-    /// Вынесено в отдельный метод для улучшения отображения в окне Parallel Tasks
-    /// </remarks>
+    /// <remarks>Вынесено в отдельный метод для улучшения отображения в окне Parallel Tasks</remarks>
     private void ConcurrentExclusiveInterleaveProcessor()
     {
         // Работаем, пока есть задачи для обработки
-        var run_tasks       = true;
+        var run_tasks = true;
         var cleanup_on_exit = true;
         while (run_tasks)
             try
@@ -168,29 +157,26 @@ public sealed class ConcurrentExclusiveInterleave
                         if (_ConcurrentTaskScheduler.Tasks.Count == 0 && _ExclusiveTaskScheduler.Tasks.Count == 0)
                         {
                             _TaskExecuting = null;
-                            run_tasks      = false;
+                            run_tasks = false;
                         }
             }
     }
 
     /// <summary>Выполняет параллельную задачу</summary>
     /// <param name="task">Задача для выполнения</param>
-    /// <remarks>
-    /// Вынесено в отдельный метод для улучшения отображения в окне Parallel Tasks
-    /// </remarks>
+    /// <remarks>Вынесено в отдельный метод для улучшения отображения в окне Parallel Tasks</remarks>
     private void ExecuteConcurrentTask(Task task) => _ConcurrentTaskScheduler.ExecuteTask(task);
 
     /// <summary>
-    /// Перечисление, выдающее ожидающие параллельные задачи по одной до тех пор,
-    /// пока не закончатся параллельные задачи или не появятся эксклюзивные
-    /// </summary>
+    /// Перечисление, выдающее ожидающие параллельные задачи по одной до те,
+    /// пока не закончатся параллельные задачи или не появятся эксклюзивные</summary>
     private IEnumerable<Task> GetConcurrentTasksUntilExclusiveExists()
     {
         while (true)
         {
             Task? found_task = null;
             lock (_InternalLock)
-                if (_ExclusiveTaskScheduler.Tasks.Count == 0 && _ConcurrentTaskScheduler.Tasks.Count > 0) 
+                if (_ExclusiveTaskScheduler.Tasks.Count == 0 && _ConcurrentTaskScheduler.Tasks.Count > 0)
                     found_task = _ConcurrentTaskScheduler.Tasks.Dequeue();
 
             if (found_task is null) yield break;
@@ -198,16 +184,14 @@ public sealed class ConcurrentExclusiveInterleave
         }
     }
 
-    /// <summary>
-    /// Перечисление, выдающее все ожидающие эксклюзивные задачи по одной
-    /// </summary>
+    /// <summary>Перечисление, выдающее все ожидающие эксклюзивные задачи по одной</summary>
     private IEnumerable<Task> GetExclusiveTasks()
     {
         while (true)
         {
             Task? found_task = null;
             lock (_InternalLock)
-                if (_ExclusiveTaskScheduler.Tasks.Count > 0) 
+                if (_ExclusiveTaskScheduler.Tasks.Count > 0)
                     found_task = _ExclusiveTaskScheduler.Tasks.Dequeue();
 
             if (found_task is null) yield break;
@@ -215,15 +199,15 @@ public sealed class ConcurrentExclusiveInterleave
         }
     }
 
-    /// <summary>
-    /// Планировщик-адаптер для постановки задач в интерлив и выполнения по запросу обработчика интерлива
-    /// </summary>
+    /// <summary>Планировщик-адаптер для постановки задач в интерлив и выполнения по запросу обработчика интерлива</summary>
     private class ConcurrentExclusiveTaskScheduler : TaskScheduler
     {
         /// <summary>Родительский интерлив</summary>
         private readonly ConcurrentExclusiveInterleave _Interleave;
+
         /// <summary>Максимальный уровень параллелизма для планировщика</summary>
         private readonly int _MaximumConcurrencyLevel;
+
         /// <summary>Признак того, что текущий поток выполняет задачу в рамках этого планировщика</summary>
         private readonly ThreadLocal<bool> _ProcessingTaskOnCurrentThread = new();
 
@@ -233,8 +217,8 @@ public sealed class ConcurrentExclusiveInterleave
         /// <param name="MaximumConcurrencyLevel">Максимальный уровень параллелизма</param>
         internal ConcurrentExclusiveTaskScheduler(ConcurrentExclusiveInterleave interleave, Queue<Task> tasks, int MaximumConcurrencyLevel)
         {
-            _Interleave              = interleave ?? throw new ArgumentNullException(nameof(interleave));
-            Tasks                    = tasks ?? throw new ArgumentNullException(nameof(tasks));
+            _Interleave = interleave.NotNull();
+            Tasks = tasks.NotNull();
             _MaximumConcurrencyLevel = MaximumConcurrencyLevel;
         }
 
@@ -259,7 +243,7 @@ public sealed class ConcurrentExclusiveInterleave
         /// <param name="task">Задача для выполнения</param>
         internal void ExecuteTask(Task task)
         {
-            var processing_task_on_current_thread                                        = _ProcessingTaskOnCurrentThread.Value;
+            var processing_task_on_current_thread = _ProcessingTaskOnCurrentThread.Value;
             if (!processing_task_on_current_thread) _ProcessingTaskOnCurrentThread.Value = true;
             TryExecuteTask(task);
             if (!processing_task_on_current_thread) _ProcessingTaskOnCurrentThread.Value = false;
@@ -272,8 +256,8 @@ public sealed class ConcurrentExclusiveInterleave
         protected override bool TryExecuteTaskInline(Task task, bool TaskWasPreviouslyQueued)
         {
             if (!_ProcessingTaskOnCurrentThread.Value) return false;
-            var t = new Task<bool>(state => TryExecuteTask((Task)state), task);
-            t.RunSynchronously(_Interleave._ParallelOptions.TaskScheduler);
+            var t = new Task<bool>(state => TryExecuteTask((Task)state!), task);
+            t.RunSynchronously(_Interleave._ParallelOptions.TaskScheduler.NotNull("Не задан планировщик задач"));
             return t.Result;
         }
 

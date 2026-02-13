@@ -30,7 +30,7 @@ public sealed class ExpressionTree : IDisposable, ICloneable<ExpressionTree>, IE
     /* --------------------------------------------------------------------------------------------- */
 
     /// <summary>Корень</summary>
-    public ExpressionTreeNode Root { get; set; }
+    public ExpressionTreeNode Root { get; set; } = null!;
 
     /* --------------------------------------------------------------------------------------------- */
 
@@ -46,7 +46,7 @@ public sealed class ExpressionTree : IDisposable, ICloneable<ExpressionTree>, IE
     public void Clear()
     {
         var root = Root;
-        Root = null;
+        Root = null!;
         root?.Dispose();
     }
 
@@ -57,26 +57,26 @@ public sealed class ExpressionTree : IDisposable, ICloneable<ExpressionTree>, IE
         var parent = Node.Parent;
         // Сохраняем ссылки на поддеревья
         var right = Node.Right;
-        var left  = Node.Left;
+        var left = Node.Left;
 
         Node.Parent = null;
-        Node.Left   = null;
-        Node.Right  = null;
+        Node.Left = null;
+        Node.Right = null;
 
-        if(parent is null)   // Если у узла нет родительского узла
-            if(Node == Root) // и при этом он является корнем
+        if (parent is null)   // Если у узла нет родительского узла
+            if (Node == Root) // и при этом он является корнем
             {
-                if(left is null)
+                if (left is null)
                 {
-                    if(right is null) return;
+                    if (right is null) return;
                     right.Parent = null; // обнулить ссылку на корень
-                    Root         = right;
+                    Root = right;
                     return;
                 }
-                if(right is null) // Если нет правого поддерева
+                if (right is null) // Если нет правого поддерева
                 {
                     left.Parent = null; // Обнулить ссылку у левого поддерева на корень
-                    Root        = left;
+                    Root = left;
                     return;
                 }
 
@@ -90,9 +90,9 @@ public sealed class ExpressionTree : IDisposable, ICloneable<ExpressionTree>, IE
                 throw new ArgumentException("Удаляемый узел не принадлежит дереву");
 
         // узел не является корневым.
-        if(Node.IsLeftSubtree) // Если узел является левым поддеревом
+        if (Node.IsLeftSubtree) // Если узел является левым поддеревом
         {
-            if(left is null)         // Если левого поддерева нет
+            if (left is null)         // Если левого поддерева нет
                 parent.Left = right; // то левым поддеревом родительского узла будет правое поддерево
             else
             { //иначе - левое поддерево
@@ -103,7 +103,7 @@ public sealed class ExpressionTree : IDisposable, ICloneable<ExpressionTree>, IE
         }
         else // иначе узел является правым поддеревом
         {
-            if(right is null)        // Если правого поддерева нет
+            if (right is null)        // Если правого поддерева нет
                 parent.Right = left; // то правым поддеревом родительского узла будет левое поддерево
             else
             { //иначе - правое поддерево
@@ -118,55 +118,53 @@ public sealed class ExpressionTree : IDisposable, ICloneable<ExpressionTree>, IE
     public void Swap(ExpressionTreeNode OldNode, ExpressionTreeNode NewNode)
     {
         OldNode.SwapTo(NewNode);
-        if(Root == OldNode) Root = NewNode;
+        if (Root == OldNode) Root = NewNode;
     }
 
     /// <summary>Переместить узел вниз</summary><param name="Node">Перемещаемый узел</param>
     public void MoveParentDown(ExpressionTreeNode Node)
     {
-        var parent          = Node.Parent;
+        var parent = Node.Parent;
         var is_left_subtree = Node.IsLeftSubtree;
 
-        if(is_left_subtree)
+        if (is_left_subtree)
         {
-            parent.Left = null;
+            parent!.Left = null;
 
-            if(parent.IsLeftSubtree)
-                parent.Parent.Left = Node;
-            else if(parent.IsRightSubtree)
-                parent.Parent.Right = Node;
+            if (parent.IsLeftSubtree)
+                parent.Parent!.Left = Node;
+            else if (parent.IsRightSubtree)
+                parent.Parent!.Right = Node;
             else
                 Node.Parent = null;
 
             var right = Node.Right;
             Node.Right = null;
-            if(right != null)
-                right.Parent = null;
+            right?.Parent = null;
 
-            Node.Right  = parent;
+            Node.Right = parent;
             parent.Left = right;
         }
         else
         {
-            parent.Right = null;
+            parent!.Right = null;
 
-            if(parent.IsLeftSubtree)
-                parent.Parent.Left = Node;
-            else if(parent.IsRightSubtree)
-                parent.Parent.Right = Node;
+            if (parent.IsLeftSubtree)
+                parent.Parent!.Left = Node;
+            else if (parent.IsRightSubtree)
+                parent.Parent!.Right = Node;
             else
                 Node.Parent = null;
 
             var left = Node.Left;
             Node.Left = null;
-            if(left != null)
-                left.Parent = null;
+            left?.Parent = null;
 
-            Node.Left    = parent;
+            Node.Left = parent;
             parent.Right = left;
         }
 
-        if(Root == parent) Root = Node;
+        if (Root == parent) Root = Node;
     }
 
     /// <summary>Обойти дерево</summary><param name="type">Способ обхода</param><returns>Перечисление узлов дерева по указанному способу обхода</returns>

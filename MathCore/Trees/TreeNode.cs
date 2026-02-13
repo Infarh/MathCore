@@ -1,6 +1,4 @@
-﻿using MathCore.Annotations;
-
-namespace MathCore.Trees;
+﻿namespace MathCore.Trees;
 
 public class TreeNode<T>(T Value, Func<T, T>? ParentSelector, Func<T, IEnumerable<T>>? ChildsSelector) : ITreeValuedNode<T>
 {
@@ -15,9 +13,11 @@ public class TreeNode<T>(T Value, Func<T, T>? ParentSelector, Func<T, IEnumerabl
     {
         get
         {
-            if (_ParentSelector is null) return null;
+            if (_ParentSelector is null) return null!;
             var parent_item = _ParentSelector.Invoke(Value);
-            return parent_item is null ? null : new TreeNode<T>(parent_item, _ParentSelector, _ChildsSelector, Level - 1);
+            return parent_item is null
+                ? null!
+                : new TreeNode<T>(parent_item, _ParentSelector, _ChildsSelector, Level - 1);
         }
     }
 
@@ -26,7 +26,7 @@ public class TreeNode<T>(T Value, Func<T, T>? ParentSelector, Func<T, IEnumerabl
         get
         {
             var childs = _ChildsSelector?.Invoke(Value);
-            if(childs is null) yield break;
+            if (childs is null) yield break;
             var child_level = Level + 1;
             foreach (var child in childs)
                 yield return new TreeNode<T>(child, _ParentSelector, _ChildsSelector, child_level);

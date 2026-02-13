@@ -112,7 +112,7 @@ public static class TaskEx
         {
             await task.ConfigureAwait(false);
         }
-        catch (OperationCanceledException e) when(e.CancellationToken == Cancel)
+        catch (OperationCanceledException e) when (e.CancellationToken == Cancel)
         {
             OnCancelled?.Invoke();
         }
@@ -125,7 +125,7 @@ public static class TaskEx
                 ? Task.FromCanceled<T>(cancel)
                 : task.CreateCancellation(cancel);
 
-    private static readonly Action<object?> __CancellationRegistration = s => ((TaskCompletionSource<bool>)s).TrySetResult(default);
+    private static readonly Action<object?> __CancellationRegistration = s => ((TaskCompletionSource<bool>)s!).TrySetResult(default);
 
     private static async Task<T> CreateCancellation<T>(this Task<T> task, CancellationToken cancel)
     {
@@ -146,7 +146,7 @@ public static class TaskEx
     public static Task Finally(this Task task, Action OnTaskCompleted) => task.ContinueWith(_ => OnTaskCompleted(), TaskContinuationOptions.None);
 
     // ReSharper disable once InconsistentNaming
-    const TaskContinuationOptions not_on_cancel = TaskContinuationOptions.NotOnCanceled;
+    private const TaskContinuationOptions not_on_cancel = TaskContinuationOptions.NotOnCanceled;
 
     /// https://blogs.msdn.microsoft.com/pfxteam/2010/04/04/a-tour-of-parallelextensionsextras/
     public static Task<TResult> Select<TSource, TResult>(this Task<TSource> source, Func<TSource, TResult> selector)
@@ -318,8 +318,8 @@ public static class TaskEx
         // When the source completes, return a grouping of just the one element
         return source.ContinueWith(t =>
         {
-            var result  = t.Result;
-            var key     = KeySelector(result);
+            var result = t.Result;
+            var key = KeySelector(result);
             var element = ElementSelector(result);
             return (IGrouping<TKey, TElement>)new OneElementGrouping<TKey, TElement> { Key = key, Element = element };
         }, not_on_cancel);
@@ -371,7 +371,7 @@ public static class TaskEx
     public static Task<TResult> WithTimeout<TResult>(this Task<TResult> task, in TimeSpan timeout)
     {
         var result = new TaskCompletionSource<TResult>(task.AsyncState);
-        var timer  = new Timer(_ => result.TrySetCanceled(), null, timeout, TimeSpan.FromMilliseconds(-1));
+        var timer = new Timer(_ => result.TrySetCanceled(), null, timeout, TimeSpan.FromMilliseconds(-1));
         task.ContinueWith(t =>
         {
             timer.Dispose();
@@ -409,7 +409,7 @@ public static class TaskEx
     /// <param name="factory">The TaskFactory.</param>
     /// <returns>A continuation task.</returns>
     public static Task ContinueWith(this Task task, Action<Task> ContinuationAction, TaskFactory factory) =>
-        task.ContinueWith(ContinuationAction, factory.CancellationToken, factory.ContinuationOptions, factory.Scheduler);
+        task.ContinueWith(ContinuationAction, factory.CancellationToken, factory.ContinuationOptions, factory.Scheduler!);
 
     /// <summary>Creates a continuation task using the specified TaskFactory.</summary>
     /// <param name="task">The antecedent Task.</param>
@@ -417,7 +417,7 @@ public static class TaskEx
     /// <param name="factory">The TaskFactory.</param>
     /// <returns>A continuation task.</returns>
     public static Task<TResult> ContinueWith<TResult>(this Task task, Func<Task, TResult> ContinuationFunction, TaskFactory factory) =>
-        task.ContinueWith(ContinuationFunction, factory.CancellationToken, factory.ContinuationOptions, factory.Scheduler);
+        task.ContinueWith(ContinuationFunction, factory.CancellationToken, factory.ContinuationOptions, factory.Scheduler!);
     #endregion
 
     #region ContinueWith accepting TaskFactory<TResult>
@@ -427,7 +427,7 @@ public static class TaskEx
     /// <param name="factory">The TaskFactory.</param>
     /// <returns>A continuation task.</returns>
     public static Task ContinueWith<TResult>(this Task<TResult> task, Action<Task<TResult>> ContinuationAction, TaskFactory<TResult> factory) =>
-        task.ContinueWith(ContinuationAction, factory.CancellationToken, factory.ContinuationOptions, factory.Scheduler);
+        task.ContinueWith(ContinuationAction, factory.CancellationToken, factory.ContinuationOptions, factory.Scheduler!);
 
     /// <summary>Creates a continuation task using the specified TaskFactory.</summary>
     /// <param name="task">The antecedent Task.</param>
@@ -435,7 +435,7 @@ public static class TaskEx
     /// <param name="factory">The TaskFactory.</param>
     /// <returns>A continuation task.</returns>
     public static Task<TNewResult> ContinueWith<TResult, TNewResult>(this Task<TResult> task, Func<Task<TResult>, TNewResult> ContinuationFunction, TaskFactory<TResult> factory) =>
-        task.ContinueWith(ContinuationFunction, factory.CancellationToken, factory.ContinuationOptions, factory.Scheduler);
+        task.ContinueWith(ContinuationFunction, factory.CancellationToken, factory.ContinuationOptions, factory.Scheduler!);
 
     #endregion
 
@@ -608,7 +608,7 @@ public static class TaskEx
     public static Task WithTimeout(this Task task, in TimeSpan timeout)
     {
         var result = new TaskCompletionSource<object>(task.AsyncState);
-        var timer  = new Timer(state => ((TaskCompletionSource<object>)state).TrySetCanceled(), result, timeout, TimeSpan.FromMilliseconds(-1));
+        var timer = new Timer(state => ((TaskCompletionSource<object>)state!).TrySetCanceled(), result, timeout, TimeSpan.FromMilliseconds(-1));
         task.ContinueWith(t =>
         {
             timer.Dispose();
@@ -625,7 +625,7 @@ public static class TaskEx
     public static Task<TResult> WithTimeout<TResult>(this Task<TResult> task, TimeSpan timeout)
     {
         var result = new TaskCompletionSource<TResult>(task.AsyncState);
-        var timer  = new Timer(state => ((TaskCompletionSource<TResult>)state).TrySetCanceled(), result, timeout, TimeSpan.FromMilliseconds(-1));
+        var timer = new Timer(state => ((TaskCompletionSource<TResult>)state!).TrySetCanceled(), result, timeout, TimeSpan.FromMilliseconds(-1));
         task.ContinueWith(t =>
         {
             timer.Dispose();
@@ -1023,7 +1023,7 @@ public static class TaskEx
        .ContinueWith(
             (_, o) => ((Action)o!)(),
             continuation,
-            default, 
+            default,
             TaskContinuationOptions.OnlyOnCanceled,
             Scheduler);
 
@@ -1031,7 +1031,7 @@ public static class TaskEx
        .ContinueWith(
             (_, o) => ((Action)o!)(),
             continuation,
-            Cancel, 
+            Cancel,
             TaskContinuationOptions.OnlyOnCanceled,
             Scheduler);
 
@@ -1077,7 +1077,7 @@ public static class TaskEx
 
     public static Task OnFailure(this Task task, Action<AggregateException> continuation, SynchronizationContext Context) => task
        .ContinueWith(
-            (t, o) => ((SynchronizationContext)((object[])o!)[0]).Send(a => ((Action<AggregateException>)((object[])a)[0])((AggregateException)((object[])a)[1]), new[] { ((object[])o)[1], t.Exception }),
+            (t, o) => ((SynchronizationContext)((object[])o!)[0]).Send(a => ((Action<AggregateException>)((object[])a!)[0])((AggregateException)((object[])a)[1]), new[] { ((object[])o)[1], t.Exception }),
             new object[] { Context, continuation },
             TaskContinuationOptions.OnlyOnFaulted);
 
@@ -1085,16 +1085,16 @@ public static class TaskEx
        .ContinueWith(
             (t, o) => ((Action<AggregateException>)o!)(t.Exception!),
             continuation,
-            default, 
-            TaskContinuationOptions.OnlyOnFaulted, 
+            default,
+            TaskContinuationOptions.OnlyOnFaulted,
             Scheduler);
 
     public static Task OnFailure(this Task task, Action<AggregateException> continuation, TaskScheduler Scheduler, CancellationToken Cancel) => task
        .ContinueWith(
             (t, o) => ((Action<AggregateException>)o!)(t.Exception!),
             continuation,
-            Cancel, 
-            TaskContinuationOptions.OnlyOnFaulted, 
+            Cancel,
+            TaskContinuationOptions.OnlyOnFaulted,
             Scheduler);
 
     public static Task<TResult> OnFailure<T, TResult>(this Task<T> task, Func<AggregateException, TResult> continuation) => task

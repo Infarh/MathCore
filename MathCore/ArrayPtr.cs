@@ -54,7 +54,7 @@ public readonly ref struct ArrayPtr<T>(T[] array, int Offset = 0, int Length = -
         else
         {
             result.Append('[');
-            for(var (i, i1) = (_Offset, Math.Min(_Offset + Length, _Array.Length)); i < i1; i++)
+            for (var (i, i1) = (_Offset, Math.Min(_Offset + Length, _Array.Length)); i < i1; i++)
                 result.Append(_Array[i]).Append(',');
             result.Length--;
             result.Append(']');
@@ -66,11 +66,11 @@ public readonly ref struct ArrayPtr<T>(T[] array, int Offset = 0, int Length = -
     public override int GetHashCode() => HashBuilder.New(_Array).Append(_Offset).Append(Length);
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public override bool Equals(object obj) => throw new NotSupportedException();
+    public override bool Equals(object? obj) => throw new NotSupportedException();
 
-    public bool Equals(ArrayPtr<T> other) => 
-        ReferenceEquals(_Array, other._Array) 
-        && _Offset == other._Offset 
+    public bool Equals(ArrayPtr<T> other) =>
+        ReferenceEquals(_Array, other._Array)
+        && _Offset == other._Offset
         && Length == other.Length;
 
     public static bool operator ==(ArrayPtr<T> a, ArrayPtr<T> b) => a.Equals(b);
@@ -78,8 +78,8 @@ public readonly ref struct ArrayPtr<T>(T[] array, int Offset = 0, int Length = -
 
     public static implicit operator ArrayPtr<T>(T[] array) => new(array);
 
-    public static explicit operator T[](ArrayPtr<T> ptr) => 
-        ptr._Offset == 0 && ptr.Length == ptr._Array.Length 
-            ? ptr._Array 
+    public static explicit operator T[](ArrayPtr<T> ptr) =>
+        ptr._Offset == 0 && ptr.Length == ptr._Array.Length
+            ? ptr._Array
             : ptr.ToArray();
 }

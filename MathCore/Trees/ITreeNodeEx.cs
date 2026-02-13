@@ -14,26 +14,23 @@ public static class ITreeNodeEx
     /// <param name="ChildsSelector">Метод извлечения дочерних значений текущего узла</param>
     /// <param name="ParentSelector">Метод извлечения значения родительского узла</param>
     /// <returns>Текущий узел дерева</returns>
-    [NotNull]
     public static TreeNode<T> AsTreeNode<T>(
-        [NotNull] this T Value,
-        [CanBeNull] Func<T, IEnumerable<T>> ChildsSelector,
-        [CanBeNull] Func<T, T> ParentSelector = null) =>
+        this T Value,
+        Func<T, IEnumerable<T>>? ChildsSelector,
+        Func<T, T>? ParentSelector = null) =>
         new(Value, ParentSelector, ChildsSelector);
 
     /// <summary>Определение корня дерева</summary>
     /// <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
     /// <param name="Node">Объект с интерфейсом элемента дерева</param>
     /// <returns>Корневой объект дерева объектов</returns>
-    [NotNull]
-    public static T GetRootNode<T>([NotNull] this T Node) where T : class, ITreeNode<T> => Node.EnumerateParents().Last();
+    public static T GetRootNode<T>(this T Node) where T : class, ITreeNode<T> => Node.EnumerateParents().Last();
 
     /// <summary>Получить все родительские элементы</summary>
     /// <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
     /// <param name="Node">Объект с интерфейсом элемента дерева</param>
     /// <returns>Массив элементов родительских узлов дерева</returns>
-    [NotNull]
-    public static T[] GetParents<T>([NotNull] this T Node) where T : class, ITreeNode<T> =>
+    public static T[] GetParents<T>(this T Node) where T : class, ITreeNode<T> =>
         Node is null
             ? throw new ArgumentNullException(nameof(Node))
             : Node.Parent is null
@@ -44,9 +41,7 @@ public static class ITreeNodeEx
     /// <typeparam name="T">Тип узла дерева</typeparam>
     /// <param name="Node">Текущий узел</param>
     /// <returns>Перечисление предков</returns>
-    [NotNull, ItemNotNull]
-    public static IEnumerable<T> EnumerateParents<T>([NotNull] this T Node) 
-        where T : class, ITreeNode<T>
+    public static IEnumerable<T> EnumerateParents<T>(this T Node) where T : class, ITreeNode<T>
     {
         for (var parent = Node.Parent; parent != null; parent = parent.Parent)
             yield return parent;
@@ -57,8 +52,7 @@ public static class ITreeNodeEx
     /// <typeparam name="TValue">Тип значения узла</typeparam>
     /// <param name="Node">Текущий узел дерева</param>
     /// <returns>Перечисление значений родительских узлов текущего узла дерева</returns>
-    [NotNull]
-    public static IEnumerable<TValue> EnumerateParentValues<T, TValue>([NotNull] this ITreeNode<T, TValue> Node)
+    public static IEnumerable<TValue> EnumerateParentValues<T, TValue>(this ITreeNode<T, TValue> Node)
         where T : class, ITreeNode<T, TValue> =>
         Node.EnumerateParents().Select(n => n.Value);
 
@@ -68,9 +62,9 @@ public static class ITreeNodeEx
     /// <param name="Node">Текущий узел дерева</param>
     /// <returns>Массив значений родительских узлов текущего узла дерева</returns>
     [NotNull]
-    public static TValue[] GetParentValues<T, TValue>([NotNull] this ITreeNode<T, TValue> Node) 
+    public static TValue[] GetParentValues<T, TValue>(this ITreeNode<T, TValue> Node)
         where T : class, ITreeNode<T, TValue> =>
-        Node.EnumerateParentValues().ToArray();
+        [.. Node.EnumerateParentValues()];
 
     /// <summary>Перечисление всех дочерних узлов дерева</summary>
     /// <typeparam name="T">Тип узла дерева</typeparam>
@@ -79,9 +73,9 @@ public static class ITreeNodeEx
     /// <param name="ParentFirst">Формировать в перечислении родительский узел первым</param>
     /// <returns>Перечисление дочерних узлов поддерева</returns>
     public static IEnumerable<T> EnumerateChilds<T>(
-        this T Node, 
-        [CanBeNull] Func<T, bool> ProcessChilds = null, 
-        bool ParentFirst = true) 
+        this T Node,
+        Func<T, bool>? ProcessChilds = null,
+        bool ParentFirst = true)
         where T : class, ITreeNode<T>
     {
         if (ParentFirst)
@@ -98,6 +92,7 @@ public static class ITreeNodeEx
                 foreach (var node in Node.Childs)
                     foreach (var child in node.EnumerateChildsWithRoot(ProcessChilds, false))
                         yield return child;
+
             yield return Node;
         }
     }
@@ -109,9 +104,9 @@ public static class ITreeNodeEx
     /// <param name="CurrentFirst">Формировать в перечислении родительский узел первым</param>
     /// <returns>Перечисление дочерних узлов поддерева</returns>
     public static IEnumerable<T> EnumerateChildsWithRoot<T>(
-        this T Node, 
-        [CanBeNull] Func<T, bool> ProcessChilds = null, 
-        bool CurrentFirst = true) 
+        this T Node,
+        Func<T, bool>? ProcessChilds = null,
+        bool CurrentFirst = true)
         where T : class, ITreeNode<T>
     {
         if (CurrentFirst)
@@ -138,10 +133,9 @@ public static class ITreeNodeEx
     /// <param name="ProcessChilds">Метод, определяющий необходимость обработки дочерних узлов</param>
     /// <param name="ParentFirst">Формировать в перечислении родительский узел первым</param>
     /// <returns>Перечисление значений дочерних узлов поддерева</returns>
-    [NotNull]
     public static IEnumerable<T> EnumerateChildValues<T>(
-        [NotNull] this ITreeValuedNode<T> Node,
-        [CanBeNull] Func<ITreeValuedNode<T>, bool> ProcessChilds = null,
+        this ITreeValuedNode<T> Node,
+        Func<ITreeValuedNode<T>, bool>? ProcessChilds = null,
         bool ParentFirst = true) =>
         Node.EnumerateChilds(ProcessChilds, ParentFirst).Select(child => child.Value);
 
@@ -151,10 +145,9 @@ public static class ITreeNodeEx
     /// <param name="ProcessChilds">Метод, определяющий необходимость обработки дочерних узлов</param>
     /// <param name="CurrentFirst">Формировать в перечислении родительский узел первым</param>
     /// <returns>Перечисление значений дочерних узлов поддерева</returns>
-    [NotNull]
     public static IEnumerable<T> EnumerateChildValuesWithRoot<T>(
-        [NotNull] this ITreeValuedNode<T> Node,
-        [CanBeNull] Func<ITreeValuedNode<T>, bool> ProcessChilds = null,
+        this ITreeValuedNode<T> Node,
+        Func<ITreeValuedNode<T>, bool>? ProcessChilds = null,
         bool CurrentFirst = true) =>
         Node.EnumerateChildsWithRoot(ProcessChilds, CurrentFirst).Select(node => node.Value);
 }

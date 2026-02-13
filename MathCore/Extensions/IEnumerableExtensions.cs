@@ -1669,13 +1669,13 @@ public static partial class IEnumerableExtensions
 
     /// <summary>История перечисления последовательности элементов</summary>
     /// <typeparam name="T">Тип элементов последовательности</typeparam>
-    public sealed class EnumerableHistory<T> : IEnumerable<T>, IObservable<T>
+    /// <remarks>Инициализация нового экземпляра <see cref="EnumerableHistory{T}"/></remarks>
+    /// <param name="HistoryLength">Длина истории</param>
+    public sealed class EnumerableHistory<T>([MinValue(0)] int HistoryLength) : IEnumerable<T>, IObservable<T>
     {
-        /// <summary>Длина истории</summary>
-        private int _HistoryLength;
 
         /// <summary>Список элементов в истории</summary>
-        private readonly List<T> _Queue;
+        private readonly List<T> _Queue = new(HistoryLength);
 
         /// <summary>Объект-наблюдения за историей</summary>
         private readonly SimpleObservableEx<T> _ObservableObject = new();
@@ -1685,7 +1685,7 @@ public static partial class IEnumerableExtensions
 
         /// <summary>Длина истории</summary>
         [MinValue(0)]
-        public int Length { get => _HistoryLength; set { _HistoryLength = value; Check(); } }
+        public int Length { get => HistoryLength; set { HistoryLength = value; Check(); } }
 
         /// <summary>Количество элементов в истории</summary>
         [MinValue(0)]
@@ -1696,18 +1696,10 @@ public static partial class IEnumerableExtensions
         /// <returns>Элемент истории перечисления</returns>
         public T this[[MinValue(0)] int i] => _Queue[^i];
 
-        /// <summary>Инициализация нового экземпляра <see cref="EnumerableHistory{T}"/></summary>
-        /// <param name="HistoryLength">Длина истории</param>
-        public EnumerableHistory([MinValue(0)] int HistoryLength)
-        {
-            _HistoryLength = HistoryLength;
-            _Queue = new(HistoryLength);
-        }
-
         /// <summary>Удаление лишних элементов из истории</summary>
         private void Check()
         {
-            while (_Queue.Count > _HistoryLength) _Queue.RemoveAt(0);
+            while (_Queue.Count > HistoryLength) _Queue.RemoveAt(0);
         }
 
         /// <summary>Добавить элемент в историю перечисления</summary>
@@ -1759,7 +1751,7 @@ public static partial class IEnumerableExtensions
     {
         if (Length > 0)
             return new StatisticValue(Length)
-                   .InitializeObject(collection, (sv, items) => sv.AddEnumerable(items))
+                   .InitializeObject(collection, (sv, items) => sv.AddEnumerable(items!))
                 ?? throw new InvalidOperationException();
         var values = collection.ToArray();
         var result = new StatisticValue(values.Length);

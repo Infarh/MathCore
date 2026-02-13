@@ -20,7 +20,7 @@ public class CSV(
     int SkipFirstLines = 0,
     bool HeaderLine = true,
     bool SkipEmptyLines = true,
-    Encoding? Encoding = null) 
+    Encoding? Encoding = null)
     : IEnumerable<CSV.Item>
 {
     /// <summary>Элемент данных</summary>
@@ -75,24 +75,23 @@ public class CSV(
     /// <inheritdoc />
     public IEnumerator<Item> GetEnumerator()
     {
-        var       separator = Separator;
-        using var reader    = new StreamReader(new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.Read), _Encoding);
-        for (var skip = SkipFirstLines; skip > 0 && !reader.EndOfStream; skip--) 
+        var separator = Separator;
+        using var reader = new StreamReader(new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.Read), _Encoding);
+        for (var skip = SkipFirstLines; skip > 0 && !reader.EndOfStream; skip--)
             reader.ReadLine();
 
         string[]? header = null;
         if (HeaderLine && !reader.EndOfStream)
-            if (reader.ReadLine() is not { Length: > 0 } header_line)
-                throw new FormatException("Ошибка формата файла - отсутствует требуемая строка заголовка");
-            else
-                header = header_line.Split(separator);
+            header = reader.ReadLine() is { Length: > 0 } header_line
+                ? header_line.Split(separator)
+                : throw new FormatException("Ошибка формата файла - отсутствует требуемая строка заголовка");
 
         while (!reader.EndOfStream)
         {
-            var file_pos  = reader.BaseStream.Position;
+            var file_pos = reader.BaseStream.Position;
             if (reader.ReadLine()?.Split(separator) is not { } item_line) continue;
             if (SkipEmptyLines && item_line.All(s => s is { Length: > 0 })) continue;
-            yield return new(header, item_line, file_pos, reader.BaseStream.Position);
+            yield return new(header!, item_line, file_pos, reader.BaseStream.Position);
         }
     }
 

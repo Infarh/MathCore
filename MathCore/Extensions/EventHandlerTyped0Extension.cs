@@ -38,7 +38,7 @@ public static class EventHandlerTyped1Extension
     /// <param name="Handler">Обработчик события</param>
     /// <param name="Sender">Источник события</param>
     [DST]
-    public static void FastStart<TSender, TEventArgs>(this EventHandler<TSender, TEventArgs>? Handler, TSender Sender) => Handler?.Invoke(Sender, default);
+    public static void FastStart<TSender, TEventArgs>(this EventHandler<TSender, TEventArgs>? Handler, TSender Sender) => Handler?.Invoke(Sender, default!);
 
     /// <summary>Быстрая генерация события</summary>
     /// <param name="Handler">Обработчик события</param>

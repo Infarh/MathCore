@@ -56,8 +56,8 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
             ? result
             : throw new FormatException("Строка имела неверный формат") { Data = { [nameof(str)] = str } };
 
-    public static Complex Parse(string str, IFormatProvider provider) =>
-        TryParse(str.NotNull(), provider, out var result)
+    public static Complex Parse(string str, IFormatProvider? provider) =>
+        TryParse(str.NotNull(), provider!, out var result)
             ? result
             : throw new FormatException("Строка имела неверный формат") { Data = { [nameof(str)] = str } };
 
@@ -77,20 +77,20 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
 
     }
 
-        /// <summary>Попытаться разобрать строку и преобразовать её в комплексное число</summary>
-        /// <param name="str">Разбираемая строка</param>
-        /// <param name="z">Число, получаемое в результате разбора строки</param>
-        /// <returns>Истина, если операция разбора строки выполнена успешно</returns>
-        /// <remarks>
-        /// <para>
-        /// Разбор строки производится по следующим правилам:
-        /// </para>
-        /// <list type="number">
-        ///     <item><description>Если строка начинается с 'i' или 'j', то она интерпретируется как мнимая часть комплексного числа</description></item>
-        ///     <item><description>Если строка заканчивается 'i' или 'j', то она интерпретируется как мнимая часть комплексного числа</description></item>
-        ///     <item><description>Если строка не содержит 'i' или 'j', то она интерпретируется как действительная часть комплексного числа</description></item>
-        /// </list>
-        /// </remarks>
+    /// <summary>Попытаться разобрать строку и преобразовать её в комплексное число</summary>
+    /// <param name="str">Разбираемая строка</param>
+    /// <param name="z">Число, получаемое в результате разбора строки</param>
+    /// <returns>Истина, если операция разбора строки выполнена успешно</returns>
+    /// <remarks>
+    /// <para>
+    /// Разбор строки производится по следующим правилам:
+    /// </para>
+    /// <list type="number">
+    ///     <item><description>Если строка начинается с 'i' или 'j', то она интерпретируется как мнимая часть комплексного числа</description></item>
+    ///     <item><description>Если строка заканчивается 'i' или 'j', то она интерпретируется как мнимая часть комплексного числа</description></item>
+    ///     <item><description>Если строка не содержит 'i' или 'j', то она интерпретируется как действительная часть комплексного числа</description></item>
+    /// </list>
+    /// </remarks>
     public static bool TryParse(StringPtr str, out Complex z)
     {
         var str_ptr = ClearStringPtr(str);
@@ -158,12 +158,12 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
         return false;
     }
 
-        /// <summary>Попытка преобразования строки в комплексное число, учитывая информацию о формате, получаемую из провайдера</summary>
-        /// <param name="str">Преобразуемая строка</param>
-        /// <param name="provider">Информация о формате</param>
-        /// <param name="z">Комплексное число, получаемое в результате разбора строки</param>
-        /// <returns>Истина, если преобразование выполнено успешно</returns>
-        /// <exception cref="ArgumentNullException">В случае если передана пустая ссылка на строку</exception>
+    /// <summary>Попытка преобразования строки в комплексное число, учитывая информацию о формате, получаемую из провайдера</summary>
+    /// <param name="str">Преобразуемая строка</param>
+    /// <param name="provider">Информация о формате</param>
+    /// <param name="z">Комплексное число, получаемое в результате разбора строки</param>
+    /// <returns>Истина, если преобразование выполнено успешно</returns>
+    /// <exception cref="ArgumentNullException">В случае если передана пустая ссылка на строку</exception>
     public static bool TryParse(StringPtr str, IFormatProvider provider, out Complex z)
     {
         var str_ptr = ClearStringPtr(str);
@@ -583,7 +583,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     /// <summary>Проверка на идентичность</summary>
     /// <param name="other">Проверяемое значение</param>
     /// <returns>Истина, если числа идентичны</returns>
-    [DST] public bool Equals(Complex other) => (IsNaN && other.IsNaN) || _Re == other._Re && _Im == other._Im;
+    [DST] public bool Equals(Complex other) => (IsNaN && other.IsNaN) || (_Re == other._Re && _Im == other._Im);
 
     /// <summary>Проверка на идентичность</summary>
     /// <param name="other">Проверяемое число</param>
@@ -593,7 +593,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     /// <summary>Проверка на идентичность</summary>
     /// <param name="other">Проверяемое значение</param>
     /// <returns>Истина, если числа идентичны</returns>
-    [DST] public bool Equals((double Re, double Im) other) => (IsNaN && (double.IsNaN(other.Re) || double.IsNaN(other.Im))) || _Re == other.Re && _Im == other.Im;
+    [DST] public bool Equals((double Re, double Im) other) => (IsNaN && (double.IsNaN(other.Re) || double.IsNaN(other.Im))) || (_Re == other.Re && _Im == other.Im);
 
     /// <summary>Проверка на идентичность</summary>
     /// <param name="other">Проверяемое число</param>
@@ -603,7 +603,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     /// <summary>Проверка на идентичность</summary>
     /// <param name="other">Проверяемое значение</param>
     /// <returns>Истина, если числа идентичны</returns>
-    [DST] public bool Equals((int Re, double Im) other) => (IsNaN && double.IsNaN(other.Im)) || _Re == other.Re && _Im == other.Im;
+    [DST] public bool Equals((int Re, double Im) other) => (IsNaN && double.IsNaN(other.Im)) || (_Re == other.Re && _Im == other.Im);
 
     /// <summary>Проверка на идентичность</summary>
     /// <param name="other">Проверяемое число</param>
@@ -613,7 +613,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     /// <summary>Проверка на идентичность</summary>
     /// <param name="other">Проверяемое значение</param>
     /// <returns>Истина, если числа идентичны</returns>
-    [DST] public bool Equals((double Re, int Im) other) => (IsNaN && double.IsNaN(other.Re)) || _Re == other.Re && _Im == other.Im;
+    [DST] public bool Equals((double Re, int Im) other) => (IsNaN && double.IsNaN(other.Re)) || (_Re == other.Re && _Im == other.Im);
 
     /// <summary>Проверка на идентичность</summary>
     /// <param name="other">Проверяемое число</param>
@@ -623,7 +623,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     /// <summary>Проверка на идентичность</summary>
     /// <param name="other">Проверяемое значение</param>
     /// <returns>Истина, если числа идентичны</returns>
-    [DST] public bool Equals(double other) => (double.IsNaN(other) && IsNaN) || _Re == other && _Im == 0d;
+    [DST] public bool Equals(double other) => (double.IsNaN(other) && IsNaN) || (_Re == other && _Im == 0d);
 
     /// <summary>Проверка на идентичность</summary>
     /// <param name="other">Проверяемое число</param>
@@ -673,7 +673,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     /// <summary>Проверка на идентичность</summary>
     /// <param name="other">Проверяемое значение</param>
     /// <returns>Истина, если числа идентичны</returns>
-    [DST] public bool Equals(float other) => (float.IsNaN(other) && IsNaN) || _Re == other && _Im == 0d;
+    [DST] public bool Equals(float other) => (float.IsNaN(other) && IsNaN) || (_Re == other && _Im == 0d);
 
     /// <summary>Проверка на идентичность</summary>
     /// <param name="other">Проверяемое число</param>

@@ -24,7 +24,6 @@ public class Set<T>(IEqualityComparer<T>? comparer) : AbstractSetOf<T>
     private int _FreeList = -1;
 
     private readonly IEqualityComparer<T> _Comparer = comparer ?? EqualityComparer<T>.Default;
-
     /// <inheritdoc />
     public override int Power => _Count;
 
@@ -44,6 +43,7 @@ public class Set<T>(IEqualityComparer<T>? comparer) : AbstractSetOf<T>
         for (var i = _Buckets[hash % _Buckets.Length] - 1; i >= 0; i = _Slots[i].Next)
             if (_Slots[i].HashCode == hash && _Comparer.Equals(_Slots[i].Value, Value))
                 return true;
+
         if (!AddValue) return false;
         Add(Value, hash);
         return false;
@@ -57,7 +57,7 @@ public class Set<T>(IEqualityComparer<T>? comparer) : AbstractSetOf<T>
         int k;
         if (_FreeList >= 0)
         {
-            k         = _FreeList;
+            k = _FreeList;
             _FreeList = _Slots[k].Next;
         }
         else
@@ -68,7 +68,7 @@ public class Set<T>(IEqualityComparer<T>? comparer) : AbstractSetOf<T>
         }
 
         var j = Hash % _Buckets.Length;
-        _Slots[k]   = new(Hash, Value, _Buckets[j] - 1);
+        _Slots[k] = new(Hash, Value, _Buckets[j] - 1);
         _Buckets[j] = k + 1;
     }
 
@@ -78,8 +78,8 @@ public class Set<T>(IEqualityComparer<T>? comparer) : AbstractSetOf<T>
     public bool Remove(T Value)
     {
         var hash = GetHashCodeOf(Value);
-        var j    = hash % _Buckets.Length;
-        var k    = -1;
+        var j = hash % _Buckets.Length;
+        var k = -1;
         for (var i = _Buckets[j] - 1; i >= 0; i = _Slots[i].Next)
         {
             if (_Slots[i].HashCode == hash && _Comparer.Equals(_Slots[i].Value, Value))
@@ -88,7 +88,7 @@ public class Set<T>(IEqualityComparer<T>? comparer) : AbstractSetOf<T>
                     _Buckets[j] = _Slots[i].Next + 1;
                 else
                     _Slots[k] = new(_Slots[k].HashCode, _Slots[k].Value, _Slots[i].Next);
-                _Slots[i] = new(-1, default, _FreeList);
+                _Slots[i] = new(-1, default!, _FreeList);
                 _FreeList = i;
                 return true;
             }
@@ -101,17 +101,17 @@ public class Set<T>(IEqualityComparer<T>? comparer) : AbstractSetOf<T>
     private void Resize()
     {
         var length = checked(_Count * 2 + 1);
-        var nn     = new int[length];
-        var slots  = new Slot[length];
+        var nn = new int[length];
+        var slots = new Slot[length];
         Array.Copy(_Slots, 0, slots, 0, _Count);
         for (var i = 0; i < _Count; i++)
         {
             var j = slots[i].HashCode % length;
             slots[i] = new(slots[i].HashCode, slots[i].Value, nn[j] - 1);
-            nn[j]    = i + 1;
+            nn[j] = i + 1;
         }
         _Buckets = nn;
-        _Slots   = slots;
+        _Slots = slots;
     }
 
     /// <summary>Получить хещ-код элемента</summary>

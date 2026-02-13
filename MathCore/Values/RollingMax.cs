@@ -46,7 +46,7 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
     /// <param name="Comparer">Компаратор для сравнения элементов</param>
     /// <param name="Inverted">Инвертировать порядок сравнения (для поиска минимумов)</param>
     public RollingMax(int MaxCount, IComparer<T>? Comparer = null, bool Inverted = false)
-        :this(new T[MaxCount > 0 ? MaxCount : throw new ArgumentOutOfRangeException(nameof(MaxCount), MaxCount, $"{nameof(MaxCount)} должно быть больше 0")], Comparer, Inverted)
+        : this(new T[MaxCount > 0 ? MaxCount : throw new ArgumentOutOfRangeException(nameof(MaxCount), MaxCount, $"{nameof(MaxCount)} должно быть больше 0")], Comparer, Inverted)
     { }
 
     /// <summary>Создаёт новый экземпляр скользящего максимума с функцией сравнения</summary>
@@ -58,7 +58,7 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
 
     private int _Index;
     private int _Count;
-    private readonly IComparer<T>? _Comparer = Comparer ?? Comparer<T>.Default;
+    private readonly IComparer<T> _Comparer = Comparer ?? Comparer<T>.Default;
 
     private readonly T[] _Buffer = Buffer switch
     {
@@ -119,35 +119,35 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
                         this[-1] = value;
                 }
                 else switch (_Comparer.Compare(value, this[-1])) // Сравниваем элемент с последним элементом в хвосте
-                {
-                    #region Если добавляемый элемент равен последнему элементу в хвосте
-                    case 0:
-                        Grow();
-                        this[-1] = value;
-                        break;
-                    #endregion
-
-                    case < 0:
-                        if (_Count == 2 & Grow()) // именно "&"! Местами операнды не менять!
-                        {
-                            (this[-1], this[-2]) = (this[-2], value);
+                    {
+                        #region Если добавляемый элемент равен последнему элементу в хвосте
+                        case 0:
+                            Grow();
+                            this[-1] = value;
                             break;
-                        }
+                        #endregion
 
-                        set = false;
-                        for (var i = 2; i < _Count; this[-(i - 1)] = this[-i], i++)
-                            if (_Comparer.Compare(value, this[-i]) > 0)
+                        case < 0:
+                            if (_Count == 2 & Grow()) // именно "&"! Местами операнды не менять!
                             {
-                                set = true;
-                                this[-(i - 1)] = value;
+                                (this[-1], this[-2]) = (this[-2], value);
                                 break;
                             }
 
-                        if (!set)
-                            this[-1] = value;
+                            set = false;
+                            for (var i = 2; i < _Count; this[-(i - 1)] = this[-i], i++)
+                                if (_Comparer.Compare(value, this[-i]) > 0)
+                                {
+                                    set = true;
+                                    this[-(i - 1)] = value;
+                                    break;
+                                }
 
-                        break;
-                }
+                            if (!set)
+                                this[-1] = value;
+
+                            break;
+                    }
 
                 return head;
             }
@@ -160,42 +160,42 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
             {
                 if (_Count == 1)
                 {
-                    if(Grow())
+                    if (Grow())
                         this[-1] = value;
                 }
                 else switch (_Comparer.Compare(value, this[-1])) // Сравниваем элемент с последним элементом в хвосте
-                {
-                    #region Если добавляемый элемент равен последнему элементу в хвосте
-                    // ... и в хвосте нет больше места
-                    // .., то записываем элемент последним в хвосте
-                    case 0:
-                        Grow();
-                        this[-1] = value; 
-                        break; 
-                    #endregion
-
-                    // Если элемент больше чем последний элемент хвоста
-                    case >0:
-                        if (_Count == 2 & Grow()) // именно "&"! Местами операнды не менять!
-                        {
-                            (this[-1], this[-2]) = (this[-2], value);
+                    {
+                        #region Если добавляемый элемент равен последнему элементу в хвосте
+                        // ... и в хвосте нет больше места
+                        // .., то записываем элемент последним в хвосте
+                        case 0:
+                            Grow();
+                            this[-1] = value;
                             break;
-                        }
+                        #endregion
 
-                        set = false;
-                        for (var i = 2; i < _Count; this[-(i - 1)] = this[-i], i++)
-                            if (_Comparer.Compare(value, this[-i]) < 0)
+                        // Если элемент больше чем последний элемент хвоста
+                        case > 0:
+                            if (_Count == 2 & Grow()) // именно "&"! Местами операнды не менять!
                             {
-                                set = true;
-                                this[-(i - 1)] = value;
+                                (this[-1], this[-2]) = (this[-2], value);
                                 break;
                             }
 
-                        if(!set)
-                            this[-1] = value;
+                            set = false;
+                            for (var i = 2; i < _Count; this[-(i - 1)] = this[-i], i++)
+                                if (_Comparer.Compare(value, this[-i]) < 0)
+                                {
+                                    set = true;
+                                    this[-(i - 1)] = value;
+                                    break;
+                                }
 
-                        break;
-                }
+                            if (!set)
+                                this[-1] = value;
+
+                            break;
+                    }
 
                 return head;
             }
@@ -259,7 +259,7 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
         .ToString();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    
+
     /// <summary>Возвращает перечислитель для итерации по элементам скользящего окна</summary>
     public IEnumerator<T> GetEnumerator()
     {

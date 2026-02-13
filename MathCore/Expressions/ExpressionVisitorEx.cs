@@ -1,4 +1,7 @@
 ﻿using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
+
+using MathCore.Annotations;
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Expressions;
@@ -6,56 +9,57 @@ namespace System.Linq.Expressions;
 //[Diagnostics.DST]
 public abstract class ExpressionVisitorEx
 {
+    [return: NotNullIfNotNull(nameof(Node))]
     public virtual Expression? Visit(Expression? Node) =>
         Node is null
             ? null
             : Node.NodeType switch
             {
-                ExpressionType.Negate             => VisitUnary((UnaryExpression) Node),
-                ExpressionType.NegateChecked      => VisitUnary((UnaryExpression) Node),
-                ExpressionType.Not                => VisitUnary((UnaryExpression) Node),
-                ExpressionType.Convert            => VisitUnary((UnaryExpression) Node),
-                ExpressionType.ConvertChecked     => VisitUnary((UnaryExpression) Node),
-                ExpressionType.ArrayLength        => VisitUnary((UnaryExpression) Node),
-                ExpressionType.Quote              => VisitUnary((UnaryExpression) Node),
-                ExpressionType.TypeAs             => VisitUnary((UnaryExpression) Node),
-                ExpressionType.Add                => VisitBinary((BinaryExpression) Node),
-                ExpressionType.AddChecked         => VisitBinary((BinaryExpression) Node),
-                ExpressionType.Subtract           => VisitBinary((BinaryExpression) Node),
-                ExpressionType.SubtractChecked    => VisitBinary((BinaryExpression) Node),
-                ExpressionType.Multiply           => VisitBinary((BinaryExpression) Node),
-                ExpressionType.MultiplyChecked    => VisitBinary((BinaryExpression) Node),
-                ExpressionType.Divide             => VisitBinary((BinaryExpression) Node),
-                ExpressionType.Modulo             => VisitBinary((BinaryExpression) Node),
-                ExpressionType.And                => VisitBinary((BinaryExpression) Node),
-                ExpressionType.AndAlso            => VisitBinary((BinaryExpression) Node),
-                ExpressionType.Or                 => VisitBinary((BinaryExpression) Node),
-                ExpressionType.OrElse             => VisitBinary((BinaryExpression) Node),
-                ExpressionType.LessThan           => VisitBinary((BinaryExpression) Node),
-                ExpressionType.LessThanOrEqual    => VisitBinary((BinaryExpression) Node),
-                ExpressionType.GreaterThan        => VisitBinary((BinaryExpression) Node),
-                ExpressionType.GreaterThanOrEqual => VisitBinary((BinaryExpression) Node),
-                ExpressionType.Equal              => VisitBinary((BinaryExpression) Node),
-                ExpressionType.NotEqual           => VisitBinary((BinaryExpression) Node),
-                ExpressionType.Coalesce           => VisitBinary((BinaryExpression) Node),
-                ExpressionType.ArrayIndex         => VisitBinary((BinaryExpression) Node),
-                ExpressionType.RightShift         => VisitBinary((BinaryExpression) Node),
-                ExpressionType.LeftShift          => VisitBinary((BinaryExpression) Node),
-                ExpressionType.ExclusiveOr        => VisitBinary((BinaryExpression) Node),
-                ExpressionType.Power              => VisitBinary((BinaryExpression) Node),
-                ExpressionType.TypeIs             => VisitTypeIs((TypeBinaryExpression) Node),
-                ExpressionType.Conditional        => VisitConditional((ConditionalExpression) Node),
-                ExpressionType.Constant           => VisitConstant((ConstantExpression) Node),
-                ExpressionType.Parameter          => VisitParameter((ParameterExpression) Node),
-                ExpressionType.MemberAccess       => VisitMemberAccess((MemberExpression) Node),
-                ExpressionType.Call               => VisitMethodCall((MethodCallExpression) Node),
-                ExpressionType.Lambda             => VisitLambda((LambdaExpression) Node),
-                ExpressionType.New                => VisitNew((NewExpression) Node),
-                ExpressionType.NewArrayInit       => VisitNewArray((NewArrayExpression) Node),
-                ExpressionType.NewArrayBounds     => VisitNewArray((NewArrayExpression) Node),
-                ExpressionType.Invoke             => VisitInvocation((InvocationExpression) Node),
-                ExpressionType.MemberInit         => VisitMemberInit((MemberInitExpression) Node),
-                ExpressionType.ListInit           => VisitListInit((ListInitExpression) Node),
+                ExpressionType.Negate => VisitUnary((UnaryExpression)Node),
+                ExpressionType.NegateChecked => VisitUnary((UnaryExpression)Node),
+                ExpressionType.Not => VisitUnary((UnaryExpression)Node),
+                ExpressionType.Convert => VisitUnary((UnaryExpression)Node),
+                ExpressionType.ConvertChecked => VisitUnary((UnaryExpression)Node),
+                ExpressionType.ArrayLength => VisitUnary((UnaryExpression)Node),
+                ExpressionType.Quote => VisitUnary((UnaryExpression)Node),
+                ExpressionType.TypeAs => VisitUnary((UnaryExpression)Node),
+                ExpressionType.Add => VisitBinary((BinaryExpression)Node),
+                ExpressionType.AddChecked => VisitBinary((BinaryExpression)Node),
+                ExpressionType.Subtract => VisitBinary((BinaryExpression)Node),
+                ExpressionType.SubtractChecked => VisitBinary((BinaryExpression)Node),
+                ExpressionType.Multiply => VisitBinary((BinaryExpression)Node),
+                ExpressionType.MultiplyChecked => VisitBinary((BinaryExpression)Node),
+                ExpressionType.Divide => VisitBinary((BinaryExpression)Node),
+                ExpressionType.Modulo => VisitBinary((BinaryExpression)Node),
+                ExpressionType.And => VisitBinary((BinaryExpression)Node),
+                ExpressionType.AndAlso => VisitBinary((BinaryExpression)Node),
+                ExpressionType.Or => VisitBinary((BinaryExpression)Node),
+                ExpressionType.OrElse => VisitBinary((BinaryExpression)Node),
+                ExpressionType.LessThan => VisitBinary((BinaryExpression)Node),
+                ExpressionType.LessThanOrEqual => VisitBinary((BinaryExpression)Node),
+                ExpressionType.GreaterThan => VisitBinary((BinaryExpression)Node),
+                ExpressionType.GreaterThanOrEqual => VisitBinary((BinaryExpression)Node),
+                ExpressionType.Equal => VisitBinary((BinaryExpression)Node),
+                ExpressionType.NotEqual => VisitBinary((BinaryExpression)Node),
+                ExpressionType.Coalesce => VisitBinary((BinaryExpression)Node),
+                ExpressionType.ArrayIndex => VisitBinary((BinaryExpression)Node),
+                ExpressionType.RightShift => VisitBinary((BinaryExpression)Node),
+                ExpressionType.LeftShift => VisitBinary((BinaryExpression)Node),
+                ExpressionType.ExclusiveOr => VisitBinary((BinaryExpression)Node),
+                ExpressionType.Power => VisitBinary((BinaryExpression)Node),
+                ExpressionType.TypeIs => VisitTypeIs((TypeBinaryExpression)Node),
+                ExpressionType.Conditional => VisitConditional((ConditionalExpression)Node),
+                ExpressionType.Constant => VisitConstant((ConstantExpression)Node),
+                ExpressionType.Parameter => VisitParameter((ParameterExpression)Node),
+                ExpressionType.MemberAccess => VisitMemberAccess((MemberExpression)Node),
+                ExpressionType.Call => VisitMethodCall((MethodCallExpression)Node),
+                ExpressionType.Lambda => VisitLambda((LambdaExpression)Node),
+                ExpressionType.New => VisitNew((NewExpression)Node),
+                ExpressionType.NewArrayInit => VisitNewArray((NewArrayExpression)Node),
+                ExpressionType.NewArrayBounds => VisitNewArray((NewArrayExpression)Node),
+                ExpressionType.Invoke => VisitInvocation((InvocationExpression)Node),
+                ExpressionType.MemberInit => VisitMemberInit((MemberInitExpression)Node),
+                ExpressionType.ListInit => VisitListInit((ListInitExpression)Node),
                 //ExpressionType.AddAssign => expr,
                 //ExpressionType.AddAssignChecked => expr,
                 //ExpressionType.AndAssign => expr,
@@ -102,10 +106,10 @@ public abstract class ExpressionVisitorEx
     protected virtual MemberBinding VisitBinding(MemberBinding binding) =>
         binding.BindingType switch
         {
-            MemberBindingType.Assignment    => VisitMemberAssignment((MemberAssignment) binding),
-            MemberBindingType.MemberBinding => VisitMemberMemberBinding((MemberMemberBinding) binding),
-            MemberBindingType.ListBinding   => VisitMemberListBinding((MemberListBinding) binding),
-            _                               => throw new($"Unhandled binding type '{binding.BindingType}'")
+            MemberBindingType.Assignment => VisitMemberAssignment((MemberAssignment)binding),
+            MemberBindingType.MemberBinding => VisitMemberMemberBinding((MemberMemberBinding)binding),
+            MemberBindingType.ListBinding => VisitMemberListBinding((MemberListBinding)binding),
+            _ => throw new($"Unhandled binding type '{binding.BindingType}'")
         };
 
     protected virtual ElementInit VisitElementInitializer(ElementInit initializer)
@@ -122,8 +126,8 @@ public abstract class ExpressionVisitorEx
 
     protected virtual Expression VisitBinary(BinaryExpression b)
     {
-        var left       = Visit(b.Left);
-        var right      = Visit(b.Right);
+        var left = Visit(b.Left);
+        var right = Visit(b.Right);
         var conversion = Visit(b.Conversion);
         return left != b.Left || right != b.Right || conversion != b.Conversion
             ? b.NodeType == ExpressionType.Coalesce && b.Conversion != null
@@ -142,8 +146,8 @@ public abstract class ExpressionVisitorEx
 
     protected virtual Expression VisitConditional(ConditionalExpression c)
     {
-        var test     = Visit(c.Test);
-        var if_true  = Visit(c.IfTrue);
+        var test = Visit(c.Test);
+        var if_true = Visit(c.IfTrue);
         var if_false = Visit(c.IfFalse);
         return test != c.Test || if_true != c.IfTrue || if_false != c.IfFalse
             ? Expression.Condition(test, if_true, if_false)
@@ -160,7 +164,7 @@ public abstract class ExpressionVisitorEx
 
     protected virtual Expression VisitMethodCall(MethodCallExpression m)
     {
-        var                     obj  = Visit(m.Object);
+        var obj = Visit(m.Object);
         IEnumerable<Expression> args = VisitExpressionList(m.Arguments);
         return obj != m.Object || !ReferenceEquals(args, m.Arguments) ? Expression.Call(obj, m.Method, args) : m;
     }
@@ -168,15 +172,15 @@ public abstract class ExpressionVisitorEx
     protected virtual ReadOnlyCollection<Expression> VisitExpressionList(ReadOnlyCollection<Expression> original)
     {
         List<Expression> list = null;
-        for(int i = 0, n = original.Count; i < n; i++)
+        for (int i = 0, n = original.Count; i < n; i++)
         {
             var p = Visit(original[i]);
-            if(list != null)
+            if (list != null)
                 list.Add(p);
-            else if(p != original[i])
+            else if (p != original[i])
             {
                 list = new(n);
-                for(var j = 0; j < i; j++)
+                for (var j = 0; j < i; j++)
                     list.Add(original[j]);
                 list.Add(p);
             }
@@ -205,37 +209,37 @@ public abstract class ExpressionVisitorEx
     protected virtual IEnumerable<MemberBinding> VisitBindingList(ReadOnlyCollection<MemberBinding> original)
     {
         List<MemberBinding> list = null;
-        for(int i = 0, n = original.Count; i < n; i++)
+        for (int i = 0, n = original.Count; i < n; i++)
         {
             var b = VisitBinding(original[i]);
-            if(list != null)
+            if (list != null)
                 list.Add(b);
-            else if(b != original[i])
+            else if (b != original[i])
             {
                 list = new(n);
-                for(var j = 0; j < i; j++)
+                for (var j = 0; j < i; j++)
                     list.Add(original[j]);
                 list.Add(b);
             }
         }
 
-        return list is null 
-            ? original 
+        return list is null
+            ? original
             : list;
     }
 
     protected virtual IEnumerable<ElementInit> VisitElementInitializerList(ReadOnlyCollection<ElementInit> original)
     {
         List<ElementInit> list = null;
-        for(int i = 0, n = original.Count; i < n; i++)
+        for (int i = 0, n = original.Count; i < n; i++)
         {
             var init = VisitElementInitializer(original[i]);
-            if(list != null)
+            if (list != null)
                 list.Add(init);
-            else if(init != original[i])
+            else if (init != original[i])
             {
                 list = new(n);
-                for(var j = 0; j < i; j++)
+                for (var j = 0; j < i; j++)
                     list.Add(original[j]);
                 list.Add(init);
             }
@@ -261,14 +265,14 @@ public abstract class ExpressionVisitorEx
 
     protected virtual Expression VisitMemberInit(MemberInitExpression init)
     {
-        var n        = VisitNew(init.NewExpression);
+        var n = VisitNew(init.NewExpression);
         var bindings = VisitBindingList(init.Bindings);
         return n != init.NewExpression || !Equals(bindings, init.Bindings) ? Expression.MemberInit(n, bindings) : init;
     }
 
     protected virtual Expression VisitListInit(ListInitExpression init)
     {
-        var n            = VisitNew(init.NewExpression);
+        var n = VisitNew(init.NewExpression);
         var initializers = VisitElementInitializerList(init.Initializers);
         return n != init.NewExpression || !Equals(initializers, init.Initializers)
             ? Expression.ListInit(n, initializers)

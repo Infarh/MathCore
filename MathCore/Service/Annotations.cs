@@ -14,10 +14,7 @@
 // ReSharper disable once CheckNamespace
 namespace MathCore.Annotations;
 
-/// <summary>
-/// Indicates that the value of the marked element could be <c>null</c> sometimes,
-/// so the check for <c>null</c> is necessary before its usage
-/// </summary>
+/// <summary>Указывает, что значение помеченного элемента может иногда быть <c>null</c>, поэтому перед использованием необходима проверка на <c>null</c></summary>
 /// <example><code>
 /// [CanBeNull] public object Test() { return null; }
 /// public void UseTest() {
@@ -28,9 +25,7 @@ namespace MathCore.Annotations;
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Delegate | AttributeTargets.Field | AttributeTargets.ReturnValue)]
 public sealed class CanBeNullAttribute : Attribute;
 
-/// <summary>
-/// Indicates that the value of the marked element could never be <c>null</c>
-/// </summary>
+/// <summary>Указывает, что значение помеченного элемента никогда не может быть <c>null</c></summary>
 /// <example><code>
 /// [NotNull] public object Foo() {
 ///   return null; // Warning: Possible 'null' assignment
@@ -40,53 +35,43 @@ public sealed class CanBeNullAttribute : Attribute;
 public sealed class NotNullAttribute : Attribute;
 
 #if !NET8_0_OR_GREATER
-/// <summary>Specifies that the output will be non-null if the named parameter is non-null.</summary>
-/// <remarks>Initializes the attribute with the associated parameter name.</remarks>
-/// <param name="parameterName">
-/// The associated parameter name.  The output will be non-null if the argument to the parameter specified is non-null.
-/// </param>
+/// <summary>Указывает, что выходное значение будет отличным от null, если указанный параметр отличен от null</summary>
+/// <remarks>Инициализирует атрибут с именем связанного параметра</remarks>
+/// <param name="parameterName">Имя связанного параметра. Выходное значение будет отличным от null, если аргумент указанного параметра отличен от null</param>
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue, AllowMultiple = true)]
 public sealed class NotNullIfNotNullAttribute(string parameterName) : Attribute
 {
-    /// <summary>Gets the associated parameter name.</summary>
+    /// <summary>Возвращает имя связанного параметра</summary>
     public string ParameterName { get; } = parameterName;
 }
 
-/// <summary>Specifies that null is disallowed as an input even if the corresponding type allows it.</summary>
+/// <summary>Указывает, что null не допускается в качестве входного значения, даже если соответствующий тип это разрешает</summary>
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, Inherited = false)]
 public sealed class DisallowNullAttribute : Attribute;
 
-/// <summary>Specifies that when a method returns <see cref="ReturnValue"/>, the parameter may be null even if the corresponding type disallows it.</summary>
-/// <remarks>Initializes the attribute with the specified return value condition.</remarks>
-/// <param name="returnValue">
-/// The return value condition. If the method returns this value, the associated parameter may be null.
-/// </param>
+/// <summary>Указывает, что когда метод возвращает <see cref="ReturnValue"/>, параметр может быть null, даже если соответствующий тип это запрещает</summary>
+/// <remarks>Инициализирует атрибут с указанным условием возвращаемого значения</remarks>
+/// <param name="returnValue">Условие возвращаемого значения. Если метод возвращает это значение, связанный параметр может быть null</param>
 [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
 public sealed class MaybeNullWhenAttribute(bool returnValue) : Attribute
 {
-    /// <summary>Gets the return value condition.</summary>
+    /// <summary>Возвращает условие возвращаемого значения</summary>
     public bool ReturnValue { get; } = returnValue;
 }
 
-/// <summary>Specifies that when a method returns <see cref="ReturnValue"/>, the parameter will not be null even if the corresponding type allows it.</summary>
-/// <remarks>Initializes the attribute with the specified return value condition.</remarks>
-/// <param name="returnValue">
-/// The return value condition. If the method returns this value, the associated parameter will not be null.
-/// </param>
+/// <summary>Указывает, что когда метод возвращает <see cref="ReturnValue"/>, параметр не будет null, даже если соответствующий тип это разрешает</summary>
+/// <remarks>Инициализирует атрибут с указанным условием возвращаемого значения</remarks>
+/// <param name="returnValue">Условие возвращаемого значения. Если метод возвращает это значение, связанный параметр не будет null</param>
 [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
 public sealed class NotNullWhenAttribute(bool returnValue) : Attribute
 {
 
-    /// <summary>Gets the return value condition.</summary>
+    /// <summary>Возвращает условие возвращаемого значения</summary>
     public bool ReturnValue { get; } = returnValue;
 }
 #endif
 
-/// <summary>
-/// Can be applied to symbols of types derived from IEnumerable as well as to symbols of Task
-/// and Lazy classes to indicate that the value of a collection item, of the Task.Result property
-/// or of the Lazy.Value property can never be null.
-/// </summary>
+/// <summary>Может применяться к символам типов, производных от IEnumerable, а также к символам классов Task и Lazy, чтобы указать, что значение элемента коллекции, свойства Task.Result или свойства Lazy.Value никогда не может быть null</summary>
 /// <example><code>
 /// public void Foo([ItemNotNull]List&lt;string&gt; books)
 /// {
@@ -99,11 +84,7 @@ public sealed class NotNullWhenAttribute(bool returnValue) : Attribute
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Delegate)]
 public sealed class ItemNotNullAttribute : Attribute;
 
-/// <summary>
-/// Can be applied to symbols of types derived from IEnumerable as well as to symbols of Task
-/// and Lazy classes to indicate that the value of a collection item, of the Task.Result property
-/// or of the Lazy.Value property can be null.
-/// </summary>
+/// <summary>Может применяться к символам типов, производных от IEnumerable, а также к символам классов Task и Lazy, чтобы указать, что значение элемента коллекции, свойства Task.Result или свойства Lazy.Value может быть null</summary>
 /// <example><code>
 /// public void Foo([ItemCanBeNull]List&lt;string&gt; books)
 /// {
@@ -117,11 +98,7 @@ public sealed class ItemNotNullAttribute : Attribute;
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Delegate)]
 public sealed class ItemCanBeNullAttribute : Attribute;
 
-/// <summary>
-/// Indicates that the marked method builds string by format pattern and (optional) arguments.
-/// Parameter, which contains format string, should be given in constructor. The format string
-/// should be in <see cref="string.Format(IFormatProvider,string,object[])"/>-like form
-/// </summary>
+/// <summary>Указывает, что помеченный метод строит строку по шаблону формата и (опционально) аргументам. Параметр, содержащий строку формата, должен быть указан в конструкторе. Строка формата должна быть в виде, подобном <see cref="string.Format(IFormatProvider,string,object[])"/></summary>
 /// <example><code>
 /// [StringFormatMethod("message")]
 /// public void ShowError(string message, params object[] args) { /* do something */ }
@@ -129,20 +106,14 @@ public sealed class ItemCanBeNullAttribute : Attribute;
 ///   ShowError("Failed: {0}"); // Warning: Non-existing argument in format string
 /// }
 /// </code></example>
-/// <param name="formatParameterName">
-/// Specifies which parameter of an annotated method should be treated as format-string
-/// </param>
+/// <param name="formatParameterName">Указывает, какой параметр аннотированного метода должен рассматриваться как строка формата</param>
 [AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method)]
 public sealed class StringFormatMethodAttribute(string formatParameterName) : Attribute
 {
     public string FormatParameterName { get; } = formatParameterName;
 }
 
-/// <summary>
-/// Indicates that the function argument should be string literal and match one
-/// of the parameters of the caller function. For example, ReSharper annotates
-/// the parameter of <see cref="System.ArgumentNullException"/>
-/// </summary>
+/// <summary>Указывает, что аргумент функции должен быть строковым литералом и совпадать с одним из параметров вызывающей функции. Например, ReSharper аннотирует параметр <see cref="System.ArgumentNullException"/></summary>
 /// <example><code>
 /// public void Foo(string param) {
 ///   if (param is null)
@@ -152,13 +123,9 @@ public sealed class StringFormatMethodAttribute(string formatParameterName) : At
 [AttributeUsage(AttributeTargets.Parameter)]
 public sealed class InvokerParameterNameAttribute : Attribute;
 
-/// <summary>
-/// Indicates that the method is contained in a type that implements
-/// <see cref="System.ComponentModel.INotifyPropertyChanged"/> interface
-/// and this method is used to notify that some property value changed
-/// </summary>
+/// <summary>Указывает, что метод содержится в типе, реализующем интерфейс <see cref="System.ComponentModel.INotifyPropertyChanged"/>, и этот метод используется для уведомления об изменении значения некоторого свойства</summary>
 /// <remarks>
-/// The method should be non-static and conform to one of the supported signatures:
+/// Метод должен быть нестатическим и соответствовать одной из поддерживаемых сигнатур:
 /// <list>
 /// <item><c>NotifyChanged(string)</c></item>
 /// <item><c>NotifyChanged(params string[])</c></item>
@@ -180,7 +147,7 @@ public sealed class InvokerParameterNameAttribute : Attribute;
 ///   }
 /// }
 /// </code>
-/// Examples of generated notifications:
+/// Примеры генерируемых уведомлений:
 /// <list>
 /// <item><c>NotifyChanged("Property")</c></item>
 /// <item><c>NotifyChanged(() =&gt; Property)</c></item>
@@ -194,15 +161,13 @@ public sealed class NotifyPropertyChangedInvocatorAttribute : Attribute
     public NotifyPropertyChangedInvocatorAttribute() { }
     public NotifyPropertyChangedInvocatorAttribute(string parameterName) => ParameterName = parameterName;
 
-    public string ParameterName { get; }
+    public string ParameterName { get; } = null!;
 }
 
 // ReSharper disable CommentTypo
-/// <summary>
-/// Describes dependency between method input and output
-/// </summary>
+/// <summary>Описывает зависимость между входом и выходом метода</summary>
 /// <syntax>
-/// <p>Function Definition Table syntax:</p>
+/// <p>Синтаксис таблицы определения функций:</p>
 /// <list>
 /// <item>FDT      ::= FDTRow [;FDTRow]*</item>
 /// <item>FDTRow   ::= Input =&gt; Output | Output &lt;= Input</item>
@@ -210,12 +175,12 @@ public sealed class NotifyPropertyChangedInvocatorAttribute : Attribute
 /// <item>Output   ::= [ParameterName: Value]* {halt|stop|void|nothing|Value}</item>
 /// <item>Value    ::= true | false | null | notnull | canbenull</item>
 /// </list>
-/// If method has single input parameter, it's name could be omitted.<br/>
-/// Using <c>halt</c> (or <c>void</c>/<c>nothing</c>, which is the same)
-/// for method output means that the methos doesn't return normally.<br/>
-/// <c>canbenull</c> annotation is only applicable for output parameters.<br/>
-/// You can use multiple <c>[ContractAnnotation]</c> for each FDT row,
-/// or use single attribute with rows separated by semicolon.<br/>
+/// Если метод имеет один входной параметр, его имя может быть опущено.<br/>
+/// Использование <c>halt</c> (или <c>void</c>/<c>nothing</c>, что одно и то же)
+/// для выхода метода означает, что метод не возвращается нормально.<br/>
+/// Аннотация <c>canbenull</c> применима только к выходным параметрам.<br/>
+/// Вы можете использовать несколько <c>[ContractAnnotation]</c> для каждой строки FDT,
+/// или использовать один атрибут со строками, разделенными точкой с запятой.<br/>
 /// </syntax>
 /// <examples><list>
 /// <item><code>
@@ -224,14 +189,14 @@ public sealed class NotifyPropertyChangedInvocatorAttribute : Attribute
 /// </code></item>
 /// <item><code>
 /// [ContractAnnotation("halt &lt;= condition: false")]
-/// public void Assert(bool condition, string text) // regular assertion method
+/// public void Assert(bool condition, string text) // обычный метод утверждения
 /// </code></item>
 /// <item><code>
 /// [ContractAnnotation("s:null => true")]
 /// public bool IsNullOrEmpty(string s) // string.IsNullOrEmpty()
 /// </code></item>
 /// <item><code>
-/// // A method that returns null if the parameter is null, and not null if the parameter is not null
+/// // Метод, который возвращает null, если параметр null, и не null, если параметр не null
 /// [ContractAnnotation("null => null; notnull => notnull")]
 /// public object Transform(object data) 
 /// </code></item>
@@ -250,9 +215,7 @@ public sealed class ContractAnnotationAttribute(string contract, bool forceFullS
     public bool ForceFullStates { get; } = forceFullStates;
 }
 
-/// <summary>
-/// Indicates that marked element should be localized or not
-/// </summary>
+/// <summary>Указывает, должен ли помеченный элемент быть локализован</summary>
 /// <example><code>
 /// [LocalizationRequiredAttribute(true)]
 /// public class Foo {
@@ -267,12 +230,7 @@ public sealed class LocalizationRequiredAttribute(bool required) : Attribute
     public bool Required { get; } = required;
 }
 
-/// <summary>
-/// Indicates that the value of the marked type (or its derivatives)
-/// cannot be compared using '==' or '!=' operators and <c>Equals()</c>
-/// should be used instead. However, using '==' or '!=' for comparison
-/// with <c>null</c> is always permitted.
-/// </summary>
+/// <summary>Указывает, что значение помеченного типа (или его производных) не может сравниваться с помощью операторов '==' или '!=' и вместо этого следует использовать <c>Equals()</c>. Однако использование '==' или '!=' для сравнения с <c>null</c> всегда разрешено</summary>
 /// <example><code>
 /// [CannotApplyEqualityOperator]
 /// class NoEquality { }
@@ -289,14 +247,11 @@ public sealed class LocalizationRequiredAttribute(bool required) : Attribute
 [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Struct)]
 public sealed class CannotApplyEqualityOperatorAttribute : Attribute;
 
-/// <summary>
-/// When applied to a target attribute, specifies a requirement for any type marked
-/// with the target attribute to implement or inherit specific type or types.
-/// </summary>
+/// <summary>При применении к целевому атрибуту указывает требование для любого типа, помеченного целевым атрибутом, реализовывать или наследовать определенный тип или типы</summary>
 /// <example><code>
-/// [BaseTypeRequired(typeof(IComponent)] // Specify requirement
+/// [BaseTypeRequired(typeof(IComponent)] // Указываем требование
 /// public class ComponentAttribute : Attribute;
-/// [Component] // ComponentAttribute requires implementing IComponent interface
+/// [Component] // ComponentAttribute требует реализации интерфейса IComponent
 /// public class MyComponent : IComponent { }
 /// </code></example>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
@@ -306,11 +261,7 @@ public sealed class BaseTypeRequiredAttribute(Type baseType) : Attribute
     public Type BaseType { get; } = baseType;
 }
 
-/// <summary>
-/// Indicates that the marked symbol is used implicitly
-/// (e.g. via reflection, in external library), so this symbol
-/// will not be marked as unused (as well as by other usage inspections)
-/// </summary>
+/// <summary>Указывает, что помеченный символ используется неявно (например, через рефлексию, во внешней библиотеке), поэтому этот символ не будет помечен как неиспользуемый (как и другими инспекциями использования)</summary>
 [AttributeUsage(AttributeTargets.All)]
 public sealed class UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags) : Attribute
 {
@@ -327,11 +278,7 @@ public sealed class UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags, I
     public ImplicitUseTargetFlags TargetFlags { get; } = targetFlags;
 }
 
-/// <summary>
-/// Should be used on attributes and causes ReSharper
-/// to not mark symbols marked with such attributes as unused
-/// (as well as by other usage inspections)
-/// </summary>
+/// <summary>Должен использоваться на атрибутах и заставляет ReSharper не помечать символы, отмеченные такими атрибутами, как неиспользуемые (как и другими инспекциями использования)</summary>
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class MeansImplicitUseAttribute(
     ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags) : Attribute
@@ -353,73 +300,53 @@ public sealed class MeansImplicitUseAttribute(
 public enum ImplicitUseKindFlags
 {
     Default = Access | Assign | InstantiatedWithFixedConstructorSignature,
-    /// <summary>Only entity marked with attribute considered used</summary>
+    /// <summary>Только сущность, помеченная атрибутом, считается используемой</summary>
     Access = 1,
-    /// <summary>Indicates implicit assignment to a member</summary>
+    /// <summary>Указывает неявное присваивание члену</summary>
     Assign = 2,
-    /// <summary>
-    /// Indicates implicit instantiation of a type with fixed constructor signature.
-    /// That means any unused constructor parameters won't be reported as such.
-    /// </summary>
+    /// <summary>Указывает неявное создание экземпляра типа с фиксированной сигнатурой конструктора. Это означает, что любые неиспользуемые параметры конструктора не будут помечены как таковые</summary>
     InstantiatedWithFixedConstructorSignature = 4,
-    /// <summary>Indicates implicit instantiation of a type</summary>
+    /// <summary>Указывает неявное создание экземпляра типа</summary>
     InstantiatedNoFixedConstructorSignature = 8,
 }
 
-/// <summary>
-/// Specify what is considered used implicitly
-/// when marked with <see cref="MeansImplicitUseAttribute"/>
-/// or <see cref="UsedImplicitlyAttribute"/>
-/// </summary>
+/// <summary>Указывает, что считается неявно используемым при пометке <see cref="MeansImplicitUseAttribute"/> или <see cref="UsedImplicitlyAttribute"/></summary>
 [Flags]
 public enum ImplicitUseTargetFlags
 {
     Default = Itself,
     Itself = 1,
-    /// <summary>Members of entity marked with attribute are considered used</summary>
+    /// <summary>Члены сущности, помеченной атрибутом, считаются используемыми</summary>
     Members = 2,
-    /// <summary>Entity marked with attribute and all its members considered used</summary>
+    /// <summary>Сущность, помеченная атрибутом, и все её члены считаются используемыми</summary>
     WithMembers = Itself | Members
 }
 
-/// <summary>
-/// This attribute is intended to mark publicly available API
-/// which should not be removed and so is treated as used
-/// </summary>
+/// <summary>Этот атрибут предназначен для пометки публично доступного API, который не должен быть удален и поэтому рассматривается как используемый</summary>
 [MeansImplicitUse]
 public sealed class PublicAPIAttribute : Attribute
 {
     public PublicAPIAttribute() { }
     public PublicAPIAttribute(string comment) => Comment = comment;
 
-    public string Comment { get; }
+    public string Comment { get; } = null!;
 }
 
-/// <summary>
-/// Tells code analysis engine if the parameter is completely handled
-/// when the invoked method is on stack. If the parameter is a delegate,
-/// indicates that delegate is executed while the method is executed.
-/// If the parameter is an enumerable, indicates that it is enumerated
-/// while the method is executed
-/// </summary>
+/// <summary>Сообщает движку анализа кода, полностью ли обрабатывается параметр при выполнении вызванного метода. Если параметр является делегатом, указывает, что делегат выполняется во время выполнения метода. Если параметр является перечислением, указывает, что оно перечисляется во время выполнения метода</summary>
 [AttributeUsage(AttributeTargets.Parameter)]
 public sealed class InstantHandleAttribute : Attribute;
 
-/// <summary>
-/// Indicates that a parameter is a path to a file or a folder
-/// within a web project. Path can be relative or absolute,
-/// starting from web root (~)
-/// </summary>
+/// <summary>Указывает, что параметр является путем к файлу или папке в веб-проекте. Путь может быть относительным или абсолютным, начинающимся с корня веб-сайта (~)</summary>
 [AttributeUsage(AttributeTargets.Parameter)]
 public class PathReferenceAttribute : Attribute
 {
     public PathReferenceAttribute() { }
     public PathReferenceAttribute([PathReference] string basePath) => BasePath = basePath;
 
-    public string BasePath { get; }
+    public string BasePath { get; } = null!;
 }
 
-// ASP.NET MVC attributes
+// Атрибуты ASP.NET MVC
 
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
 [method: SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
@@ -445,121 +372,69 @@ public sealed class AspMvcPartialViewLocationFormatAttribute(string format) : At
 [method: SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
 public sealed class AspMvcViewLocationFormatAttribute(string format) : Attribute;
 
-/// <summary>
-/// ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter
-/// is an MVC action. If applied to a method, the MVC action name is calculated
-/// implicitly from the context. Use this attribute for custom wrappers similar to
-/// <c>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String)</c>
-/// </summary>
+/// <summary>Атрибут ASP.NET MVC. Если применен к параметру, указывает, что параметр является действием MVC. Если применен к методу, имя действия MVC вычисляется неявно из контекста. Используйте этот атрибут для пользовательских оберток, подобных <c>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String)</c></summary>
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
 public sealed class AspMvcActionAttribute : Attribute
 {
     public AspMvcActionAttribute() { }
     public AspMvcActionAttribute(string anonymousProperty) => AnonymousProperty = anonymousProperty;
 
-    public string AnonymousProperty { get; }
+    public string AnonymousProperty { get; } = null!;
 }
 
-/// <summary>
-/// ASP.NET MVC attribute. Indicates that a parameter is an MVC area.
-/// Use this attribute for custom wrappers similar to
-/// <c>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String)</c>
-/// </summary>
+/// <summary>Атрибут ASP.NET MVC. Указывает, что параметр является областью MVC. Используйте этот атрибут для пользовательских оберток, подобных <c>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String)</c></summary>
 [AttributeUsage(AttributeTargets.Parameter)]
 public sealed class AspMvcAreaAttribute : PathReferenceAttribute
 {
     public AspMvcAreaAttribute() { }
     public AspMvcAreaAttribute(string anonymousProperty) => AnonymousProperty = anonymousProperty;
 
-    public string AnonymousProperty { get; }
+    public string AnonymousProperty { get; } = null!;
 }
 
-/// <summary>
-/// ASP.NET MVC attribute. If applied to a parameter, indicates that
-/// the parameter is an MVC controller. If applied to a method,
-/// the MVC controller name is calculated implicitly from the context.
-/// Use this attribute for custom wrappers similar to 
-/// <c>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String, String)</c>
-/// </summary>
+/// <summary>Атрибут ASP.NET MVC. Если применен к параметру, указывает, что параметр является контроллером MVC. Если применен к методу, имя контроллера MVC вычисляется неявно из контекста. Используйте этот атрибут для пользовательских оберток, подобных <c>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String, String)</c></summary>
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
 public sealed class AspMvcControllerAttribute : Attribute
 {
     public AspMvcControllerAttribute() { }
     public AspMvcControllerAttribute(string anonymousProperty) => AnonymousProperty = anonymousProperty;
 
-    public string AnonymousProperty { get; }
+    public string AnonymousProperty { get; } = null!;
 }
 
-/// <summary>
-/// ASP.NET MVC attribute. Indicates that a parameter is an MVC Master.
-/// Use this attribute for custom wrappers similar to
-/// <c>System.Web.Mvc.Controller.View(String, String)</c>
-/// </summary>
+/// <summary>Атрибут ASP.NET MVC. Указывает, что параметр является главной страницей MVC. Используйте этот атрибут для пользовательских оберток, подобных <c>System.Web.Mvc.Controller.View(String, String)</c></summary>
 [AttributeUsage(AttributeTargets.Parameter)]
 public sealed class AspMvcMasterAttribute : Attribute;
 
-/// <summary>
-/// ASP.NET MVC attribute. Indicates that a parameter is an MVC model type.
-/// Use this attribute for custom wrappers similar to
-/// <c>System.Web.Mvc.Controller.View(String, Object)</c>
-/// </summary>
+/// <summary>Атрибут ASP.NET MVC. Указывает, что параметр является типом модели MVC. Используйте этот атрибут для пользовательских оберток, подобных <c>System.Web.Mvc.Controller.View(String, Object)</c></summary>
 [AttributeUsage(AttributeTargets.Parameter)]
 public sealed class AspMvcModelTypeAttribute : Attribute;
 
-/// <summary>
-/// ASP.NET MVC attribute. If applied to a parameter, indicates that
-/// the parameter is an MVC partial view. If applied to a method,
-/// the MVC partial view name is calculated implicitly from the context.
-/// Use this attribute for custom wrappers similar to
-/// <c>System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(HtmlHelper, String)</c>
-/// </summary>
+/// <summary>Атрибут ASP.NET MVC. Если применен к параметру, указывает, что параметр является частичным представлением MVC. Если применен к методу, имя частичного представления MVC вычисляется неявно из контекста. Используйте этот атрибут для пользовательских оберток, подобных <c>System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(HtmlHelper, String)</c></summary>
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
 public sealed class AspMvcPartialViewAttribute : PathReferenceAttribute;
 
-/// <summary>
-/// ASP.NET MVC attribute. Allows disabling all inspections
-/// for MVC views within a class or a method.
-/// </summary>
+/// <summary>Атрибут ASP.NET MVC. Позволяет отключить все инспекции для представлений MVC в пределах класса или метода</summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public sealed class AspMvcPressuresViewErrorAttribute : Attribute;
 
-/// <summary>
-/// ASP.NET MVC attribute. Indicates that a parameter is an MVC display template.
-/// Use this attribute for custom wrappers similar to 
-/// <c>System.Web.Mvc.Html.DisplayExtensions.DisplayForModel(HtmlHelper, String)</c>
-/// </summary>
+/// <summary>Атрибут ASP.NET MVC. Указывает, что параметр является шаблоном отображения MVC. Используйте этот атрибут для пользовательских оберток, подобных <c>System.Web.Mvc.Html.DisplayExtensions.DisplayForModel(HtmlHelper, String)</c></summary>
 [AttributeUsage(AttributeTargets.Parameter)]
 public sealed class AspMvcDisplayTemplateAttribute : Attribute;
 
-/// <summary>
-/// ASP.NET MVC attribute. Indicates that a parameter is an MVC editor template.
-/// Use this attribute for custom wrappers similar to
-/// <c>System.Web.Mvc.Html.EditorExtensions.EditorForModel(HtmlHelper, String)</c>
-/// </summary>
+/// <summary>Атрибут ASP.NET MVC. Указывает, что параметр является шаблоном редактора MVC. Используйте этот атрибут для пользовательских оберток, подобных <c>System.Web.Mvc.Html.EditorExtensions.EditorForModel(HtmlHelper, String)</c></summary>
 [AttributeUsage(AttributeTargets.Parameter)]
 public sealed class AspMvcEditorTemplateAttribute : Attribute;
 
-/// <summary>
-/// ASP.NET MVC attribute. Indicates that a parameter is an MVC template.
-/// Use this attribute for custom wrappers similar to
-/// <c>System.ComponentModel.DataAnnotations.UIHintAttribute(System.String)</c>
-/// </summary>
+/// <summary>Атрибут ASP.NET MVC. Указывает, что параметр является шаблоном MVC. Используйте этот атрибут для пользовательских оберток, подобных <c>System.ComponentModel.DataAnnotations.UIHintAttribute(System.String)</c></summary>
 [AttributeUsage(AttributeTargets.Parameter)]
 public sealed class AspMvcTemplateAttribute : Attribute;
 
-/// <summary>
-/// ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter
-/// is an MVC view. If applied to a method, the MVC view name is calculated implicitly
-/// from the context. Use this attribute for custom wrappers similar to
-/// <c>System.Web.Mvc.Controller.View(Object)</c>
-/// </summary>
+/// <summary>Атрибут ASP.NET MVC. Если применен к параметру, указывает, что параметр является представлением MVC. Если применен к методу, имя представления MVC вычисляется неявно из контекста. Используйте этот атрибут для пользовательских оберток, подобных <c>System.Web.Mvc.Controller.View(Object)</c></summary>
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
 public sealed class AspMvcViewAttribute : PathReferenceAttribute;
 
-/// <summary>
-/// ASP.NET MVC attribute. When applied to a parameter of an attribute,
-/// indicates that this parameter is an MVC action name
-/// </summary>
+/// <summary>Атрибут ASP.NET MVC. При применении к параметру атрибута указывает, что этот параметр является именем действия MVC</summary>
 /// <example><code>
 /// [ActionName("Foo")]
 /// public ActionResult Login(string returnUrl) {
@@ -585,12 +460,8 @@ public sealed class HtmlAttributeValueAttribute(string name) : Attribute
     public string Name { get; } = name;
 }
 
-// Razor attributes
+// Атрибуты Razor
 
-/// <summary>
-/// Razor attribute. Indicates that a parameter or a method is a Razor section.
-/// Use this attribute for custom wrappers similar to 
-/// <c>System.Web.WebPages.WebPageBase.RenderSection(String)</c>
-/// </summary>
+/// <summary>Атрибут Razor. Указывает, что параметр или метод является секцией Razor. Используйте этот атрибут для пользовательских оберток, подобных <c>System.Web.WebPages.WebPageBase.RenderSection(String)</c></summary>
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
 public sealed class RazorSectionAttribute : Attribute;

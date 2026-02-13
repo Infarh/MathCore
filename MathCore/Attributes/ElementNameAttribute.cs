@@ -26,7 +26,7 @@ public sealed class ElementNameAttribute : Attribute
     public override int GetHashCode() => Name.GetHashCode() ^ typeof(ElementNameAttribute).GetHashCode();
 
     /// <inheritdoc />
-    public override bool Equals(object obj) => obj is ElementNameAttribute A ? A.Name == Name : base.Equals(obj);
+    public override bool Equals(object? obj) => obj is ElementNameAttribute A ? A.Name == Name : base.Equals(obj);
 
     /// <summary>Оператор неявного приведения типа <see cref="ElementNameAttribute"/> к <see cref="string"/></summary>
     /// <param name="A">Атрибут имени</param>

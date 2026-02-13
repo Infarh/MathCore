@@ -24,7 +24,7 @@ public readonly ref partial struct StringPtr
             /// <summary>Текущая позиция в исходной строке</summary>
             private int _CurrentPos = StartIndex;
 
-            public T Current { get; private set; }
+            public T? Current { get; private set; }
 
             public bool MoveNext()
             {

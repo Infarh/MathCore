@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+
 using MathCore.Extensions.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes;
@@ -17,7 +18,7 @@ public class MultiplicationOperatorNode : OperatorNode
     public MultiplicationOperatorNode(ExpressionTreeNode Left, ExpressionTreeNode Right)
         : this()
     {
-        this.Left  = Left;
+        this.Left = Left;
         this.Right = Right;
     }
 

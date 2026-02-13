@@ -1735,23 +1735,23 @@ public partial class Matrix<T>
                 for (var k = 0; k < j; k++)
                 {
                     var s = default(T);
-                    n = default; // скалярное произведение столбца на самого себя
+                    n = default!; // скалярное произведение столбца на самого себя
                     // Вычисление скалярного произведения v*u и квадрата длины u
                     for (var i = 0; i < N; i++)
                     {
                         var v = u[i, k];
-                        s += matrix[i, j] * v;
+                        s = s! + matrix[i, j] * v;
                         n += v * v;
                     }
 
-                    s /= n;
+                    s = s! / n;
                     // Вычитание проекции
                     for (var i = 0; i < N; i++)
                         u[i, j] -= u[i, k] * s;
                 }
 
                 // Вычисление нормированного вектора
-                n = default;
+                n = default!;
                 for (var i = 0; i < N; i++)
                     n += u[i, j] * u[i, j];
                 n = T.Sqrt(n);
@@ -1764,8 +1764,8 @@ public partial class Matrix<T>
                 {
                     var s = default(T);
                     for (var k = 0; k < N; k++)
-                        s += q[k, i] * matrix[k, j];
-                    r[i, j] = s;
+                        s = s! + q[k, i] * matrix[k, j];
+                    r[i, j] = s!;
                 }
         }
 

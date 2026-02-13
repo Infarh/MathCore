@@ -15,13 +15,13 @@ internal class IntegralVisitor : ExpressionVisitorEx
     {
         get
         {
-            var id = Thread.CurrentThread.ManagedThreadId;
+            var id = Environment.CurrentManagedThreadId;
             return _Parameters[id];
         }
         set
         {
-            var id = Thread.CurrentThread.ManagedThreadId;
-            if(value is null)
+            var id = Environment.CurrentManagedThreadId;
+            if (value is null)
                 _Parameters.Remove(id);
             else
                 _Parameters.Add(id, value);
@@ -37,7 +37,7 @@ internal class IntegralVisitor : ExpressionVisitorEx
 
     private static void CheckValueType(Type type)
     {
-        if(!CheckNumType(type)) throw new NotSupportedException($"Неподдерживаемый тип данных {type}");
+        if (!CheckNumType(type)) throw new NotSupportedException($"Неподдерживаемый тип данных {type}");
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -67,16 +67,16 @@ internal class IntegralVisitor : ExpressionVisitorEx
     {
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
-        if(l is null && r is null) return b;
-        if(l != null && r != null)
+        if (l is null && r is null) return b;
+        if (l != null && r != null)
             return b.NodeType == ExpressionType.Add
                 ? Expression.Constant((double)l.Value! + (double)r.Value!)
                 : Expression.Constant((double)l.Value! - (double)r.Value!);
-        if(l != null && l.Value.Equals(0.0))
+        if (l != null && l.Value?.Equals(0.0) == true)
             return b.NodeType == ExpressionType.Add
                 ? b.Right
                 : Expression.MakeUnary(ExpressionType.Negate, b.Right, b.Right.Type);
-        return r != null && r.Value.Equals(0.0) ? b.Left : b;
+        return r != null && r.Value?.Equals(0.0) == true ? b.Left : b;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -91,13 +91,13 @@ internal class IntegralVisitor : ExpressionVisitorEx
     {
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
-        if(l is null && r is null) return b;
-        if(l != null && r != null)
+        if (l is null && r is null) return b;
+        if (l != null && r != null)
             return Expression.Constant((double)l.Value! * (double)r.Value!);
-        if(l?.Value.Equals(0.0) == true) return l;
-        if(l?.Value.Equals(1.0) == true) return b.Right;
-        if(r?.Value.Equals(0.0) == true) return r;
-        return r?.Value.Equals(1.0) == true ? b.Left : b;
+        if (l?.Value?.Equals(0.0) == true) return l;
+        if (l?.Value?.Equals(1.0) == true) return b.Right;
+        if (r?.Value?.Equals(0.0) == true) return r;
+        return r?.Value?.Equals(1.0) == true ? b.Left : b;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -112,12 +112,12 @@ internal class IntegralVisitor : ExpressionVisitorEx
     {
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
-        if(l is null && r is null) return b;
-        if(l != null && r != null) return Expression.Constant((double)l.Value! / (double)r.Value!);
-        if(l?.Value.Equals(0.0) == true) return l;
-        if(l?.Value.Equals(1.0) == true) return b;
-        if(r?.Value.Equals(0.0) == true) return Expression.Constant(double.PositiveInfinity);
-        return r?.Value.Equals(1.0) == true ? b.Left : b;
+        if (l is null && r is null) return b;
+        if (l != null && r != null) return Expression.Constant((double)l.Value! / (double)r.Value!);
+        if (l?.Value?.Equals(0.0) == true) return l;
+        if (l?.Value?.Equals(1.0) == true) return b;
+        if (r?.Value?.Equals(0.0) == true) return Expression.Constant(double.PositiveInfinity);
+        return r?.Value?.Equals(1.0) == true ? b.Left : b;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -129,24 +129,24 @@ internal class IntegralVisitor : ExpressionVisitorEx
     {
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
-        if(l is null && r is null) return b;
-        if(l != null && r != null) return Expression.Constant(Math.Pow((double)l.Value!, (double)r.Value!));
-        if(l != null && (l.Value.Equals(0.0) || l.Value.Equals(1.0))) return l;
-        if(r?.Value.Equals(0.0) == true) return Expression.Constant(1.0);
-        if(r?.Value.Equals(1.0) == true) return b.Left;
+        if (l is null && r is null) return b;
+        if (l != null && r != null) return Expression.Constant(Math.Pow((double)l.Value!, (double)r.Value!));
+        if (l != null && (l.Value?.Equals(0.0) == true || l.Value?.Equals(1.0) == true)) return l;
+        if (r?.Value?.Equals(0.0) == true) return Expression.Constant(1.0);
+        if (r?.Value?.Equals(1.0) == true) return b.Left;
         return b;
     }
 
     private static Expression MathMethod(string Name, params Expression[] p) =>
         p.All(P => P is ConstantExpression)
-            ? Expression.Constant(typeof(Math).GetMethod(Name, p.Select(P => P.Type).ToArray())
+            ? Expression.Constant(typeof(Math).GetMethod(Name, p.Select(P => P.Type).ToArray())!
                .Invoke(null, p.Cast<ConstantExpression>().Select(P => P.Value).ToArray()))
             : Expression.Call(typeof(Math), Name, null, p);
 
     public Expression Visit(LambdaExpression exp, double constant) => Visit(exp, Expression.Constant(constant));
     public Expression Visit(LambdaExpression exp, Expression constant)
     {
-        exp = (LambdaExpression?)base.Visit(exp);
+        exp = (LambdaExpression?)base.Visit(exp)!;
         return Expression.Lambda(exp.Type, sAdd(exp.Body, constant), exp.Parameters);
     }
 
@@ -154,7 +154,7 @@ internal class IntegralVisitor : ExpressionVisitorEx
     {
         Parameter = lambda.Parameters[0];
         var expr = base.VisitLambda(lambda);
-        Parameter = null;
+        Parameter = null!;
         return expr;
     }
 
@@ -173,7 +173,7 @@ internal class IntegralVisitor : ExpressionVisitorEx
     protected override Expression VisitBinary(BinaryExpression b)
     {
         var node_type = b.NodeType;
-        switch(node_type)
+        switch (node_type)
         {
             case ExpressionType.Add:
             case ExpressionType.AddChecked:
@@ -189,10 +189,10 @@ internal class IntegralVisitor : ExpressionVisitorEx
             case ExpressionType.Multiply:
             case ExpressionType.MultiplyChecked:
                 {
-                    var left  = b.Left;
+                    var left = b.Left;
                     var right = b.Right;
-                    if(left is ConstantExpression) return sMultiply(left, Visit(right));
-                    if(right is ConstantExpression) return sMultiply(Visit(left), right);
+                    if (left is ConstantExpression) return sMultiply(left, Visit(right)!)!;
+                    if (right is ConstantExpression) return sMultiply(Visit(left)!, right);
 
                     throw new NotImplementedException();
                 }
@@ -201,10 +201,10 @@ internal class IntegralVisitor : ExpressionVisitorEx
                 {
                     var x = b.Left;
                     var y = b.Right;
-                    if(x is ConstantExpression constant && y is ParameterExpression)
+                    if (x is ConstantExpression constant && y is ParameterExpression)
                     {
                         var I = sDivide(1, MathMethod("Log", MathMethod("Abs", y)));
-                        if((double)constant.Value! != 1.0)
+                        if ((double)constant.Value! != 1.0)
                             I = sMultiply(constant, I);
                         return I;
                     }
@@ -215,12 +215,12 @@ internal class IntegralVisitor : ExpressionVisitorEx
                 {
                     var x = b.Left;
                     var y = b.Right;
-                    if(x is ParameterExpression && y is ConstantExpression)
+                    if (x is ParameterExpression && y is ConstantExpression)
                     {
                         y = sInc(y);
                         return sDivide(sPower(x, y), y);
                     }
-                    if(x is ConstantExpression && y is ParameterExpression)
+                    if (x is ConstantExpression && y is ParameterExpression)
                         return sDivide(b, MathMethod("Log", x));
                     throw new NotImplementedException();
                 }
@@ -231,14 +231,11 @@ internal class IntegralVisitor : ExpressionVisitorEx
 
     protected Expression? VisitMathMethodCall(MethodCallExpression m)
     {
-        switch(m.Method.Name)
+        return m.Method.Name switch
         {
-            case "Pow":
-                return Visit(sPower(Expression.Power(m.Arguments[0], m.Arguments[1])));
-            case "Sin":
-                return Expression.Negate(MathMethod("Cos", m.Arguments[0]));
-            case "Cos":
-                return MathMethod("Sin", m.Arguments[0]);
+            "Pow" => Visit(sPower(Expression.Power(m.Arguments[0], m.Arguments[1]))),
+            "Sin" => Expression.Negate(MathMethod("Cos", m.Arguments[0])),
+            "Cos" => MathMethod("Sin", m.Arguments[0]),
             //case "Tan":
             //    {
             //        var x = m.Arguments[0];
@@ -323,9 +320,8 @@ internal class IntegralVisitor : ExpressionVisitorEx
             //        var expr = MathMethod("Log", x, Expression.Constant(10.0));
             //        return Visit(expr);
             //    }
-            default:
-                throw new NotSupportedException();
-        }
+            _ => throw new NotSupportedException(),
+        };
         //Math.
     }
 
@@ -335,8 +331,8 @@ internal class IntegralVisitor : ExpressionVisitorEx
         //if(result != null) return result;
 
         var method = m.Method;
-        if(method.DeclaringType == typeof(Math))
-            return VisitMathMethodCall(m);
+        if (method.DeclaringType == typeof(Math))
+            return VisitMathMethodCall(m)!;
         throw new NotSupportedException();
         //return base.VisitMethodCall(m);
     }

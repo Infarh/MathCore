@@ -56,28 +56,28 @@ public readonly struct CSVQuery : IEnumerable<CSVQueryRow>, IEquatable<CSVQuery>
         CultureInfo Culture
     )
     {
-        _ReaderFactory           = ReaderFactory.NotNull();
-        SkipRowsCount            = SkipRows;
-        this.ContainsHeader      = ContainsHeader;
+        _ReaderFactory = ReaderFactory.NotNull();
+        SkipRowsCount = SkipRows;
+        this.ContainsHeader = ContainsHeader;
         SkipRowsAfterHeaderCount = SkipRowsAfterHeader;
-        Separator                = ValuesSeparator;
-        TakeRowsCount            = TakeRows;
-        this.Headers             = Headers;
-        this.EoL                 = EoL;
-        this.Culture             = Culture;
+        Separator = ValuesSeparator;
+        TakeRowsCount = TakeRows;
+        this.Headers = Headers;
+        this.EoL = EoL;
+        this.Culture = Culture;
     }
 
     private CSVQuery(in CSVQuery query)
     {
-        _ReaderFactory           = query._ReaderFactory;
-        SkipRowsCount            = query.SkipRowsCount;
-        ContainsHeader           = query.ContainsHeader;
+        _ReaderFactory = query._ReaderFactory;
+        SkipRowsCount = query.SkipRowsCount;
+        ContainsHeader = query.ContainsHeader;
         SkipRowsAfterHeaderCount = query.SkipRowsAfterHeaderCount;
-        Separator                = query.Separator;
-        TakeRowsCount            = query.TakeRowsCount;
-        Headers                  = query.Headers;
-        EoL                      = query.EoL;
-        Culture                  = query.Culture;
+        Separator = query.Separator;
+        TakeRowsCount = query.TakeRowsCount;
+        Headers = query.Headers;
+        EoL = query.EoL;
+        Culture = query.Culture;
     }
 
     /// <summary>Установить число пропускаемых строк в начале файла</summary>
@@ -190,7 +190,7 @@ public readonly struct CSVQuery : IEnumerable<CSVQueryRow>, IEquatable<CSVQuery>
             throw new FormatException("Неожиданный конец потока");
 
         char[] separator = [Separator];
-        var    line      = reader.ReadLine();
+        var line = reader.ReadLine();
 
         if (string.IsNullOrWhiteSpace(line))
             throw new FormatException("Пустая строка заголовка");
@@ -283,7 +283,7 @@ public readonly struct CSVQuery : IEnumerable<CSVQueryRow>, IEquatable<CSVQuery>
     /// <inheritdoc />
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    public bool Equals(object other, IEqualityComparer comparer) =>
+    public bool Equals(object? other, IEqualityComparer comparer) =>
         other is CSVQuery query
         && comparer.Equals(_ReaderFactory, query._ReaderFactory)
         && comparer.Equals(SkipRowsCount, query.SkipRowsCount)

@@ -22,7 +22,7 @@ public class QueryResult<T> : IPagedQueryable<T>
     private readonly int _TotalItemsCount;
 
     /// <summary>Параметры запроса</summary>
-    public QueryOptions Options { get; }
+    public QueryOptions Options { get; } = null!;
 
     /// <summary>Номер страницы (начиная с нуля)</summary>
     public int Page => Options?.Page ?? 0;
@@ -41,7 +41,7 @@ public class QueryResult<T> : IPagedQueryable<T>
 
     public QueryResult(IQueryable<T> query, QueryOptions? Options = null)
     {
-        SourceQuery                = query;
+        SourceQuery = query;
         (_Query, _TotalItemsCount) = Options is null ? (query, query.Count()) : (this.Options = Options).Items(query);
     }
 
@@ -50,12 +50,12 @@ public class QueryResult<T> : IPagedQueryable<T>
     public QueryResult<T>? GetPreviousPage() => HasPreviousPage
         ? new QueryResult<T>(SourceQuery, new()
         {
-            Page              = Page - 1,
-            Size              = PageSize,
-            OrderProperty     = Options?.OrderProperty,
+            Page = Page - 1,
+            Size = PageSize,
+            OrderProperty = Options?.OrderProperty!,
             OrderByDescending = Options?.OrderByDescending ?? false,
-            SearchProperty    = Options?.SearchProperty,
-            SearchTerm        = Options?.SearchTerm
+            SearchProperty = Options?.SearchProperty!,
+            SearchTerm = Options?.SearchTerm!
         })
         : null;
 
@@ -64,12 +64,12 @@ public class QueryResult<T> : IPagedQueryable<T>
     public QueryResult<T>? GetNextPage() => HasNextPage
         ? new QueryResult<T>(SourceQuery, new()
         {
-            Page              = Page + 1,
-            Size              = PageSize,
-            OrderProperty     = Options?.OrderProperty,
+            Page = Page + 1,
+            Size = PageSize,
+            OrderProperty = Options?.OrderProperty!,
             OrderByDescending = Options?.OrderByDescending ?? false,
-            SearchProperty    = Options?.SearchProperty,
-            SearchTerm        = Options?.SearchTerm
+            SearchProperty = Options?.SearchProperty!,
+            SearchTerm = Options?.SearchTerm!
         })
         : null;
 

@@ -1,12 +1,9 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
 
-using MathCore.Vectors;
-
 using static System.Linq.Expressions.Expression;
 
 using bEx = System.Linq.Expressions.BinaryExpression;
-using cEx = System.Linq.Expressions.ConstantExpression;
 using Ex = System.Linq.Expressions.Expression;
 using iEx = System.Linq.Expressions.IndexExpression;
 using lEx = System.Linq.Expressions.LambdaExpression;
@@ -25,70 +22,10 @@ using uEx = System.Linq.Expressions.UnaryExpression;
 namespace MathCore.Extensions.Expressions;
 
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Стиль", "IDE0046:Преобразовать в условное выражение", Justification = "<Ожидание>")]
-public static class ExpressionExtensions
+public static partial class ExpressionExtensions
 {
+
     #region Types
-
-    private sealed class SubstExpressionVisitor : ExpressionVisitorEx
-    {
-        #region Properties
-
-        public pEx ParamExpressionToSubstitute { private get; init; } = null!;
-
-        public lEx SubstExpression { private get; init; } = null!;
-
-        #endregion
-
-        #region Methods
-
-        public new Ex Visit(Ex exp) => base.Visit(exp);
-
-        protected override Ex VisitUnary(uEx node)
-            => node.Operand == ParamExpressionToSubstitute
-                ? Ex.MakeUnary(node.NodeType, SubstExpression.Body, node.Type)
-                : base.VisitUnary(node);
-
-        protected override Ex VisitMethodCall(mcEx node)
-        {
-            if (node.Arguments.Count(expr => expr == ParamExpressionToSubstitute) == 0)
-                return base.VisitMethodCall(node);
-            var arguments = node.Arguments
-               .Select(arg => arg == ParamExpressionToSubstitute ? SubstExpression.Body : Visit(arg))
-               .ToList();
-            return Call(node.Object, node.Method, arguments);
-        }
-
-        protected override Ex VisitBinary(bEx node)
-        {
-            Ex  left, right;
-            var subst_left  = false;
-            var subst_right = false;
-
-            if (node.Left == ParamExpressionToSubstitute)
-            {
-                left       = SubstExpression.Body;
-                subst_left = true;
-            }
-            else
-                left = node.Left;
-
-            if (node.Right == ParamExpressionToSubstitute)
-            {
-                right       = SubstExpression.Body;
-                subst_right = true;
-            }
-            else
-                right = node.Right;
-            if (!subst_left && !subst_right) return base.VisitBinary(node);
-            if (!subst_left)
-                left = Visit(left);
-            if (!subst_right)
-                right = Visit(right);
-            return MakeBinary(node.NodeType, left, right, node.IsLiftedToNull, node.Method);
-        }
-
-        #endregion
-    }
 
     #endregion
 
@@ -97,7 +34,7 @@ public static class ExpressionExtensions
     /// <exception cref="FormatException">Количество аргументов подстановки не равно 1, или во входном выражении отсутствие подставляемый параметр</exception>
     public static lEx? Substitute(this lEx Expr, lEx Substitution)
     {
-        var parameters            = Expr.Parameters;
+        var parameters = Expr.Parameters;
         var substitute_parameters = Substitution.Parameters;
         if (substitute_parameters.Count != 1)
             throw new FormatException("Количество аргументов подстановки не равно 1");
@@ -106,7 +43,7 @@ public static class ExpressionExtensions
             throw new FormatException("Во входном выражении отсутствие подставляемый параметр");
 
         var visitor = new SubstitutionVisitor(Substitution);
-        var result  = visitor.Visit(Expr);
+        var result = visitor.Visit(Expr);
 
         return result as lEx;
     }
@@ -154,7 +91,7 @@ public static class ExpressionExtensions
         var visitor =
             new SubstExpressionVisitor
             {
-                SubstExpression             = SubstExpression,
+                SubstExpression = SubstExpression,
                 ParamExpressionToSubstitute = main_parameter
             };
 
@@ -201,22 +138,22 @@ public static class ExpressionExtensions
         var ta = a.Type;
         var tb = b.Type;
 
-        if (ta == typeof(double)) b      = b.ConvertTo(ta);
+        if (ta == typeof(double)) b = b.ConvertTo(ta);
         else if (tb == typeof(double)) a = a.ConvertTo(tb);
-        else if (ta == typeof(float)) b  = b.ConvertTo(ta);
-        else if (tb == typeof(float)) a  = a.ConvertTo(tb);
-        else if (ta == typeof(ulong)) b  = b.ConvertTo(ta);
-        else if (tb == typeof(ulong)) a  = a.ConvertTo(tb);
-        else if (ta == typeof(long)) b   = b.ConvertTo(ta);
-        else if (tb == typeof(long)) a   = a.ConvertTo(tb);
-        else if (ta == typeof(uint)) b   = b.ConvertTo(ta);
-        else if (tb == typeof(uint)) a   = a.ConvertTo(tb);
-        else if (ta == typeof(int)) b    = b.ConvertTo(ta);
-        else if (tb == typeof(int)) a    = a.ConvertTo(tb);
-        else if (ta == typeof(sbyte)) b  = b.ConvertTo(ta);
-        else if (tb == typeof(sbyte)) a  = a.ConvertTo(tb);
-        else if (ta == typeof(byte)) b   = b.ConvertTo(ta);
-        else if (tb == typeof(byte)) a   = a.ConvertTo(tb);
+        else if (ta == typeof(float)) b = b.ConvertTo(ta);
+        else if (tb == typeof(float)) a = a.ConvertTo(tb);
+        else if (ta == typeof(ulong)) b = b.ConvertTo(ta);
+        else if (tb == typeof(ulong)) a = a.ConvertTo(tb);
+        else if (ta == typeof(long)) b = b.ConvertTo(ta);
+        else if (tb == typeof(long)) a = a.ConvertTo(tb);
+        else if (ta == typeof(uint)) b = b.ConvertTo(ta);
+        else if (tb == typeof(uint)) a = a.ConvertTo(tb);
+        else if (ta == typeof(int)) b = b.ConvertTo(ta);
+        else if (tb == typeof(int)) a = a.ConvertTo(tb);
+        else if (ta == typeof(sbyte)) b = b.ConvertTo(ta);
+        else if (tb == typeof(sbyte)) a = a.ConvertTo(tb);
+        else if (ta == typeof(byte)) b = b.ConvertTo(ta);
+        else if (tb == typeof(byte)) a = a.ConvertTo(tb);
         return a;
     }
 
@@ -236,7 +173,7 @@ public static class ExpressionExtensions
     public static bEx? Add<T>(this Ex? left, params IReadOnlyList<T>? right)
     {
         var i = 0;
-        Ex  l;
+        Ex l;
         if (left != null) l = left;
         else if (right is null || right.Count == i) return null;
         else l = right[i++].ToExpression();
@@ -266,8 +203,8 @@ public static class ExpressionExtensions
 
     public static bEx MultiplyWithConversion(this Ex left, Ex right) =>
         !left.IsNumeric() || !right.IsNumeric() || left.Type == right.Type
-            ? left.Multiply(right)
-            : left.TryConvert(ref right).Multiply(right);
+            ? left.Mult(right)
+            : left.TryConvert(ref right).Mult(right);
 
     public static bEx Multiply(this Ex left, Ex right, bool conversion = false) => conversion ? left.MultiplyWithConversion(right) : Ex.Multiply(left, right);
     public static bEx Multiply(this Ex left, int right) => left.MultiplyWithConversion(right.ToExpression());
@@ -275,7 +212,7 @@ public static class ExpressionExtensions
 
     public static bEx? Multiply(this Ex? left, params IReadOnlyList<Ex>? right)
     {
-        Ex  l;
+        Ex l;
         if (left != null) l = left;
         else if (right is not { Count: > 0 }) return null;
         else l = right[1];
@@ -285,6 +222,10 @@ public static class ExpressionExtensions
             l = l.MultiplyWithConversion(right[i++]);
         return (bEx)l;
     }
+
+    public static bEx Mult<T>(this Ex left, T right) => Ex.Multiply(left, right as Ex ?? right.ToExpression());
+
+    public static bEx Mult<T>(this Ex left, Ex right) => Ex.Multiply(left, right);
 
     public static bEx? Multiply<T>(this Ex? left, params IReadOnlyList<T>? right)
     {
@@ -390,7 +331,7 @@ public static class ExpressionExtensions
     public static bEx? Coalesce(this Ex? left, params IReadOnlyList<Ex>? right)
     {
         var i = 0;
-        Ex  l;
+        Ex l;
         if (left != null) l = left;
         else if (right is null || right.Count == i) return null;
         else l = right[i++];
@@ -402,7 +343,7 @@ public static class ExpressionExtensions
     public static bEx? Coalesce<T>(this Ex? left, params IReadOnlyList<T>? right)
     {
         var i = 0;
-        Ex  l;
+        Ex l;
         if (left != null) l = left;
         else if (right is null || right.Count == i) return null;
         else
@@ -478,21 +419,21 @@ public static class ExpressionExtensions
 
     public static Ex ToNewExpression(this Type type) => New(type.GetConstructor(Type.EmptyTypes) ?? throw new InvalidOperationException());
 
-    public static Ex ToNewExpression(this Type type, params IEnumerable<Ex> p) => 
-        New(type.GetConstructor(p.Select(pp => pp.Type).ToArray()) ?? throw new InvalidOperationException("Конструктор не найден"));
+    public static Ex ToNewExpression(this Type type, params IEnumerable<Ex> p) =>
+        New(type.GetConstructor([.. p.Select(pp => pp.Type)]) ?? throw new InvalidOperationException("Конструктор не найден"));
 
-    public static Ex ToNewExpression<T>(this Type type, params IEnumerable<T> p) => 
-        New(type.GetConstructor(p.Select(pp => pp!.GetType()).ToArray()) 
+    public static Ex ToNewExpression<T>(this Type type, params IEnumerable<T> p) =>
+        New(type.GetConstructor([.. p.Select(pp => pp!.GetType())])
             ?? throw new InvalidOperationException("Конструктор не найден"));
 
     public static pEx ParameterOf(this string ParameterName, Type type) => Parameter(type, ParameterName);
     public static pEx ParameterOf<T>(this string ParameterName) => Parameter(typeof(T), ParameterName);
 
     public static mcEx GetCall(this Ex obj, string method, IEnumerable<Ex> arg)
-        => Call(obj, method, (arg = arg.ToArray()).Select(a => a.Type).ToArray(), (Ex[])arg);
+        => Call(obj, method, [.. (arg = [.. arg]).Select(a => a.Type)], (Ex[])arg);
 
     public static mcEx GetCall(this Ex obj, string method, params Ex[] arg)
-        => Call(obj, method, arg.Select(a => a.Type).ToArray(), arg);
+        => Call(obj, method, [.. arg.Select(a => a.Type)], arg);
 
     public static mcEx GetCall(this Ex obj, MethodInfo method, params IEnumerable<Ex> arg) => Call(obj, method, arg);
 
@@ -545,16 +486,16 @@ public static class ExpressionExtensions
     public static Ex CloneExpression(this Ex expr)
     {
         var visitor = new CloningVisitor();
-        return visitor.Visit(expr);
+        return visitor.Visit(expr).NotNull();
     }
 
     public static Ex[]? CloneArray(this Ex[]? expr)
     {
         if (expr is null) return null;
         var visitor = new CloningVisitor();
-        var result  = new Ex[expr.Length];
+        var result = new Ex[expr.Length];
         for (var i = 0; i < result.Length; i++)
-            result[i] = visitor.Visit(expr[i]);
+            result[i] = visitor.Visit(expr[i]).NotNull();
         return result;
     }
     public static Ex[,]? CloneArray(this Ex[,]? expr)
@@ -562,12 +503,12 @@ public static class ExpressionExtensions
         if (expr is null) return null;
         var visitor = new CloningVisitor();
 
-        var n      = expr.GetLength(0);
-        var m      = expr.GetLength(1);
+        var n = expr.GetLength(0);
+        var m = expr.GetLength(1);
         var result = new Ex[n, m];
         for (var i = 0; i < n; i++)
             for (var j = 0; j < m; j++)
-                result[i, j] = visitor.Visit(expr[i, j]);
+                result[i, j] = visitor.Visit(expr[i, j]).NotNull();
         return result;
     }
 
@@ -615,1270 +556,6 @@ public static class ExpressionExtensions
         visitor.BinaryVisited += ExpressionSimplifierRules.Binary;
 
         return visitor.Visit(expr);
-    }
-
-    private static class ExpressionSimplifierRules
-    {
-        public static Ex Binary(object Sender, EventArgs<bEx> Args)
-        {
-            var expr = Args.Argument;
-            switch (expr.NodeType)
-            {
-                default:
-                    return expr;
-                case ExpressionType.Add:
-                case ExpressionType.AddChecked:
-                    return AdditionSimplify(expr);
-                //case ExpressionType.And:
-                //    break;
-                //case ExpressionType.AndAlso:
-                //    break;
-                //case ExpressionType.Coalesce:
-                //    break;
-                case ExpressionType.Divide:
-                    return DivideSimplify(expr);
-                //case ExpressionType.Equal:
-                //    break;
-                //case ExpressionType.ExclusiveOr:
-                //    break;
-                //case ExpressionType.GreaterThan:
-                //    break;
-                //case ExpressionType.GreaterThanOrEqual:
-                //    break;
-                //case ExpressionType.LeftShift:
-                //    break;
-                //case ExpressionType.LessThan:
-                //    break;
-                //case ExpressionType.LessThanOrEqual:
-                //    break;
-                //case ExpressionType.Modulo:
-                //    break;
-                case ExpressionType.Multiply:
-                case ExpressionType.MultiplyChecked:
-                    return MultiplySimplify(expr);
-                //case ExpressionType.NotEqual:
-                //    break;
-                //case ExpressionType.Or:
-                //    break;
-                //case ExpressionType.OrElse:
-                //    break;
-                //case ExpressionType.Power:
-                //    break;
-                //case ExpressionType.RightShift:
-                //    break;
-                case ExpressionType.Subtract:
-                    return subtractionSimplify(expr);
-                //case ExpressionType.SubtractChecked:
-                //    break;
-                //case ExpressionType.TypeIs:
-                //    break;
-                //case ExpressionType.Assign:
-                //    break;
-            }
-        }
-
-        #region Is...?
-
-        private static bool IsNumeric(object value) => value 
-            is byte 
-            or sbyte 
-            or short 
-            or ushort 
-            or int 
-            or uint 
-            or long 
-            or ulong 
-            or float 
-            or double 
-            or Complex 
-            or Vector2D 
-            or Vector3D;
-
-        private static bool IsZero(object value) =>
-            value is ((byte)0) or ((sbyte)0) or ((short)0) or ((ushort)0) or 0 or 0u or 0L or 0ul or 0f or 0d 
-            || value is Complex && ((Complex)0).Equals(value) 
-            || value is Vector2D && ((Vector2D)0).Equals(value) 
-            || value is Vector3D && ((Vector3D)0).Equals(value)
-        ;
-
-        private static bool IsUnit(object value) =>
-            value is ((byte)1) or ((sbyte)1) or ((short)1) or ((ushort)1) or 1 or 1u or 1L or 1ul or 1f or 1d 
-            || value is Complex && Complex.Real.Equals(value)
-        ;
-
-        #endregion
-
-        private static Ex MultiplySimplify(bEx expr)
-        {
-            //var is_checked = expr.NodeType == ExpressionType.MultiplyChecked;
-            if (IsZero((expr.Left as cEx)?.Value)) return expr.Left;
-            if (IsUnit((expr.Left as cEx)?.Value)) return expr.Right;
-
-            if (IsZero((expr.Right as cEx)?.Value)) return expr.Right;
-            if (IsUnit((expr.Right as cEx)?.Value)) return expr.Left;
-
-            return MultiplyValues((expr.Left as cEx)?.Value, (expr.Right as cEx)?.Value) ?? expr;
-        }
-
-        private static Ex? MultiplyValues(object left, object right)
-        {
-            if (!IsNumeric(left) || !IsNumeric(right)) return null;
-            return left switch
-            {
-                byte left1 => right switch
-                {
-                    byte b             => (left1 * b).ToExpression(),
-                    sbyte right1       => (left1 * right1).ToExpression(),
-                    short s            => (left1 * s).ToExpression(),
-                    ushort right1      => (left1 * right1).ToExpression(),
-                    int i              => (left1 * i).ToExpression(),
-                    uint u             => (left1 * u).ToExpression(),
-                    long l             => (left1 * l).ToExpression(),
-                    ulong right1       => (left1 * right1).ToExpression(),
-                    float f            => (left1 * f).ToExpression(),
-                    double d           => (left1 * d).ToExpression(),
-                    Complex complex    => (left1 * complex).ToExpression(),
-                    Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
-                    _                  => (left1 * (right as Vector3D?))?.ToExpression()
-                },
-                sbyte left1 => right switch
-                {
-                    byte b        => (left1 * b).ToExpression(),
-                    sbyte right1  => (left1 * right1).ToExpression(),
-                    short s       => (left1 * s).ToExpression(),
-                    ushort right1 => (left1 * right1).ToExpression(),
-                    int i         => (left1 * i).ToExpression(),
-                    uint u        => (left1 * u).ToExpression(),
-                    long l        => (left1 * l).ToExpression(),
-                    //ulong right1 => (left1 * right1).ToExpression(),
-                    float f            => (left1 * f).ToExpression(),
-                    double d           => (left1 * d).ToExpression(),
-                    Complex complex    => (left1 * complex).ToExpression(),
-                    Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
-                    _                  => (left1 * (right as Vector3D?))?.ToExpression()
-                },
-                short left1 => right switch
-                {
-                    byte b        => (left1 * b).ToExpression(),
-                    sbyte right1  => (left1 * right1).ToExpression(),
-                    short s       => (left1 * s).ToExpression(),
-                    ushort right1 => (left1 * right1).ToExpression(),
-                    int i         => (left1 * i).ToExpression(),
-                    uint u        => (left1 * u).ToExpression(),
-                    long l        => (left1 * l).ToExpression(),
-                    //ulong right1 => (left1 * right1).ToExpression(),
-                    float f            => (left1 * f).ToExpression(),
-                    double d           => (left1 * d).ToExpression(),
-                    Complex complex    => (left1 * complex).ToExpression(),
-                    Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
-                    _                  => (left1 * (right as Vector3D?))?.ToExpression()
-                },
-                ushort left1 => right switch
-                {
-                    byte b             => (left1 * b).ToExpression(),
-                    sbyte right1       => (left1 * right1).ToExpression(),
-                    short s            => (left1 * s).ToExpression(),
-                    ushort right1      => (left1 * right1).ToExpression(),
-                    int i              => (left1 * i).ToExpression(),
-                    uint u             => (left1 * u).ToExpression(),
-                    long l             => (left1 * l).ToExpression(),
-                    ulong right1       => (left1 * right1).ToExpression(),
-                    float f            => (left1 * f).ToExpression(),
-                    double d           => (left1 * d).ToExpression(),
-                    Complex complex    => (left1 * complex).ToExpression(),
-                    Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
-                    _                  => (left1 * (right as Vector3D?))?.ToExpression()
-                },
-                int left1 => right switch
-                {
-                    byte b        => (left1 * b).ToExpression(),
-                    sbyte right1  => (left1 * right1).ToExpression(),
-                    short s       => (left1 * s).ToExpression(),
-                    ushort right1 => (left1 * right1).ToExpression(),
-                    int i         => (left1 * i).ToExpression(),
-                    uint u        => (left1 * u).ToExpression(),
-                    long l        => (left1 * l).ToExpression(),
-                    //ulong right1 => (left1 * right1).ToExpression(),
-                    float f            => (left1 * f).ToExpression(),
-                    double d           => (left1 * d).ToExpression(),
-                    Complex complex    => (left1 * complex).ToExpression(),
-                    Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
-                    _                  => (left1 * (right as Vector3D?))?.ToExpression()
-                },
-                uint left1 => right switch
-                {
-                    byte b             => (left1 * b).ToExpression(),
-                    sbyte right1       => (left1 * right1).ToExpression(),
-                    short s            => (left1 * s).ToExpression(),
-                    ushort right1      => (left1 * right1).ToExpression(),
-                    int i              => (left1 * i).ToExpression(),
-                    uint u             => (left1 * u).ToExpression(),
-                    long l             => (left1 * l).ToExpression(),
-                    ulong right1       => (left1 * right1).ToExpression(),
-                    float f            => (left1 * f).ToExpression(),
-                    double d           => (left1 * d).ToExpression(),
-                    Complex complex    => (left1 * complex).ToExpression(),
-                    Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
-                    _                  => (left1 * (right as Vector3D?))?.ToExpression()
-                },
-                long left1 => right switch
-                {
-                    byte b        => (left1 * b).ToExpression(),
-                    sbyte right1  => (left1 * right1).ToExpression(),
-                    short s       => (left1 * s).ToExpression(),
-                    ushort right1 => (left1 * right1).ToExpression(),
-                    int i         => (left1 * i).ToExpression(),
-                    uint u        => (left1 * u).ToExpression(),
-                    long l        => (left1 * l).ToExpression(),
-                    //ulong right1 => (left1 * right1).ToExpression(),
-                    float f            => (left1 * f).ToExpression(),
-                    double d           => (left1 * d).ToExpression(),
-                    Complex complex    => (left1 * complex).ToExpression(),
-                    Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
-                    _                  => (left1 * (right as Vector3D?))?.ToExpression()
-                },
-                ulong left1 => right switch
-                {
-                    byte b => (left1 * b).ToExpression(),
-                    //sbyte right1 => (left1 * right1).ToExpression(),
-                    //short s => (left1 * s).ToExpression(),
-                    ushort right1 => (left1 * right1).ToExpression(),
-                    //int i => (left1 * i).ToExpression(),
-                    //uint u => (left1 * u).ToExpression(),
-                    //long l => (left1 * l).ToExpression(),
-                    ulong right1       => (left1 * right1).ToExpression(),
-                    float f            => (left1 * f).ToExpression(),
-                    double d           => (left1 * d).ToExpression(),
-                    Complex complex    => (left1 * complex).ToExpression(),
-                    Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
-                    _                  => (left1 * (right as Vector3D?))?.ToExpression()
-                },
-                float left1 => right switch
-                {
-                    byte b             => (left1 * b).ToExpression(),
-                    sbyte right1       => (left1 * right1).ToExpression(),
-                    short s            => (left1 * s).ToExpression(),
-                    ushort right1      => (left1 * right1).ToExpression(),
-                    int i              => (left1 * i).ToExpression(),
-                    uint u             => (left1 * u).ToExpression(),
-                    long l             => (left1 * l).ToExpression(),
-                    ulong right1       => (left1 * right1).ToExpression(),
-                    float f            => (left1 * f).ToExpression(),
-                    double d           => (left1 * d).ToExpression(),
-                    Complex complex    => (left1 * complex).ToExpression(),
-                    Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
-                    _                  => (left1 * (right as Vector3D?))?.ToExpression()
-                },
-                double left1 => right switch
-                {
-                    byte b             => (left1 * b).ToExpression(),
-                    sbyte right1       => (left1 * right1).ToExpression(),
-                    short s            => (left1 * s).ToExpression(),
-                    ushort right1      => (left1 * right1).ToExpression(),
-                    int i              => (left1 * i).ToExpression(),
-                    uint u             => (left1 * u).ToExpression(),
-                    long l             => (left1 * l).ToExpression(),
-                    ulong right1       => (left1 * right1).ToExpression(),
-                    float f            => (left1 * f).ToExpression(),
-                    double d           => (left1 * d).ToExpression(),
-                    Complex complex    => (left1 * complex).ToExpression(),
-                    Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
-                    _                  => (left1 * (right as Vector3D?))?.ToExpression()
-                },
-                Complex left1 => right switch
-                {
-                    byte b          => (left1 * b).ToExpression(),
-                    sbyte right1    => (left1 * right1).ToExpression(),
-                    short s         => (left1 * s).ToExpression(),
-                    ushort right1   => (left1 * right1).ToExpression(),
-                    int i           => (left1 * i).ToExpression(),
-                    uint u          => (left1 * u).ToExpression(),
-                    long l          => (left1 * l).ToExpression(),
-                    ulong right1    => (left1 * right1).ToExpression(),
-                    float f         => (left1 * f).ToExpression(),
-                    double d        => (left1 * d).ToExpression(),
-                    Complex complex => (left1 * complex).ToExpression(),
-                    //Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
-                    _ => null
-                },
-                Vector2D left1 => right switch
-                {
-                    byte b        => (left1 * b).ToExpression(),
-                    sbyte right1  => (left1 * right1).ToExpression(),
-                    short s       => (left1 * s).ToExpression(),
-                    ushort right1 => (left1 * right1).ToExpression(),
-                    int i         => (left1 * i).ToExpression(),
-                    uint u        => (left1 * u).ToExpression(),
-                    long l        => (left1 * l).ToExpression(),
-                    ulong right1  => (left1 * right1).ToExpression(),
-                    float f       => (left1 * f).ToExpression(),
-                    double d      => (left1 * d).ToExpression(),
-                    //Complex complex => (left1 * complex).ToExpression(),
-                    Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
-                    _                  => null
-                },
-                Vector3D vector_3d => right switch
-                {
-                    byte b             => (vector_3d * b).ToExpression(),
-                    sbyte right1       => (vector_3d * right1).ToExpression(),
-                    short s            => (vector_3d * s).ToExpression(),
-                    ushort right1      => (vector_3d * right1).ToExpression(),
-                    int i              => (vector_3d * i).ToExpression(),
-                    uint u             => (vector_3d * u).ToExpression(),
-                    long l             => (vector_3d * l).ToExpression(),
-                    ulong right1       => (vector_3d * right1).ToExpression(),
-                    float f            => (vector_3d * f).ToExpression(),
-                    double d           => (vector_3d * d).ToExpression(),
-                    Complex complex    => (vector_3d * complex).ToExpression(),
-                    Vector2D vector_2d => (vector_3d * vector_2d).ToExpression(),
-                    _                  => (vector_3d * (right as Vector3D?))?.ToExpression()
-                },
-                _ => null
-            };
-        }
-
-        private static Ex DivideSimplify(bEx expr)
-        {
-            if (IsZero((expr.Left as cEx)?.Value)) return expr.Left;
-            if (IsUnit((expr.Right as cEx)?.Value)) return expr.Left;
-
-            return DivideValues((expr.Left as cEx)?.Value, (expr.Right as cEx)?.Value) ?? expr;
-        }
-
-        private static Ex? DivideValues(object left, object right)
-        {
-            if (!IsNumeric(left) || !IsNumeric(right)) return null;
-            if (left is byte)
-            {
-                if (IsZero(right))
-                {
-                    return right switch
-                    {
-                        double.NaN     => double.NaN.ToExpression(),
-                        double and > 0 => double.PositiveInfinity.ToExpression(),
-                        double and < 0 => double.NegativeInfinity.ToExpression(),
-
-                        float.NaN      => float.NaN.ToExpression(),
-                        float and > 0  => float.PositiveInfinity.ToExpression(),
-                        float and < 0  => float.NegativeInfinity.ToExpression(),
-
-                        _              => Ex.Throw(new DivideByZeroException().ToExpression())
-                    };
-
-
-                    //if (right is double)
-                    //    return double.IsNaN((double)right)
-                    //        ? double.NaN.ToExpression()
-                    //        : ((double)right > 0 ? double.PositiveInfinity : double.NegativeInfinity).ToExpression();
-                    //if (right is not float) 
-                    //    return Ex.Throw(new DivideByZeroException().ToExpression());
-                    //return float.IsNaN((float)right)
-                    //    ? float.NaN.ToExpression()
-                    //    : ((float)right > 0 ? float.PositiveInfinity : float.NegativeInfinity).ToExpression();
-                }
-
-                return right switch
-                {
-                    byte b             => ((byte)left / b).ToExpression(),
-                    sbyte right1       => ((byte)left / right1).ToExpression(),
-                    short s            => ((byte)left / s).ToExpression(),
-                    ushort right1      => ((byte)left / right1).ToExpression(),
-                    int i              => ((byte)left / i).ToExpression(),
-                    uint u             => ((byte)left / u).ToExpression(),
-                    long l             => ((byte)left / l).ToExpression(),
-                    ulong right1       => ((byte)left / right1).ToExpression(),
-                    float f            => ((byte)left / f).ToExpression(),
-                    double d           => ((byte)left / d).ToExpression(),
-                    Complex complex    => ((byte)left / complex).ToExpression(),
-                    Vector2D vector_2d => ((byte)left / vector_2d).ToExpression(),
-                    _                  => ((byte)left / (right as Vector3D?))?.ToExpression()
-                };
-            }
-            if (left is sbyte)
-            {
-                if (IsZero(right))
-                    return ((sbyte)left, right) switch
-                    {
-                        (_,  double.NaN)     => double.NaN.ToExpression(),
-                        (>0, double and > 0) => double.PositiveInfinity.ToExpression(),
-                        (_,  double and > 0) => double.NegativeInfinity.ToExpression(),
-                        (>0, double and < 0) => double.NegativeInfinity.ToExpression(),
-                        (_,  double and < 0) => double.PositiveInfinity.ToExpression(),
-
-                        (_,  float.NaN)     => float.NaN.ToExpression(),
-                        (>0, float and > 0) => float.PositiveInfinity.ToExpression(),
-                        (_,  float and > 0) => float.NegativeInfinity.ToExpression(),
-                        (>0, float and < 0) => float.NegativeInfinity.ToExpression(),
-                        (_,  float and < 0) => float.PositiveInfinity.ToExpression(),
-
-                        _ => Ex.Throw(new DivideByZeroException().ToExpression())
-                    };
-
-                return right switch
-                {
-                    byte b        => ((sbyte)left / b).ToExpression(),
-                    sbyte right1  => ((sbyte)left / right1).ToExpression(),
-                    short s       => ((sbyte)left / s).ToExpression(),
-                    ushort right1 => ((sbyte)left / right1).ToExpression(),
-                    int i         => ((sbyte)left / i).ToExpression(),
-                    uint u        => ((sbyte)left / u).ToExpression(),
-                    long l        => ((sbyte)left / l).ToExpression(),
-                    //ulong right1 => ((sbyte)left / right1).ToExpression(),
-                    float f            => ((sbyte)left / f).ToExpression(),
-                    double d           => ((sbyte)left / d).ToExpression(),
-                    Complex complex    => ((sbyte)left / complex).ToExpression(),
-                    Vector2D vector_2d => ((sbyte)left / vector_2d).ToExpression(),
-                    _                  => ((sbyte)left / (right as Vector3D?))?.ToExpression()
-                };
-            }
-            if (left is short)
-            {
-                if (IsZero(right))
-                    return ((short)left, right) switch
-                    {
-                        (_, double.NaN)        => double.NaN.ToExpression(),
-                        ( > 0, double and > 0) => double.PositiveInfinity.ToExpression(),
-                        (_, double and > 0)    => double.NegativeInfinity.ToExpression(),
-                        ( > 0, double and < 0) => double.NegativeInfinity.ToExpression(),
-                        (_, double and < 0)    => double.PositiveInfinity.ToExpression(),
-
-                        (_, float.NaN)        => float.NaN.ToExpression(),
-                        ( > 0, float and > 0) => float.PositiveInfinity.ToExpression(),
-                        (_, float and > 0)    => float.NegativeInfinity.ToExpression(),
-                        ( > 0, float and < 0) => float.NegativeInfinity.ToExpression(),
-                        (_, float and < 0)    => float.PositiveInfinity.ToExpression(),
-
-                        _ => Ex.Throw(new DivideByZeroException().ToExpression())
-                    };
-
-                return right switch
-                {
-                    byte b        => ((short)left / b).ToExpression(),
-                    sbyte right1  => ((short)left / right1).ToExpression(),
-                    short s       => ((short)left / s).ToExpression(),
-                    ushort right1 => ((short)left / right1).ToExpression(),
-                    int i         => ((short)left / i).ToExpression(),
-                    uint u        => ((short)left / u).ToExpression(),
-                    long l        => ((short)left / l).ToExpression(),
-                    //ulong right1 => ((short)left / right1).ToExpression(),
-                    float f            => ((short)left / f).ToExpression(),
-                    double d           => ((short)left / d).ToExpression(),
-                    Complex complex    => ((short)left / complex).ToExpression(),
-                    Vector2D vector_2d => ((short)left / vector_2d).ToExpression(),
-                    _                  => ((short)left / (right as Vector3D?))?.ToExpression()
-                };
-            }
-            if (left is ushort)
-            {
-                if (IsZero(right))
-                {
-                    if (right is double)
-                        return double.IsNaN((double)right)
-                            ? double.NaN.ToExpression()
-                            : ((double)right > 0 ? double.PositiveInfinity : double.NegativeInfinity).ToExpression();
-                    if (right is not float) return Ex.Throw(new DivideByZeroException().ToExpression());
-                    return float.IsNaN((float)right)
-                        ? float.NaN.ToExpression()
-                        : ((float)right > 0 ? float.PositiveInfinity : float.NegativeInfinity).ToExpression();
-                }
-
-                return right switch
-                {
-                    byte b             => ((ushort)left / b).ToExpression(),
-                    sbyte right1       => ((ushort)left / right1).ToExpression(),
-                    short s            => ((ushort)left / s).ToExpression(),
-                    ushort right1      => ((ushort)left / right1).ToExpression(),
-                    int i              => ((ushort)left / i).ToExpression(),
-                    uint u             => ((ushort)left / u).ToExpression(),
-                    long l             => ((ushort)left / l).ToExpression(),
-                    ulong right1       => ((ushort)left / right1).ToExpression(),
-                    float f            => ((ushort)left / f).ToExpression(),
-                    double d           => ((ushort)left / d).ToExpression(),
-                    Complex complex    => ((ushort)left / complex).ToExpression(),
-                    Vector2D vector_2d => ((ushort)left / vector_2d).ToExpression(),
-                    _                  => ((ushort)left / (right as Vector3D?))?.ToExpression()
-                };
-            }
-            if (left is int)
-            {
-                if (IsZero(right))
-                    return ((int)left, right) switch
-                    {
-                        (_, double.NaN)        => double.NaN.ToExpression(),
-                        ( > 0, double and > 0) => double.PositiveInfinity.ToExpression(),
-                        (_, double and > 0)    => double.NegativeInfinity.ToExpression(),
-                        ( > 0, double and < 0) => double.NegativeInfinity.ToExpression(),
-                        (_, double and < 0)    => double.PositiveInfinity.ToExpression(),
-
-                        (_, float.NaN)        => float.NaN.ToExpression(),
-                        ( > 0, float and > 0) => float.PositiveInfinity.ToExpression(),
-                        (_, float and > 0)    => float.NegativeInfinity.ToExpression(),
-                        ( > 0, float and < 0) => float.NegativeInfinity.ToExpression(),
-                        (_, float and < 0)    => float.PositiveInfinity.ToExpression(),
-
-                        _ => Ex.Throw(new DivideByZeroException().ToExpression())
-                    };
-
-                return right switch
-                {
-                    byte b        => ((int)left / b).ToExpression(),
-                    sbyte right1  => ((int)left / right1).ToExpression(),
-                    short s       => ((int)left / s).ToExpression(),
-                    ushort right1 => ((int)left / right1).ToExpression(),
-                    int i         => ((int)left / i).ToExpression(),
-                    uint u        => ((int)left / u).ToExpression(),
-                    long l        => ((int)left / l).ToExpression(),
-                    //ulong right1 => ((int)left / right1).ToExpression(),
-                    float f            => ((int)left / f).ToExpression(),
-                    double d           => ((int)left / d).ToExpression(),
-                    Complex complex    => ((int)left / complex).ToExpression(),
-                    Vector2D vector_2d => ((int)left / vector_2d).ToExpression(),
-                    _                  => ((int)left / (right as Vector3D?))?.ToExpression()
-                };
-            }
-            if (left is uint)
-            {
-                if (IsZero(right))
-                {
-                    if (right is double)
-                    {
-                        if (double.IsNaN((double)right)) return double.NaN.ToExpression();
-                        return ((double)right > 0 ? double.PositiveInfinity : double.NegativeInfinity).ToExpression();
-                    }
-                    if (right is float)
-                    {
-                        if (float.IsNaN((float)right)) return float.NaN.ToExpression();
-                        return ((float)right > 0 ? float.PositiveInfinity : float.NegativeInfinity).ToExpression();
-                    }
-                    return Ex.Throw(new DivideByZeroException().ToExpression());
-                }
-
-                return right switch
-                {
-                    byte b             => ((uint)left / b).ToExpression(),
-                    sbyte right1       => ((uint)left / right1).ToExpression(),
-                    short s            => ((uint)left / s).ToExpression(),
-                    ushort right1      => ((uint)left / right1).ToExpression(),
-                    int i              => ((uint)left / i).ToExpression(),
-                    uint u             => ((uint)left / u).ToExpression(),
-                    long l             => ((uint)left / l).ToExpression(),
-                    ulong right1       => ((uint)left / right1).ToExpression(),
-                    float f            => ((uint)left / f).ToExpression(),
-                    double d           => ((uint)left / d).ToExpression(),
-                    Complex complex    => ((uint)left / complex).ToExpression(),
-                    Vector2D vector_2d => ((uint)left / vector_2d).ToExpression(),
-                    _                  => ((uint)left / (right as Vector3D?))?.ToExpression()
-                };
-            }
-            if (left is long)
-            {
-                if (IsZero(right))
-                    return ((long)left, right) switch
-                    {
-                        (_, double.NaN)        => double.NaN.ToExpression(),
-                        ( > 0, double and > 0) => double.PositiveInfinity.ToExpression(),
-                        (_, double and > 0)    => double.NegativeInfinity.ToExpression(),
-                        ( > 0, double and < 0) => double.NegativeInfinity.ToExpression(),
-                        (_, double and < 0)    => double.PositiveInfinity.ToExpression(),
-
-                        (_, float.NaN)        => float.NaN.ToExpression(),
-                        ( > 0, float and > 0) => float.PositiveInfinity.ToExpression(),
-                        (_, float and > 0)    => float.NegativeInfinity.ToExpression(),
-                        ( > 0, float and < 0) => float.NegativeInfinity.ToExpression(),
-                        (_, float and < 0)    => float.PositiveInfinity.ToExpression(),
-
-                        _ => Ex.Throw(new DivideByZeroException().ToExpression())
-                    };
-
-                return right switch
-                {
-                    byte b        => ((long)left / b).ToExpression(),
-                    sbyte right1  => ((long)left / right1).ToExpression(),
-                    short s       => ((long)left / s).ToExpression(),
-                    ushort right1 => ((long)left / right1).ToExpression(),
-                    int i         => ((long)left / i).ToExpression(),
-                    uint u        => ((long)left / u).ToExpression(),
-                    long l        => ((long)left / l).ToExpression(),
-                    //ulong right1 => ((long)left / right1).ToExpression(),
-                    float f            => ((long)left / f).ToExpression(),
-                    double d           => ((long)left / d).ToExpression(),
-                    Complex complex    => ((long)left / complex).ToExpression(),
-                    Vector2D vector_2d => ((long)left / vector_2d).ToExpression(),
-                    _                  => ((long)left / (right as Vector3D?))?.ToExpression()
-                };
-            }
-            if (left is ulong)
-            {
-                if (IsZero(right))
-                {
-                    if (right is double)
-                    {
-                        if (double.IsNaN((double)right)) return double.NaN.ToExpression();
-                        return ((double)right > 0 ? double.PositiveInfinity : double.NegativeInfinity).ToExpression();
-                    }
-                    if (right is float)
-                    {
-                        if (float.IsNaN((float)right)) return float.NaN.ToExpression();
-                        return ((float)right > 0 ? float.PositiveInfinity : float.NegativeInfinity).ToExpression();
-                    }
-                    return Ex.Throw(new DivideByZeroException().ToExpression());
-                }
-
-                return right switch
-                {
-                    byte b => ((ulong)left / b).ToExpression(),
-                    //sbyte right1 => ((ulong)left / right1).ToExpression(),
-                    //short s => ((ulong)left / s).ToExpression(),
-                    ushort right1 => ((ulong)left / right1).ToExpression(),
-                    //int i => ((ulong)left / i).ToExpression(),
-                    uint u => ((ulong)left / u).ToExpression(),
-                    //long l => ((ulong)left / l).ToExpression(),
-                    ulong right1       => ((ulong)left / right1).ToExpression(),
-                    float f            => ((ulong)left / f).ToExpression(),
-                    double d           => ((ulong)left / d).ToExpression(),
-                    Complex complex    => ((ulong)left / complex).ToExpression(),
-                    Vector2D vector_2d => ((ulong)left / vector_2d).ToExpression(),
-                    _                  => ((ulong)left / (right as Vector3D?))?.ToExpression()
-                };
-            }
-            if (left is float)
-            {
-                if (IsZero(right))
-                    return ((float)left, right) switch
-                    {
-                        (_, double.NaN)        => double.NaN.ToExpression(),
-                        ( > 0, double and > 0) => double.PositiveInfinity.ToExpression(),
-                        (_, double and > 0)    => double.NegativeInfinity.ToExpression(),
-                        ( > 0, double and < 0) => double.NegativeInfinity.ToExpression(),
-                        (_, double and < 0)    => double.PositiveInfinity.ToExpression(),
-
-                        (_, float.NaN)        => float.NaN.ToExpression(),
-                        ( > 0, float and > 0) => float.PositiveInfinity.ToExpression(),
-                        (_, float and > 0)    => float.NegativeInfinity.ToExpression(),
-                        ( > 0, float and < 0) => float.NegativeInfinity.ToExpression(),
-                        (_, float and < 0)    => float.PositiveInfinity.ToExpression(),
-
-                        _ => Ex.Throw(new DivideByZeroException().ToExpression())
-                    };
-
-                return right switch
-                {
-                    byte b             => ((float)left / b).ToExpression(),
-                    sbyte right1       => ((float)left / right1).ToExpression(),
-                    short s            => ((float)left / s).ToExpression(),
-                    ushort right1      => ((float)left / right1).ToExpression(),
-                    int i              => ((float)left / i).ToExpression(),
-                    uint u             => ((float)left / u).ToExpression(),
-                    long l             => ((float)left / l).ToExpression(),
-                    ulong right1       => ((float)left / right1).ToExpression(),
-                    float f            => ((float)left / f).ToExpression(),
-                    double d           => ((float)left / d).ToExpression(),
-                    Complex complex    => ((float)left / complex).ToExpression(),
-                    Vector2D vector_2d => ((float)left / vector_2d).ToExpression(),
-                    _                  => ((float)left / (right as Vector3D?))?.ToExpression()
-                };
-            }
-            if (left is double)
-            {
-                if (IsZero(right))
-                    return ((double)left, right) switch
-                    {
-                        (_, double.NaN)        => double.NaN.ToExpression(),
-                        ( > 0, double and > 0) => double.PositiveInfinity.ToExpression(),
-                        (_, double and > 0)    => double.NegativeInfinity.ToExpression(),
-                        ( > 0, double and < 0) => double.NegativeInfinity.ToExpression(),
-                        (_, double and < 0)    => double.PositiveInfinity.ToExpression(),
-
-                        (_, float.NaN)        => float.NaN.ToExpression(),
-                        ( > 0, float and > 0) => float.PositiveInfinity.ToExpression(),
-                        (_, float and > 0)    => float.NegativeInfinity.ToExpression(),
-                        ( > 0, float and < 0) => float.NegativeInfinity.ToExpression(),
-                        (_, float and < 0)    => float.PositiveInfinity.ToExpression(),
-
-                        _ => Ex.Throw(new DivideByZeroException().ToExpression())
-                    };
-
-                return right switch
-                {
-                    byte b             => ((double)left / b).ToExpression(),
-                    sbyte right1       => ((double)left / right1).ToExpression(),
-                    short s            => ((double)left / s).ToExpression(),
-                    ushort right1      => ((double)left / right1).ToExpression(),
-                    int i              => ((double)left / i).ToExpression(),
-                    uint u             => ((double)left / u).ToExpression(),
-                    long l             => ((double)left / l).ToExpression(),
-                    ulong right1       => ((double)left / right1).ToExpression(),
-                    float f            => ((double)left / f).ToExpression(),
-                    double d           => ((double)left / d).ToExpression(),
-                    Complex complex    => ((double)left / complex).ToExpression(),
-                    Vector2D vector_2d => ((double)left / vector_2d).ToExpression(),
-                    _                  => ((double)left / (right as Vector3D?))?.ToExpression()
-                };
-            }
-            if (left is Complex)
-            {
-                if (IsZero(right))
-                    return Ex.Throw(new DivideByZeroException().ToExpression());
-                return right switch
-                {
-                    byte b          => ((Complex)left / b).ToExpression(),
-                    sbyte right1    => ((Complex)left / right1).ToExpression(),
-                    short s         => ((Complex)left / s).ToExpression(),
-                    ushort right1   => ((Complex)left / right1).ToExpression(),
-                    int i           => ((Complex)left / i).ToExpression(),
-                    uint u          => ((Complex)left / u).ToExpression(),
-                    long l          => ((Complex)left / l).ToExpression(),
-                    ulong right1    => ((Complex)left / right1).ToExpression(),
-                    float f         => ((Complex)left / f).ToExpression(),
-                    double d        => ((Complex)left / d).ToExpression(),
-                    Complex complex => ((Complex)left / complex).ToExpression(),
-                    //Vector2D vector_2d => ((Complex)left / vector_2d).ToExpression(),
-                    _ => null
-                };
-            }
-            if (left is Vector2D)
-            {
-                if (IsZero(right))
-                    return Ex.Throw(new DivideByZeroException().ToExpression());
-                return right switch
-                {
-                    byte b        => ((Vector2D)left / b).ToExpression(),
-                    sbyte right1  => ((Vector2D)left / right1).ToExpression(),
-                    short s       => ((Vector2D)left / s).ToExpression(),
-                    ushort right1 => ((Vector2D)left / right1).ToExpression(),
-                    int i         => ((Vector2D)left / i).ToExpression(),
-                    uint u        => ((Vector2D)left / u).ToExpression(),
-                    long l        => ((Vector2D)left / l).ToExpression(),
-                    ulong right1  => ((Vector2D)left / right1).ToExpression(),
-                    float f       => ((Vector2D)left / f).ToExpression(),
-                    //Complex complex => ((Vector2D)left / complex).ToExpression(),
-                    //Vector2D vector_2d => ((Vector2D)left / vector_2d).ToExpression(),
-                    _ => ((Vector2D)left / (right as double?))?.ToExpression()
-                };
-            }
-            if (left is Vector3D)
-            {
-                if (IsZero(right))
-                    return Ex.Throw(new DivideByZeroException().ToExpression());
-                return right switch
-                {
-                    byte b        => ((Vector3D)left / b).ToExpression(),
-                    sbyte right1  => ((Vector3D)left / right1).ToExpression(),
-                    short s       => ((Vector3D)left / s).ToExpression(),
-                    ushort right1 => ((Vector3D)left / right1).ToExpression(),
-                    int i         => ((Vector3D)left / i).ToExpression(),
-                    uint u        => ((Vector3D)left / u).ToExpression(),
-                    long l        => ((Vector3D)left / l).ToExpression(),
-                    ulong right1  => ((Vector3D)left / right1).ToExpression(),
-                    float f       => ((Vector3D)left / f).ToExpression(),
-                    double d      => ((Vector3D)left / d).ToExpression(),
-                    //Complex complex => ((Vector3D)left / complex).ToExpression(),
-                    //Vector2D vector_2d => ((Vector3D)left / vector_2d).ToExpression(),
-                    //_ => ((Vector3D)left / (right as Vector3D?))?.ToExpression()
-                    _ => null
-                };
-            }
-            return null;
-        }
-
-        private static Ex AdditionSimplify(bEx expr)
-        {
-            var right = expr.Right;
-            var left  = expr.Left;
-            if (IsZero((left as cEx)?.Value)) return right;
-            if (IsZero((right as cEx)?.Value)) return left;
-
-            //if(right.NodeType == ExpressionType.Add || right.NodeType == ExpressionType.Subtract)
-            //{
-            //    var right_operands = GetOperands_Addition(right as bEx).ToArray();
-            //    var consts = right_operands.Where(e => e is cEx || e.NodeType == ExpressionType.Negate && ((uEx)e).Operand is cEx).ToList();
-            //    var vars = right_operands.Except(consts).ToList();
-
-            //    Expression sum = null;
-            //    while(sum is null && consts.Count > 0)
-            //        if()
-
-            //            if(consts.Count > 1)
-            //            {
-            //                for(var i = 0; i < consts.Count; i++)
-            //                {
-            //                    var s = AddValues((sum as cEx)?.Value, (consts[i] as cEx)?.Value);
-            //                    if(s is null)
-            //        }
-            //            }
-            //}
-
-
-            return AddValues((left as cEx)?.Value, (right as cEx)?.Value) ?? expr;
-        }
-
-        private static IEnumerable<Ex> GetOperands_Addition(bEx? expr)
-        {
-            if (expr is null || expr.NodeType is not (ExpressionType.Add and ExpressionType.Subtract)) yield break;
-
-            var left = expr.Left;
-            if (left is bEx && left.NodeType == ExpressionType.Add || left.NodeType == ExpressionType.Subtract)
-                foreach (var item in GetOperands_Addition(left as bEx))
-                    yield return item;
-            else
-                yield return left;
-
-            var right = expr.Right;
-            if (right is bEx && right.NodeType == ExpressionType.Add || right.NodeType == ExpressionType.Subtract)
-                if (expr.NodeType == ExpressionType.Add)
-                    foreach (var item in GetOperands_Addition(left as bEx))
-                        yield return item;
-                else
-                    foreach (var item in GetOperands_Addition(left as bEx))
-                        if (item.NodeType == ExpressionType.Negate)
-                            yield return ((uEx)item).Operand;
-                        else
-                            yield return item.Negate();
-            else
-                yield return right;
-        }
-
-        private static Ex? AddValues(object left, object right)
-        {
-            if (!IsNumeric(left) || !IsNumeric(right)) return null;
-            return left switch
-            {
-                byte left1 => right switch
-                {
-                    byte b             => (left1 + b).ToExpression(),
-                    sbyte right1       => (left1 + right1).ToExpression(),
-                    short s            => (left1 + s).ToExpression(),
-                    ushort right1      => (left1 + right1).ToExpression(),
-                    int i              => (left1 + i).ToExpression(),
-                    uint u             => (left1 + u).ToExpression(),
-                    long l             => (left1 + l).ToExpression(),
-                    ulong right1       => (left1 + right1).ToExpression(),
-                    float f            => (left1 + f).ToExpression(),
-                    double d           => (left1 + d).ToExpression(),
-                    Complex complex    => (left1 + complex).ToExpression(),
-                    Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
-                    _                  => (left1 + (right as Vector3D?))?.ToExpression()
-                },
-                sbyte left1 => right switch
-                {
-                    byte b        => (left1 + b).ToExpression(),
-                    sbyte right1  => (left1 + right1).ToExpression(),
-                    short s       => (left1 + s).ToExpression(),
-                    ushort right1 => (left1 + right1).ToExpression(),
-                    int i         => (left1 + i).ToExpression(),
-                    uint u        => (left1 + u).ToExpression(),
-                    long l        => (left1 + l).ToExpression(),
-                    //ulong right1 => (left1 + right1).ToExpression(),
-                    float f            => (left1 + f).ToExpression(),
-                    double d           => (left1 + d).ToExpression(),
-                    Complex complex    => (left1 + complex).ToExpression(),
-                    Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
-                    _                  => (left1 + (right as Vector3D?))?.ToExpression()
-                },
-                short left1 => right switch
-                {
-                    byte b        => (left1 + b).ToExpression(),
-                    sbyte right1  => (left1 + right1).ToExpression(),
-                    short s       => (left1 + s).ToExpression(),
-                    ushort right1 => (left1 + right1).ToExpression(),
-                    int i         => (left1 + i).ToExpression(),
-                    uint u        => (left1 + u).ToExpression(),
-                    long l        => (left1 + l).ToExpression(),
-                    //ulong right1 => (left1 + right1).ToExpression(),
-                    float f            => (left1 + f).ToExpression(),
-                    double d           => (left1 + d).ToExpression(),
-                    Complex complex    => (left1 + complex).ToExpression(),
-                    Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
-                    _                  => (left1 + (right as Vector3D?))?.ToExpression()
-                },
-                ushort left1 => right switch
-                {
-                    byte b             => (left1 + b).ToExpression(),
-                    sbyte right1       => (left1 + right1).ToExpression(),
-                    short s            => (left1 + s).ToExpression(),
-                    ushort right1      => (left1 + right1).ToExpression(),
-                    int i              => (left1 + i).ToExpression(),
-                    uint u             => (left1 + u).ToExpression(),
-                    long l             => (left1 + l).ToExpression(),
-                    ulong right1       => (left1 + right1).ToExpression(),
-                    float f            => (left1 + f).ToExpression(),
-                    double d           => (left1 + d).ToExpression(),
-                    Complex complex    => (left1 + complex).ToExpression(),
-                    Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
-                    _                  => (left1 + (right as Vector3D?))?.ToExpression()
-                },
-                int left1 => right switch
-                {
-                    byte b        => (left1 + b).ToExpression(),
-                    sbyte right1  => (left1 + right1).ToExpression(),
-                    short s       => (left1 + s).ToExpression(),
-                    ushort right1 => (left1 + right1).ToExpression(),
-                    int i         => (left1 + i).ToExpression(),
-                    uint u        => (left1 + u).ToExpression(),
-                    long l        => (left1 + l).ToExpression(),
-                    //ulong right1 => (left1 + right1).ToExpression(),
-                    float f            => (left1 + f).ToExpression(),
-                    double d           => (left1 + d).ToExpression(),
-                    Complex complex    => (left1 + complex).ToExpression(),
-                    Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
-                    _                  => (left1 + (right as Vector3D?))?.ToExpression()
-                },
-                uint left1 => right switch
-                {
-                    byte b             => (left1 + b).ToExpression(),
-                    sbyte right1       => (left1 + right1).ToExpression(),
-                    short s            => (left1 + s).ToExpression(),
-                    ushort right1      => (left1 + right1).ToExpression(),
-                    int i              => (left1 + i).ToExpression(),
-                    uint u             => (left1 + u).ToExpression(),
-                    long l             => (left1 + l).ToExpression(),
-                    ulong right1       => (left1 + right1).ToExpression(),
-                    float f            => (left1 + f).ToExpression(),
-                    double d           => (left1 + d).ToExpression(),
-                    Complex complex    => (left1 + complex).ToExpression(),
-                    Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
-                    _                  => (left1 + (right as Vector3D?))?.ToExpression()
-                },
-                long left1 => right switch
-                {
-                    byte b        => (left1 + b).ToExpression(),
-                    sbyte right1  => (left1 + right1).ToExpression(),
-                    short s       => (left1 + s).ToExpression(),
-                    ushort right1 => (left1 + right1).ToExpression(),
-                    int i         => (left1 + i).ToExpression(),
-                    uint u        => (left1 + u).ToExpression(),
-                    long l        => (left1 + l).ToExpression(),
-                    //ulong right1 => (left1 + right1).ToExpression(),
-                    float f            => (left1 + f).ToExpression(),
-                    double d           => (left1 + d).ToExpression(),
-                    Complex complex    => (left1 + complex).ToExpression(),
-                    Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
-                    _                  => (left1 + (right as Vector3D?))?.ToExpression()
-                },
-                ulong left1 => right switch
-                {
-                    byte b => (left1 + b).ToExpression(),
-                    //sbyte right1 => (left1 + right1).ToExpression(),
-                    //short s => (left1 + s).ToExpression(),
-                    ushort right1 => (left1 + right1).ToExpression(),
-                    //int i => (left1 + i).ToExpression(),
-                    uint u => (left1 + u).ToExpression(),
-                    //long l => (left1 + l).ToExpression(),
-                    ulong right1       => (left1 + right1).ToExpression(),
-                    float f            => (left1 + f).ToExpression(),
-                    double d           => (left1 + d).ToExpression(),
-                    Complex complex    => (left1 + complex).ToExpression(),
-                    Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
-                    _                  => (left1 + (right as Vector3D?))?.ToExpression()
-                },
-                float left1 => right switch
-                {
-                    byte b             => (left1 + b).ToExpression(),
-                    sbyte right1       => (left1 + right1).ToExpression(),
-                    short s            => (left1 + s).ToExpression(),
-                    ushort right1      => (left1 + right1).ToExpression(),
-                    int i              => (left1 + i).ToExpression(),
-                    uint u             => (left1 + u).ToExpression(),
-                    long l             => (left1 + l).ToExpression(),
-                    ulong right1       => (left1 + right1).ToExpression(),
-                    float f            => (left1 + f).ToExpression(),
-                    double d           => (left1 + d).ToExpression(),
-                    Complex complex    => (left1 + complex).ToExpression(),
-                    Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
-                    _                  => (left1 + (right as Vector3D?))?.ToExpression()
-                },
-                double left1 => right switch
-                {
-                    byte b             => (left1 + b).ToExpression(),
-                    sbyte right1       => (left1 + right1).ToExpression(),
-                    short s            => (left1 + s).ToExpression(),
-                    ushort right1      => (left1 + right1).ToExpression(),
-                    int i              => (left1 + i).ToExpression(),
-                    uint u             => (left1 + u).ToExpression(),
-                    long l             => (left1 + l).ToExpression(),
-                    ulong right1       => (left1 + right1).ToExpression(),
-                    float f            => (left1 + f).ToExpression(),
-                    double d           => (left1 + d).ToExpression(),
-                    Complex complex    => (left1 + complex).ToExpression(),
-                    Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
-                    _                  => (left1 + (right as Vector3D?))?.ToExpression()
-                },
-                Complex left1 => right switch
-                {
-                    byte b          => (left1 + b).ToExpression(),
-                    sbyte right1    => (left1 + right1).ToExpression(),
-                    short s         => (left1 + s).ToExpression(),
-                    ushort right1   => (left1 + right1).ToExpression(),
-                    int i           => (left1 + i).ToExpression(),
-                    uint u          => (left1 + u).ToExpression(),
-                    long l          => (left1 + l).ToExpression(),
-                    ulong right1    => (left1 + right1).ToExpression(),
-                    float f         => (left1 + f).ToExpression(),
-                    double d        => (left1 + d).ToExpression(),
-                    Complex complex => (left1 + complex).ToExpression(),
-                    //Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
-                    _ => null
-                },
-                Vector2D left1 => right switch
-                {
-                    byte b        => (left1 + b).ToExpression(),
-                    sbyte right1  => (left1 + right1).ToExpression(),
-                    short s       => (left1 + s).ToExpression(),
-                    ushort right1 => (left1 + right1).ToExpression(),
-                    int i         => (left1 + i).ToExpression(),
-                    uint u        => (left1 + u).ToExpression(),
-                    long l        => (left1 + l).ToExpression(),
-                    ulong right1  => (left1 + right1).ToExpression(),
-                    float f       => (left1 + f).ToExpression(),
-                    double d      => (left1 + d).ToExpression(),
-                    //Complex complex => (left1 + complex).ToExpression(),
-                    Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
-                    _                  => null
-                },
-                Vector3D vector_3d => right switch
-                {
-                    byte b             => (vector_3d + b).ToExpression(),
-                    sbyte right1       => (vector_3d + right1).ToExpression(),
-                    short s            => (vector_3d + s).ToExpression(),
-                    ushort right1      => (vector_3d + right1).ToExpression(),
-                    int i              => (vector_3d + i).ToExpression(),
-                    uint u             => (vector_3d + u).ToExpression(),
-                    long l             => (vector_3d + l).ToExpression(),
-                    ulong right1       => (vector_3d + right1).ToExpression(),
-                    float f            => (vector_3d + f).ToExpression(),
-                    double d           => (vector_3d + d).ToExpression(),
-                    Complex complex    => (vector_3d + complex).ToExpression(),
-                    Vector2D vector_2d => (vector_3d + vector_2d).ToExpression(),
-                    _                  => (vector_3d + (right as Vector3D?))?.ToExpression()
-                },
-                _ => null
-            };
-        }
-
-        private static Ex subtractionSimplify(bEx expr)
-        {
-            if (IsZero((expr.Left as cEx)?.Value)) return expr.Right.Negate();
-            if (IsZero((expr.Right as cEx)?.Value)) return expr.Left;
-
-            return subtractValues((expr.Left as cEx)?.Value, (expr.Right as cEx)?.Value) ?? expr;
-        }
-
-        private static Ex? subtractValues(object left, object right)
-        {
-            if (!IsNumeric(left) || !IsNumeric(right)) return null;
-            return left switch
-            {
-                byte left1 => right switch
-                {
-                    byte b             => (left1 - b).ToExpression(),
-                    sbyte right1       => (left1 - right1).ToExpression(),
-                    short s            => (left1 - s).ToExpression(),
-                    ushort right1      => (left1 - right1).ToExpression(),
-                    int i              => (left1 - i).ToExpression(),
-                    uint u             => (left1 - u).ToExpression(),
-                    long l             => (left1 - l).ToExpression(),
-                    ulong right1       => (left1 - right1).ToExpression(),
-                    float f            => (left1 - f).ToExpression(),
-                    double d           => (left1 - d).ToExpression(),
-                    Complex complex    => (left1 - complex).ToExpression(),
-                    Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
-                    _                  => (left1 - (right as Vector3D?))?.ToExpression()
-                },
-                sbyte left1 => right switch
-                {
-                    byte b        => (left1 - b).ToExpression(),
-                    sbyte right1  => (left1 - right1).ToExpression(),
-                    short s       => (left1 - s).ToExpression(),
-                    ushort right1 => (left1 - right1).ToExpression(),
-                    int i         => (left1 - i).ToExpression(),
-                    uint u        => (left1 - u).ToExpression(),
-                    long l        => (left1 - l).ToExpression(),
-                    //ulong right1 => (left1 - right1).ToExpression(),
-                    float f            => (left1 - f).ToExpression(),
-                    double d           => (left1 - d).ToExpression(),
-                    Complex complex    => (left1 - complex).ToExpression(),
-                    Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
-                    _                  => (left1 - (right as Vector3D?))?.ToExpression()
-                },
-                short left1 => right switch
-                {
-                    byte b        => (left1 - b).ToExpression(),
-                    sbyte right1  => (left1 - right1).ToExpression(),
-                    short s       => (left1 - s).ToExpression(),
-                    ushort right1 => (left1 - right1).ToExpression(),
-                    int i         => (left1 - i).ToExpression(),
-                    uint u        => (left1 - u).ToExpression(),
-                    long l        => (left1 - l).ToExpression(),
-                    //ulong right1 => (left1 - right1).ToExpression(),
-                    float f            => (left1 - f).ToExpression(),
-                    double d           => (left1 - d).ToExpression(),
-                    Complex complex    => (left1 - complex).ToExpression(),
-                    Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
-                    _                  => (left1 - (right as Vector3D?))?.ToExpression()
-                },
-                ushort left1 => right switch
-                {
-                    byte b             => (left1 - b).ToExpression(),
-                    sbyte right1       => (left1 - right1).ToExpression(),
-                    short s            => (left1 - s).ToExpression(),
-                    ushort right1      => (left1 - right1).ToExpression(),
-                    int i              => (left1 - i).ToExpression(),
-                    uint u             => (left1 - u).ToExpression(),
-                    long l             => (left1 - l).ToExpression(),
-                    ulong right1       => (left1 - right1).ToExpression(),
-                    float f            => (left1 - f).ToExpression(),
-                    double d           => (left1 - d).ToExpression(),
-                    Complex complex    => (left1 - complex).ToExpression(),
-                    Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
-                    _                  => (left1 - (right as Vector3D?))?.ToExpression()
-                },
-                int left1 => right switch
-                {
-                    byte b        => (left1 - b).ToExpression(),
-                    sbyte right1  => (left1 - right1).ToExpression(),
-                    short s       => (left1 - s).ToExpression(),
-                    ushort right1 => (left1 - right1).ToExpression(),
-                    int i         => (left1 - i).ToExpression(),
-                    uint u        => (left1 - u).ToExpression(),
-                    long l        => (left1 - l).ToExpression(),
-                    //ulong right1 => (left1 - right1).ToExpression(),
-                    float f            => (left1 - f).ToExpression(),
-                    double d           => (left1 - d).ToExpression(),
-                    Complex complex    => (left1 - complex).ToExpression(),
-                    Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
-                    _                  => (left1 - (right as Vector3D?))?.ToExpression()
-                },
-                uint left1 => right switch
-                {
-                    byte b             => (left1 - b).ToExpression(),
-                    sbyte right1       => (left1 - right1).ToExpression(),
-                    short s            => (left1 - s).ToExpression(),
-                    ushort right1      => (left1 - right1).ToExpression(),
-                    int i              => (left1 - i).ToExpression(),
-                    uint u             => (left1 - u).ToExpression(),
-                    long l             => (left1 - l).ToExpression(),
-                    ulong right1       => (left1 - right1).ToExpression(),
-                    float f            => (left1 - f).ToExpression(),
-                    double d           => (left1 - d).ToExpression(),
-                    Complex complex    => (left1 - complex).ToExpression(),
-                    Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
-                    _                  => (left1 - (right as Vector3D?))?.ToExpression()
-                },
-                long left1 => right switch
-                {
-                    byte b        => (left1 - b).ToExpression(),
-                    sbyte right1  => (left1 - right1).ToExpression(),
-                    short s       => (left1 - s).ToExpression(),
-                    ushort right1 => (left1 - right1).ToExpression(),
-                    int i         => (left1 - i).ToExpression(),
-                    uint u        => (left1 - u).ToExpression(),
-                    long l        => (left1 - l).ToExpression(),
-                    //ulong right1 => (left1 - right1).ToExpression(),
-                    float f            => (left1 - f).ToExpression(),
-                    double d           => (left1 - d).ToExpression(),
-                    Complex complex    => (left1 - complex).ToExpression(),
-                    Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
-                    _                  => (left1 - (right as Vector3D?))?.ToExpression()
-                },
-                ulong left1 => right switch
-                {
-                    byte b => (left1 - b).ToExpression(),
-                    //sbyte right1 => (left1 - right1).ToExpression(),
-                    //short s => (left1 - s).ToExpression(),
-                    ushort right1 => (left1 - right1).ToExpression(),
-                    //int i => (left1 - i).ToExpression(),
-                    uint u => (left1 - u).ToExpression(),
-                    //long l => (left1 - l).ToExpression(),
-                    ulong right1       => (left1 - right1).ToExpression(),
-                    float f            => (left1 - f).ToExpression(),
-                    double d           => (left1 - d).ToExpression(),
-                    Complex complex    => (left1 - complex).ToExpression(),
-                    Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
-                    _                  => (left1 - (right as Vector3D?))?.ToExpression()
-                },
-                float left1 => right switch
-                {
-                    byte b             => (left1 - b).ToExpression(),
-                    sbyte right1       => (left1 - right1).ToExpression(),
-                    short s            => (left1 - s).ToExpression(),
-                    ushort right1      => (left1 - right1).ToExpression(),
-                    int i              => (left1 - i).ToExpression(),
-                    uint u             => (left1 - u).ToExpression(),
-                    long l             => (left1 - l).ToExpression(),
-                    ulong right1       => (left1 - right1).ToExpression(),
-                    float f            => (left1 - f).ToExpression(),
-                    double d           => (left1 - d).ToExpression(),
-                    Complex complex    => (left1 - complex).ToExpression(),
-                    Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
-                    _                  => (left1 - (right as Vector3D?))?.ToExpression()
-                },
-                double left1 => right switch
-                {
-                    byte b             => (left1 - b).ToExpression(),
-                    sbyte right1       => (left1 - right1).ToExpression(),
-                    short s            => (left1 - s).ToExpression(),
-                    ushort right1      => (left1 - right1).ToExpression(),
-                    int i              => (left1 - i).ToExpression(),
-                    uint u             => (left1 - u).ToExpression(),
-                    long l             => (left1 - l).ToExpression(),
-                    ulong right1       => (left1 - right1).ToExpression(),
-                    float f            => (left1 - f).ToExpression(),
-                    double d           => (left1 - d).ToExpression(),
-                    Complex complex    => (left1 - complex).ToExpression(),
-                    Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
-                    _                  => (left1 - (right as Vector3D?))?.ToExpression()
-                },
-                Complex left1 => right switch
-                {
-                    byte b          => (left1 - b).ToExpression(),
-                    sbyte right1    => (left1 - right1).ToExpression(),
-                    short s         => (left1 - s).ToExpression(),
-                    ushort right1   => (left1 - right1).ToExpression(),
-                    int i           => (left1 - i).ToExpression(),
-                    uint u          => (left1 - u).ToExpression(),
-                    long l          => (left1 - l).ToExpression(),
-                    ulong right1    => (left1 - right1).ToExpression(),
-                    float f         => (left1 - f).ToExpression(),
-                    double d        => (left1 - d).ToExpression(),
-                    Complex complex => (left1 - complex).ToExpression(),
-                    //Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
-                    _ => null
-                },
-                Vector2D left1 => right switch
-                {
-                    byte b        => (left1 - b).ToExpression(),
-                    sbyte right1  => (left1 - right1).ToExpression(),
-                    short s       => (left1 - s).ToExpression(),
-                    ushort right1 => (left1 - right1).ToExpression(),
-                    int i         => (left1 - i).ToExpression(),
-                    uint u        => (left1 - u).ToExpression(),
-                    long l        => (left1 - l).ToExpression(),
-                    ulong right1  => (left1 - right1).ToExpression(),
-                    float f       => (left1 - f).ToExpression(),
-                    double d      => (left1 - d).ToExpression(),
-                    //Complex complex => (left1 - complex).ToExpression(),
-                    Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
-                    _                  => null
-                },
-                Vector3D vector_3d => right switch
-                {
-                    byte b             => (vector_3d - b).ToExpression(),
-                    sbyte right1       => (vector_3d - right1).ToExpression(),
-                    short s            => (vector_3d - s).ToExpression(),
-                    ushort right1      => (vector_3d - right1).ToExpression(),
-                    int i              => (vector_3d - i).ToExpression(),
-                    uint u             => (vector_3d - u).ToExpression(),
-                    long l             => (vector_3d - l).ToExpression(),
-                    ulong right1       => (vector_3d - right1).ToExpression(),
-                    float f            => (vector_3d - f).ToExpression(),
-                    double d           => (vector_3d - d).ToExpression(),
-                    Complex complex    => (vector_3d - complex).ToExpression(),
-                    Vector2D vector_2d => (vector_3d - vector_2d).ToExpression(),
-                    _                  => (vector_3d - (right as Vector3D?))?.ToExpression()
-                },
-                _ => null
-            };
-        }
     }
 
     public static MethodCallExpression GetAbs(this Ex x) => Call(((Func<double, double>)Math.Abs).Method, x);
