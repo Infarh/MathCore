@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 // ReSharper disable EventNeverSubscribedTo.Global
 
 // ReSharper disable UnusedType.Global

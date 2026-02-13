@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive;

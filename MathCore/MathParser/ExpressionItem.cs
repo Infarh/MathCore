@@ -1,5 +1,4 @@
-﻿#nullable enable
-using MathCore.ViewModels;
+﻿using MathCore.ViewModels;
 
 namespace MathCore.MathParser;
 

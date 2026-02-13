@@ -1,5 +1,4 @@
-﻿#nullable enable
-using MathCore.Annotations;
+﻿using MathCore.Annotations;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable UnusedMember.Global

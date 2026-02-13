@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable ReturnTypeCanBeEnumerable.Global
+﻿// ReSharper disable ReturnTypeCanBeEnumerable.Global
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global

@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Linq.Reactive;
+﻿using System.Linq.Reactive;
 using System.Runtime.CompilerServices;
 
 using MathCore.Values;

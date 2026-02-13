@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable once CheckNamespace
+﻿// ReSharper disable once CheckNamespace
 namespace System.Collections.Concurrent;
 
 public class ConcurrentList<T> : IList<T>, IDisposable

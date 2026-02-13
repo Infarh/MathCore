@@ -7,7 +7,7 @@ namespace MathCore;
 
 public readonly partial struct Complex : IBinaryFloatingPointIeee754<Complex>
 {
-    int IComparable.CompareTo(object obj) => throw new NotImplementedException();
+    int IComparable.CompareTo(object? obj) => throw new NotImplementedException();
 
     int IComparable<Complex>.CompareTo(Complex other) => throw new NotImplementedException();
 

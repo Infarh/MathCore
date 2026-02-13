@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Linq.Expressions;
 
 // ReSharper disable UnusedMember.Global

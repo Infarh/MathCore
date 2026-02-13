@@ -1,5 +1,4 @@
 ﻿// ReSharper disable InconsistentNaming
-#nullable enable
 using System.Collections.Concurrent;
 
 using MathCore.Annotations;

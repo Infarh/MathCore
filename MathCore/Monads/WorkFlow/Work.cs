@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Monads.WorkFlow;
+﻿namespace MathCore.Monads.WorkFlow;
 
 /// <summary>Работа, выполняющая преобразование данных указанным методом</summary>
 /// <typeparam name="TParameter">Тип сходных данных для преобразования</typeparam>

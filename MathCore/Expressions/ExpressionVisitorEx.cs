@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Expressions;

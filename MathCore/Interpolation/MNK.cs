@@ -1,5 +1,4 @@
-﻿#nullable enable
-using static MathCore.Matrix.Array;
+﻿using static MathCore.Matrix.Array;
 using static MathCore.Matrix.Array.Operator;
 // ReSharper disable MemberCanBePrivate.Global
 

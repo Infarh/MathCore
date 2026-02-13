@@ -1,5 +1,4 @@
-﻿#nullable enable
-using MathCore.Vectors;
+﻿using MathCore.Vectors;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedMember.Local
 

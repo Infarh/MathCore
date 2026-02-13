@@ -1,5 +1,4 @@
-﻿#nullable enable
-using MathCore;
+﻿using MathCore;
 using MathCore.Extensions.Expressions;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ConvertToAutoPropertyWithPrivateSetter

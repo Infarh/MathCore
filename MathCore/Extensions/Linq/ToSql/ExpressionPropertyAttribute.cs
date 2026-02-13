@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable once CheckNamespace
+﻿// ReSharper disable once CheckNamespace
 // ReSharper disable UnusedType.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Local
 // ReSharper disable MemberCanBePrivate.Global

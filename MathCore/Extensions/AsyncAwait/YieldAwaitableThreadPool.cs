@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace

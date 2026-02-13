@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 using System.Text;
 
 namespace MathCore;

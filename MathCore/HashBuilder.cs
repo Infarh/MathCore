@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore;
+﻿namespace MathCore;
 
 /// <summary>Построитель хеш-суммы</summary>
 /// <remarks>Инициализация нового построителя хеш-суммы</remarks>

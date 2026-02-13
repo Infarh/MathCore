@@ -1,5 +1,4 @@
-﻿#nullable enable
-using static MathCore.MatrixComplex.Array.Operator;
+﻿using static MathCore.MatrixComplex.Array.Operator;
 
 // ReSharper disable ExceptionNotThrown
 // ReSharper disable InconsistentNaming

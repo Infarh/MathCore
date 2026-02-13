@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Collections;
+﻿namespace MathCore.Collections;
 
 /// <summary>Функциональное дерево</summary>
 /// <typeparam name="T"></typeparam>

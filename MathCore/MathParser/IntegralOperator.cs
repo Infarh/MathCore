@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq.Expressions;
 
 using MathCore.MathParser.ExpressionTrees.Nodes;

@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Linq.Reactive;
 
 // ReSharper disable MemberCanBePrivate.Global

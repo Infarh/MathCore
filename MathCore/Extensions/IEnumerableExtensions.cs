@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections;
+﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Reactive;
 using System.Text;

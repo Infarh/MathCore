@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections;
+﻿using System.Collections;
 using System.Numerics;
 
 using MathCore;

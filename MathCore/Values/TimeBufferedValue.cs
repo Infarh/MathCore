@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable UnusedType.Global
+﻿// ReSharper disable UnusedType.Global
 // ReSharper disable UnusedParameter.Local
 
 namespace MathCore.Values;

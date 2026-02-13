@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable once CheckNamespace
+﻿// ReSharper disable once CheckNamespace
 namespace System.Numerics;
 
 public static class BigIntegerExtensions

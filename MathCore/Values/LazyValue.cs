@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Values;
+﻿namespace MathCore.Values;
 
 ///<summary>"Ленивое" значение</summary>
 ///<typeparam name="T">Тип значения</typeparam>

@@ -1,5 +1,4 @@
-﻿#nullable enable
-using MathCore;
+﻿using MathCore;
 using MathCore.Evaluations;
 
 using System.Diagnostics.CodeAnalysis;

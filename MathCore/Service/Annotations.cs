@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 // ReSharper disable UnusedType.Global
 #pragma warning disable CS9113 // Parameter is unread.
 

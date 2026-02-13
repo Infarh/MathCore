@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable UnusedMember.Global
+﻿// ReSharper disable UnusedMember.Global
 
 namespace MathCore.Values;
 

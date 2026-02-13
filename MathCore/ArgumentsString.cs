@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable EventNeverSubscribedTo.Global
+﻿// ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedType.Global
 

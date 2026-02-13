@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Local

@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo

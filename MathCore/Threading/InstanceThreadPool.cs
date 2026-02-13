@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 
-#nullable enable
 namespace MathCore.Threading;
 
 /// <summary>Пул с фикисрованным поличеством потоков</summary>

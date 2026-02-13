@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable once CheckNamespace
+﻿// ReSharper disable once CheckNamespace
 namespace System;
 
 public class LambdaProcessor(Action action) : Processor

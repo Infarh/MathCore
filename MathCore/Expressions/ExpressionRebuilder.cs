@@ -13,14 +13,16 @@ public class ExpressionRebuilder : ExpressionVisitorEx
     /// <param name="Node">Узел дерева</param>
     /// <param name="Base">Базовый метод обработки узла</param>
     /// <returns>Узел, которым надо заместить посещённый узел дерева</returns>
-    private Expression InvokeEvent<TExpressionNode>(EventHandlerReturn<EventArgs<TExpressionNode>, Expression> Handlers, TExpressionNode Node, Func<TExpressionNode, Expression> Base)
+    private Expression InvokeEvent<TExpressionNode>(
+        EventHandlerReturn<EventArgs<TExpressionNode>, Expression> Handlers,
+        TExpressionNode Node,
+        Func<TExpressionNode, Expression?> Base)
         where TExpressionNode : Expression
     {
         // Если обработчиков события нет, то вызываем базовый метод и возвращаем результат
         var element = Base(Node); // Вызываем базовый метод для получения замены
-        if(Handlers is null) return element;
-        var node = element as TExpressionNode;
-        return node != null
+        if (Handlers is null) return element;
+        return element is TExpressionNode node
             ? Handlers(this, new(node))
             : element; // иначе возвращаем элемент, от базового метода
     }
@@ -31,11 +33,14 @@ public class ExpressionRebuilder : ExpressionVisitorEx
     /// <param name="Node">Посещённый узел дерева</param>
     /// <param name="Base">Базовый метод обработки узла</param>
     /// <returns>Узел, которым надо заместить посещённый узел дерева</returns>
-    private TOut InvokeEvent<TElement, TOut>(EventHandlerReturn<EventArgs<TOut>, TOut> Handlers, TElement Node, Func<TElement, TOut> Base)
+    private TOut InvokeEvent<TElement, TOut>(
+        EventHandlerReturn<EventArgs<TOut>, TOut> Handlers,
+        TElement Node,
+        Func<TElement, TOut> Base)
     {
         // Если обработчиков события нет, то вызываем базовый метод и возвращаем результат
         var element = Base(Node); // Вызываем базовый метод для получения замены
-        if(Handlers is null) return element;
+        if (Handlers is null) return element;
         // Генерируем событие с передачей в него узла, полученного от базового дерева
         return Handlers(this, new(element));
     }

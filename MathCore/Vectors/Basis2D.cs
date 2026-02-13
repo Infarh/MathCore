@@ -1,5 +1,4 @@
-﻿#nullable enable
-using static System.Math;
+﻿using static System.Math;
 // ReSharper disable ConvertToAutoPropertyWhenPossible
 // ReSharper disable InconsistentNaming
 // ReSharper disable MemberCanBePrivate.Global

@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 using MathCore.Annotations;
 
 #if NET8_0_OR_GREATER

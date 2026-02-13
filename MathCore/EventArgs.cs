@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global

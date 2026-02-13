@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.IoC;
+﻿namespace MathCore.IoC;
 
 /// <summary>Методы-расширения для менеджера сервисов</summary>
 // ReSharper disable once InconsistentNaming

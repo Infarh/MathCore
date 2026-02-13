@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Vectors;
+﻿namespace MathCore.Vectors;
 
 public static class Vector2DExtensions
 {

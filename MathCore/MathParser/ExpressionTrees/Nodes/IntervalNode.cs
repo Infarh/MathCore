@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.MathParser.ExpressionTrees.Nodes;
+﻿namespace MathCore.MathParser.ExpressionTrees.Nodes;
 
 /// <summary>Узел интервального значения</summary>
 public class IntervalNode : ParsedNode

@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Optimization.ParticleSwarm;
+﻿namespace MathCore.Optimization.ParticleSwarm;
 
 /// <summary>Рой двумерных частиц</summary>
 public class Swarm2D(int ParticleCount = 100)

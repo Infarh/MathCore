@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Dynamic;
+﻿using System.Dynamic;
 using System.Reflection;
 
 // ReSharper disable UnusedType.Global

@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 // ReSharper disable UnusedType.Global
 // ReSharper disable MemberCanBePrivate.Global

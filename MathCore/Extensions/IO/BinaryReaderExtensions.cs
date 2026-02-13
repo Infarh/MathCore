@@ -1,5 +1,4 @@
-﻿#nullable enable
-#if NET8_0_OR_GREATER
+﻿#if NET8_0_OR_GREATER
 using System.Buffers;
 #endif
 using System.Runtime.InteropServices;

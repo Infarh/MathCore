@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 // ReSharper disable UnusedType.Global
 
 namespace MathCore;

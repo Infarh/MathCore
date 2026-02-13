@@ -1,5 +1,4 @@
-﻿#nullable enable
-using MathCore.MathParser.ExpressionTrees.Nodes;
+﻿using MathCore.MathParser.ExpressionTrees.Nodes;
 // ReSharper disable ConvertToAutoProperty
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global

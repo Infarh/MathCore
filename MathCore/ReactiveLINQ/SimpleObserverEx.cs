@@ -1,6 +1,4 @@
 ﻿// ReSharper disable VirtualMemberNeverOverridden.Global
-#nullable enable
-
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBeProtected.Global
 

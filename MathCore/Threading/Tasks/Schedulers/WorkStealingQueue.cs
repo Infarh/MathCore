@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Threading.Tasks.Schedulers;
+﻿namespace MathCore.Threading.Tasks.Schedulers;
 
 /// <summary>A work-stealing queue.</summary>
 /// <typeparam name="T">Specifies the type of data stored in the queue.</typeparam>

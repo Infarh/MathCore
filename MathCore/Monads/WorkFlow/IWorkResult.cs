@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Monads.WorkFlow;
+﻿namespace MathCore.Monads.WorkFlow;
 
 /// <summary>Результат выполнения работы</summary>
 public interface IWorkResult

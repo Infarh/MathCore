@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.IoC.ServiceRegistrations;
+﻿namespace MathCore.IoC.ServiceRegistrations;
 
 public class SingleCallServiceRegistration<TService> : ServiceRegistration<TService> where TService : class
 {

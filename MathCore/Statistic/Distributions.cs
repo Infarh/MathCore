@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Statistic;
+﻿namespace MathCore.Statistic;
 
 /// <summary>Распределения</summary>
 public static partial class Distributions

@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 

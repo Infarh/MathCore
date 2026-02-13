@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 using MathCore.Annotations;
 
 // ReSharper disable UnusedMember.Global

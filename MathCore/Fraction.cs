@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Numerics;
+﻿using System.Numerics;
 
 using static System.Math;
 

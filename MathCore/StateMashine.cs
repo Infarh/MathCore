@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore;
+﻿namespace MathCore;
 
 public class LambdaStateMachine<TState, TValue>(TState state = default)
 {

@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 // ReSharper disable UnusedType.Global
 
 // ReSharper disable once CheckNamespace

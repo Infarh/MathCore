@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Vectors;
+﻿namespace MathCore.Vectors;
 
 public class VectorND_double : Vector<double>
 {

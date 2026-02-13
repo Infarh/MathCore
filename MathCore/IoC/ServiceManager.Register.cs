@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 using MathCore.IoC.Exceptions;
 using MathCore.IoC.ServiceRegistrations;
 

@@ -84,7 +84,7 @@ public class ConsoleProgressBar : IDisposable, IProgress<double>
     ///     не обновляет текст индикатора прогресса.
     /// </remarks>
     /// <param name="state">Объект, передаваемый в обработчик события таймера</param>
-    private void TimerHandler(object state)
+    private void TimerHandler(object? state)
     {
         lock (_Timer)
         {

@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 using MathCore.IoC.ServiceRegistrations;
 
 // ReSharper disable UnusedMethodReturnValue.Global

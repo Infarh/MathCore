@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Threading.Tasks;
+﻿namespace MathCore.Threading.Tasks;
 
 public class SimpleProgress<T>(Action<T> ProgressReporter) : IProgress<T>
 {

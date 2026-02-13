@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 // ReSharper disable UnusedMethodReturnValue.Global
 
 // ReSharper disable once CheckNamespace

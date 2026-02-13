@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Values;
+﻿namespace MathCore.Values;
 
 /// <summary>Статистическая информация о значении</summary>
 /// <remarks>Инициализация нового экземпляра <see cref="StatisticValue"/></remarks>

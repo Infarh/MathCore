@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore;
+﻿namespace MathCore;
 
 /// <summary>Алгоритмы для Простых чисел</summary>
 public static class PrimeNumbers

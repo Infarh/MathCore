@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Reflection;
+﻿using System.Reflection;
 using MathCore;
 // ReSharper disable EventNeverSubscribedTo.Global
 

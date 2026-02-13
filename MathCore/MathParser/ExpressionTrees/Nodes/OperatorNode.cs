@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable MemberCanBePrivate.Global
 

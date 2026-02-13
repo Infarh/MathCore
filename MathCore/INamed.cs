@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore;
+﻿namespace MathCore;
 
 /// <summary>Объект, обладающий именем</summary>
 public interface INamedRead

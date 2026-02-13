@@ -1,6 +1,4 @@
-﻿using MathCore.Annotations;
-
-namespace MathCore.Threading.Tasks.Schedulers;
+﻿namespace MathCore.Threading.Tasks.Schedulers;
 
 public class SynchronizationContextScheduler : TaskScheduler
 {
@@ -12,14 +10,14 @@ public class SynchronizationContextScheduler : TaskScheduler
     public SynchronizationContextScheduler(SynchronizationContext Context)
     {
         _Context = Context;
-        _Execute = Execute;
+        _Execute = Execute!;
     }
 
     protected override IEnumerable<Task> GetScheduledTasks() => [];
 
     protected override void QueueTask(Task task) => _Context.Send(_Execute, task);
 
-    private void Execute([NotNull] object p) => TryExecuteTask((Task)p);
+    private void Execute(object p) => TryExecuteTask((Task)p);
 
     protected override bool TryExecuteTaskInline(Task task, bool TaskWasPreviouslyQueued) => TryExecuteTask(task);
 }

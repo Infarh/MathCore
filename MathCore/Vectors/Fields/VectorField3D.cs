@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Vectors.Fields;
+﻿namespace MathCore.Vectors.Fields;
 
 /// <summary>Трёхмерное векторное поле</summary>
 /// <param name="r">Координата в пространстве</param>

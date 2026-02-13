@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 
 // ReSharper disable UnusedMemberInSuper.Global
 // ReSharper disable UnusedMember.Global

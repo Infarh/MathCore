@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable once CheckNamespace
+﻿// ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive;
 
 /// <summary>Простейший наблюдаемый объект</summary><typeparam name="T">Тип объектов событий</typeparam>

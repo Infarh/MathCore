@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Values;
+﻿namespace MathCore.Values;
 
 /// <summary>Множество</summary>
 /// <typeparam name="T">Тип элементов множества</typeparam>

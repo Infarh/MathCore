@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.MathParser;
+﻿namespace MathCore.MathParser;
 
 /// <summary>функция в структуре математического выражения</summary>
 public class ExpressionFunction : ExpressionItem, ICloneable<ExpressionFunction>

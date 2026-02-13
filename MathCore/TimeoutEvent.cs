@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore;
+﻿namespace MathCore;
 
 /// <summary>Класс задержки реакции на событие</summary>
 /// <typeparam name="TEventArgs">Тип аргумента события</typeparam>

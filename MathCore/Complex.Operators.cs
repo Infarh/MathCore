@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable InconsistentNaming
+﻿// ReSharper disable InconsistentNaming
 
 namespace MathCore;
 

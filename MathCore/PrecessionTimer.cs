@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.InteropServices;
 // ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable UnusedType.Global

@@ -38,11 +38,11 @@ public partial class ViewModel
         /// <param name="OldValue">Прежнее значение свойства</param>
         /// <param name="NewValue">Новое значение свойства</param>
         /// <param name="OnPropertyChanged">Действие по генерации события обновления свойства - делегат <see cref="System.ComponentModel.PropertyChangedEventHandler"/></param>
-        internal SetStaticValueResult(bool Result, [CanBeNull]T OldValue, [CanBeNull]T NewValue, [NotNull]Action<string> OnPropertyChanged)
+        internal SetStaticValueResult(bool Result, [CanBeNull] T OldValue, [CanBeNull] T NewValue, [NotNull] Action<string> OnPropertyChanged)
         {
-            _Result            = Result;
-            _OldValue          = OldValue;
-            _NewValue          = NewValue;
+            _Result = Result;
+            _OldValue = OldValue;
+            _NewValue = NewValue;
             _OnPropertyChanged = OnPropertyChanged;
         }
 
@@ -81,7 +81,7 @@ public partial class ViewModel
             if (!_Result) return this;
             _OnPropertyChanged(PropertyName);
             return this;
-        } 
+        }
 
         /// <summary>Выполнить генерацию события изменения указанного свойства даже если значение свойства не изменилось</summary>
         /// <param name="PropertyName">Имя обновившегося связанного свойства</param>
@@ -181,13 +181,13 @@ public partial class ViewModel
         /// <inheritdoc />
         public override int GetHashCode()
         {
-                
+
             unchecked
             {
-                var hash_code         = _Result.GetHashCode();
+                var hash_code = _Result.GetHashCode();
                 var equality_comparer = EqualityComparer<T>.Default;
-                hash_code = (hash_code * 397) ^ equality_comparer.GetHashCode(_OldValue);
-                hash_code = (hash_code * 397) ^ equality_comparer.GetHashCode(_NewValue);
+                hash_code = (hash_code * 397) ^ equality_comparer.GetHashCode(_OldValue!);
+                hash_code = (hash_code * 397) ^ equality_comparer.GetHashCode(_NewValue!);
                 hash_code = (hash_code * 397) ^ _OnPropertyChanged.GetHashCode();
                 return hash_code;
             }
@@ -214,11 +214,11 @@ public partial class ViewModel
     /// <returns>Объект контроля процесс обновления значения свойства</returns>
     public static SetStaticValueResult<T> SetValue<T>(
         [CanBeNull] ref T field,
-        [CanBeNull] in T value, 
-        [NotNull] in Action<string> OnPropertyChanged, 
+        [CanBeNull] in T value,
+        [NotNull] in Action<string> OnPropertyChanged,
         [NotNull, CallerMemberName] in string PropertyName = null)
     {
-        if (Equals(field, value)) 
+        if (Equals(field, value))
             return new(false, field, field, OnPropertyChanged);
 
         var old_value = field;
@@ -237,12 +237,12 @@ public partial class ViewModel
     /// <returns>Объект контроля процесс обновления значения свойства</returns>
     public static SetStaticValueResult<T> SetValue<T>(
         [CanBeNull] ref T field,
-        [CanBeNull] in T value, 
+        [CanBeNull] in T value,
         in Func<T, bool> Validator,
-        [NotNull] in Action<string> OnPropertyChanged, 
+        [NotNull] in Action<string> OnPropertyChanged,
         [NotNull, CallerMemberName] in string PropertyName = null)
     {
-        if (Equals(field, value) || !Validator(value)) 
+        if (Equals(field, value) || !Validator(value))
             return new(false, field, value, OnPropertyChanged);
 
         var old_value = field;
