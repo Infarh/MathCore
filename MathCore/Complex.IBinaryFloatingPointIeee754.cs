@@ -75,9 +75,9 @@ public readonly partial struct Complex : IBinaryFloatingPointIeee754<Complex>
 
     static Complex INumberBase<Complex>.MinMagnitudeNumber(Complex x, Complex y) => throw new NotImplementedException();
 
-    static Complex INumberBase<Complex>.Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider provider) => throw new NotImplementedException();
+    static Complex INumberBase<Complex>.Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider) => throw new NotImplementedException();
 
-    static Complex INumberBase<Complex>.Parse(string s, NumberStyles style, IFormatProvider provider) => throw new NotImplementedException();
+    static Complex INumberBase<Complex>.Parse(string? s, NumberStyles style, IFormatProvider? provider) => throw new NotImplementedException();
 
     static bool INumberBase<Complex>.TryConvertFromChecked<TOther>(TOther value, out Complex result) => throw new NotImplementedException();
 
@@ -91,9 +91,9 @@ public readonly partial struct Complex : IBinaryFloatingPointIeee754<Complex>
 
     static bool INumberBase<Complex>.TryConvertToTruncating<TOther>(Complex value, out TOther result) => throw new NotImplementedException();
 
-    static bool INumberBase<Complex>.TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider provider, out Complex result) => throw new NotImplementedException();
+    static bool INumberBase<Complex>.TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out Complex result) => throw new NotImplementedException();
 
-    static bool INumberBase<Complex>.TryParse(string s, NumberStyles style, IFormatProvider provider, out Complex result) => throw new NotImplementedException();
+    static bool INumberBase<Complex>.TryParse(string? s, NumberStyles style, IFormatProvider? provider, out Complex result) => throw new NotImplementedException();
 
     static Complex INumberBase<Complex>.One => Real;
 

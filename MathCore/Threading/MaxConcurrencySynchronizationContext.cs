@@ -11,9 +11,9 @@ public sealed class MaxConcurrencySynchronizationContext(int MaxConcurrencyLevel
     /// <summary>Метод, вызываемый при освобождении семафора</summary>
     /// <param name="SemaphoreWaitTask">Задача ожидания освобождения семафора</param>
     /// <param name="CallState">Массив с параметрами продолжения, хранящий в первом параметре делегат, который надо вызвать, а во втором - параметр вызова делегата</param>
-    private void OnSemaphoreReleased(Task SemaphoreWaitTask, object CallState)
+    private void OnSemaphoreReleased(Task SemaphoreWaitTask, object? CallState)
     {
-        var d     = (SendOrPostCallback)((object[])CallState)[0];
+        var d = (SendOrPostCallback)((object[])CallState!)[0];
         var state = ((object[])CallState)[1];
         try
         {
@@ -30,11 +30,11 @@ public sealed class MaxConcurrencySynchronizationContext(int MaxConcurrencyLevel
         _Semaphore
            .WaitAsync()
            .ContinueWith(
-                OnSemaphoreReleased, 
-                new [] { d, state }, 
-                default, 
-                TaskContinuationOptions.None, 
-                TaskScheduler.Default);
+                continuationAction: OnSemaphoreReleased,
+                state: new[] { d, state },
+                cancellationToken: default,
+                continuationOptions: TaskContinuationOptions.None,
+                scheduler: TaskScheduler.Default);
 
     /// <inheritdoc />
     public override void Send(SendOrPostCallback d, object state)
