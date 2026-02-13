@@ -3,6 +3,21 @@
 namespace MathCore.Threading.Tasks.Schedulers;
 
 /// <summary>Предоставляет планировщик задач с поддержкой переприоритизации ранее поставленных задач</summary>
+/// <example>
+/// <code>
+/// var scheduler = new ReprioritizableTaskScheduler();
+///
+/// var t1 = Task.Factory.StartNew(() => { /* будет выполнено позже */ },
+///     CancellationToken.None, TaskCreationOptions.None, scheduler);
+///
+/// var t2 = Task.Factory.StartNew(() => { /* будет выполнено раньше */ },
+///     CancellationToken.None, TaskCreationOptions.None, scheduler);
+///
+/// scheduler.Prioritize(t2);
+///
+/// Task.WaitAll(t1, t2);
+/// </code>
+/// </example>
 public sealed class ReprioritizableTaskScheduler : TaskScheduler
 {
     private readonly LinkedList<Task> _Tasks = new(); // protected by lock(_tasks)
@@ -11,7 +26,7 @@ public sealed class ReprioritizableTaskScheduler : TaskScheduler
     /// <param name="task">Задача для постановки в очередь</param>
     protected override void QueueTask(Task task)
     {
-        // Store the task, and notify the ThreadPool of work to be processed
+        // Сохраняем задачу и уведомляем ThreadPool о поступлении работы
         lock (_Tasks) _Tasks.AddLast(task);
         ThreadPool.UnsafeQueueUserWorkItem(ProcessNextQueuedItem, null);
     }
