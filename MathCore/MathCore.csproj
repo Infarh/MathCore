@@ -13,9 +13,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.94.3</Version>
+    <Version>0.1.0</Version>
     <PackageReleaseNotes>
-        Оптимизация работы, комментарии
+        Включена поддержка Nullable, добавлены комментарии
     </PackageReleaseNotes>
   </PropertyGroup>
 
