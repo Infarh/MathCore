@@ -6,8 +6,8 @@ internal sealed class NumericExpr : Query
     #region Fields
 
     internal Operator.Op Op;
-    internal Query Operand1;
-    internal Query Operand2;
+    internal Query Operand1 = null!;
+    internal Query Operand2 = null!;
 
     #endregion
 

@@ -10,7 +10,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes;
 public class StringNode : ParsedNode
 {
     /// <summary>Значение узла</summary>
-    public string Value { get; set; }
+    public string Value { get; set; } = null!;
 
     /// <summary>Инициализация нового строкового узла</summary>
     public StringNode() { }
@@ -23,7 +23,7 @@ public class StringNode : ParsedNode
     /// <returns>Клон узла</returns>
     public override ExpressionTreeNode Clone() => new StringNode(Value)
     {
-        Left  = Left?.Clone(),
+        Left = Left?.Clone(),
         Right = Right?.Clone()
     };
 

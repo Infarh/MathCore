@@ -39,7 +39,7 @@ public class XPathReader : XmlReader
 {
     #region Fields
 
-    private readonly XPathCollection _XPathCollection;
+    private readonly XPathCollection _XPathCollection = null!;
 
     #endregion
 
@@ -117,7 +117,7 @@ public class XPathReader : XmlReader
     public override XmlNameTable NameTable => BaseReader.NameTable;
 
     /// <summary>Получает базовый XmlReader, используемый для чтения XML-документа</summary>
-    internal XmlReader BaseReader { get; }
+    internal XmlReader BaseReader { get; } = null!;
 
     /// <summary>Получает или задаёт индекс обрабатываемого атрибута</summary>
     internal int ProcessAttribute { get; set; } = -1;

@@ -1,5 +1,4 @@
-﻿using MathCore.Annotations;
-// ReSharper disable EventNeverSubscribedTo.Global
+﻿// ReSharper disable EventNeverSubscribedTo.Global
 
 // ReSharper disable once CheckNamespace
 namespace System.Reflection;
@@ -17,15 +16,16 @@ public class Event<TObject, TEventArgs> where TEventArgs : EventArgs
     }
 
     /// <summary>Описание события</summary>
-    private readonly EventInfo _EventInfo;
+    private readonly EventInfo _EventInfo = null!;
+
     /// <summary>Объект-источник</summary>
-    private readonly TObject _Object;
+    private readonly TObject _Object = default!;
 
     /// <summary>Событие</summary>
     /// <param name="o">Объект-источник события</param>
     /// <param name="Name">Название события</param>
     /// <param name="Private">Приватность описания события в классе объекта</param>
-    public Event([CanBeNull] TObject o, [NotNull] string Name, bool Private = false)
+    public Event(TObject? o, string Name, bool Private = false)
     {
         _Object = o;
 
@@ -34,7 +34,7 @@ public class Event<TObject, TEventArgs> where TEventArgs : EventArgs
             type = o.GetType();
 
         var is_private = Private ? BindingFlags.NonPublic : BindingFlags.Public;
-        var is_static  = o is null ? BindingFlags.Static : BindingFlags.Instance;
+        var is_static = o is null ? BindingFlags.Static : BindingFlags.Instance;
 
         _EventInfo = type.GetEvent(Name, is_private | is_static);
     }

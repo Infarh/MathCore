@@ -21,7 +21,7 @@ public class Property<TObject, TValue> : IValue<TValue?>
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>Событие возникает если свойство <see cref="Value"/> изменило своё значение</summary>
-    public event EventHandler ValueChanged;
+    public event EventHandler? ValueChanged;
 
     /// <summary>Генерация события <see cref="ValueChanged"/></summary>
     /// <param name="E">Аргумент события</param>
@@ -32,17 +32,17 @@ public class Property<TObject, TValue> : IValue<TValue?>
     /// <summary>Информация о свойстве</summary>
     private PropertyInfo? _PropertyInfo;
     /// <summary>Имя свойства</summary>
-    private string _Name;
+    private string _Name = null!;
     /// <summary>Объект, которому принадлежит свойство</summary>
-    private TObject _Object;
+    private TObject _Object = default!;
     /// <summary>Флаг приватности свойства</summary>
     private bool _Private;
 
     /// <summary>Действие, осуществляющее установку значения свойства</summary>
-    private Action<TValue?> _SetMethod;
+    private Action<TValue?> _SetMethod = null!;
 
     /// <summary>Функция, вычисляющая значение свойства</summary>
-    private Func<TValue?> _GetMethod;
+    private Func<TValue?> _GetMethod = null!;
 
     /// <summary>Описание свойства</summary>
     private PropertyDescriptor? _Descriptor;

@@ -1463,7 +1463,7 @@ public static partial class ExpressionExtensions
     /// <param name="expr">Выражение для упрощения</param>
     /// <returns>Упрощённое выражение</returns>
     /// <remarks>Применяет правила упрощения к бинарным операциям в дереве выражения</remarks>
-    public static Ex Simplify(this Ex expr)
+    public static Ex? Simplify(this Ex expr)
     {
         var visitor = new ExpressionRebuilder();
         visitor.BinaryVisited += ExpressionSimplifierRules.Binary;

@@ -6,8 +6,8 @@ namespace MathCore.Net.Http.Html;
 public class HElement : HElementBase, IEnumerable<HElementBase>, IEnumerable<HAttribute>
 {
     private string _Name;
-    private List<HAttribute> _Attributes;
-    private List<HElementBase> _Elements;
+    private List<HAttribute> _Attributes = null!;
+    private List<HElementBase> _Elements = null!;
     private bool _AlwaysOpen;
     private bool _OnlyOpen;
 

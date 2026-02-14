@@ -25,7 +25,7 @@ internal sealed class StringFunctions : Query
 {
     #region Fields
 
-    private readonly ArrayList _ArgList;
+    private readonly ArrayList _ArgList = null!;
 
     private readonly FT _FuncType;
 
@@ -68,9 +68,9 @@ internal sealed class StringFunctions : Query
         _ => XPathResultType.String
     };
 
-    private static string toString(double num) => Convert.ToString(num);
+    //private static string toString(double num) => Convert.ToString(num);
 
-    private static string toString(bool b) => b ? "true" : "false";
+    //private static string toString(bool b) => b ? "true" : "false";
 
     //
     // string string(object?)

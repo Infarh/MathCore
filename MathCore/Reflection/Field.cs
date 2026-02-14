@@ -11,7 +11,7 @@ namespace System.Reflection;
 public class Field<TObject, TValue>
 {
     /// <summary>Информация о поле</summary>
-    private FieldInfo _FieldInfo;
+    private FieldInfo _FieldInfo = null!;
 
     /// <summary>Имя поля</summary>
     private string _Name;

@@ -7,10 +7,10 @@ namespace System.Linq.Expressions;
 
 public class ItemBase(Type type, string Name)
 {
-    protected readonly object _Object;
+    protected readonly object _Object = null!;
     protected readonly Type _ObjectType = type;
     protected readonly string _Name = Name;
-    protected AttributesExtractor _ObjectAttributes;
+    protected AttributesExtractor _ObjectAttributes = null!;
 
     public string Name => _Name;
 

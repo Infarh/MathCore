@@ -451,7 +451,7 @@ public sealed class HtmlElementAttributesAttribute : Attribute
     public HtmlElementAttributesAttribute() { }
     public HtmlElementAttributesAttribute(string name) => Name = name;
 
-    public string Name { get; }
+    public string Name { get; } = null!;
 }
 
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]

@@ -66,7 +66,7 @@ public static class ExpressionEx
         return Expression.Lambda<Func<TFirstParam, TResult>>(new_second, param);
     }
 
-    public static Expression Replace(this Expression expression,
+    public static Expression? Replace(this Expression expression,
         Expression SearchEx, Expression ReplaceEx) => new ReplaceVisitor(SearchEx, ReplaceEx).Visit(expression);
 
     public static Expression<Func<TSource, bool>> IsNotNull<TSource, TKey>(

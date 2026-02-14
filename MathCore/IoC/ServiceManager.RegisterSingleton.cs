@@ -11,7 +11,7 @@ public sealed partial class ServiceManager
         lock (_SyncRoot)
         {
             var registration_type = typeof(SingletonServiceRegistration<>).MakeGenericType(ServiceType);
-            var registration = (ServiceRegistration)registration_type.CreateObject(this, ServiceType);
+            var registration = (ServiceRegistration)registration_type.CreateObject(this, ServiceType).NotNull();
 
             _Services[ServiceType] = registration;
             return registration;
@@ -24,7 +24,7 @@ public sealed partial class ServiceManager
         {
             var registration_type = typeof(SingletonServiceRegistration<>).MakeGenericType(ServiceType);
             var registration = _Services.Values.FirstOrDefault(r => r.GetType() == registration_type)
-                ?? (ServiceRegistration)registration_type.CreateObject(this, ServiceType);
+                ?? (ServiceRegistration)registration_type.CreateObject(this, ServiceType).NotNull();
 
             _Services[InterfaceType] = registration;
             return registration;

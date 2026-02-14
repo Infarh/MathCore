@@ -17,7 +17,7 @@ public class EventArgs<TArgument> : EventArgs
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>Параметр аргумента</summary>
-    public TArgument Argument { get; set; }
+    public TArgument Argument { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -58,10 +58,10 @@ public class EventArgs<TArgument1, TArgument2>
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>1 параметр аргумента</summary>
-    public TArgument1 Argument1 { get; set; }
+    public TArgument1 Argument1 { get; set; } = default!;
 
     /// <summary>2 параметр аргумента</summary>
-    public TArgument2 Argument2 { get; set; }
+    public TArgument2 Argument2 { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -118,7 +118,7 @@ public class EventArgs<TArgument1, TArgument2, TArgument3>
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>3 параметр аргумента</summary>
-    public TArgument3 Argument3 { get; set; }
+    public TArgument3 Argument3 { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -177,7 +177,7 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4>
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>4 параметр аргумента</summary>
-    public TArgument4 Argument4 { get; set; }
+    public TArgument4 Argument4 { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -240,7 +240,7 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>5 параметр аргумента</summary>
-    public TArgument5 Argument5 { get; set; }
+    public TArgument5 Argument5 { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -307,7 +307,7 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>6 параметр аргумента</summary>
-    public TArgument6 Argument6 { get; set; }
+    public TArgument6 Argument6 { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -378,7 +378,7 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>7 параметр аргумента</summary>
-    public TArgument7 Argument7 { get; set; }
+    public TArgument7 Argument7 { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -453,7 +453,7 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>8 параметр аргумента</summary>
-    public TArgument8 Argument8 { get; set; }
+    public TArgument8 Argument8 { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -532,7 +532,7 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>9 параметр аргумента</summary>
-    public TArgument9 Argument9 { get; set; }
+    public TArgument9 Argument9 { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -615,7 +615,7 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>10 параметр аргумента</summary>
-    public TArgument10 Argument10 { get; set; }
+    public TArgument10 Argument10 { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 

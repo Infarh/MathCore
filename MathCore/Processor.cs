@@ -126,7 +126,7 @@ public abstract class Processor : INotifyPropertyChanged, IDisposable
 
     // ReSharper disable NotAccessedField.Global
     /// <summary>Метод извлечения времени выполнения одного цикла основного метода процессора</summary>
-    protected Func<TimeSpan> _GetLastDeltaTime;
+    protected Func<TimeSpan> _GetLastDeltaTime = null!;
     // ReSharper restore NotAccessedField.Global
 
     /// <summary>Объект синхронизации потоков по запуску процессора</summary>
@@ -148,14 +148,14 @@ public abstract class Processor : INotifyPropertyChanged, IDisposable
             _Priority = value;
             var thread = _MainWorkThread;
             lock (_StartStopSectionLocker)
-                if(thread != null && (thread.IsAlive || thread.IsBackground))
+                if (thread != null && (thread.IsAlive || thread.IsBackground))
                     thread.Priority = value;
             OnPropertyChanged();
         }
     }
 
     /// <summary>Признак активности процессора</summary>
-    public bool Enable { [DST] get => _Enabled; [DST] set { if(value) Start(); else Stop(); } }
+    public bool Enable { [DST] get => _Enabled; [DST] set { if (value) Start(); else Stop(); } }
 
     /// <summary>Основной поток работы процессора</summary>
     public Thread? MainThread { [DST] get => _MainWorkThread; }
@@ -193,7 +193,7 @@ public abstract class Processor : INotifyPropertyChanged, IDisposable
         [DST]
         set
         {
-            if(_ActionTimeout == value) return;
+            if (_ActionTimeout == value) return;
             _ActionTimeout = value;
             _SetTimeout?.Invoke(value);
             OnPropertyChanged();
@@ -229,18 +229,18 @@ public abstract class Processor : INotifyPropertyChanged, IDisposable
     [DST]
     // ReSharper disable VirtualMemberNeverOverriden.Global
     public virtual void Start()
-        // ReSharper restore VirtualMemberNeverOverriden.Global
+    // ReSharper restore VirtualMemberNeverOverriden.Global
     {
-        if(_Enabled) return;
+        if (_Enabled) return;
         lock (_StartStopSectionLocker)
         {
-            if(_Enabled) return;
+            if (_Enabled) return;
             _Enabled = true;
             _MainWorkThread = new(ThreadMethod)
             {
                 IsBackground = true,
-                Name         = _NameForeNewMainThread,
-                Priority     = _Priority
+                Name = _NameForeNewMainThread,
+                Priority = _Priority
             };
 
             _MainWorkThread.Start();
@@ -256,12 +256,12 @@ public abstract class Processor : INotifyPropertyChanged, IDisposable
     [DST]
     // ReSharper disable VirtualMemberNeverOverriden.Global
     public virtual void Stop()
-        // ReSharper restore VirtualMemberNeverOverriden.Global
+    // ReSharper restore VirtualMemberNeverOverriden.Global
     {
-        if(!_Enabled) return;
+        if (!_Enabled) return;
         lock (_StartStopSectionLocker)
         {
-            if(!_Enabled) return;
+            if (!_Enabled) return;
             _Enabled = false;
 
 #if !NET5_0_OR_GREATER
@@ -269,8 +269,8 @@ public abstract class Processor : INotifyPropertyChanged, IDisposable
                 _MainWorkThread.Abort(); 
 #endif
 
-            _MainWorkThread   = null;
-            _SetTimeout       = null;
+            _MainWorkThread = null;
+            _SetTimeout = null;
             _GetLastDeltaTime = null;
 
             _StartWaitHandle.Reset();
@@ -298,7 +298,7 @@ public abstract class Processor : INotifyPropertyChanged, IDisposable
     // ReSharper disable VirtualMemberNeverOverriden.Global
     //        [DST]
     protected virtual void ThreadMethod()
-        // ReSharper restore VirtualMemberNeverOverriden.Global
+    // ReSharper restore VirtualMemberNeverOverriden.Global
     {
         InitializeAction();
 
@@ -317,21 +317,22 @@ public abstract class Processor : INotifyPropertyChanged, IDisposable
         DateTime start_time;
         DateTime stop_time;
         TimeSpan time_to_sleep;
-        bool     is_synchronous;
+        bool is_synchronous;
         // ReSharper restore TooWideLocalVariableScope 
 
         #endregion
 
         #region Основное действие
 
-        while(_Enabled)
+        while (_Enabled)
         {
             start_time = Now;
-            try { MainAction(); } catch(Exception error)
+            try { MainAction(); }
+            catch (Exception error)
             {
                 var args = new ExceptionEventHandlerArgs<Exception>(error);
                 OnError(args);
-                if(args.NeedToThrow) throw;
+                if (args.NeedToThrow) throw;
 
 #if !NET5_0_OR_GREATER
                 if (error is ThreadAbortException) Thread.ResetAbort(); 
@@ -339,13 +340,13 @@ public abstract class Processor : INotifyPropertyChanged, IDisposable
             }
             stop_time = Now;
             _CyclesCount++;
-            if(timeout.Ticks <= 0) continue;
-            delta          = stop_time - start_time;
-            time_to_sleep  = timeout - delta;
+            if (timeout.Ticks <= 0) continue;
+            delta = stop_time - start_time;
+            time_to_sleep = timeout - delta;
             is_synchronous = _IsSynchronous = timeout.Ticks > 0 && time_to_sleep.Ticks > 0;
-            if(is_synchronous)
+            if (is_synchronous)
                 Thread.Sleep(time_to_sleep);
-            else if(_ErrorIfAsync)
+            else if (_ErrorIfAsync)
                 OnError(__AsyncException);
         }
 
@@ -361,11 +362,12 @@ public abstract class Processor : INotifyPropertyChanged, IDisposable
     [DST]
     private void InitializeAction()
     {
-        try { Initializer(); } catch(Exception error)
+        try { Initializer(); }
+        catch (Exception error)
         {
             var args = new ExceptionEventHandlerArgs<Exception>(error);
             OnError(args);
-            if(args.NeedToThrow) throw;
+            if (args.NeedToThrow) throw;
 
 #if !NET5_0_OR_GREATER
             if (error is ThreadAbortException)
@@ -381,10 +383,10 @@ public abstract class Processor : INotifyPropertyChanged, IDisposable
     [DST]
     protected virtual void Initializer()
     {
-        _StartTime      = Now;
-        _StopTime       = null;
-        _CyclesCount    = 0;
-        _IsSynchronous  = true;
+        _StartTime = Now;
+        _StopTime = null;
+        _CyclesCount = 0;
+        _IsSynchronous = true;
         _Monitor.Status = "Обработка";
         OnProcessStarted(EventArgs.Empty);
     }
@@ -396,9 +398,9 @@ public abstract class Processor : INotifyPropertyChanged, IDisposable
     // ReSharper disable VirtualMemberNeverOverriden.Global
     [DST]
     protected virtual void Finalizer()
-        // ReSharper restore VirtualMemberNeverOverriden.Global
+    // ReSharper restore VirtualMemberNeverOverriden.Global
     {
-        _StopTime       = Now;
+        _StopTime = Now;
         _Monitor.Status = "Завершено";
         OnProcessCompleted(EventArgs.Empty);
     }
@@ -407,11 +409,12 @@ public abstract class Processor : INotifyPropertyChanged, IDisposable
     [DST]
     private void FinalizeAction()
     {
-        try { Finalizer(); } catch(Exception error)
+        try { Finalizer(); }
+        catch (Exception error)
         {
             var args = new ExceptionEventHandlerArgs<Exception>(error);
             OnError(args);
-            if(args.NeedToThrow) throw;
+            if (args.NeedToThrow) throw;
 
 #if !NET5_0_OR_GREATER
             if (error is ThreadAbortException) 

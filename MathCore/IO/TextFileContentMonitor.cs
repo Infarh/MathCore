@@ -4,12 +4,12 @@ namespace MathCore.IO;
 
 public class TextFileContentMonitor
 {
-    public event EventHandler<EventArgs<StringBuilder>> NewContent;
+    public event EventHandler<EventArgs<StringBuilder>>? NewContent;
 
     protected virtual void OnNewContent(StringBuilder content) => NewContent?.Invoke(this, content);
 
-    private readonly FileInfo _File;
-    private readonly FileSystemWatcher _Watcher;
+    private readonly FileInfo _File = null!;
+    private readonly FileSystemWatcher _Watcher = null!;
     private long _LastLength;
 
     public TextFileContentMonitor(string FileName) : this(new FileInfo(FileName)) { }

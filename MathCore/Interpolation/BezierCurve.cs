@@ -21,7 +21,7 @@ public class BezierCurve : Interpolator
     [Hyperlink("http://ru.wikipedia.org/wiki/Биномиальный_коэффициент")]
     private static int BinomCoefficient(int n, int k)
     {
-        if(k < 0 || (0 <= n && n < k)) return 0;
+        if (k < 0 || (0 <= n && n < k)) return 0;
         var K = 1L;
         if (n >= 0 || 0 > K) return (int)(K * n.Factorial() / (k.Factorial() - (n - k).Factorial()));
         K = k % 2 == 0 ? 1 : -1;
@@ -47,11 +47,11 @@ public class BezierCurve : Interpolator
     /* -------------------------------------------------------------------------------------------- */
 
     /// <summary>Набор точек аппроксимации</summary>
-    private Vector2D[] _Points;
+    private Vector2D[] _Points = null!;
     //private Vector2D[] _SortedPoints;
 
     /// <summary><see url="http://ru.wikipedia.org/wiki/Многочлен_Бернштейна">Полином Бернштейна</see>></summary>        
-    private Func<double, double>[] _BernshteynPolynoms;
+    private Func<double, double>[] _BernshteynPolynoms = null!;
 
     /* -------------------------------------------------------------------------------------------- */
 
@@ -60,8 +60,8 @@ public class BezierCurve : Interpolator
     /// <param name="Y">Список координат точек y</param>
     public BezierCurve(IEnumerable<double> X, IEnumerable<double> Y)
     {
-        var x = X.Select((xx, i) => (X:xx, i));
-        var y = Y.Select((yy, i) => (Y:yy, i));
+        var x = X.Select((xx, i) => (X: xx, i));
+        var y = Y.Select((yy, i) => (Y: yy, i));
         Initialize(x.Join(y, xx => xx.i, yy => yy.i, (xx, yy) => new Vector2D(xx.X, yy.Y)));
     }
 
@@ -77,7 +77,7 @@ public class BezierCurve : Interpolator
     /// <param name="Points">Набор точек</param>
     private void Initialize(IEnumerable<Vector2D> Points)
     {
-        _Points = Points.ToArray();
+        _Points = [.. Points];
         //{
         //    var points = _Points.ToList();
         //    points.Sort((v1, v2) => v1.X > v2.X ? 1 : v1.X.Equals(v2.X) ? 0 : -1);
@@ -85,7 +85,7 @@ public class BezierCurve : Interpolator
         //}
         var count = _Points.Length;
         _BernshteynPolynoms = new Func<double, double>[count];
-        for(var i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
             _BernshteynPolynoms[i] = GetBernshteynPolynom(i, count);
     }
 
@@ -93,13 +93,13 @@ public class BezierCurve : Interpolator
 
     public Vector2D B(double t)
     {
-        if(t is < 0 or > 1)
+        if (t is < 0 or > 1)
             throw new ArgumentOutOfRangeException(nameof(t), t, "t в не интервала [0;1]");
 
         var count = _Points.Length;
-        var x     = 0d;
-        var y     = 0d;
-        for(var i = 0; i < count; i++)
+        var x = 0d;
+        var y = 0d;
+        for (var i = 0; i < count; i++)
         {
             var b = _BernshteynPolynoms[i](t);
             x += _Points[i].X * b;

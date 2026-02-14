@@ -42,8 +42,8 @@ internal class ArrayManager
 
     #region Fields
 
-    private Queue _BufferQueue;
-    private Buffer _CurrentBuffer;
+    private Queue _BufferQueue = null!;
+    private Buffer _CurrentBuffer = null!;
 
     #endregion
 

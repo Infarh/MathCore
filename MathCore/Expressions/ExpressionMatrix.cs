@@ -61,8 +61,10 @@ public class ExpressionMatrix : ICloneable<ExpressionMatrix>, IEquatable<Express
     /// <returns>Элемент матрицы</returns>
     public Expression this[int i, int j]
     {
-        [DST] get => _Data[i, j];
-        [DST] set => _Data[i, j] = value.NodeType == ExpressionType.Lambda ? ((LambdaExpression)value).Body : value;
+        [DST]
+        get => _Data[i, j];
+        [DST]
+        set => _Data[i, j] = value.NodeType == ExpressionType.Lambda ? ((LambdaExpression)value).Body : value;
     }
 
     /// <summary>Вектор-столбец</summary>
@@ -151,10 +153,10 @@ public class ExpressionMatrix : ICloneable<ExpressionMatrix>, IEquatable<Express
     public ExpressionMatrix(IEnumerable<IEnumerable<Expression>> Items) : this(GetElements(Items)) { }
     private static Expression[,] GetElements(IEnumerable<IEnumerable<Expression>> Items)
     {
-        var cols       = Items.Select(col => col.ToListFast()).ToList();
+        var cols = Items.Select(col => col.ToListFast()).ToList();
         var cols_count = cols.Count;
         var rows_count = cols.Max(col => col.Count);
-        var data       = new Expression[rows_count, cols_count];
+        var data = new Expression[rows_count, cols_count];
         for (var j = 0; j < cols_count; j++)
         {
             var col = cols[j];
@@ -172,7 +174,7 @@ public class ExpressionMatrix : ICloneable<ExpressionMatrix>, IEquatable<Express
     [DST]
     public ExpressionMatrix GetCol(int j)
     {
-        var a                               = new ExpressionMatrix(N, 1);
+        var a = new ExpressionMatrix(N, 1);
         for (var i = 0; i < N; i++) a[i, j] = this[i, j];
         return a;
     }
@@ -183,7 +185,7 @@ public class ExpressionMatrix : ICloneable<ExpressionMatrix>, IEquatable<Express
     [DST]
     public ExpressionMatrix GetRow(int i)
     {
-        var a                               = new ExpressionMatrix(1, M);
+        var a = new ExpressionMatrix(1, M);
         for (var j = 0; j < M; j++) a[i, j] = this[i, j];
         return a;
     }
@@ -193,9 +195,9 @@ public class ExpressionMatrix : ICloneable<ExpressionMatrix>, IEquatable<Express
     public ExpressionMatrix GetTriangle()
     {
         var result = Clone();
-        var n      = N;
-        var m      = M;
-        var row    = new Expression[m];
+        var n = N;
+        var m = M;
+        var row = new Expression[m];
         for (var i0 = 0; i0 < n - 1; i0++)
         {
             var a = result[i0, i0];      //Захватываем первый элемент строки
@@ -235,8 +237,8 @@ public class ExpressionMatrix : ICloneable<ExpressionMatrix>, IEquatable<Express
             throw new InvalidOperationException("Трансвекция неквадратной матрицы невозможна");
 
         var u_matrix = GetUnitaryMatrix(_N);
-        var a        = _Data;
-        var result   = u_matrix._Data;
+        var a = _Data;
+        var result = u_matrix._Data;
         for (var row = 0; row < _N; row++)
             result[row, col] = row == col
                 ? 1d.ToExpression().DivideWithConversion(a[row, col])
@@ -300,12 +302,12 @@ public class ExpressionMatrix : ICloneable<ExpressionMatrix>, IEquatable<Express
                 return this[0, 0].MultiplyWithConversion(this[1, 1]).SubtractWithConversion(this[0, 1].MultiplyWithConversion(this[1, 0]));
         }
 
-        var data = _Data.CloneArray() 
+        var data = _Data.CloneArray()
             ?? throw new InvalidOperationException(
                 "Получена пустая ссылка на массив данных матрицы при его клонировании");
 
-        Expression? det    = null;
-        var        negate = false;
+        Expression? det = null;
+        var negate = false;
         for (var k = 0; k < n; k++) //Разложение по элементам первой строки
         {
             int i;
@@ -348,7 +350,7 @@ public class ExpressionMatrix : ICloneable<ExpressionMatrix>, IEquatable<Express
                                 diagonal_item)));
         }
 
-        return det.Simplify();
+        return det.Simplify().NotNull();
     }
 
     /* -------------------------------------------------------------------------------------------- */
@@ -379,7 +381,7 @@ public class ExpressionMatrix : ICloneable<ExpressionMatrix>, IEquatable<Express
 
     /* -------------------------------------------------------------------------------------------- */
 
-    public static bool operator ==(ExpressionMatrix? A, ExpressionMatrix? B) => A is null && B is null || A != null && B != null && A.Equals(B);
+    public static bool operator ==(ExpressionMatrix? A, ExpressionMatrix? B) => (A is null && B is null) || (A != null && B != null && A.Equals(B));
 
     public static bool operator !=(ExpressionMatrix? A, ExpressionMatrix? B) => !(A == B);
 
@@ -455,7 +457,7 @@ public class ExpressionMatrix : ICloneable<ExpressionMatrix>, IEquatable<Express
             throw new ArgumentOutOfRangeException(nameof(B), "Матрицы несогласованных порядков.");
 
         var result = new ExpressionMatrix(A.N, B.M);
-        var data   = result._Data;
+        var data = result._Data;
 
         for (var i = 0; i < result.N; i++)
             for (var j = 0; j < result.M; j++)
@@ -476,7 +478,7 @@ public class ExpressionMatrix : ICloneable<ExpressionMatrix>, IEquatable<Express
             throw new ArgumentOutOfRangeException(nameof(B), "Матрицы несогласованных порядков.");
 
         var result = new ExpressionMatrix(A.N, B.M);
-        var data   = result._Data;
+        var data = result._Data;
 
         for (var i = 0; i < result.N; i++)
             for (var j = 0; j < result.M; j++)
@@ -548,7 +550,7 @@ public class ExpressionMatrix : ICloneable<ExpressionMatrix>, IEquatable<Express
 
     #region IEquatable<ExpressionMatrix> Members
 
-    public bool Equals(ExpressionMatrix? other) => other != null && (ReferenceEquals(this, other) || other._N == _N && other._M == _M && Equals(other._Data, _Data));
+    public bool Equals(ExpressionMatrix? other) => other != null && (ReferenceEquals(this, other) || (other._N == _N && other._M == _M && Equals(other._Data, _Data)));
 
     private static bool Equals(Expression[,] E1, Expression[,] E2)
     {

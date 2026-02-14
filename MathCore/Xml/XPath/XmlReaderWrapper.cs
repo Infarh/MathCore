@@ -6,14 +6,14 @@ internal class XmlReaderWrapper(XmlReader reader) : XmlReader
     private bool _IsInFuture;
 
     private XmlNodeType _OldNodeType;
-    private string _OldLocalName;
-    private string _OldPrefix;
-    private string _OldName;
-    private string _OldValue;
-    private Type _OldValueType;
+    private string _OldLocalName = null!;
+    private string _OldPrefix = null!;
+    private string _OldName = null!;
+    private string _OldValue = null!;
+    private Type _OldValueType = null!;
     private int _OldDepth;
     private char _OldQuoteChar;
-    private string _OldBaseURI;
+    private string _OldBaseURI = null!;
     private bool _OldIsEmptyElement;
     private int _OldAttributeCount;
     private bool _OldEOF;

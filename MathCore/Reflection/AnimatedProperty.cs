@@ -36,7 +36,7 @@ public class AnimatedProperty<TObject, TValue>(
     private bool _Enabled;
 
     /// <summary>поток в котором будет происходить изменение значений свойства</summary>
-    private Thread _Thread;
+    private Thread _Thread = null!;
 
     /// <summary>Приоритет потока анимации</summary>
     private ThreadPriority _Priority = ThreadPriority.Normal;

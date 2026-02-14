@@ -10,10 +10,10 @@ namespace System.Reflection;
 public class Method<TObject, TResult>
 {
     /// <summary>Информация о контролируемом методе</summary>
-    private MethodInfo _MethodInfo;
+    private MethodInfo _MethodInfo = null!;
 
     /// <summary>Имя метод</summary>
-    private string _Name;
+    private string _Name = null!;
 
     /// <summary>Объект, метод которого контролируется</summary>
     private TObject _Object;
@@ -22,7 +22,7 @@ public class Method<TObject, TResult>
     private bool _Private;
 
     /// <summary>Функция, вычисляющая результат вызова метода</summary>
-    private Func<object[], TResult?> _Method;
+    private Func<object[], TResult?> _Method = null!;
 
     /// <summary>Имя контролируемого метода</summary>
     public string Name { get => _Name; set => Initialize(_Object, _Name = value, _Private); }

@@ -3,8 +3,8 @@ namespace System.Linq.Reactive;
 
 internal sealed class AsyncPatternObservable<T> : SimpleObservableEx<T>
 {
-    private readonly IAsyncResult _AsyncResult;
-    private T _Result;
+    private readonly IAsyncResult _AsyncResult = null!;
+    private T _Result = default;
 
     public AsyncPatternObservable
     (

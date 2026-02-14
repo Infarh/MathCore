@@ -96,7 +96,7 @@ internal class Function : AstNode
 
     #region Fields
 
-    private readonly string _Name;
+    private readonly string _Name = null!;
 
     #endregion
 
@@ -107,42 +107,42 @@ internal class Function : AstNode
     internal override XPathResultType ReturnType =>
         TypeOfFunction switch
         {
-            FunctionType.FuncLast            => XPathResultType.Number,
-            FunctionType.FuncPosition        => XPathResultType.Number,
-            FunctionType.FuncCount           => XPathResultType.Number,
-            FunctionType.FuncID              => XPathResultType.NodeSet,
-            FunctionType.FuncLocalName       => XPathResultType.String,
-            FunctionType.FuncNameSpaceUri    => XPathResultType.String,
-            FunctionType.FuncName            => XPathResultType.String,
-            FunctionType.FuncString          => XPathResultType.String,
-            FunctionType.FuncBoolean         => XPathResultType.Boolean,
-            FunctionType.FuncNumber          => XPathResultType.Number,
-            FunctionType.FuncTrue            => XPathResultType.Boolean,
-            FunctionType.FuncFalse           => XPathResultType.Boolean,
-            FunctionType.FuncNot             => XPathResultType.Boolean,
-            FunctionType.FuncConcat          => XPathResultType.String,
-            FunctionType.FuncStartsWith      => XPathResultType.Boolean,
-            FunctionType.FuncContains        => XPathResultType.Boolean,
+            FunctionType.FuncLast => XPathResultType.Number,
+            FunctionType.FuncPosition => XPathResultType.Number,
+            FunctionType.FuncCount => XPathResultType.Number,
+            FunctionType.FuncID => XPathResultType.NodeSet,
+            FunctionType.FuncLocalName => XPathResultType.String,
+            FunctionType.FuncNameSpaceUri => XPathResultType.String,
+            FunctionType.FuncName => XPathResultType.String,
+            FunctionType.FuncString => XPathResultType.String,
+            FunctionType.FuncBoolean => XPathResultType.Boolean,
+            FunctionType.FuncNumber => XPathResultType.Number,
+            FunctionType.FuncTrue => XPathResultType.Boolean,
+            FunctionType.FuncFalse => XPathResultType.Boolean,
+            FunctionType.FuncNot => XPathResultType.Boolean,
+            FunctionType.FuncConcat => XPathResultType.String,
+            FunctionType.FuncStartsWith => XPathResultType.Boolean,
+            FunctionType.FuncContains => XPathResultType.Boolean,
             FunctionType.FuncSubstringBefore => XPathResultType.String,
-            FunctionType.FuncSubstringAfter  => XPathResultType.String,
-            FunctionType.FuncSubstring       => XPathResultType.String,
-            FunctionType.FuncStringLength    => XPathResultType.Number,
-            FunctionType.FuncNormalize       => XPathResultType.String,
-            FunctionType.FuncTranslate       => XPathResultType.String,
-            FunctionType.FuncLang            => XPathResultType.Boolean,
-            FunctionType.FuncSum             => XPathResultType.Number,
-            FunctionType.FuncFloor           => XPathResultType.Number,
-            FunctionType.FuncCeiling         => XPathResultType.Number,
-            FunctionType.FuncRound           => XPathResultType.Number,
-            FunctionType.FuncUserDefined     => XPathResultType.Error,
-            _                                => XPathResultType.Error
+            FunctionType.FuncSubstringAfter => XPathResultType.String,
+            FunctionType.FuncSubstring => XPathResultType.String,
+            FunctionType.FuncStringLength => XPathResultType.Number,
+            FunctionType.FuncNormalize => XPathResultType.String,
+            FunctionType.FuncTranslate => XPathResultType.String,
+            FunctionType.FuncLang => XPathResultType.Boolean,
+            FunctionType.FuncSum => XPathResultType.Number,
+            FunctionType.FuncFloor => XPathResultType.Number,
+            FunctionType.FuncCeiling => XPathResultType.Number,
+            FunctionType.FuncRound => XPathResultType.Number,
+            FunctionType.FuncUserDefined => XPathResultType.Error,
+            _ => XPathResultType.Error
         };
 
     internal FunctionType TypeOfFunction { get; }
 
-    internal ArrayList ArgumentList { get; }
+    internal ArrayList ArgumentList { get; } = null!;
 
-    internal string Prefix { get; }
+    internal string Prefix { get; } = null!;
 
     internal string Name => TypeOfFunction == FunctionType.FuncUserDefined ? _Name : _Str[(int)TypeOfFunction];
 
@@ -153,15 +153,15 @@ internal class Function : AstNode
     internal Function(FunctionType FType, ArrayList argumentList)
     {
         TypeOfFunction = FType;
-        ArgumentList   = new(argumentList);
+        ArgumentList = new(argumentList);
     }
 
     internal Function(string prefix, string name, ArrayList argumentList)
     {
         TypeOfFunction = FunctionType.FuncUserDefined;
-        Prefix         = prefix;
-        _Name          = name;
-        ArgumentList   = new(argumentList);
+        Prefix = prefix;
+        _Name = name;
+        ArgumentList = new(argumentList);
     }
 
     internal Function(FunctionType FType) => TypeOfFunction = FType;
@@ -169,7 +169,7 @@ internal class Function : AstNode
     internal Function(FunctionType FType, AstNode arg)
     {
         TypeOfFunction = FType;
-        ArgumentList   = [arg];
+        ArgumentList = [arg];
     }
 
     #endregion

@@ -38,7 +38,7 @@ public readonly struct WorkResult(Exception? PrevError = null, Exception? Curren
 public readonly struct WorkResult<T> : IWorkResult<T>, IEquatable<WorkResult<T>>
 {
     /// <inheritdoc />
-    public Exception Error { get; }
+    public Exception Error { get; } = null!;
 
     /// <inheritdoc />
     public bool Success => Error is null;
@@ -47,7 +47,7 @@ public readonly struct WorkResult<T> : IWorkResult<T>, IEquatable<WorkResult<T>>
     public bool Failure => !Success;
 
     /// <inheritdoc />
-    public T Result { get; }
+    public T Result { get; } = default!;
 
     /// <summary>Инициализация нового результата выполнения работы</summary>
     /// <param name="Result">Результат выполнения работы</param>
@@ -93,7 +93,7 @@ public readonly struct WorkResult<T> : IWorkResult<T>, IEquatable<WorkResult<T>>
 public readonly struct WorkResult<TParameter, T> : IWorkResult<TParameter, T>, IEquatable<WorkResult<TParameter, T>>
 {
     /// <inheritdoc />
-    public Exception Error { get; }
+    public Exception Error { get; } = null!;
 
     /// <inheritdoc />
     public bool Success => Error is null;
@@ -102,10 +102,10 @@ public readonly struct WorkResult<TParameter, T> : IWorkResult<TParameter, T>, I
     public bool Failure => !Success;
 
     /// <inheritdoc />
-    public TParameter Parameter { get; }
+    public TParameter Parameter { get; } = default!;
 
     /// <inheritdoc />
-    public T Result { get; }
+    public T Result { get; } = default!;
 
     /// <summary>Инициализация нового результата выполнения работы</summary>
     /// <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>

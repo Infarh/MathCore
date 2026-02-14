@@ -1,6 +1,4 @@
-﻿using MathCore.Annotations;
-
-// ReSharper disable UnusedAutoPropertyAccessor.Global
+﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
 
@@ -9,9 +7,9 @@ namespace MathCore.IoC.ServiceRegistrations;
 [NotImplemented]
 public class SingleTaskServiceRegistration<TService> : ServiceRegistration<TService> where TService : class
 {
-    private volatile AsyncLocal<object> _Initializer;
+    private volatile AsyncLocal<object> _Initializer = null!;
 
-    private volatile AsyncLocal<Exception> _Exceptions;
+    private volatile AsyncLocal<Exception> _Exceptions = null!;
 
     public bool NeedDisposeInstance { get; set; }
 
@@ -47,7 +45,6 @@ public class SingleTaskServiceRegistration<TService> : ServiceRegistration<TServ
     //    base.Dispose(disposing);
     //}
 
-    [NotNull]
     internal override ServiceRegistration CloneFor(IServiceManager manager) => _FactoryMethod is null
         ? new(manager, ServiceType)
         : new SingleThreadServiceRegistration<TService>(manager, ServiceType, _FactoryMethod);

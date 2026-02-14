@@ -10,7 +10,7 @@ namespace System;
 public sealed class DependencyOnAttribute : Attribute
 {
     /// <summary>Элемент, от которого существует зависимость</summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     /// <summary>Инициализация нового экземпляра <see cref="DependencyOnAttribute"/></summary>
     public DependencyOnAttribute() { }

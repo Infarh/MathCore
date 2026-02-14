@@ -50,7 +50,7 @@ public class XPathCollection() : ICollection
     private readonly Hashtable _XPatches = [];
 
     private int _Key; // Количество запросов, добавленных в коллекцию в качестве ключей
-    private XPathReader _Reader;
+    private XPathReader _Reader = null!;
 
     #endregion
 
@@ -63,7 +63,7 @@ public class XPathCollection() : ICollection
     internal int ProcessCount { get; set; } = 0;
 
     /// <summary>Менеджер пространств имён XML для разрешения префиксов в запросах XPath</summary>
-    public XmlNamespaceManager NamespaceManager { set; get; }
+    public XmlNamespaceManager NamespaceManager { set; get; } = null!;
 
     /// <summary>Получает запрос XPath по индексу</summary>
     /// <param name="index">Индекс запроса в коллекции</param>

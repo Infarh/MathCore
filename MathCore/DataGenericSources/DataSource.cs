@@ -8,7 +8,7 @@ public abstract class DataSource<T>
 
     private readonly Func<DataHost<T>, T> _DataExtractor;
 
-    private T _Value;
+    private T _Value = default!;
 
     public DataHost<T> Host { get; }
 
@@ -16,9 +16,9 @@ public abstract class DataSource<T>
 
     protected DataSource(DataHost<T> Host, Func<DataHost<T>, T> DataExtractor)
     {
-        _DataExtractor =  DataExtractor;
-        this.Host      =  Host;
-        Host.Updated   += OnHostUpdated;
+        _DataExtractor = DataExtractor;
+        this.Host = Host;
+        Host.Updated += OnHostUpdated;
     }
 
     public T GetValue() => _Value = _DataExtractor(Host);

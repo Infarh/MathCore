@@ -11,7 +11,7 @@ namespace MathCore.Evaluations;
 public class FunctionEvaluation<T> : Evaluation<T>
 {
     /// <summary>Вычисляемая функция</summary>
-    public Func<T> Function { get; set; }
+    public Func<T> Function { get; set; } = null!;
 
     /// <summary>Инициализация нового вычисления функции</summary>
     public FunctionEvaluation() { }

@@ -7,7 +7,7 @@ namespace MathCore.Net.Http.Html;
 
 public class NumberedList : TypedElement
 {
-    private IEnumerable Items { get; set; }
+    private IEnumerable Items { get; set; } = null!;
 
     public NumberedList(params ListItem[] items) : base("ol", items.Cast<HElementBase>().ToArray()) { }
 

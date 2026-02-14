@@ -7,7 +7,7 @@ public class LambdaGraphLink<TValue, TWeight>(
     bool Buffered = false)
     : IGraphLink<TValue, TWeight>
 {
-    private object _Weight;
+    private object _Weight = null!;
 
     public IGraphNode<TValue, TWeight> Node { get; } = To;
 

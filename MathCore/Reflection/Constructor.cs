@@ -1,5 +1,4 @@
 ﻿using MathCore;
-using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ArgumentsStyleOther
 // ReSharper disable ArgumentsStyleLiteral
@@ -13,7 +12,7 @@ namespace System.Reflection;
 public class Constructor<T> : IFactory<T>, IFactory<T, object[]>
 {
     /// <summary>Информация о конструкторе</summary>
-    private ConstructorInfo _Info;
+    private ConstructorInfo _Info = null!;
 
     /// <summary>Тип объекта, конструктор которого требуется контролировать</summary>
     private Type _ObjectType;
@@ -22,7 +21,7 @@ public class Constructor<T> : IFactory<T>, IFactory<T, object[]>
     private bool _Private;
 
     /// <summary>Массив типов параметров конструктора</summary>
-    private Type[] _ArgumentTypes;
+    private Type[] _ArgumentTypes = null!;
 
     /// <summary>Конструктор найден</summary>
     public bool IsExist => _Info != null;
@@ -52,19 +51,19 @@ public class Constructor<T> : IFactory<T>, IFactory<T, object[]>
     /// <param name="o">Объект, Конструктор которого используется</param>
     /// <param name="Private">Искать приватный конструктор?</param>
     /// <param name="ArgumentTypes">Массив типов параметров конструктора</param>
-    public Constructor([NotNull] T o, bool Private = false, [NotNull] params Type[] ArgumentTypes) => Initialize(_ObjectType = o.GetType(), ArgumentTypes, _Private = Private);
+    public Constructor(T o, bool Private = false, params Type[] ArgumentTypes) => Initialize(_ObjectType = o.GetType(), ArgumentTypes, _Private = Private);
 
     /// <summary>Инициализация нового экземпляра <see cref="Constructor{T}"/></summary>
     /// <param name="type">Тип, из которого извлекается конструктор</param>
     /// <param name="Private">Искать приватный конструктор?</param>
     /// <param name="ArgumentTypes">Массив типов параметров конструктора</param>
-    public Constructor(Type type, bool Private = false, [NotNull] params Type[] ArgumentTypes) => Initialize(_ObjectType = type, ArgumentTypes, _Private = Private);
+    public Constructor(Type type, bool Private = false, params Type[] ArgumentTypes) => Initialize(_ObjectType = type, ArgumentTypes, _Private = Private);
 
     /// <summary>Инициализация контроля конструктора</summary>
     /// <param name="Type">Тип из которого извлекается конструктор</param>
     /// <param name="Types">Массив типов аргументов конструктора</param>
     /// <param name="IsPrivate">Искать приватный конструктор?</param>
-    private void Initialize([NotNull] Type Type, [NotNull] Type[] Types, bool IsPrivate) =>
+    private void Initialize(Type Type, Type[] Types, bool IsPrivate) =>
         _Info =
             Type.GetConstructor(
                 bindingAttr: BindingFlags.Instance | (IsPrivate ? BindingFlags.NonPublic : BindingFlags.Public),

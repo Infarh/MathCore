@@ -6,10 +6,10 @@ namespace MathCore.Graphs;
 
 public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
 {
-    private TreeListNode<TValue> _Prev;
-    private TreeListNode<TValue> _Next;
+    private TreeListNode<TValue> _Prev = null!;
+    private TreeListNode<TValue> _Next = null!;
 
-    private TreeListNode<TValue> _Child;
+    private TreeListNode<TValue> _Child = null!;
 
     public TreeListNode<TValue> Prev
     {
@@ -50,7 +50,7 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
         }
     }
 
-    public TValue Value { get; set; }
+    public TValue Value { get; set; } = default!;
 
     public int Length => this[n => n.Next].Count();
 

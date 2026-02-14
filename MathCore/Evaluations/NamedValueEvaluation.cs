@@ -7,7 +7,7 @@ namespace MathCore.Evaluations;
 public class NamedValueEvaluation<T> : ValueEvaluation<T>
 {
     /// <summary>Имя вычисления</summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     /// <summary>Признак того, что данное вычисление является именованным параметром</summary>
     public bool IsParameter { get; set; }

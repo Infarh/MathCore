@@ -5,8 +5,8 @@ internal sealed class AndExpr : Query
 {
     #region Fields
 
-    private readonly BooleanFunctions _Operand1;
-    private readonly BooleanFunctions _Operand2;
+    private readonly BooleanFunctions _Operand1 = null!;
+    private readonly BooleanFunctions _Operand2 = null!;
 
     #endregion
 

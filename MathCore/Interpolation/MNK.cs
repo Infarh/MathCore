@@ -9,7 +9,7 @@ namespace MathCore;
 public class MNK
 {
     /// <summary>Коэффициенты аппроксимирующего полинома</summary>
-    private double[] _A;
+    private double[] _A = null!;
     /// <summary>Максимальный показатель степени многочлена аппроксимации</summary>
     private readonly int _M;
     /// <summary>Значение абсцисс точек данных</summary>
@@ -25,7 +25,7 @@ public class MNK
     {
         _XData = X;
         _YData = Y;
-        _M     = m;
+        _M = m;
         Initialize();
     }
 
@@ -36,7 +36,7 @@ public class MNK
 
     private static double[,] CreateMatrix(double[] XData, int MaxPower)
     {
-        var N      = XData.Length;
+        var N = XData.Length;
         var result = new double[N, MaxPower];
         for (var i = 0; i < N; i++)
         {
@@ -45,8 +45,8 @@ public class MNK
             var v = x;
             for (var power = 1; power < MaxPower; power++)
             {
-                result[i, power] =  v;
-                v                *= x;
+                result[i, power] = v;
+                v *= x;
             }
         }
 
@@ -56,7 +56,7 @@ public class MNK
     private void Initialize()
     {
         // A = (M^T * M)^-1 * M^T * Y
-        var matrix    = CreateMatrix(_XData, _M);
+        var matrix = CreateMatrix(_XData, _M);
         var transpose = Transpose(matrix);
         _A = MultiplyCol(Multiply(Inverse(Multiply(transpose, matrix)), transpose), _YData);
 
