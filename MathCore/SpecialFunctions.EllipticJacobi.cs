@@ -10,7 +10,7 @@ public static partial class SpecialFunctions
     public static class EllipticJacobi
     {
         /// <summary>Вычисляет квадрат модифицированного параметра эллиптической функции Якоби</summary>
-        /// <param name="k">Параметр эллиптической функции Якоби, где 0 <= k <= 1.</param>
+        /// <param name="k">Параметр эллиптической функции Якоби, где 0 &lt;= k &lt;= 1.</param>
         /// <returns>Квадрат модифицированного параметра k.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static double GetKi(double k)
