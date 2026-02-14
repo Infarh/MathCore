@@ -258,7 +258,7 @@ public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclud
     /// <param name="obj">Объект <see cref="T:System.Object"/>, который требуется сравнить с текущим объектом <see cref="T:System.Object"/>.</param>
     /// <exception cref="T:System.NullReferenceException">Параметр <paramref name="obj"/> имеет значение null.</exception><filterpriority>2</filterpriority>
     [DST]
-    public override bool Equals(object obj) => obj is Interval<T> I && Equals(I);
+    public override bool Equals(object? obj) => obj is Interval<T> I && Equals(I);
 
     /// <inheritdoc />
     object ICloneable.Clone() => Clone();
@@ -772,7 +772,7 @@ public readonly struct Interval(double Min, bool MinInclude, double Max, bool Ma
         _Max.Equals(other.Max);
 
     /// <inheritdoc />
-    public override bool Equals(object obj) => obj is Interval I && Equals(I);
+    public override bool Equals(object? obj) => obj is Interval I && Equals(I);
 
     /* ------------------------------------------------------------------------------------------ */
 

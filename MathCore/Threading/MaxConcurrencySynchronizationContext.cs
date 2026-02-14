@@ -26,7 +26,7 @@ public sealed class MaxConcurrencySynchronizationContext(int MaxConcurrencyLevel
     }
 
     /// <inheritdoc />
-    public override void Post(SendOrPostCallback d, object state) =>
+    public override void Post(SendOrPostCallback d, object? state) =>
         _Semaphore
            .WaitAsync()
            .ContinueWith(
@@ -37,7 +37,7 @@ public sealed class MaxConcurrencySynchronizationContext(int MaxConcurrencyLevel
                 scheduler: TaskScheduler.Default);
 
     /// <inheritdoc />
-    public override void Send(SendOrPostCallback d, object state)
+    public override void Send(SendOrPostCallback d, object? state)
     {
         _Semaphore.Wait();
         try

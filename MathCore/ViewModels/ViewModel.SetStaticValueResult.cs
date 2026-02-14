@@ -176,7 +176,7 @@ public partial class ViewModel
         /// <inheritdoc />
         //[Obsolete("Нельзя вызвать метод Equals у ref struct типа")]
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public override bool Equals(object obj) => throw new NotSupportedException("Невозможно выполнить метод Equals()");
+        public override bool Equals(object? obj) => throw new NotSupportedException("Невозможно выполнить метод Equals()");
 
         /// <inheritdoc />
         public override int GetHashCode()

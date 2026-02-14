@@ -15,7 +15,7 @@ public class ExpressionRebuilder : ExpressionVisitorEx
     /// <returns>Узел, которым надо заместить посещённый узел дерева</returns>
     private Expression InvokeEvent<TExpressionNode>(
         EventHandlerReturn<EventArgs<TExpressionNode>, Expression> Handlers,
-        TExpressionNode Node,
+        TExpressionNode? Node,
         Func<TExpressionNode, Expression?> Base)
         where TExpressionNode : Expression
     {
@@ -49,7 +49,7 @@ public class ExpressionRebuilder : ExpressionVisitorEx
     public event EventHandlerReturn<EventArgs<Expression>, Expression> Visited;
 
     /// <summary>Посетить узел дерева</summary><param name="Node">Узел дерева</param><returns>Новый узел дерева</returns>
-    public override Expression Visit(Expression Node) => InvokeEvent(Visited, Node, base.Visit);
+    public override Expression Visit(Expression? Node) => InvokeEvent(Visited, Node, base.Visit);
 
     /// <summary>Событие возникает при посещении узла дерева бинарного выражения</summary>
     public event EventHandlerReturn<EventArgs<BinaryExpression>, Expression> BinaryVisited;

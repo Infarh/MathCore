@@ -24,25 +24,25 @@ internal class XmlReaderWrapper(XmlReader reader) : XmlReader
 
     public override bool Read()
     {
-        if(!_IsInFuture)
+        if (!_IsInFuture)
         {
             var next = reader.Read();
-            _OldNodeType       = reader.NodeType;
-            _OldLocalName      = reader.LocalName;
-            _OldPrefix         = reader.Prefix;
-            _OldName           = reader.Name;
-            _OldValue          = reader.Value;
-            _OldValueType      = reader.ValueType;
-            _OldDepth          = reader.Depth;
-            _OldQuoteChar      = reader.QuoteChar;
-            _OldBaseURI        = reader.BaseURI;
+            _OldNodeType = reader.NodeType;
+            _OldLocalName = reader.LocalName;
+            _OldPrefix = reader.Prefix;
+            _OldName = reader.Name;
+            _OldValue = reader.Value;
+            _OldValueType = reader.ValueType;
+            _OldDepth = reader.Depth;
+            _OldQuoteChar = reader.QuoteChar;
+            _OldBaseURI = reader.BaseURI;
             _OldIsEmptyElement = reader.IsEmptyElement;
             _OldAttributeCount = reader.AttributeCount;
-            _OldEOF            = reader.EOF;
-            _OldReadState      = reader.ReadState;
-            _OldHasAttributes  = reader.HasAttributes;
-            _OldHasValue       = reader.HasValue;
-            _OldIsDefault      = reader.IsDefault;
+            _OldEOF = reader.EOF;
+            _OldReadState = reader.ReadState;
+            _OldHasAttributes = reader.HasAttributes;
+            _OldHasValue = reader.HasValue;
+            _OldIsDefault = reader.IsDefault;
             return next;
         }
         _IsInFuture = false;
@@ -52,9 +52,9 @@ internal class XmlReaderWrapper(XmlReader reader) : XmlReader
     private bool _NextReadValue = true;
     public bool PeekNextNode()
     {
-        if(!_NextReadValue) return false;
-        if(_IsInFuture) return _NextReadValue;
-        _IsInFuture    = true;
+        if (!_NextReadValue) return false;
+        if (_IsInFuture) return _NextReadValue;
+        _IsInFuture = true;
         _NextReadValue = reader.Read();
         return _NextReadValue;
     }
@@ -178,13 +178,13 @@ internal class XmlReaderWrapper(XmlReader reader) : XmlReader
 
     public override string GetAttribute(string name) => reader.GetAttribute(name);
 
-    public override string GetAttribute(string name, string NamespaceURI) => reader.GetAttribute(name, NamespaceURI);
+    public override string GetAttribute(string name, string? NamespaceURI) => reader.GetAttribute(name, NamespaceURI);
 
     public override string GetAttribute(int i) => reader.GetAttribute(i);
 
     public override bool MoveToAttribute(string name) => reader.MoveToAttribute(name);
 
-    public override bool MoveToAttribute(string name, string ns) => reader.MoveToAttribute(name, ns);
+    public override bool MoveToAttribute(string name, string? ns) => reader.MoveToAttribute(name, ns);
 
     public override bool MoveToFirstAttribute() => reader.MoveToFirstAttribute();
 

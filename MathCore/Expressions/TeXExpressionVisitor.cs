@@ -1,4 +1,5 @@
 ﻿using System.Text;
+
 using MathCore.Annotations;
 
 // ReSharper disable UnusedType.Global
@@ -35,7 +36,7 @@ public class TeXExpressionVisitor : ExpressionVisitor
     // Открытые интерфейс
     //----------------------------------------------------------------------------------------//
     // Изменяем сгенерированную строку в зависимости от типа знака "умножения"
-    public string GenerateTeXExpression(string ExpressionName, MultiplicationSign MultiplicationSign = MultiplicationSign.Asterisk) => 
+    public string GenerateTeXExpression(string ExpressionName, MultiplicationSign MultiplicationSign = MultiplicationSign.Asterisk) =>
         GenerateTeXExpressionImpl(ExpressionName, MultiplicationSign);
 
     public string GenerateTeXExpression(MultiplicationSign MultiplicationSign = MultiplicationSign.Asterisk) =>
@@ -58,12 +59,12 @@ public class TeXExpressionVisitor : ExpressionVisitor
     protected override Expression VisitMember(MemberExpression node)
     {
         var strings = node.Member.Name.Split('.');
-        var name    = strings[^1];
+        var name = strings[^1];
         _Result.Append(name);
         return node;
     }
 
-    public override Expression Visit(Expression node)
+    public override Expression Visit(Expression? node)
     {
         if (node is not ConstantExpression constant) return base.Visit(node);
         _Result.Append(constant.Value);
@@ -84,7 +85,7 @@ public class TeXExpressionVisitor : ExpressionVisitor
         // подобное, здесь же этого совершенно достаточно
         var pow_method = typeof(Math).GetMethod("Pow");
 
-        if (node.Method != pow_method) 
+        if (node.Method != pow_method)
             return base.Visit(node) ?? throw new InvalidOperationException();
 
         Visit(node.Arguments[0]);
@@ -100,9 +101,9 @@ public class TeXExpressionVisitor : ExpressionVisitor
     private static bool RequiresPrecedence(ExpressionType NodeType) =>
         NodeType switch
         {
-            ExpressionType.Add      => true,
+            ExpressionType.Add => true,
             ExpressionType.Subtract => true,
-            _                       => false
+            _ => false
         };
 
     // Оператор деления несколько отличается от всех остальных операторов с двумя аргументами,
@@ -122,9 +123,9 @@ public class TeXExpressionVisitor : ExpressionVisitor
         _Result.Append(node.NodeType switch
         {
             ExpressionType.Multiply => "*",
-            ExpressionType.Add      => "+",
+            ExpressionType.Add => "+",
             ExpressionType.Subtract => "-",
-            _                       => throw new NotSupportedException($"The binary operator '{node.NodeType}' is not supported")
+            _ => throw new NotSupportedException($"The binary operator '{node.NodeType}' is not supported")
         });
 
         Visit(node.Right);

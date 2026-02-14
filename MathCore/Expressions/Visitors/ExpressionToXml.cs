@@ -49,16 +49,16 @@ public sealed class ExpressionToXml : ExpressionVisitor
 
     protected override Expression VisitMember(MemberExpression node)
     {
-        var full_name   = node.Member.Name;
+        var full_name = node.Member.Name;
         var point_index = full_name.LastIndexOf('.');
         if (point_index != -1) return node;
 
-        var name    = full_name[(point_index + 1)..];
+        var name = full_name[(point_index + 1)..];
         _Result.Append(name);
         return node;
     }
 
-    public override Expression? Visit(Expression node)
+    public override Expression? Visit(Expression? node)
     {
         if (node is not ConstantExpression constant) return base.Visit(node);
         _Result.Append(constant.Value);
@@ -67,7 +67,7 @@ public sealed class ExpressionToXml : ExpressionVisitor
 
     protected override Expression VisitParameter(ParameterExpression node)
     {
-        var full_name   = node.Name;
+        var full_name = node.Name;
         var point_index = full_name.LastIndexOf('.');
         if (point_index != -1) return node;
 
@@ -118,9 +118,9 @@ public sealed class ExpressionToXml : ExpressionVisitor
         _Result.Append(node.NodeType switch
         {
             ExpressionType.Multiply => "*",
-            ExpressionType.Add      => "+",
+            ExpressionType.Add => "+",
             ExpressionType.Subtract => "-",
-            _                       => throw new NotSupportedException($"The binary operator '{node.NodeType}' is not supported")
+            _ => throw new NotSupportedException($"The binary operator '{node.NodeType}' is not supported")
         });
 
         Visit(node.Right);

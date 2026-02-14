@@ -46,8 +46,9 @@ public class Base64Decoder(BinaryWriter Writer) : TextWriter
 
     public override Encoding Encoding => Encoding.UTF8;
 
-    public override void Write(char[] str)
+    public override void Write(char[]? str)
     {
+        if (str == null) throw new ArgumentNullException(nameof(str));
         if (_Bits < 0) throw new InvalidOperationException();
 
         foreach (var c in str)

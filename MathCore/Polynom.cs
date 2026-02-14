@@ -236,7 +236,7 @@ public partial class Polynom(params double[] a) : ICloneable<Polynom>, IEquatabl
 
     /// <inheritdoc />
     [DST]
-    public override bool Equals(object obj) => Equals(obj as Polynom);
+    public override bool Equals(object? obj) => Equals(obj as Polynom);
 
     #endregion
 

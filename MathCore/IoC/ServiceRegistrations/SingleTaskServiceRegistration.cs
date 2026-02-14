@@ -19,7 +19,7 @@ public class SingleTaskServiceRegistration<TService> : ServiceRegistration<TServ
 
     public object? Instance => GetService();
 
-    public override Exception LastException { get => _Exceptions.Value; set => _Exceptions.Value = value; }
+    public override Exception? LastException { get => _Exceptions.Value; set => _Exceptions.Value = value; }
 
     public SingleTaskServiceRegistration(IServiceManager Manager, Type ServiceType) : base(Manager, ServiceType) => ResetAll();
 

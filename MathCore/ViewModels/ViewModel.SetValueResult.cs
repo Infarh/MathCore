@@ -40,10 +40,10 @@ public partial class ViewModel
         /// <param name="model">Модель-представления, для свойство которой изменилось</param>
         internal SetValueResult(bool Result, T? OldValue, T? NewValue, ViewModel model)
         {
-            _Result   = Result;
+            _Result = Result;
             _OldValue = OldValue;
             _NewValue = NewValue;
-            _Model    = model;
+            _Model = model;
         }
 
         /// <summary>В случае если значение было установлено, выполнить указанное действие</summary>
@@ -166,14 +166,14 @@ public partial class ViewModel
             && _Model.Equals(other._Model);
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public override bool Equals(object obj) => throw new NotSupportedException("Невозможно выполнить метод Equals()");
+        public override bool Equals(object? obj) => throw new NotSupportedException("Невозможно выполнить метод Equals()");
 
         /// <inheritdoc />
         public override int GetHashCode()
         {
             unchecked
             {
-                var hash_code         = _Result.GetHashCode();
+                var hash_code = _Result.GetHashCode();
                 var equality_comparer = EqualityComparer<T>.Default;
                 hash_code = (hash_code * 397) ^ equality_comparer.GetHashCode(_OldValue);
                 hash_code = (hash_code * 397) ^ equality_comparer.GetHashCode(_NewValue);

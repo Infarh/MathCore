@@ -88,7 +88,7 @@ public readonly struct GeoLocation : IEquatable<GeoLocation>, IFormattable
 
     public bool Equals(GeoLocation pos) => pos.Latitude.Equals(Latitude) && pos.Longitude.Equals(Longitude);
 
-    public override bool Equals(object obj) => obj is GeoLocation pos && Equals(pos);
+    public override bool Equals(object? obj) => obj is GeoLocation pos && Equals(pos);
 
     public override string ToString()
     {
