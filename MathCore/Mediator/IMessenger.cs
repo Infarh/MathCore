@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Mediator;
+﻿namespace MathCore.Mediator;
 
 public interface IMessenger
 {

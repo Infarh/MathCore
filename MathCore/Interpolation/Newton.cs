@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 using MathCore.Vectors;
 
 namespace MathCore.Interpolation;

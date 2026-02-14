@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections;
+﻿using System.Collections;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
@@ -90,17 +89,17 @@ public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>
             //Тело выражения конвертера из строки в нужный тип данных
             var converter_body = ValueConverterExpression?.Body;
             //Если конвертера не указано (тело отсутствует)
-            if(converter_body is null)
+            if (converter_body is null)
             {
                 //Проверяем - можно ли преобразовать строку напрямую к нужному типу параметра
-                if(typeof(TValue).IsAssignableFrom(typeof(string)))
+                if (typeof(TValue).IsAssignableFrom(typeof(string)))
                     //Если да, то создаём выражение прямого присвоения
                     return Lambda<Action<TObject, string>>(Assign(expression.Body, p_str), p_obj, p_str);
                 //Если прямое присвоение строки не возможно, то
                 //Определяем конвертер для целевого типа
                 var c = TypeDescriptor.GetConverter(typeof(TValue));
                 //Если преобразователь не может осуществить требуемое преобразование типов,
-                if(!c.CanConvertFrom(typeof(string))) //то генерируем исключение
+                if (!c.CanConvertFrom(typeof(string))) //то генерируем исключение
                     throw new NotSupportedException(
                         $"Невозможно автоматически преобразовать тип {typeof(string)} в {typeof(TValue)}");
                 //Если конвертер может преобразовать строку в указанный тип данных
@@ -117,7 +116,7 @@ public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>
                 );
             }
             //Если выражение содержит не указание конкретного члена класса (поля, или свойства), то генерируем исключение
-            if(expression.Body is not MemberExpression) throw new NotSupportedException("Выражение не поддерживается");
+            if (expression.Body is not MemberExpression) throw new NotSupportedException("Выражение не поддерживается");
             return Lambda<Action<TObject, string>> //Создаём лямбда-выражение
             (                                      //содержащее
                 Assign                             //выражение присвоения
@@ -151,17 +150,17 @@ public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>
             //Тело выражения конвертера
             var converter_body = ValueConverterExpression?.Body;
             //Если конвертер не указан - тело конвертера отсутствует
-            if(converter_body is null)
+            if (converter_body is null)
             {
                 //Проверяем - возможно ли прямое присвоение строкового параметру целевого типа
-                if(typeof(TValue).IsAssignableFrom(typeof(string)))
+                if (typeof(TValue).IsAssignableFrom(typeof(string)))
                     //Если присвоение возможно, то заменяем в теле выражения инициализации 
                     //целевой параметр на строковый параметр и возвращаем лямбда-выражение
-                    return Lambda<Action<TObject, string>>(expr_body.Replace(p_arg, p_str), p_obj, p_str);
+                    return Lambda<Action<TObject, string>>(expr_body.Replace(p_arg, p_str)!, p_obj, p_str);
                 //Если прямое присвоение не возможно, то пытаемся выполнить преобразование с помощью конвертера
                 var c = TypeDescriptor.GetConverter(typeof(TValue));
                 //Если преобразование типов невозможно, то
-                if(!c.CanConvertFrom(typeof(string))) //генерируем исключение
+                if (!c.CanConvertFrom(typeof(string))) //генерируем исключение
                     throw new NotSupportedException(
                         $"Невозможно автоматически преобразовать тип {typeof(string)} в {typeof(TValue)}");
                 //Если преобразование возможно, то создаём тело выражения-конвертера
@@ -179,7 +178,7 @@ public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>
             //создаём лямбда-выражение инициализации объекта
             return Lambda<Action<TObject, string>>
             ( //За основу берём тело исходного выражения инициализации
-                expr_body.Replace(p_arg, converter_body),
+                expr_body.Replace(p_arg, converter_body)!,
                 //Заменяем в дереве параметр целевого объекта на тело конвертера
                 p_obj, //Параметр - инициализируемый объект
                 p_str  //Параметр - строка xml-структуры
@@ -187,25 +186,25 @@ public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>
         }
 
         private static Expression<Action<TObject, string>> GetExpression(
-            Expression<Action<TValue>> InitializationExpression, 
+            Expression<Action<TValue>> InitializationExpression,
             Expression<Func<string, TValue>>? ValueConverterExpression)
         {
-            var p_obj     = Parameter(typeof(TObject), "o");         //Параметр выражения инициализации, содержащий объект инициализации
-            var p_arg     = InitializationExpression.Parameters[0];  //Параметр выражения инициализации, содержащий параметр инициализации
+            var p_obj = Parameter(typeof(TObject), "o");         //Параметр выражения инициализации, содержащий объект инициализации
+            var p_arg = InitializationExpression.Parameters[0];  //Параметр выражения инициализации, содержащий параметр инициализации
             var expr_body = InitializationExpression.Body;             //Тело выражения инициализации
-            var p_str     = ValueConverterExpression?.Parameters[0] ?? Parameter(typeof(string), "s"); //Параметр выражения конвертера, содержащий строку
-                
+            var p_str = ValueConverterExpression?.Parameters[0] ?? Parameter(typeof(string), "s"); //Параметр выражения конвертера, содержащий строку
+
             var converter_body = ValueConverterExpression?.Body; //Тело выражения конвертера
-            if(converter_body is null)                           //Если конвертер не указан - тело конвертера отсутствует
+            if (converter_body is null)                           //Если конвертер не указан - тело конвертера отсутствует
             {
-                if(typeof(TValue).IsAssignableFrom(typeof(string))) //Проверяем - возможно ли прямое присвоение строкового параметру целевого типа
+                if (typeof(TValue).IsAssignableFrom(typeof(string))) //Проверяем - возможно ли прямое присвоение строкового параметру целевого типа
                     //Если присвоение возможно, то заменяем в теле выражения инициализации
                     //целевой параметр на строковый параметр и возвращаем лямбда-выражение
-                    return Lambda<Action<TObject, string>>(expr_body.Replace(p_arg, p_str), p_obj, p_str);
+                    return Lambda<Action<TObject, string>>(expr_body.Replace(p_arg, p_str)!, p_obj, p_str);
 
                 var converter = TypeDescriptor.GetConverter(typeof(TValue)); //Если прямое присвоение не возможно, то пытаемся выполнить преобразование с помощью конвертера
-                    
-                if(!converter.CanConvertFrom(typeof(string))) //Если преобразование типов невозможно, то генерируем исключение
+
+                if (!converter.CanConvertFrom(typeof(string))) //Если преобразование типов невозможно, то генерируем исключение
                     throw new NotSupportedException($"Невозможно автоматически преобразовать тип {typeof(string)} в {typeof(TValue)}");
 
                 //Если преобразование возможно, то создаём тело выражения-конвертера
@@ -223,7 +222,7 @@ public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>
             //создаём лямбда-выражение инициализации объекта
             return Lambda<Action<TObject, string>>
             ( //За основу берём тело исходного выражения инициализации
-                expr_body.Replace(p_arg, converter_body),
+                expr_body.Replace(p_arg, converter_body)!,
                 //Заменяем в дереве параметр целевого объекта на тело конвертера
                 p_obj, //Параметр - инициализируемый объект
                 p_str  //Параметр - строка xml-структуры
@@ -327,8 +326,8 @@ public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>
     /// <param name="xml">Xml-документ - источник данных процесса инициализации</param>
     /// <param name="XmlNamespace">Пространство имён данных процесса инициализации</param>
     public void Initialize(
-        [DisallowNull] TObject obj, 
-        XDocument? xml, 
+        [DisallowNull] TObject obj,
+        XDocument? xml,
         IXmlNamespaceResolver XmlNamespace)
         => Initialize(obj, xml?.Root, XmlNamespace);
 
@@ -337,11 +336,11 @@ public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>
     /// <param name="xml">Узел Xml-документа - источник данных процесса инициализации</param>
     /// <param name="XmlNamespace">Пространство имён данных процесса инициализации</param>
     public void Initialize(
-        [DisallowNull] TObject obj, 
-        XElement? xml, 
+        [DisallowNull] TObject obj,
+        XElement? xml,
         IXmlNamespaceResolver XmlNamespace)
     {
-        if(xml is null) return;
+        if (xml is null) return;
         foreach (var rule in _Rules)
             rule.Execute(obj, xml, XmlNamespace);
     }
@@ -353,7 +352,7 @@ public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>
         XElement? xml,
         IXmlNamespaceResolver XmlNamespace)
     {
-        if(xml is null) return;
+        if (xml is null) return;
         foreach (var rule in _Rules.Where(rule => rule.IsObjectLess))
             rule.Execute(xml, XmlNamespace);
     }
@@ -377,7 +376,7 @@ public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>
            .ForeachLazy(path.Add)
            .Foreach(obj, (q, o) => q.QueryMatch += (_, e) => ((Rule)q.Tag).Update(o!, e.Argument));
         var reader = new XPathReader(xml, path);
-        while(reader.ReadUntilMatch()) { }
+        while (reader.ReadUntilMatch()) { }
     }
 
     #endregion
@@ -452,16 +451,16 @@ public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>
     bool ICollection<Rule>.IsReadOnly => false;
 
     /// <inheritdoc />
-    void ICollection<Rule>.Add(Rule? item) => _Rules.Add(item);
+    void ICollection<Rule>.Add(Rule item) => _Rules.Add(item);
 
     /// <inheritdoc />
-    bool ICollection<Rule>.Contains(Rule? item) => _Rules.Contains(item);
+    bool ICollection<Rule>.Contains(Rule item) => _Rules.Contains(item);
 
     /// <inheritdoc />
     void ICollection<Rule>.CopyTo(Rule[] array, int ArrayIndex) => _Rules.CopyTo(array, ArrayIndex);
 
     /// <inheritdoc />
-    bool ICollection<Rule>.Remove(Rule? item) => _Rules.Remove(item);
+    bool ICollection<Rule>.Remove(Rule item) => _Rules.Remove(item);
 
     /// <inheritdoc />
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_Rules).GetEnumerator();

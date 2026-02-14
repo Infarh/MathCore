@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-using MathCore.Hash.CRC;
+﻿using MathCore.Hash.CRC;
 
 namespace MathCore.Tests.Hash.CRC;
 
@@ -59,7 +57,7 @@ public class CRC64Tests
         var result = crc.Compute(data);
 
         // Проверяем, что результат вычисляется (не проверяем конкретное значение без эталона)
-        Assert.IsTrue(result >= 0);
+        Assert.IsGreaterThanOrEqualTo(0UL, result);
     }
 
     [TestMethod]

@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Collections.Interfaces;
+﻿namespace MathCore.Collections.Interfaces;
 
 /// <summary>Репозиторий</summary>
 /// <typeparam name="T">Тип элемента репозитория</typeparam>

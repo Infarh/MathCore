@@ -1,9 +1,22 @@
-﻿#nullable enable
-// ReSharper disable UnusedType.Global
+﻿// ReSharper disable UnusedType.Global
 
 namespace MathCore.Threading.Tasks.Schedulers;
 
 /// <summary>Планировщик выполняет задачи синхронно в текущем потоке</summary>
+/// <example>
+/// <code>
+/// var scheduler = new CurrentThreadTaskScheduler();
+///
+/// // Задача будет выполнена немедленно в текущем потоке
+/// var task = Task.Factory.StartNew(
+///     () => 42,
+///     CancellationToken.None,
+///     TaskCreationOptions.None,
+///     scheduler);
+///
+/// var result = task.Result;
+/// </code>
+/// </example>
 public sealed class CurrentThreadTaskScheduler : TaskScheduler
 {
     /// <summary>Максимальное число параллельно выполняемых задач в данном планировщике всегда равно 1</summary>

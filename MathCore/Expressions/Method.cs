@@ -11,7 +11,7 @@ public class Method<TResult>
 {
     public static Expression<Func<TObject, TResult>> GetInvokerExpression<TObject>(MethodInfo method)
     {
-        var p = "obj".ParameterOf(typeof(TObject));
+        var p = "obj".ParameterOf<TObject>();
         return p.GetCall(method).CreateLambda<Func<TObject, TResult>>(p);
     }
 

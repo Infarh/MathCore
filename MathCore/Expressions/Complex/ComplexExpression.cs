@@ -80,8 +80,8 @@ public abstract class ComplexExpression
 
     #region Fields
 
-    private Expression _Re;
-    private Expression _Im;
+    private Expression _Re = null!;
+    private Expression _Im = null!;
 
     #endregion
 
@@ -115,7 +115,7 @@ public abstract class ComplexExpression
     [NotNull, PublicAPI]
     public Expression<TDelegate> Lambda<TDelegate>(params IEnumerable<ParameterExpression> Parameters)
     {
-        var t_complex   = typeof(MathCore.Complex);
+        var t_complex = typeof(MathCore.Complex);
         var constructor = t_complex.GetConstructor([typeof(double), typeof(double)]);
         Debug.Assert(constructor != null, "MathCore.Complex.ctor info != null");
         var expression = Expression.New(constructor, Re, Im);

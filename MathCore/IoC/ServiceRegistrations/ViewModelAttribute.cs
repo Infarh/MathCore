@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.IoC.ServiceRegistrations;
+﻿namespace MathCore.IoC.ServiceRegistrations;
 
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public sealed class ViewModelAttribute : Attribute

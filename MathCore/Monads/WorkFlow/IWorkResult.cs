@@ -1,11 +1,10 @@
-﻿#nullable enable
-namespace MathCore.Monads.WorkFlow;
+﻿namespace MathCore.Monads.WorkFlow;
 
 /// <summary>Результат выполнения работы</summary>
 public interface IWorkResult
 {
     /// <summary>Ошибка, которая произошла в ходе выполнения работы</summary>
-    Exception Error { get; }
+    Exception? Error { get; }
 
     /// <summary>Признак того, что работа завершилась успешно</summary>
     bool Success { get; }

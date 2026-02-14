@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -13,19 +12,19 @@ namespace MathCore.Logging;
 
 public sealed class LogItem : IEnumerable<LogItem>, INotifyPropertyChanged, INotifyCollectionChanged
 {
-    public event PropertyChangedEventHandler? PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged = null!;
 
     [NotifyPropertyChangedInvocator]
     private void OnPropertyChanged([CallerMemberName] string? PropertyName = null) => PropertyChanged.Start(this, new PropertyChangedEventArgs(PropertyName));
 
-    public event NotifyCollectionChangedEventHandler? CollectionChanged;
+    public event NotifyCollectionChangedEventHandler? CollectionChanged = null!;
 
     private void OnCollectionChanged(NotifyCollectionChangedEventArgs Args) => CollectionChanged?.Invoke(this, Args);
 
     private DateTime _Time;
-    private string _Value;
-    private string _Message;
-    private object _Data;
+    private string? _Value;
+    private string _Message = null!;
+    private object _Data = null!;
     private LogType _Type;
     private readonly List<LogItem> _Items = [];
     private bool _Initialized;
@@ -59,7 +58,7 @@ public sealed class LogItem : IEnumerable<LogItem>, INotifyPropertyChanged, INot
         }
     }
 
-    public string Value { get => _Value; set => Add(value, _Type); }
+    public string? Value { get => _Value; set => Add(value, _Type); }
 
     public LogType Type
     {
@@ -96,7 +95,7 @@ public sealed class LogItem : IEnumerable<LogItem>, INotifyPropertyChanged, INot
 
     internal LogItem() { }
 
-    internal LogItem(DateTime Time, string Value, LogType Type)
+    internal LogItem(DateTime Time, string? Value, LogType Type)
     {
         _Initialized = true;
         _Time = Time;
@@ -115,11 +114,11 @@ public sealed class LogItem : IEnumerable<LogItem>, INotifyPropertyChanged, INot
         OnCollectionChanged(new(NotifyCollectionChangedAction.Reset));
     }
 
-    public LogItem Add(string value, LogType type = LogType.Information) => Add(DateTime.Now, value, type);
+    public LogItem Add(string? value, LogType type = LogType.Information) => Add(DateTime.Now, value, type);
 
-    public LogItem Add(DateTime time, string value, LogType type = LogType.Information)
+    public LogItem Add(DateTime time, string? value, LogType type = LogType.Information)
     {
-        var old_value = _Value;
+        var old_value = _Value ?? string.Empty;
         var old_time = _Time;
         _Value = value;
         Time = time;

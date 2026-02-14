@@ -7,7 +7,7 @@ namespace MathCore.Evaluations;
 public class NamedValueEvaluation<T> : ValueEvaluation<T>
 {
     /// <summary>Имя вычисления</summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     /// <summary>Признак того, что данное вычисление является именованным параметром</summary>
     public bool IsParameter { get; set; }
@@ -31,11 +31,11 @@ public class NamedValueEvaluation<T> : ValueEvaluation<T>
         : base.GetExpression();
 
     /// <inheritdoc />
-    public override string ToString() => IsParameter
+    public override string? ToString() => IsParameter
         ? Name.IsNullOrWhiteSpace()
             ? $"({typeof(T)})p"
             : Name
         : Name.IsNullOrWhiteSpace()
-            ? Value.ToString()
+            ? Value?.ToString()
             : $"{Name}={Value}";
 }

@@ -39,7 +39,7 @@ public static class Win32Processes
 
             res = RmRegisterResources(handle, (uint)resources.Length, resources, 0, null, 0, null);
 
-            if (res != 0) 
+            if (res != 0)
                 throw new InvalidOperationException("Could not register resource.");
 
             //Note: there's a race condition here -- the first call to RmGetList() returns
@@ -54,7 +54,7 @@ public static class Win32Processes
         }
         finally
         {
-            RmEndSession(handle);
+            _ = RmEndSession(handle);
         }
 
         return [];
@@ -68,9 +68,9 @@ public static class Win32Processes
         public System.Runtime.InteropServices.ComTypes.FILETIME ProcessStartTime;
     }
 
-    const int __RebootReasonNone = 0;
-    const int CCH_RM_MAX_APP_NAME = 255;
-    const int CCH_RM_MAX_SVC_NAME = 63;
+    private const int __RebootReasonNone = 0;
+    private const int CCH_RM_MAX_APP_NAME = 255;
+    private const int CCH_RM_MAX_SVC_NAME = 63;
 
     private enum RM_APP_TYPE
     {
@@ -100,8 +100,8 @@ public static class Win32Processes
 
     [DllImport("rstrtmgr.dll", CharSet = CharSet.Unicode)]
     private static extern int RmRegisterResources(uint pSessionHandle, uint nFiles, string[] rgsFilenames,
-        uint nApplications, [In] RM_UNIQUE_PROCESS[] rgApplications, uint nServices,
-        string[] rgsServiceNames);
+        uint nApplications, [In] RM_UNIQUE_PROCESS[]? rgApplications, uint nServices,
+        string[]? rgsServiceNames);
 
     [DllImport("rstrtmgr.dll", CharSet = CharSet.Auto)]
     private static extern int RmStartSession(out uint pSessionHandle, int dwSessionFlags, string strSessionKey);
@@ -111,7 +111,7 @@ public static class Win32Processes
 
     [DllImport("rstrtmgr.dll")]
     private static extern int RmGetList(uint dwSessionHandle, out uint pnProcInfoNeeded,
-        ref uint pnProcInfo, [In, Out] RM_PROCESS_INFO[] rgAffectedApps,
+        ref uint pnProcInfo, [In, Out] RM_PROCESS_INFO[]? rgAffectedApps,
         ref uint lpdwRebootReasons);
 
     private static Process[] GetProcesses(uint ProcInfoNeeded, uint handle, uint RebootReasons)

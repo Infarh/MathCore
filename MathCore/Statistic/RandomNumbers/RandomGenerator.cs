@@ -5,7 +5,7 @@ namespace MathCore.Statistic.RandomNumbers;
 
 /// <summary>Генератор случайных чисел</summary>
 [Serializable]
-public abstract class RandomGenerator(Random rnd = null) : IValueRead<double>
+public abstract class RandomGenerator(Random? rnd = null) : IValueRead<double>
 {
     /* ------------------------------------------------------------------------------------------ */
 
@@ -29,9 +29,9 @@ public abstract class RandomGenerator(Random rnd = null) : IValueRead<double>
 
     /* ------------------------------------------------------------------------------------------ */
 
-    protected RandomGenerator(double sigma, Random rnd = null) : this(rnd) => _Sigma = sigma;
+    protected RandomGenerator(double sigma, Random? rnd = null) : this(rnd) => _Sigma = sigma;
 
-    protected RandomGenerator(double sigma, double mu, Random rnd = null) : this(sigma, rnd) => _Mu = mu;
+    protected RandomGenerator(double sigma, double mu, Random? rnd = null) : this(sigma, rnd) => _Mu = mu;
 
     /* ------------------------------------------------------------------------------------------ */
 

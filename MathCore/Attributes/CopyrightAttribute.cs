@@ -4,8 +4,6 @@
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable UnusedMember.Global
 
-using MathCore.Annotations;
-
 // ReSharper disable once CheckNamespace
 namespace System;
 
@@ -14,11 +12,11 @@ namespace System;
 public sealed class CopyrightAttribute : Attribute
 {
     /// <summary>Авторские права</summary>
-    public string Copyright { set; get; }
+    public string Copyright { set; get; } = null!;
 
     /// <summary>Ссылка на источник</summary>
 #pragma warning disable IDE1006 // Стили именования
-    public string url { get; set; }
+    public string url { get; set; } = null!;
 #pragma warning restore IDE1006 // Стили именования
 
     /// <summary>Инициализация нового экземпляра <see cref="CopyrightAttribute"/></summary>
@@ -26,6 +24,5 @@ public sealed class CopyrightAttribute : Attribute
     public CopyrightAttribute(string Copyright) => this.Copyright = Copyright;
 
     /// <inheritdoc />
-    [NotNull]
     public override string ToString() => $"Copyright: {Copyright}";
 }

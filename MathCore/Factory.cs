@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.ComponentModel;
+﻿using System.ComponentModel;
 // ReSharper disable VirtualMemberNeverOverridden.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBeProtected.Global
@@ -30,7 +29,7 @@ public interface IFactory<out T, in TParameter>
 
 /// <summary>Генератор объектов типа <typeparamref name="T"/></summary>
 /// <typeparam name="T">Тип генерируемых объектов</typeparam>
-public class Factory<T> : INotifyPropertyChanged, IFactory<T>
+public class Factory<T> : INotifyPropertyChanged, IFactory<T?>
 {
     /* ------------------------------------------------------------------------------------------ */
 
@@ -39,8 +38,10 @@ public class Factory<T> : INotifyPropertyChanged, IFactory<T>
     /// <summary>Событие возникает при генерации новой строки</summary>
     event PropertyChangedEventHandler? INotifyPropertyChanged.PropertyChanged
     {
-        [DST] add => PropertyChangedHandlers += value;
-        [DST] remove => PropertyChangedHandlers -= value;
+        [DST]
+        add => PropertyChangedHandlers += value;
+        [DST]
+        remove => PropertyChangedHandlers -= value;
     }
 
     /// <summary>Генерация события уведомления об изменении значения свойства</summary>
@@ -50,9 +51,9 @@ public class Factory<T> : INotifyPropertyChanged, IFactory<T>
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>Метод генерации объектов</summary>
-    private Func<T>? _FactoryMethod;
+    private Func<T> _FactoryMethod = null!;
 
-    private T _Last;
+    private T _Last = default!;
     private readonly PropertyChangedEventArgs _PropertyLastChangedArgs = new(nameof(Last));
 
     /// <summary>Генерировать события изменения свойств</summary>
@@ -68,7 +69,7 @@ public class Factory<T> : INotifyPropertyChanged, IFactory<T>
         private set
         {
             _Last = value;
-            if(_RaiseLastChangedEvents)
+            if (_RaiseLastChangedEvents)
                 OnPropertyChanged(_PropertyLastChangedArgs);
         }
     }
@@ -76,8 +77,10 @@ public class Factory<T> : INotifyPropertyChanged, IFactory<T>
     /// <summary>Метод генерации объектов типа <typeparamref name="T"/></summary>
     public Func<T> FactoryMethod
     {
-        [DST] get => _FactoryMethod;
-        [DST] set => _FactoryMethod = value;
+        [DST]
+        get => _FactoryMethod;
+        [DST]
+        set => _FactoryMethod = value;
     }
 
     /* ------------------------------------------------------------------------------------------ */

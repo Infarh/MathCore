@@ -1,31 +1,31 @@
-﻿using MathCore.Annotations;
-
-namespace MathCore.ViewModels;
+﻿namespace MathCore.ViewModels;
 
 public partial class ViewModel
 {
-    private PropertyChangedEventsSuppressor _PropertyChangedEventsSuppressor;
+    private PropertyChangedEventsSuppressor _PropertyChangedEventsSuppressor = null!;
 
     public sealed class PropertyChangedEventsSuppressor : IDisposable
     {
         private readonly Dictionary<string, DateTime> _RegistredEvents = new(10);
-        [NotNull] private readonly ViewModel _Model;
+
+        private readonly ViewModel _Model = null!;
+
         public TimeSpan Timeout { get; set; }
 
-        internal PropertyChangedEventsSuppressor([NotNull] ViewModel Model, TimeSpan Timeout)
+        internal PropertyChangedEventsSuppressor(ViewModel Model, TimeSpan Timeout)
         {
-            _Model       = Model ?? throw new ArgumentNullException(nameof(Model));
+            _Model = Model ?? throw new ArgumentNullException(nameof(Model));
             this.Timeout = Timeout;
         }
 
-        internal void RegisterEvent([NotNull] string Event) => _RegistredEvents[Event] = DateTime.Now;
+        internal void RegisterEvent(string Event) => _RegistredEvents[Event] = DateTime.Now;
 
         public void Clear() => _RegistredEvents.Clear();
 
         public void Dispose()
         {
             if (ReferenceEquals(_Model._PropertyChangedEventsSuppressor, this))
-                _Model._PropertyChangedEventsSuppressor = null;
+                _Model._PropertyChangedEventsSuppressor = null!;
 
             if (Timeout == default)
                 foreach (var property_name in _RegistredEvents.Keys)
@@ -41,6 +41,7 @@ public partial class ViewModel
     {
         if (_PropertyChangedEventsSuppressor is not { } suppressor)
             return _PropertyChangedEventsSuppressor = new(this, RegistrationTimeout);
+
         suppressor.Timeout = RegistrationTimeout;
         return suppressor;
     }

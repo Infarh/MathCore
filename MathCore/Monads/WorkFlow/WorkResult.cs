@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Monads.WorkFlow;
+﻿namespace MathCore.Monads.WorkFlow;
 
 /// <summary>Результат выполнения работы</summary>
 /// <remarks>Инициализация нового результата выполнения работы</remarks>
@@ -39,7 +38,7 @@ public readonly struct WorkResult(Exception? PrevError = null, Exception? Curren
 public readonly struct WorkResult<T> : IWorkResult<T>, IEquatable<WorkResult<T>>
 {
     /// <inheritdoc />
-    public Exception Error { get; }
+    public Exception? Error { get; }
 
     /// <inheritdoc />
     public bool Success => Error is null;
@@ -48,14 +47,14 @@ public readonly struct WorkResult<T> : IWorkResult<T>, IEquatable<WorkResult<T>>
     public bool Failure => !Success;
 
     /// <inheritdoc />
-    public T Result { get; }
+    public T Result { get; } = default!;
 
     /// <summary>Инициализация нового результата выполнения работы</summary>
     /// <param name="Result">Результат выполнения работы</param>
     /// <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
     public WorkResult(T Result, Exception? PrevError = null)
     {
-        Error       = PrevError;
+        Error = PrevError;
         this.Result = Result;
     }
 
@@ -64,7 +63,7 @@ public readonly struct WorkResult<T> : IWorkResult<T>, IEquatable<WorkResult<T>>
     /// <param name="CurrentError">Ошибка текущего процесса выполнения работы</param>
     public WorkResult(Exception? PrevError = null, Exception? CurrentError = null)
     {
-        Result = default;
+        Result = default!;
         Error = PrevError is null
             ? CurrentError
             : CurrentError is null
@@ -94,7 +93,7 @@ public readonly struct WorkResult<T> : IWorkResult<T>, IEquatable<WorkResult<T>>
 public readonly struct WorkResult<TParameter, T> : IWorkResult<TParameter, T>, IEquatable<WorkResult<TParameter, T>>
 {
     /// <inheritdoc />
-    public Exception Error { get; }
+    public Exception? Error { get; }
 
     /// <inheritdoc />
     public bool Success => Error is null;
@@ -103,18 +102,18 @@ public readonly struct WorkResult<TParameter, T> : IWorkResult<TParameter, T>, I
     public bool Failure => !Success;
 
     /// <inheritdoc />
-    public TParameter Parameter { get; }
+    public TParameter Parameter { get; } = default!;
 
     /// <inheritdoc />
-    public T Result { get; }
+    public T Result { get; } = default!;
 
     /// <summary>Инициализация нового результата выполнения работы</summary>
     /// <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
     public WorkResult(Exception PrevError)
     {
-        Error     = PrevError;
-        Parameter = default;
-        Result    = default;
+        Error = PrevError;
+        Parameter = default!;
+        Result = default!;
     }
 
     /// <summary>Инициализация нового результата выполнения работы</summary>
@@ -123,9 +122,9 @@ public readonly struct WorkResult<TParameter, T> : IWorkResult<TParameter, T>, I
     /// <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
     public WorkResult(TParameter Parameter, T Result, Exception? PrevError = null)
     {
-        Error          = PrevError;
+        Error = PrevError;
         this.Parameter = Parameter;
-        this.Result    = Result;
+        this.Result = Result;
     }
 
     /// <summary>Инициализация нового результата выполнения работы</summary>
@@ -135,7 +134,7 @@ public readonly struct WorkResult<TParameter, T> : IWorkResult<TParameter, T>, I
     public WorkResult(TParameter Parameter, Exception? PrevError = null, Exception? CurrentError = null)
     {
         this.Parameter = Parameter;
-        Result         = default;
+        Result = default!;
         Error = PrevError is null
             ? CurrentError
             : CurrentError is null

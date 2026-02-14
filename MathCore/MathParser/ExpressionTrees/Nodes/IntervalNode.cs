@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.MathParser.ExpressionTrees.Nodes;
+﻿namespace MathCore.MathParser.ExpressionTrees.Nodes;
 
 /// <summary>Узел интервального значения</summary>
 public class IntervalNode : ParsedNode
@@ -12,7 +11,7 @@ public class IntervalNode : ParsedNode
 
     public IntervalNode(double Min, double Max) : this(new ConstValueNode(Min), new ConstValueNode(Max)) { }
 
-    public IntervalNode(ExpressionTreeNode Min, ExpressionTreeNode? Max = null) { Left = Min; Right = Max; }
+    public IntervalNode(ExpressionTreeNode? Min, ExpressionTreeNode? Max = null) { Left = Min; Right = Max; }
 
     /// <summary>Клонирование поддерева</summary>
     /// <returns>Клон поддерева</returns>

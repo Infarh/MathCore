@@ -1,23 +1,27 @@
-﻿#nullable enable
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace MathCore.MathParser;
 
 [NotImplemented]
 public class DifferentialTransformationVisitor : ExpressionVisitorEx
 {
-    private readonly object _Differentiate_LockObject = new();
+#if NET9_0_OR_GREATER
+    private readonly Lock _Differentiate_LockObject = new();
+#else
+    private readonly object _Differentiate_LockObject = new(); 
+#endif
+
     private ParameterExpression _Differential_Parameter;
 
     public DifferentialTransformationVisitor() => throw new NotImplementedException();
 
-    public Expression Differentiate<TDelegate>(Expression<TDelegate> expression, string ParameterName)
+    public Expression? Differentiate<TDelegate>(Expression<TDelegate> expression, string ParameterName)
     {
         var parameter = (from p in expression.Parameters where p.Name == ParameterName select p).FirstOrDefault();
-        if(parameter is null)
+        if (parameter is null)
             throw new ArgumentException(@"Не задан параметр дифференцирования", nameof(ParameterName));
 
-        lock(_Differentiate_LockObject)
+        lock (_Differentiate_LockObject)
         {
             _Differential_Parameter = parameter;
             return Visit(expression);
@@ -30,7 +34,7 @@ public class DifferentialTransformationVisitor : ExpressionVisitorEx
 
     protected override Expression VisitBinary(BinaryExpression b)
     {
-        switch(b.NodeType)
+        switch (b.NodeType)
         {
             case ExpressionType.Add:
                 break;

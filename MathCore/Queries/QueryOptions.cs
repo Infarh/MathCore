@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -64,16 +63,16 @@ public class QueryOptions
     public int Size { get; set; } = 10;
 
     /// <summary>Свойство, по которому выполняется упорядочивание</summary>
-    public string OrderProperty { get; set; }
+    public string OrderProperty { get; set; } = null!;
 
     /// <summary>Выполнять ли упорядочивание по убыванию?</summary>
     public bool OrderByDescending { get; set; }
 
     /// <summary>Свойство, используемое для поиска</summary>
-    public string SearchProperty { get; set; }
+    public string SearchProperty { get; set; } = null!;
 
     /// <summary>Искомое значение</summary>
-    public string SearchTerm { get; set; }
+    public string SearchTerm { get; set; } = null!;
 
     /// <summary>Сформировать отфильтрованный и упорядоченный запрос</summary>
     /// <typeparam name="T">Тип элементов запроса</typeparam>
@@ -101,14 +100,14 @@ public class QueryOptions
     {
         if (string.IsNullOrWhiteSpace(OrderProperty)) return query;
 
-        var x        = Expression.Parameter(typeof(T), "x");
-        var value    = GetProperty(x, OrderProperty);
+        var x = Expression.Parameter(typeof(T), "x");
+        var value = GetProperty(x, OrderProperty);
         var criteria = Expression.Lambda(typeof(Func<,>).MakeGenericType(typeof(T), value.Type), value, x);
 
         //return GetMethodInfo(typeof(T), value.Type, OrderByDescending)
         //   .Invoke(null, new object[] { query, criteria })
         //    as IQueryable<T>;
-        return (IQueryable<T>)GetMethod<T>(value.Type, OrderByDescending).DynamicInvoke(query, criteria);
+        return (IQueryable<T>)GetMethod<T>(value.Type, OrderByDescending).DynamicInvoke(query, criteria)!;
     }
 
     /// <summary>Метод, осуществляющий фильтрацию элементов запроса</summary>
@@ -125,7 +124,7 @@ public class QueryOptions
         if (value.Type != typeof(string))
             value = Expression.Call(value, "ToString", Type.EmptyTypes);
 
-        var body      = Expression.Call(value, "Contains", Type.EmptyTypes, Expression.Constant(SearchTerm));
+        var body = Expression.Call(value, "Contains", Type.EmptyTypes, Expression.Constant(SearchTerm));
         var condition = Expression.Lambda<Func<T, bool>>(body, x);
 
         return query.Where(condition);

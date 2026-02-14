@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable MemberCanBePrivate.Global
+﻿// ReSharper disable MemberCanBePrivate.Global
 
 namespace MathCore.MathParser;
 

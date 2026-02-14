@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Text;
 
 using MathCore.Extensions.Expressions;
@@ -20,7 +19,7 @@ public readonly struct CSVWriter<T>
     private readonly char _Separator;
 
     /// <summary>Словарь соответствия имени колонки методу извлечения значения и индексу колонки</summary>
-    private readonly IDictionary<string, (Func<T, object> Selector, int Index)> _Selectors;
+    private readonly IDictionary<string, (Func<T, object> Selector, int Index)>? _Selectors;
 
     /// <summary>Требуется ли записывать заголовок?</summary>
     private readonly bool _WriteHeaders;
@@ -268,7 +267,7 @@ public readonly struct CSVWriter<T>
         foreach (var item in _Items)
         {
             for (var i = 0; i < values.Length; i++)
-                values[i] = Convert.ToString(selectors[i](item));
+                values[i] = Convert.ToString(selectors[i](item))!;
             writer.WriteLineValues(separator, values);
         }
     }
@@ -294,7 +293,7 @@ public readonly struct CSVWriter<T>
         {
             Cancel.ThrowIfCancellationRequested();
             for (var i = 0; i < values.Length; i++)
-                values[i] = Convert.ToString(selectors[i](item));
+                values[i] = Convert.ToString(selectors[i](item))!;
 
             Cancel.ThrowIfCancellationRequested();
             await writer.WriteLineValuesAsync(separator, values).ConfigureAwait(false);

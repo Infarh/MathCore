@@ -45,7 +45,7 @@ public readonly struct GeoLocationSpan : IEquatable<GeoLocationSpan>
 
     public bool Equals(GeoLocationSpan delta) => delta.LatitudeDelta.Equals(LatitudeDelta) && delta.LongitudeDelta.Equals(LongitudeDelta);
 
-    public override bool Equals(object obj) => obj is GeoLocationSpan delta && Equals(delta);
+    public override bool Equals(object? obj) => obj is GeoLocationSpan delta && Equals(delta);
 
     public override int GetHashCode() => HashBuilder.New(LatitudeDelta).Append(LongitudeDelta);
 

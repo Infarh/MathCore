@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -13,8 +12,8 @@ namespace MathCore.Vectors;
 /// <summary>Двумерный вектор</summary>
 [Serializable]
 [TypeConverter(typeof(Vector2DConverter))]
-public readonly struct Vector2D : 
-    ICloneable<Vector2D>, 
+public readonly struct Vector2D :
+    ICloneable<Vector2D>,
     IEquatable<Vector2D>,
     IEquatable<(double X, double Y)>,
     IEquatable<(int X, double Y)>,
@@ -65,7 +64,7 @@ public readonly struct Vector2D :
     /// <inheritdoc />
     public override string ToString() => $"({X};{Y})";
 
-    public string ToString(string format, IFormatProvider FormatProvider) => new StringBuilder("(")
+    public string ToString(string? format, IFormatProvider? FormatProvider) => new StringBuilder("(")
         .Append(X.ToString(format, FormatProvider)).Append(';')
         .Append(Y.ToString(format, FormatProvider)).Append(')')
         .ToString();

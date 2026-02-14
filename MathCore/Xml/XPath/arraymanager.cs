@@ -42,8 +42,8 @@ internal class ArrayManager
 
     #region Fields
 
-    private Queue _BufferQueue;
-    private Buffer _CurrentBuffer;
+    private Queue? _BufferQueue;
+    private Buffer? _CurrentBuffer;
 
     #endregion
 
@@ -57,7 +57,7 @@ internal class ArrayManager
 
     private int Offset { get; set; }
 
-    internal char[] CurrentBuffer => _CurrentBuffer?.CharBuffer;
+    internal char[] CurrentBuffer => _CurrentBuffer?.CharBuffer!;
 
     internal int CurrentBufferOffset => _CurrentBuffer?._offset ?? 0;
 
@@ -68,10 +68,10 @@ internal class ArrayManager
         get
         {
             var len = 0;
-            if(_CurrentBuffer != null)
+            if (_CurrentBuffer != null)
                 len += _CurrentBuffer.Size - _CurrentBuffer._offset;
             var enumerator = BufferQueue.GetEnumerator();
-            while(enumerator.MoveNext())
+            while (enumerator.MoveNext())
             {
                 var element = (Buffer)enumerator.Current;
                 len += element.Size - element._offset;
@@ -85,22 +85,25 @@ internal class ArrayManager
         get
         {
             var ch = '\0';
-            if(_CurrentBuffer is null)
+            if (_CurrentBuffer is null)
             {
-                if(BufferQueue.Count > 0)
-                    _CurrentBuffer = (Buffer)BufferQueue.Dequeue();
+                if (BufferQueue.Count > 0)
+                    _CurrentBuffer = (Buffer?)BufferQueue.Dequeue();
                 else
                     return ch;
             }
 
-            if(!(_CurrentBuffer._offset + index - Offset < _CurrentBuffer.Size))
+            if (_CurrentBuffer is null) throw new InvalidOperationException("Не был получен текущий буфер");
+
+            if (!(_CurrentBuffer._offset + index - Offset < _CurrentBuffer.Size))
             {
-                Offset         = index;
-                _CurrentBuffer = BufferQueue.Count > 0 ? (Buffer)BufferQueue.Dequeue() : null;
+                Offset = index;
+                _CurrentBuffer = BufferQueue.Count > 0 ? (Buffer?)BufferQueue.Dequeue() : null;
             }
 
-            if(_CurrentBuffer != null)
-                ch = _CurrentBuffer.CharBuffer[_CurrentBuffer._offset + (index - Offset)];
+            if (_CurrentBuffer != null)
+                return _CurrentBuffer.CharBuffer[_CurrentBuffer._offset + (index - Offset)];
+
             return ch;
         }
     }
@@ -111,8 +114,8 @@ internal class ArrayManager
 
     internal ArrayManager()
     {
-        BufferQueue    = null;
-        Offset         = 0;
+        _BufferQueue = null;
+        Offset = 0;
         _CurrentBuffer = null;
     }
 
@@ -124,16 +127,16 @@ internal class ArrayManager
 
     internal void CleanUp(int InternalBufferOffset)
     {
-        if(_CurrentBuffer is null) return;
+        if (_CurrentBuffer is null) return;
         _CurrentBuffer._offset += InternalBufferOffset - Offset;
-        Offset                 =  0;
+        Offset = 0;
     }
 
     internal void Refresh()
     {
-        BufferQueue    = new();
+        BufferQueue = new();
         _CurrentBuffer = null;
-        Offset         = 0;
+        Offset = 0;
     }
 
     #endregion

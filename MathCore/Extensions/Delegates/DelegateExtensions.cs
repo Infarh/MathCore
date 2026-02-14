@@ -1,10 +1,10 @@
-﻿#nullable enable
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 
 using MathCore.Extensions.Expressions;
-using MCEx = System.Linq.Expressions.MethodCallExpression;
+
 using Ex = System.Linq.Expressions.Expression;
+using MCEx = System.Linq.Expressions.MethodCallExpression;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable CatchAllClause
 
@@ -43,7 +43,8 @@ public static class DelegateExtensions
             try
             {
                 action();
-            } catch(Exception)
+            }
+            catch (Exception)
             {
                 OnException?.Invoke();
             }
@@ -55,7 +56,8 @@ public static class DelegateExtensions
             try
             {
                 action(t);
-            } catch(Exception)
+            }
+            catch (Exception)
             {
                 OnException?.Invoke(t);
             }
@@ -68,7 +70,8 @@ public static class DelegateExtensions
             try
             {
                 action();
-            } catch(TException)
+            }
+            catch (TException)
             {
                 OnException?.Invoke();
             }
@@ -81,7 +84,8 @@ public static class DelegateExtensions
             try
             {
                 action(t);
-            } catch(TException)
+            }
+            catch (TException)
             {
                 OnException?.Invoke(t);
             }
@@ -97,7 +101,8 @@ public static class DelegateExtensions
             try
             {
                 return func();
-            } catch(Exception)
+            }
+            catch (Exception)
             {
                 return OnException is null ? default : OnException();
             }
@@ -109,7 +114,8 @@ public static class DelegateExtensions
             try
             {
                 return func(t);
-            } catch(Exception)
+            }
+            catch (Exception)
             {
                 return OnException is null ? default : OnException(t);
             }
@@ -122,7 +128,8 @@ public static class DelegateExtensions
             try
             {
                 return func();
-            } catch(TException)
+            }
+            catch (TException)
             {
                 return OnException is null ? default : OnException();
             }
@@ -136,7 +143,8 @@ public static class DelegateExtensions
             try
             {
                 return func(t);
-            } catch(TException)
+            }
+            catch (TException)
             {
                 return OnException is null ? default : OnException(t);
             }
@@ -144,5 +152,5 @@ public static class DelegateExtensions
 
     #endregion
 
-    public static Task<object?> DynamicInvokeAsync(this Delegate action, params object[] parameters) => action.Async(parameters, (d, p) => d.DynamicInvoke(p));
+    public static Task<object?> DynamicInvokeAsync(this Delegate action, params object[] parameters) => action.Async(parameters, (d, p) => d.DynamicInvoke(p))!;
 }

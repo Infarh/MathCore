@@ -10,7 +10,7 @@ namespace System;
 public sealed class AffectsTheAttribute : Attribute
 {
     /// <summary>Элемент, на который оказывается влияние</summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     /// <summary>Инициализация нового экземпляра <see cref="AffectsTheAttribute"/></summary>
     public AffectsTheAttribute() { }

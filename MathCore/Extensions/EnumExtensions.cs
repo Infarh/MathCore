@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 // ReSharper disable UnusedType.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -21,7 +20,7 @@ public static class EnumExtensions
     {
         var attribute_type = typeof(TAttribute);
         var value_type = value.GetType();
-        var field = value_type.GetField(value.ToString());
+        var field = value_type.GetField(value.ToString()).NotNull();
         return (TAttribute[]?)field.GetCustomAttributes(attribute_type, false);
     }
 

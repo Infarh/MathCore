@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.CSV;
+﻿namespace MathCore.CSV;
 
 public static class Extensions
 {

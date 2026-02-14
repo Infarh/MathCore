@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Interpolation;
+﻿namespace MathCore.Interpolation;
 
 public class Biliniar : Interpolator
 {

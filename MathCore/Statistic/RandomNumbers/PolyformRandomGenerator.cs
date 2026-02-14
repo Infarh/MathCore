@@ -46,18 +46,18 @@ public class PolyformRandomGenerator
 
     public static Expression<Func<double, double>> GetNormalDistributionExpression(double m, double s)
     {
-        var X       = Expression.Parameter(typeof(double), "x");
-        var M       = m.ToExpression();
-        var S       = s.ToExpression();
-        var expr_2  = 2.ToExpression();
-        var sqrt2PI = expr_2.Multiply(Consts.pi.ToExpression()).Power(0.5);
-        var E       = ((Func<double, double>)Exp).GetCallExpression(X.Subtract(M).Power(2).Divide(expr_2.Multiply(S.Power(2))).Negate());
-        var body    = 1.ToExpression().Divide(S.Multiply(sqrt2PI)).Multiply(E);
+        var X = Expression.Parameter(typeof(double), "x");
+        var M = m.ToExpression();
+        var S = s.ToExpression();
+        var expr_2 = 2.ToExpression();
+        var sqrt2PI = expr_2.Mult(Consts.pi.ToExpression()).Power(0.5);
+        var E = ((Func<double, double>)Exp).GetCallExpression(X.Subtract(M).Power(2).Divide(expr_2.Mult(S.Power(2))).Negate());
+        var body = 1.ToExpression().Divide(S.Mult(sqrt2PI)).Mult(E);
         return Expression.Lambda<Func<double, double>>(body, X);
     }
 
-    private static double[] __NormalStairWidth;
-    private static double[] __NormalStairHeight;
+    private static double[] __NormalStairWidth = null!;
+    private static double[] __NormalStairHeight = null!;
     private static bool __NormalInitialized;
     private static readonly object __NormalInitializationSyncRoot = new();
     private const double __Normal_x1 = 3.6541528853610088;
@@ -67,21 +67,21 @@ public class PolyformRandomGenerator
 
     private static bool InitializeNormal()
     {
-        if(__NormalInitialized) return true;
+        if (__NormalInitialized) return true;
         lock (__NormalInitializationSyncRoot)
         {
-            if(__NormalInitialized) return true;
-            __NormalStairWidth  = new double[257];
+            if (__NormalInitialized) return true;
+            __NormalStairWidth = new double[257];
             __NormalStairHeight = new double[256];
             // coordinates of the implicit rectangle in base layer
             __NormalStairHeight[0] = Exp(-.5 * __Normal_x1 * __Normal_x1);
-            __NormalStairWidth[0]  = __Normal_A / __NormalStairHeight[0];
+            __NormalStairWidth[0] = __Normal_A / __NormalStairHeight[0];
             // implicit value for the top layer
             __NormalStairWidth[256] = 0;
-            for(var i = 1; i <= 255; ++i)
+            for (var i = 1; i <= 255; ++i)
             {
                 // such x_i that f(x_i) = y_{i-1}
-                __NormalStairWidth[i]  = Sqrt(-2 * Log(__NormalStairHeight[i - 1]));
+                __NormalStairWidth[i] = Sqrt(-2 * Log(__NormalStairHeight[i - 1]));
                 __NormalStairHeight[i] = __NormalStairHeight[i - 1] + __Normal_A / __NormalStairWidth[i];
             }
             return __NormalInitialized = true;
@@ -96,61 +96,61 @@ public class PolyformRandomGenerator
         var iterator = 0;
         do
         {
-            var B        = BasicRandGenerator();
+            var B = BasicRandGenerator();
             var stair_id = (int)(B & 0xff);
-            var x        = Uniform(0, __NormalStairWidth[stair_id]); // get horizontal coordinate
-            if(x < __NormalStairWidth[stair_id + 1])
+            var x = Uniform(0, __NormalStairWidth[stair_id]); // get horizontal coordinate
+            if (x < __NormalStairWidth[stair_id + 1])
                 return (long)B > 0 ? x : -x;
-            if(stair_id == 0) // handle the base layer
+            if (stair_id == 0) // handle the base layer
             {
                 _NormalZigguratZ = -1;
                 double y;
-                if(_NormalZigguratZ >= 0)
-                    // we don't have to generate another exponential variable as we already have one
+                if (_NormalZigguratZ >= 0)
+                // we don't have to generate another exponential variable as we already have one
                 {
-                    y                = Exponential(1);
+                    y = Exponential(1);
                     _NormalZigguratZ = y - 0.5 * _NormalZigguratZ * _NormalZigguratZ;
                 }
-                if(_NormalZigguratZ < 0) // if previous generation wasn't successful
+                if (_NormalZigguratZ < 0) // if previous generation wasn't successful
                     do
                     {
-                        x                = Exponential(__Normal_x1);
-                        y                = Exponential(1);
+                        x = Exponential(__Normal_x1);
+                        y = Exponential(1);
                         _NormalZigguratZ = y - 0.5 * x * x;
                         // we storage this value as after acceptance it becomes exponentially distributed
-                    } while(_NormalZigguratZ <= 0);
+                    } while (_NormalZigguratZ <= 0);
 
                 x += __Normal_x1;
                 return (long)B > 0 ? x : -x;
             }
             // handle the wedges of other stairs
-            if(Uniform(__NormalStairHeight[stair_id - 1], __NormalStairHeight[stair_id]) < Exp(-.5 * x * x))
+            if (Uniform(__NormalStairHeight[stair_id - 1], __NormalStairHeight[stair_id]) < Exp(-.5 * x * x))
                 return (long)B > 0 ? x : -x;
-        } while(++iterator <= 1e9); // one billion should be enough
+        } while (++iterator <= 1e9); // one billion should be enough
         throw new CalculationsException();
     }
 
-    public double Normal(double mu, double sigma) => 
+    public double Normal(double mu, double sigma) =>
         __NormalInitialized || InitializeNormal()
-            ? mu + NormalZiggurat() * sigma 
+            ? mu + NormalZiggurat() * sigma
             : throw new CalculationsException();
 
     #endregion
 
     #region Exponential
 
-    public static double ExponentialDistribution(double x, double l, double s) => l * Exp(-l * x);
-    public static Func<double, double> GetExponentialDistribution(double l, double s) => x => l * Exp(-l * x);
+    public static double ExponentialDistribution(double x, double l, double _) => l * Exp(-l * x);
+    public static Func<double, double> GetExponentialDistribution(double l, double _) => x => l * Exp(-l * x);
 
-    public static Expression<Func<double, double>> GetExponentialDistributionExpression(double l, double s)
+    public static Expression<Func<double, double>> GetExponentialDistributionExpression(double l, double _)
     {
-        var x    = Expression.Parameter(typeof(double), "x");
-        var body = l.ToExpression().Multiply(MathExpression.Exp(l.ToExpression().Multiply(x).Negate()));
+        var x = Expression.Parameter(typeof(double), "x");
+        var body = l.ToExpression().Mult(MathExpression.Exp(l.ToExpression().Mult(x).Negate()));
         return Expression.Lambda<Func<double, double>>(body, x);
     }
 
-    private static double[] __ExponentialStairWidth;
-    private static double[] __ExponentialStairHeight;
+    private static double[] __ExponentialStairWidth = null!;
+    private static double[] __ExponentialStairHeight = null!;
     private static bool __ExponentialInitialized;
     private static readonly object __ExponentialInitializationSyncRoot = new();
     private const double __X1 = 7.69711747013104972;
@@ -160,21 +160,21 @@ public class PolyformRandomGenerator
 
     private static bool InitializeExponential()
     {
-        if(__ExponentialInitialized) return true;
+        if (__ExponentialInitialized) return true;
         lock (__ExponentialInitializationSyncRoot)
         {
-            if(__ExponentialInitialized) return true;
-            __ExponentialStairWidth  = new double[257];
+            if (__ExponentialInitialized) return true;
+            __ExponentialStairWidth = new double[257];
             __ExponentialStairHeight = new double[256];
             // coordinates of the implicit rectangle in base layer
             __ExponentialStairHeight[0] = Exp(-__X1);
-            __ExponentialStairWidth[0]  = __A / __ExponentialStairHeight[0];
+            __ExponentialStairWidth[0] = __A / __ExponentialStairHeight[0];
             // implicit value for the top layer
             __ExponentialStairWidth[256] = 0;
-            for(var i = 1; i <= 255; ++i)
+            for (var i = 1; i <= 255; ++i)
             {
                 // such x_i that f(x_i) = y_{i-1}
-                __ExponentialStairWidth[i]  = -Log(__ExponentialStairHeight[i - 1]);
+                __ExponentialStairWidth[i] = -Log(__ExponentialStairHeight[i - 1]);
                 __ExponentialStairHeight[i] = __ExponentialStairHeight[i - 1] + __A / __ExponentialStairWidth[i];
             }
             return __ExponentialInitialized = true;
@@ -187,16 +187,16 @@ public class PolyformRandomGenerator
         do
         {
             var stair_id = (int)(BasicRandGenerator() & 255);
-            var x        = Uniform(0, __ExponentialStairWidth[stair_id]); // get horizontal coordinate
-            if(x < __ExponentialStairWidth[stair_id + 1])                 // if we are under the upper stair - accept
+            var x = Uniform(0, __ExponentialStairWidth[stair_id]); // get horizontal coordinate
+            if (x < __ExponentialStairWidth[stair_id + 1])                 // if we are under the upper stair - accept
                 return x;
-            if(stair_id == 0) // if we catch the tail
+            if (stair_id == 0) // if we catch the tail
                 return __X1 + ExpZiggurat();
-            if(Uniform(__ExponentialStairHeight[stair_id - 1], __ExponentialStairHeight[stair_id]) < Exp(-x))
+            if (Uniform(__ExponentialStairHeight[stair_id - 1], __ExponentialStairHeight[stair_id]) < Exp(-x))
                 // if we are under the curve - accept
                 return x;
             // rejection - go back
-        } while(++iter <= 1e9); // one billion should be enough to be sure there is a bug
+        } while (++iter <= 1e9); // one billion should be enough to be sure there is a bug
         throw new CalculationsException();
     }
 
@@ -212,18 +212,18 @@ public class PolyformRandomGenerator
 
     public static Expression<Func<double, double>> GetGammaDistributionExpression(double k, double th)
     {
-        var X  = Expression.Parameter(typeof(double), "x");
-        var K  = k.ToExpression();
+        var X = Expression.Parameter(typeof(double), "x");
+        var K = k.ToExpression();
         var TH = th.ToExpression();
-        var body = X.Power(K.Subtract(1)).Multiply(MathExpression.Exp(X.Divide(TH)).Negate())
-           .Divide(MathExpression.F(SpecialFunctions.Gamma.G, K).Multiply(TH.Power(K)));
+        var body = X.Power(K.Subtract(1)).Mult(MathExpression.Exp(X.Divide(TH)).Negate())
+           .Divide(MathExpression.F(SpecialFunctions.Gamma.G, K).Mult(TH.Power(K)));
         return Expression.Lambda<Func<double, double>>(body, X);
     }
 
     public double GA1(int k)
     {
         double x = 0;
-        for(var i = 0; i < k; ++i)
+        for (var i = 0; i < k; ++i)
             x += Exponential(1);
         return x;
     }
@@ -232,7 +232,7 @@ public class PolyformRandomGenerator
     {
         var x = Normal(0, 1);
         x *= 0.5 * x;
-        for(var i = 1; i < k; ++i)
+        for (var i = 1; i < k; ++i)
             x += Exponential(1);
         return x;
     }
@@ -244,22 +244,22 @@ public class PolyformRandomGenerator
         do
         {
             // M_E is base of natural logarithm
-            var    u = Uniform(0, 1 + k / Consts.e);
-            var    w = Exponential(1);
+            var u = Uniform(0, 1 + k / Consts.e);
+            var w = Exponential(1);
             double x;
-            if(u <= 1)
+            if (u <= 1)
             {
                 x = Pow(u, 1.0 / k);
-                if(x <= w)
+                if (x <= w)
                     return x;
             }
             else
             {
                 x = -Log((1 - u) / k + 1.0 / Consts.e);
-                if((1 - k) * Log(x) <= w)
+                if ((1 - k) * Log(x) <= w)
                     return x;
             }
-        } while(++iter < 1e9); // excessive maximum number of rejections
+        } while (++iter < 1e9); // excessive maximum number of rejections
         throw new CalculationsException();
     }
 
@@ -271,33 +271,33 @@ public class PolyformRandomGenerator
         {
             e1 = Exponential(1);
             e2 = Exponential(1);
-        } while(e2 < (k - 1) * (e1 - Log(e1) - 1));
+        } while (e2 < (k - 1) * (e1 - Log(e1) - 1));
         return k * e1;
     }
 
     private double GO(double k)
     {
         // Assume that k > 3
-        var m       = k - 1;
-        var s2      = Sqrt(8 * k / 3) + k;
+        var m = k - 1;
+        var s2 = Sqrt(8 * k / 3) + k;
         var sqrt_s2 = Sqrt(s2);
-        var d       = Consts.sqrt_2 * Consts.sqrt_3 * s2;
-        var b       = d + m;
-        var w       = s2 / (m - 1);
-        var v       = (s2 + s2) / (m * Sqrt(k));
-        var c       = b + Log(sqrt_s2 * d / b) - m - m - 3.7203285;
+        var d = Consts.sqrt_2 * Consts.sqrt_3 * s2;
+        var b = d + m;
+        var w = s2 / (m - 1);
+        var v = (s2 + s2) / (m * Sqrt(k));
+        var c = b + Log(sqrt_s2 * d / b) - m - m - 3.7203285;
 
         var iter = 0;
         do
         {
-            var    u = Uniform(0, 1);
+            var u = Uniform(0, 1);
             double x;
-            if(u <= 0.0095722652)
+            if (u <= 0.0095722652)
             {
                 var e1 = Exponential(1);
                 var e2 = Exponential(1);
                 x = b * (1 + e1 / d);
-                if(m * (x / b - Log(x / m)) + c <= e2)
+                if (m * (x / b - Log(x / m)) + c <= e2)
                     return x;
             }
             else
@@ -307,20 +307,20 @@ public class PolyformRandomGenerator
                 {
                     n = Normal(0, 1);
                     x = sqrt_s2 * n + m; // ~ Normal(m, s)
-                } while(x < 0 || x > b);
+                } while (x < 0 || x > b);
                 u = Uniform(0, 1);
                 var s = 0.5 * n * n;
-                if(n > 0)
+                if (n > 0)
                 {
-                    if(u < 1 - w * s)
+                    if (u < 1 - w * s)
                         return x;
                 }
-                else if(u < 1 + s * (v * n - w))
+                else if (u < 1 + s * (v * n - w))
                     return x;
-                if(Log(u) < m * Log(x / m) + m - x + s)
+                if (Log(u) < m * Log(x / m) + m - x + s)
                     return x;
             }
-        } while(++iter < 1e9);
+        } while (++iter < 1e9);
         throw new CalculationsException();
     }
 
@@ -335,10 +335,10 @@ public class PolyformRandomGenerator
 
     public static Expression<Func<double, double>> GetCauchyDistributionExpression(double x0, double g)
     {
-        var X    = Expression.Parameter(typeof(double), "x");
-        var X0   = x0.ToExpression();
-        var G    = g.ToExpression();
-        var body = G.Divide(Consts.pi.ToExpression().Multiply(G.Power(2).Add(X.Subtract(X0)).Power(2)));
+        var X = Expression.Parameter(typeof(double), "x");
+        var X0 = x0.ToExpression();
+        var G = g.ToExpression();
+        var body = G.Divide(Consts.pi.ToExpression().Mult(G.Power(2).Add(X.Subtract(X0)).Power(2)));
         return Expression.Lambda<Func<double, double>>(body, X);
     }
 
@@ -353,7 +353,7 @@ public class PolyformRandomGenerator
         {
             x = Uniform(-1, 1);
             y = Uniform(-1, 1);
-        } while(x * x + y * y > 1.0 || y.Equals(0d));
+        } while (x * x + y * y > 1.0 || y.Equals(0d));
         return x0 + gamma * x / y;
     }
 
@@ -368,10 +368,10 @@ public class PolyformRandomGenerator
 
     public static Expression<Func<double, double>> GetLaplaceDistributionExpression(double m, double b)
     {
-        var X    = Expression.Parameter(typeof(double), "x");
-        var M    = m.ToExpression();
-        var B    = b.ToExpression();
-        var body = 2.ToExpression().Multiply(B).Inverse().Multiply(MathExpression.Exp(X.Subtract(M).Divide(B).Negate()));
+        var X = Expression.Parameter(typeof(double), "x");
+        var M = m.ToExpression();
+        var B = b.ToExpression();
+        var body = 2.ToExpression().Mult(B).Inverse().Mult(MathExpression.Exp(X.Subtract(M).Divide(B).Negate()));
         return Expression.Lambda<Func<double, double>>(body, X);
     }
 
@@ -391,8 +391,8 @@ public class PolyformRandomGenerator
         var X = Expression.Parameter(typeof(double), "x");
         var M = m.ToExpression();
         var C = c.ToExpression();
-        var body = C.Multiply(MathExpression.Exp(C.Divide(M.Subtract(X))))
-           .Divide(2.ToExpression().Multiply(Consts.pi).Multiply(X.Subtract(M).Power(3))).SqrtPower();
+        var body = C.Mult(MathExpression.Exp(C.Divide(M.Subtract(X))))
+           .Divide(2.ToExpression().Mult(Consts.pi).Mult(X.Subtract(M).Power(3))).SqrtPower();
         return Expression.Lambda<Func<double, double>>(body, X);
     }
 
@@ -413,17 +413,17 @@ public class PolyformRandomGenerator
 
     public static Expression<Func<double, double>> GetChiSquaredDistributionExpression(double k)
     {
-        var X   = Expression.Parameter(typeof(double), "x");
+        var X = Expression.Parameter(typeof(double), "x");
         var K05 = k.ToExpression().Divide(2);
-        var body = K05.PowerOf(2).Multiply(MathExpression.F(SpecialFunctions.Gamma.G, K05)).Inverse()
-           .Multiply(X.Power(K05.Subtract(1)).Multiply(MathExpression.Exp(X.Divide(2).Negate())));
+        var body = K05.PowerOf(2).Mult(MathExpression.F(SpecialFunctions.Gamma.G, K05)).Inverse()
+           .Mult(X.Power(K05.Subtract(1)).Mult(MathExpression.Exp(X.Divide(2).Negate())));
         return Expression.Lambda<Func<double, double>>(body, X);
     }
 
     public double ChiSquared(int k)
     {
         // ~ Gamma(k / 2, 2)
-        if(k >= 10) // too big parameter
+        if (k >= 10) // too big parameter
             return GO(0.5 * k);
         var x = (k & 1) != 0 ? GA2(0.5 * k) : GA1(k >> 1);
         return x + x;
@@ -444,10 +444,10 @@ public class PolyformRandomGenerator
         var X = Expression.Parameter(typeof(double), "x");
         var M = m.ToExpression();
         var S = s.ToExpression();
-        var body = X.Multiply(S).Multiply(2.ToExpression().Multiply(Consts.pi).Sqrt()).Inverse()
-           .Multiply(
+        var body = X.Mult(S).Mult(2.ToExpression().Mult(Consts.pi).Sqrt()).Inverse()
+           .Mult(
                 MathExpression.Exp(
-                    MathExpression.Log(X.Subtract(M)).Power(2).Divide(2.ToExpression().Multiply(S.Power(2)))).Negate());
+                    MathExpression.Log(X.Subtract(M)).Power(2).Divide(2.ToExpression().Mult(S.Power(2)))).Negate());
         return Expression.Lambda<Func<double, double>>(body, X);
     }
 
@@ -465,11 +465,11 @@ public class PolyformRandomGenerator
 
     public static Expression<Func<double, double>> GetLogisticDistributionExpression(double M, double S)
     {
-        var x    = Expression.Parameter(typeof(double), "x");
-        var m    = M.ToExpression();
-        var s    = S.ToExpression();
-        var e    = MathExpression.Exp(x.Subtract(m).Divide(s).Negate());
-        var body = e.Divide(s.Multiply(1.ToExpression().Add(e)).Power(2));
+        var x = Expression.Parameter(typeof(double), "x");
+        var m = M.ToExpression();
+        var s = S.ToExpression();
+        var e = MathExpression.Exp(x.Subtract(m).Divide(s).Negate());
+        var body = e.Divide(s.Mult(1.ToExpression().Add(e)).Power(2));
         return Expression.Lambda<Func<double, double>>(body, x);
     }
 
@@ -491,7 +491,7 @@ public class PolyformRandomGenerator
     // ReSharper disable once IdentifierTypo
     public double FisherSnedecor(int d1, int d2)
     {
-        var numerator   = d2 * ChiSquared(d1);
+        var numerator = d2 * ChiSquared(d1);
         var denominator = d1 * ChiSquared(d2);
         return numerator / denominator;
     }

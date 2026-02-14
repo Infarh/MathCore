@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 // ReSharper disable UnusedMethodReturnValue.Global
 
@@ -64,7 +63,7 @@ public static class IXmlSerializableAsyncExtensions
         await writer.WriteStartElementAsync(GroupName).ConfigureAwait(false);
         if (attributes != null)
             foreach (var (key, value) in attributes.Where(kv => kv.Value != null!))
-                await writer.WriteAttributeStringAsync(key, value.ToString()).ConfigureAwait(false);
+                await writer.WriteAttributeStringAsync(key, value?.ToString() ?? string.Empty).ConfigureAwait(false);
 
         foreach (var obj in enumeration)
             await obj.WriteXmlToAsync(writer, ElementName).ConfigureAwait(false);

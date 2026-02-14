@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Monads.WorkFlow;
+﻿namespace MathCore.Monads.WorkFlow;
 
 /// <summary>Работа, возвращающая указанное константное значение</summary>
 /// <typeparam name="T">Тип возвращаемого работой значения</typeparam>

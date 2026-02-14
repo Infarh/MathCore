@@ -1,5 +1,4 @@
-﻿#nullable enable
-using static MathCore.MatrixComplex.Array.Operator;
+﻿using static MathCore.MatrixComplex.Array.Operator;
 
 // ReSharper disable ExceptionNotThrown
 // ReSharper disable InconsistentNaming
@@ -156,8 +155,8 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
     [DST]
     public MatrixComplex(Complex[,] Data, bool clone = false)
     {
-        _N    = Data.GetLength(0);
-        _M    = Data.GetLength(1);
+        _N = Data.GetLength(0);
+        _M = Data.GetLength(1);
         _Data = clone ? Data.CloneObject() : Data;
     }
 
@@ -168,7 +167,7 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
     public MatrixComplex(IList<Complex> DataCol, bool IsColumn = true) : this(IsColumn ? DataCol.Count : 1, IsColumn ? 1 : DataCol.Count)
     {
         if (IsColumn) for (var i = 0; i < _N; i++) _Data[i, 0] = DataCol[i];
-        else for (var j = 0; j < _M; j++) _Data[0, j]          = DataCol[j];
+        else for (var j = 0; j < _M; j++) _Data[0, j] = DataCol[j];
     }
 
     /// <summary>Инициализация новой матрицы на основе перечисления строк (перечисления элементов строк) </summary>
@@ -181,13 +180,13 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
     [DST]
     private static Complex[,] GetElements(IEnumerable<IEnumerable<Complex>> ColsItems)
     {
-        var cols       = ColsItems.Select(col => col.ToListFast()).ToList();
+        var cols = ColsItems.Select(col => col.ToListFast()).ToList();
         var cols_count = cols.Count;
         var rows_count = cols.Max(col => col.Count);
-        var data       = new Complex[rows_count, cols_count];
+        var data = new Complex[rows_count, cols_count];
         for (var j = 0; j < cols_count; j++)
         {
-            var col                                                          = cols[j];
+            var col = cols[j];
             for (var i = 0; i < col.Count && i < rows_count; i++) data[i, j] = col[i];
         }
         return data;
@@ -224,8 +223,8 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
     /// <exception cref="ArgumentNullException">Если <paramref name="B"/> <see langword="null"/></exception>
     public MatrixComplex GetTriangle(ref MatrixComplex B, bool CloneB = true)
     {
-        var b         = CloneB ? B._Data.CloneObject() : B._Data;
-        var result    = new MatrixComplex(Array.GetTriangle(_Data, b, out _, out _));
+        var b = CloneB ? B._Data.CloneObject() : B._Data;
+        var result = new MatrixComplex(Array.GetTriangle(_Data, b, out _, out _));
         if (CloneB) B = new(b);
         return result;
     }
@@ -239,7 +238,7 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
     /// <returns>Треугольная матрица</returns>
     public MatrixComplex GetTriangle(ref MatrixComplex B, out MatrixComplex P, out int rank, out Complex d, bool CloneB = true)
     {
-        var b      = B._Data;
+        var b = B._Data;
         var result = new MatrixComplex(Array.GetTriangle(_Data, ref b, out var p, out rank, out d, CloneB));
         P = new(p);
         if (CloneB) B = new(b);
@@ -315,7 +314,7 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
         IFormatProvider? provider = null
     ) => _Data.ToStringFormatView(Format, Splitter, provider) ?? throw new InvalidOperationException();
 
-    [DST] public string ToString(string format, IFormatProvider? provider) => _Data.ToStringFormatView(format, "\t", provider) ?? throw new InvalidOperationException();
+    [DST] public string ToString(string? format, IFormatProvider? provider) => _Data.ToStringFormatView(format, "\t", provider) ?? throw new InvalidOperationException();
 
     /* -------------------------------------------------------------------------------------------- */
 
@@ -331,13 +330,13 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
 
     /* -------------------------------------------------------------------------------------------- */
 
-    [DST] public static bool operator ==(MatrixComplex? A, MatrixComplex? B) => A is null && B is null || A is not null && B is not null && A.Equals(B);
+    [DST] public static bool operator ==(MatrixComplex? A, MatrixComplex? B) => (A is null && B is null) || (A is not null && B is not null && A.Equals(B));
 
     [DST] public static bool operator !=(MatrixComplex? A, MatrixComplex? B) => !(A == B);
 
     [DST] public static bool operator ==(Complex[,]? A, MatrixComplex? B) => B == A;
 
-    [DST] public static bool operator ==(MatrixComplex? A, Complex[,]? B) => A is null && B is null || A is not null && B is not null && A.Equals(B);
+    [DST] public static bool operator ==(MatrixComplex? A, Complex[,]? B) => (A is null && B is null) || (A is not null && B is not null && A.Equals(B));
 
     [DST] public static bool operator !=(Complex[,]? A, MatrixComplex? B) => !(A == B);
 
@@ -349,7 +348,7 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
 
     [DST] public static MatrixComplex operator -(MatrixComplex M, Complex x) => new(Subtract(M._Data, x));
 
-    [DST] public static MatrixComplex operator -(MatrixComplex M) => new(new Complex[M._N, M._M].Initialize(M._Data, (i, j, data) => -data[i, j]));
+    [DST] public static MatrixComplex operator -(MatrixComplex M) => new(new Complex[M._N, M._M].Initialize(M._Data, (i, j, data) => -data![i, j]));
 
     [DST] public static MatrixComplex operator -(Complex x, MatrixComplex M) => new(Subtract(x, M._Data));
 
@@ -380,7 +379,7 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
         if (!M.IsSquare) throw new ArgumentException("Матрица не квадратная", nameof(M));
         switch (n)
         {
-            case 1:  return M.Clone();
+            case 1: return M.Clone();
             case -1: return M.GetInverse(out _);
             default:
                 var m = M._Data;
@@ -389,7 +388,7 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
                     m = Array.Inverse(m, out _);
                     n = -n;
                 }
-                var result                         = Array.GetUnitaryArrayMatrix(M._N);
+                var result = Array.GetUnitaryArrayMatrix(M._N);
                 for (var i = 0; i < n; i++) result = Multiply(result, m);
                 return new(result);
         }

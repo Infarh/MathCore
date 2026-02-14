@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 
-#nullable enable
 namespace MathCore.Threading;
 
 /// <summary>Пул с фикисрованным поличеством потоков</summary>
@@ -31,12 +30,12 @@ public class InstanceThreadPool : IDisposable
         Initialize();
     }
 
-        /// <summary>Инициализирует потоки пула</summary>
-        /// <remarks>
-        /// Создает <see cref="_Threads.Length"/> потоков, каждый из которых
-        /// будет выполнять делегат <see cref="WorkingThread"/>, и запускает
-        /// каждый поток.
-        /// </remarks>
+    /// <summary>Инициализирует потоки пула</summary>
+    /// <remarks>
+    /// Создает <see cref="_Threads.Length"/> потоков, каждый из которых
+    /// будет выполнять делегат <see cref="WorkingThread"/>, и запускает
+    /// каждый поток.
+    /// </remarks>
     private void Initialize()
     {
         for (var i = 0; i < _Threads.Length; i++)
@@ -134,7 +133,7 @@ public class InstanceThreadPool : IDisposable
                 }
             }
         }
-        catch (ThreadInterruptedException e)
+        catch (ThreadInterruptedException)
         {
             Trace.TraceWarning("Поток {0} был принудительно прерван при завершении работы пула", thread_name);
         }
@@ -158,5 +157,7 @@ public class InstanceThreadPool : IDisposable
 
         _ExecuteEvent.Dispose();
         _WorkingEvent.Dispose();
+
+        GC.SuppressFinalize(this);
     }
 }

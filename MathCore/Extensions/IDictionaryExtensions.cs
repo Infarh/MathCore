@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -27,7 +26,7 @@ public static class IDictionaryExtensions
     /// <param name="value">Значение значения</param>
     public static void Deconstruct<TKey, TValue>(this KeyValuePair<TKey, TValue> item, out TKey key, out TValue value)
     {
-        key   = item.Key;
+        key = item.Key;
         value = item.Value;
     }
 
@@ -405,10 +404,10 @@ public static class IDictionaryExtensions
     /// <returns>Строка по заданному шаблону</returns>
     public static string ToPatternString<TValue>(
         this IDictionary<string, TValue> dictionary,
-        string Pattern, 
+        string Pattern,
         IFormatProvider? FormatProvider = null) =>
-        dictionary is null 
-            ? throw new ArgumentNullException(nameof(dictionary)) 
+        dictionary is null
+            ? throw new ArgumentNullException(nameof(dictionary))
             : Regex.Replace(
                 Pattern ?? throw new ArgumentNullException(nameof(Pattern)),
                 @"{(?<name>\w+)(?::(?<format>.+?))?}",
@@ -416,7 +415,7 @@ public static class IDictionaryExtensions
                     ? Match.Value
                     : value is IFormattable formattable_value && Match.Groups["format"].Success
                         ? formattable_value.ToString(Match.Groups["format"].Value, FormatProvider ?? CultureInfo.CurrentCulture)
-                        : value?.ToString()
+                        : value?.ToString()!
             );
 
     public static DictionaryKeySafe<TKey, TValue> ToKeySafeDictionary<TKey, TValue>(this IDictionary<TKey, TValue> dictionary) where TKey : notnull => new(dictionary);

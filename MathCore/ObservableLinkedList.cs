@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
@@ -55,9 +54,7 @@ public class ObservableLinkedList<T> :
     protected virtual void OnCollectionChanged(T NewValue, int index) => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, NewValue, index));
     protected virtual void OnCollectionChanged(T OldValue, T NewValue, int index) => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, NewValue, OldValue, index));
 
-    /// <summary>
-    /// Метод генерации события изменения коллекции
-    /// </summary>
+    /// <summary>Метод генерации события изменения коллекции</summary>
     /// <param name="e">Параметры события</param>
     /// <remarks>
     /// Метод генерирует событие <see cref="CollectionChanged"/> с указанными параметрами,
@@ -94,10 +91,10 @@ public class ObservableLinkedList<T> :
     public int Count => _List.Count;
 
     /// <summary>Первый элемент списка</summary>
-    public LinkedListNode<T> First => _List.First;
+    public LinkedListNode<T>? First => _List.First;
 
     /// <summary>Последний элемент списка</summary>
-    public LinkedListNode<T> Last => _List.Last;
+    public LinkedListNode<T>? Last => _List.Last;
 
     bool ICollection<T>.IsReadOnly => false;
 
@@ -107,10 +104,10 @@ public class ObservableLinkedList<T> :
 
     public T this[int index]
     {
-        get => NodeAt(index).Value;
+        get => NodeAt(index) is { Value: var value } ? value : throw new ArgumentOutOfRangeException(nameof(index), index, "Индекс за гразицами диапазона");
         set
         {
-            var node = NodeAt(index);
+            var node = NodeAt(index) ?? throw new ArgumentOutOfRangeException(nameof(index), index, "Индекс за гразицами диапазона");
             var old_value = node.Value;
             node.Value = value;
             OnCollectionChanged(old_value, value, index);
@@ -132,7 +129,7 @@ public class ObservableLinkedList<T> :
 
     #region Методы 
 
-    public void Add(T? value) => AddLast(value);
+    public void Add(T value) => AddLast(value);
 
     /// <summary>Добавить элемент после указанного элемента</summary>
     /// <param name="PrevNode">Элемент, после которого надо добавить значение в список</param>
@@ -262,7 +259,7 @@ public class ObservableLinkedList<T> :
     /// <summary>Определение индекса заданного значения</summary>
     /// <param name="value">Искомое значение</param>
     /// <returns>Индекс заданного значения, если он найден, либо -1</returns>
-    public int IndexOf(T? value)
+    public int IndexOf(T value)
     {
         var node = _List.First;
         for (var n = 0; node != null; node = node.Next, n++)
@@ -289,10 +286,10 @@ public class ObservableLinkedList<T> :
     /// <remarks>
     /// Метод работает за O(n / 2), т.е. за половину от времени, которое потребовалось бы для прохода списка от начала до конца.
     /// </remarks>
-    public LinkedListNode<T>? NodeAt(int index)
+    public LinkedListNode<T> NodeAt(int index)
     {
         var count = Count;
-        if (index < 0 || index >= count) throw new ArgumentOutOfRangeException(nameof(index), @"Индекс вышел за границы списка");
+        if (index < 0 || index >= count) throw new ArgumentOutOfRangeException(nameof(index), "Индекс вышел за границы списка");
         LinkedListNode<T>? node;
         if (index > count / 2)
         {
@@ -304,10 +301,10 @@ public class ObservableLinkedList<T> :
             node = _List.First;
             while (index-- > 0 && node is not null) node = node.Next;
         }
-        return node;
+        return node.NotNull();
     }
 
-    public bool Contains(T? value) => _List.Contains(value);
+    public bool Contains(T value) => _List.Contains(value);
 
     public void CopyTo(T[] array, int index) => _List.CopyTo(array, index);
 
@@ -326,7 +323,7 @@ public class ObservableLinkedList<T> :
     /// Генерирует событие <see cref="CollectionChanged"/> и события свойств <see cref="First"/> и <see cref="Last"/>,
     /// если соответствующие узлы изменяются.
     /// </remarks>
-    public bool Remove(T? value)
+    public bool Remove(T value)
     {
         var index = IndexOf(value, out var node);
         var is_first = ReferenceEquals(_List.First, node);
@@ -371,7 +368,7 @@ public class ObservableLinkedList<T> :
     {
         if (_List.Count == 0) return;
 
-        var item = _List.First.Value;
+        var item = _List.First!.Value;
         _List.RemoveFirst();
 
         OnCollectionItemRemoved(item, 0);
@@ -388,9 +385,9 @@ public class ObservableLinkedList<T> :
         var count = _List.Count;
         if (count == 0) return;
 
-        var item = _List.First.Value;
+        var item = _List.First!.Value;
         _List.RemoveLast();
-        
+
         OnCollectionItemRemoved(item, count);
         OnPropertyChanged(nameof(Last));
     }
@@ -413,7 +410,7 @@ public class ObservableLinkedList<T> :
 
     void IDeserializationCallback.OnDeserialization(object? sender) => _List.OnDeserialization(sender);
 
-    public void Insert(int index, T? item) => AddAfter(NodeAt(index), item);
+    public void Insert(int index, T item) => AddAfter(NodeAt(index), item);
 
     public void RemoveAt(int index) => Remove(NodeAt(index));
 }

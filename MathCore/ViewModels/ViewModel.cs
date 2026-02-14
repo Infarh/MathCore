@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -28,8 +27,8 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
     /// <typeparam name="T">Тип значения свойства</typeparam>
     /// <returns>Истина, если событие было обработано и новое значение свойства не равно старому</returns>
     protected virtual bool OnPropertyChanging<T>(
-        T OldValue, 
-        ref T? NewValue, 
+        T OldValue,
+        ref T? NewValue,
         [CallerMemberName] in string PropertyName = null!)
     {
         if (PropertyChanging is not { } handlers) return false;
@@ -62,7 +61,7 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
 
     /// <summary>Присоединить обработчик события <see cref="PropertyChanged"/></summary>
     /// <param name="handler">Присоединяемый обработчик события <see cref="PropertyChanged"/></param>
-    protected virtual void PropertyChanged_AddHandler(in PropertyChangedEventHandler handler) => PropertyChangedEvent += handler;
+    protected virtual void PropertyChanged_AddHandler(PropertyChangedEventHandler? handler) => PropertyChangedEvent += handler;
 
     /// <summary>Словарь обработчиков событий изменений свойств</summary>
     private Dictionary<string, Action>? _PropertyChangedHandlers;
@@ -88,7 +87,7 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
     {
         lock (_PropertiesDependenciesSyncRoot)
         {
-            if (_PropertyChangedHandlers is not { Count: > 0 } || !_PropertyChangedHandlers.TryGetValue(PropertyName, out var h)) 
+            if (_PropertyChangedHandlers is not { Count: > 0 } || !_PropertyChangedHandlers.TryGetValue(PropertyName, out var h))
                 return false;
             // ReSharper disable once DelegateSubtraction
             h -= handler;
@@ -124,16 +123,16 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
 
     /// <summary>Отсоединить обработчик события <see cref="PropertyChanged"/></summary>
     /// <param name="handler">Отсоединяемый обработчик события <see cref="PropertyChanged"/></param>
-    protected virtual void PropertyChanged_RemoveHandler(in PropertyChangedEventHandler handler) => PropertyChangedEvent -= handler;
+    protected virtual void PropertyChanged_RemoveHandler(PropertyChangedEventHandler? handler) => PropertyChangedEvent -= handler;
 
     /// <summary>Получить перечисление всех объектов, подписанных на событие <see cref="PropertyChanged"/></summary>
     /// <typeparam name="T">Тип интересующих объектов</typeparam>
     /// <returns>Перечисление объектов-подписчиков события <see cref="PropertyChanged"/></returns>
-    protected IEnumerable<T> GetPropertyChangedObservers<T>() => 
+    protected IEnumerable<T> GetPropertyChangedObservers<T>() =>
         PropertyChangedEvent?
            .GetInvocationList()
            .Select(i => i.Target)
-           .OfType<T>() 
+           .OfType<T>()
         ?? [];
 
     /// <summary>Получить перечисление всех методов, подписанных на событие <see cref="PropertyChanged"/></summary>
@@ -141,7 +140,7 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
     protected IEnumerable<PropertyChangedEventHandler> GetPropertyChangedObserversMethods() =>
         PropertyChangedEvent?
            .GetInvocationList()
-           .Cast<PropertyChangedEventHandler>() 
+           .Cast<PropertyChangedEventHandler>()
         ?? [];
 
     /// <summary>Получить перечисление всех методов, подписанных на событие <see cref="PropertyChanged"/></summary>
@@ -151,11 +150,16 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
         PropertyChangedEvent?
            .GetInvocationList()
            .Where(i => i.Target is T)
-           .Cast<PropertyChangedEventHandler>() 
+           .Cast<PropertyChangedEventHandler>()
         ?? [];
 
 
-    private readonly object _PropertiesDependenciesSyncRoot = new();
+#if NET9_0_OR_GREATER
+    private readonly Lock _PropertiesDependenciesSyncRoot = new();
+#else
+    private readonly object _PropertiesDependenciesSyncRoot = new(); 
+#endif
+
     /// <summary>Словарь графа зависимости изменений свойств</summary>
     private Dictionary<string, List<string>>? _PropertiesDependenciesDictionary;
 
@@ -174,7 +178,7 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
             Dictionary<string, List<string>> dependencies_dictionary;
             if (_PropertiesDependenciesDictionary is null)
             {
-                dependencies_dictionary           = [];
+                dependencies_dictionary = [];
                 _PropertiesDependenciesDictionary = dependencies_dictionary;
             }
             else dependencies_dictionary = _PropertiesDependenciesDictionary;
@@ -216,26 +220,26 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
     /// <param name="invoke_stack">Стек вызова свойств</param>
     /// <returns>Истина, если найден цикл</returns>
     private Queue<string>? IsLoopDependency(
-        in string property, 
-        in string dependency, 
-        in string? next_property = null, 
+        in string property,
+        in string dependency,
+        in string? next_property = null,
         Stack<string>? invoke_stack = null)
     {
-        if(_PropertiesDependenciesDictionary is null) throw new InvalidOperationException("Отсутствует словарь свойств-зависимости");
+        if (_PropertiesDependenciesDictionary is null) throw new InvalidOperationException("Отсутствует словарь свойств-зависимости");
         invoke_stack ??= [property];
 
-        if (string.Equals(property, next_property)) 
+        if (string.Equals(property, next_property))
             return invoke_stack.ToQueueReverse().AddValue(property);
 
         var check_property = next_property ?? dependency;
-        if(_PropertiesDependenciesDictionary is null) 
+        if (_PropertiesDependenciesDictionary is null)
             throw new InvalidOperationException("Отсутствует словарь свойств-зависимости");
 
-        if (!_PropertiesDependenciesDictionary.TryGetValue(check_property, out var dependence_properties)) 
+        if (!_PropertiesDependenciesDictionary.TryGetValue(check_property, out var dependence_properties))
             return null;
 
         foreach (var dependence_property in dependence_properties)
-            if (IsLoopDependency(property, dependency, dependence_property, invoke_stack.AddValue(check_property)) is { } invoke_queue) 
+            if (IsLoopDependency(property, dependency, dependence_property, invoke_stack.AddValue(check_property)) is { } invoke_queue)
                 return invoke_queue;
 
         invoke_stack.Pop();
@@ -250,11 +254,11 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
     {
         lock (_PropertiesDependenciesSyncRoot)
         {
-            if (_PropertiesDependenciesDictionary?.ContainsKey(PropertyName) != true) 
+            if (_PropertiesDependenciesDictionary?.ContainsKey(PropertyName) != true)
                 return false;
 
             var dependencies = _PropertiesDependenciesDictionary[PropertyName];
-            var result       = dependencies.Remove(Dependence);
+            var result = dependencies.Remove(Dependence);
             if (dependencies.Count == 0)
                 _PropertiesDependenciesDictionary.Remove(PropertyName);
             return result;
@@ -284,12 +288,13 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
 
         var handlers = PropertyChangedEvent;
         handlers.Start(this, PropertyName);
-        string[]? dependencies                      = null;
-        var      properties_dependencies_dictionary = _PropertiesDependenciesDictionary;
+        string[]? dependencies = null;
+        var properties_dependencies_dictionary = _PropertiesDependenciesDictionary;
         if (properties_dependencies_dictionary != null)
             lock (properties_dependencies_dictionary)
-                if (properties_dependencies_dictionary.ContainsKey(PropertyName))
-                    dependencies = properties_dependencies_dictionary[PropertyName].Where(name => name != PropertyName).ToArray();
+                if (properties_dependencies_dictionary.TryGetValue(PropertyName, out var deps))
+                    dependencies = [.. deps.Where(name => name != PropertyName)];
+
         var dependency_handlers = _PropertyChangedHandlers;
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (dependency_handlers is not null && dependency_handlers.TryGetValue(PropertyName, out var handler)) handler?.Invoke();
@@ -309,9 +314,9 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
     /// <param name="OnChanging">Метод, выполняемый до генерации события</param>
     /// <param name="OnChanged">Метод, выполняемый после генерации события</param>
     protected async void OnPropertyChangedAsync(
-        string PropertyName, 
+        string PropertyName,
         int Timeout = 0,
-        Action? OnChanging = null, 
+        Action? OnChanging = null,
         Action? OnChanged = null)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
@@ -364,7 +369,7 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
                 PropertyDependence_Add(property.Name, affects_the_attribute.Name);
             foreach (var changed_handler_attribute in property.GetCustomAttributes(typeof(ChangedHandlerAttribute), true).OfType<ChangedHandlerAttribute>().Where(a => !string.IsNullOrWhiteSpace(a.MethodName)))
             {
-                var handler = type.GetMethod(changed_handler_attribute.MethodName, BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic) 
+                var handler = type.GetMethod(changed_handler_attribute.MethodName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                     ?? throw new InvalidOperationException(
                     $"Для свойства {property.Name} определён атрибут {nameof(ChangedHandlerAttribute)}, но в классе {type.Name} отсутствует " +
                     $"указанный в атрибуте метод реакции на изменение значения свойства {changed_handler_attribute.MethodName}");
@@ -397,6 +402,7 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
 
     /// <summary>Освободить управляемые объекты</summary>
     protected virtual void DisposeManagedObject() { }
+
     /// <summary>Освободить неуправляемые объекты</summary>
     protected virtual void DisposeUnmanagedObject() { }
 

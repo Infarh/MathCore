@@ -1,11 +1,12 @@
-﻿#nullable enable
-
+﻿
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedMember.Local
 // ReSharper disable LoopCanBeConvertedToQuery
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMethodReturnValue.Global
+
+using MathCore.Annotations;
 
 namespace MathCore;
 
@@ -58,7 +59,7 @@ public partial class Matrix
     /// <param name="Up">Верхняя диагональ</param>
     /// <param name="RightPart">Правая часть системы уравнений</param>
     /// <param name="Result">Вектор результата</param>
-    public static void TridiagonalAlgorithm(double[] Down, double[] Middle, double[] Up, double[] RightPart, ref double[]? Result)
+    public static void TridiagonalAlgorithm(double[] Down, double[] Middle, double[] Up, double[] RightPart, [NotNull] ref double[]? Result)
     {
         Result ??= new double[Middle.Length];
         TridiagonalAlgorithm(Down, Middle, Up, RightPart, Result);
@@ -71,9 +72,9 @@ public partial class Matrix
     /// <param name="RightPart">Правая часть системы уравнений</param>
     public static double[] TridiagonalAlgorithm(double[] Down, double[] Middle, double[] Up, double[] RightPart)
     {
-        double[] result = null!;
+        double[]? result = null;
         TridiagonalAlgorithm(Down, Middle, Up, RightPart, ref result);
-        return result;
+        return result!;
     }
 
     /// <summary>Метод прогонки</summary>
@@ -142,7 +143,7 @@ public partial class Matrix
         const int mas_stackalloc_len = 256;
         double[]? pool_array = null;
         var up = n <= mas_stackalloc_len
-            ? stackalloc double[n] 
+            ? stackalloc double[n]
             : (pool_array = System.Buffers.ArrayPool<double>.Shared.Rent(n)).AsSpan(0, n);
 
         try
@@ -160,7 +161,7 @@ public partial class Matrix
 
             Result[n] = (Result[n] - Down[n - 1] * Result[n - 1]) / (Middle[n] - Down[n - 1] * up[n - 1]);
 
-            while(n-- > 0)
+            while (n-- > 0)
                 Result[n] -= up[n] * Result[n + 1];
         }
         finally

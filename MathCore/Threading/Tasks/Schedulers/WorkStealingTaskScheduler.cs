@@ -3,9 +3,18 @@
 namespace MathCore.Threading.Tasks.Schedulers;
 
 /// <summary>Планировщик с собственным пулом потоков</summary>
+/// <example>
+/// <code>
+/// var scheduler = new WorkStealingTaskScheduler(4);
+/// var task = new Task(() => Console.WriteLine("Hello from task"));
+/// task.Start(scheduler);
+/// task.Wait();
+/// scheduler.Dispose();
+/// </code>
+/// </example>
 public class WorkStealingTaskScheduler : TaskScheduler, IDisposable
 {
-    [ThreadStatic] private static WorkStealingQueue<Task> __ThreadTaskQueue;
+    [ThreadStatic] private static WorkStealingQueue<Task>? __ThreadTaskQueue;
 
     private readonly int _ConcurrencyLevel;
     private readonly Queue<Task> _Queue = [];
@@ -21,11 +30,11 @@ public class WorkStealingTaskScheduler : TaskScheduler, IDisposable
     /// <param name="ConcurrencyLevel">Число потоков, доступных планировщику</param>
     public WorkStealingTaskScheduler(int ConcurrencyLevel)
     {
-        // Store the concurrency level
+        // Сохранение уровня параллелизма
         if (ConcurrencyLevel <= 0) throw new ArgumentOutOfRangeException(nameof(ConcurrencyLevel));
         _ConcurrencyLevel = ConcurrencyLevel;
 
-        // Set up threads
+        // Инициализация потоков
         _Threads = new(() =>
         {
             var threads = new Thread[_ConcurrencyLevel];
@@ -41,32 +50,32 @@ public class WorkStealingTaskScheduler : TaskScheduler, IDisposable
     /// <summary>Добавление задачи в очередь к планировщику</summary>
     protected override void QueueTask(Task task)
     {
-        // Make sure the pool is started, e.g. that all threads have been created.
+        // Убедиться, что пул запущен, например, что все потоки были созданы
         _ = _Threads.Value;
 
-        // If the task is marked as long-running, give it its own dedicated thread
-        // rather than queueing it.
+        // Если задача отмечена как долгоживущая, дать ей собственный выделенный поток
+        // вместо добавления в очередь
         if ((task.CreationOptions & TaskCreationOptions.LongRunning) != 0)
-            new Thread(state => TryExecuteTask((Task)state)) { IsBackground = true }.Start(task);
+            new Thread(state => TryExecuteTask((Task)state!)) { IsBackground = true }.Start(task);
         else
         {
-            // Otherwise, insert the work item into a queue, possibly waking a thread.
-            // If there's a local queue and the task does not prefer to be in the global queue,
-            // add it to the local queue.
+            // Иначе добавить рабочую задачу в очередь, возможно разбудив поток
+            // Если есть локальная очередь и задача не предпочитает быть в глобальной очереди,
+            // добавить её в локальную очередь
             var wsq = __ThreadTaskQueue;
             if (wsq != null && ((task.CreationOptions & TaskCreationOptions.PreferFairness) == 0))
             {
-                // Add to the local queue and notify any waiting threads that work is available.
-                // Races may occur which result in missed event notifications, but they're benign in that
-                // this thread will eventually pick up the work item anyway, as will other threads when another
-                // work item notification is received.
+                // Добавить в локальную очередь и уведомить ожидающие потоки о доступности работы
+                // Могут возникнуть условия гонки, которые приведут к пропущенным уведомлениям,
+                // но они безвредны, так как этот поток в конечном итоге получит рабочую задачу,
+                // как и другие потоки при получении другого уведомления о задаче
                 wsq.LocalPush(task);
                 if (_ThreadsWaiting == 0) return;
-                // OK to read lock-free.
+                // Безопасное чтение без блокировки
                 lock (_Queue)
                     Monitor.Pulse(_Queue);
             }
-            // Otherwise, add the work item to the global queue
+            // Иначе добавить рабочую задачу в глобальную очередь
             else
                 lock (_Queue)
                 {
@@ -76,30 +85,31 @@ public class WorkStealingTaskScheduler : TaskScheduler, IDisposable
         }
     }
 
-    /// <summary>Executes a task on the current thread.</summary>
-    /// <param name="task">The task to be executed.</param>
-    /// <param name="TaskWasPreviouslyQueued">Ignored.</param>
-    /// <returns>Whether the task could be executed.</returns>
+    /// <summary>Выполнить задачу в текущем потоке</summary>
+    /// <param name="task">Задача для выполнения</param>
+    /// <param name="TaskWasPreviouslyQueued">Игнорируется</param>
+    /// <returns>Можно ли выполнить задачу</returns>
     protected override bool TryExecuteTaskInline(Task task, bool TaskWasPreviouslyQueued) => TryExecuteTask(task);
 
-    // // Optional replacement: Instead of always trying to execute the task (which could
-    // // benignly leave a task in the queue that's already been executed), we
-    // // can search the current work-stealing queue and remove the task,
-    // // executing it inline only if it's found.
+    // // Альтернативная реализация: вместо всегда попытки выполнить задачу (что может оставить
+    // // задачу в очереди, которая уже была выполнена), мы можем
+    // // поискать задачу в текущей очереди с кражей работ и удалить её,
+    // // выполняя её встроенно только если она найдена
     // WorkStealingQueue<Task> queue = __ThreadTaskQueue;
     // return queue != null && queue.TryFindAndPop(task) && TryExecuteTask(task);
-    /// <summary>Gets the maximum concurrency level supported by this scheduler.</summary>
+
+    /// <summary>Получить максимальный уровень параллелизма, поддерживаемый этим планировщиком</summary>
     public override int MaximumConcurrencyLevel => _ConcurrencyLevel;
 
-    /// <summary>Gets all of the tasks currently scheduled to this scheduler.</summary>
-    /// <returns>An enumerable containing all of the scheduled tasks.</returns>
+    /// <summary>Получить все задачи, текущего запланированные для этого планировщика</summary>
+    /// <returns>Перечисление содержащее все запланированные задачи</returns>
     protected override IEnumerable<Task> GetScheduledTasks()
     {
-        // Keep track of all of the tasks we find
+        // Отслеживать все найденные задачи
         var tasks = new List<Task>();
 
-        // Get all of the global tasks.  We use TryEnter so as not to hang
-        // a debugger if the lock is held by a frozen thread.
+        // Получить все глобальные задачи. Используем TryEnter чтобы не зависнуть
+        // в отладчике если блокировка удерживается замороженным потоком
         var lock_taken = false;
         try
         {
@@ -112,7 +122,7 @@ public class WorkStealingTaskScheduler : TaskScheduler, IDisposable
             if (lock_taken) Monitor.Exit(_Queue);
         }
 
-        // Now get all of the tasks from the work-stealing queues
+        // Теперь получить все задачи из очередей с кражей работ
         var queues = _TaskQueues;
         for (var i = 0; i < queues.Length; i++)
         {
@@ -120,18 +130,18 @@ public class WorkStealingTaskScheduler : TaskScheduler, IDisposable
             if (wsq != null) tasks.AddRange(wsq.ToArray());
         }
 
-        // Return to the debugger all of the collected task instances
+        // Вернуть отладчику все собранные экземпляры задач
         return tasks;
     }
 
-    /// <summary>Adds a work-stealing queue to the set of queues.</summary>
-    /// <param name="queue">The queue to be added.</param>
+    /// <summary>Добавить очередь с кражей работ в набор очередей</summary>
+    /// <param name="queue">Очередь для добавления</param>
     private void AddQueue(WorkStealingQueue<Task> queue)
     {
         lock (_TaskQueues)
         {
-            // Find the next open slot in the array. If we find one,
-            // store the queue and we're done.
+            // Найти следующий свободный слот в массиве. Если найдём,
+            // сохраним очередь и готово
             int i;
             for (i = 0; i < _TaskQueues.Length; i++)
                 if (_TaskQueues[i] is null)
@@ -140,71 +150,69 @@ public class WorkStealingTaskScheduler : TaskScheduler, IDisposable
                     return;
                 }
 
-            // We couldn't find an open slot, so double the length 
-            // of the array by creating a new one, copying over,
-            // and storing the new one. Here, i == _wsQueues.Length.
+            // Не удалось найти свободный слот, поэтому удвоим длину массива
+            // создав новый, скопировав данные
+            // и сохранив новый. Здесь i == _TaskQueues.Length
             var queues = new WorkStealingQueue<Task>[i * 2];
             Array.Copy(_TaskQueues, queues, i);
-            queues[i]   = queue;
+            queues[i] = queue;
             _TaskQueues = queues;
         }
     }
 
-    /// <summary>Remove a work-stealing queue from the set of queues.</summary>
-    /// <param name="wsq">The work-stealing queue to remove.</param>
+    /// <summary>Удалить очередь с кражей работ из набора очередей</summary>
+    /// <param name="wsq">Очередь с кражей работ для удаления</param>
     private void RemoveWsq(WorkStealingQueue<Task> wsq)
     {
         lock (_TaskQueues)
-            // Find the queue, and if/when we find it, null out its array slot
+            // Найти очередь и если найдём, то обнулить её слот в массиве
             for (var i = 0; i < _TaskQueues.Length; i++)
                 if (_TaskQueues[i] == wsq)
-                    _TaskQueues[i] = null;
+                    _TaskQueues[i] = null!;
     }
 
-    /// <summary>
-    /// The dispatch loop run by each thread in the scheduler.
-    /// </summary>
+    /// <summary>Цикл диспетчера, выполняемый каждым потоком планировщика</summary>
     private void DispatchLoop()
     {
-        // Create a new queue for this thread, store it in TLS for later retrieval,
-        // and add it to the set of queues for this scheduler.
+        // Создать новую очередь для этого потока, сохранить её в TLS для последующего получения,
+        // и добавить её в набор очередей для этого планировщика
         var queue = new WorkStealingQueue<Task>();
         __ThreadTaskQueue = queue;
         AddQueue(queue);
 
         try
         {
-            // Until there's no more work to do...
+            // Пока есть работа для выполнения...
             while (true)
             {
-                // Search order: (1) local WSQ, (2) global Q, (3) steals from other queues.
+                // Порядок поиска: (1) локальная очередь с кражей, (2) глобальная очередь, (3) кража из других очередей
                 if (!queue.LocalPop(out var task))
                 {
-                    // We weren't able to get a task from the local WSQ
+                    // Не удалось получить задачу из локальной очереди с кражей
                     var searched_for_steals = false;
                     while (true)
                     {
                         lock (_Queue)
                         {
-                            // If shutdown was requested, exit the thread.
+                            // Если запрошено завершение, выйти из потока
                             if (_Shutdown)
                                 return;
 
-                            // (2) try the global queue.
+                            // (2) попробовать глобальную очередь
                             if (_Queue.Count != 0)
                             {
-                                // We found a work item! Grab it ...
+                                // Нашли рабочую задачу! Возьмём её...
                                 task = _Queue.Dequeue();
                                 break;
                             }
 
                             if (searched_for_steals)
                             {
-                                // Note that we're not waiting for work, and then wait
+                                // Отметить что мы не ждём работу, а потом ждём
                                 _ThreadsWaiting++;
                                 try { Monitor.Wait(_Queue); } finally { _ThreadsWaiting--; }
 
-                                // If we were signaled due to shutdown, exit the thread.
+                                // Если мы получили сигнал завершения, выйти из потока
                                 if (_Shutdown)
                                     return;
 
@@ -213,7 +221,7 @@ public class WorkStealingTaskScheduler : TaskScheduler, IDisposable
                             }
                         }
 
-                        // (3) try to steal.
+                        // (3) попробовать украсть
                         var ws_queues = _TaskQueues;
                         int i;
                         for (i = 0; i < ws_queues.Length; i++)
@@ -228,7 +236,7 @@ public class WorkStealingTaskScheduler : TaskScheduler, IDisposable
                     }
                 }
 
-                // ...and Invoke it.
+                // ...и выполнить её
                 TryExecuteTask(task!);
             }
         }
@@ -238,7 +246,7 @@ public class WorkStealingTaskScheduler : TaskScheduler, IDisposable
         }
     }
 
-    /// <summary>Signal the scheduler to shutdown and wait for all threads to finish.</summary>
+    /// <summary>Сигнализировать планировщику о завершении и дождаться окончания всех потоков</summary>
     public void Dispose()
     {
         _Shutdown = true;

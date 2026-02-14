@@ -8,5 +8,7 @@ public enum ServiceRegistrationMode : byte
     /// <summary>Режим регистрации, при котором для каждого вызова будет создан новый экземпляр сервиса</summary>
     SingleCall,
     /// <summary>Режим регистрации, при котором для каждого потока будет создан единый экземпляр сервиса</summary>
-    SingleThread
+    SingleThread,
+    /// <summary>Режим регистрации, при котором для каждой цепочки async/await будет создан единый экземпляр сервиса</summary>
+    SingleTask
 }

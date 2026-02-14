@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Reflection;
+﻿using System.Reflection;
 using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
 
@@ -39,7 +38,7 @@ public abstract partial class ServiceRegistration
                 }
 
                 result[i] = obj ?? ParameterSelector(parameter_type);
-                if (result[i] is null && parameters[i].GetCustomAttribute(typeof(NotNullAttribute)) != null)
+                if (result[i] is null && parameters[i].GetCustomAttribute<NotNullAttribute>() != null)
                     throw new InvalidOperationException($"Ошибка в процессе создания объекта - не найден параметр конструктора c индексом {i} типа {parameter_type} с именем {parameters[i].Name} помеченный аттрибутом [NotNull]");
             }
             return result;

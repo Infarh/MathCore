@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq.Expressions;
 
@@ -137,23 +136,23 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
         ? (Sin(_Phi), Cos(_Phi))
         : (Sin(_Phi * ToRad), Cos(_Phi * ToRad));
 
-    public ((double SinTh, double CosTh), (double SinPh, double CosPh)) SinCos => _AngleType == AngleType.Rad 
-        ? ((Sin(_Theta), Cos(_Theta)), (Sin(_Phi), Cos(_Phi))) 
+    public ((double SinTh, double CosTh), (double SinPh, double CosPh)) SinCos => _AngleType == AngleType.Rad
+        ? ((Sin(_Theta), Cos(_Theta)), (Sin(_Phi), Cos(_Phi)))
         : ((Sin(_Theta * ToRad), Cos(_Theta * ToRad)), (Sin(_Phi * ToRad), Cos(_Phi * ToRad)));
 
     /// <summary>Являются ли значения угла места и азимута = 0?</summary>
     public bool IsZero => _Theta.Equals(0d) && _Phi.Equals(0d);
 
     /// <summary>Комплексное число, характеризующее действительной частью направляющий косинус <see cref="Theta"/>, мнимой частью - направляющий синус</summary>
-    public Complex ComplexCosTheta => _AngleType == AngleType.Rad 
-        ? Complex.Exp(_Theta) 
+    public Complex ComplexCosTheta => _AngleType == AngleType.Rad
+        ? Complex.Exp(_Theta)
         : Complex.Exp(_Theta * __ToRad);
 
     /// <summary>Комплексное число, характеризующее действительной частью направляющий косинус <see cref="Phi"/>, мнимой частью - направляющий синус</summary>
-    public Complex ComplexCosPhi => _AngleType == AngleType.Rad 
-        ? Complex.Exp(_Phi) 
+    public Complex ComplexCosPhi => _AngleType == AngleType.Rad
+        ? Complex.Exp(_Phi)
         : Complex.Exp(_Phi * __ToRad);
-    
+
     /// <summary>Представление угла в градусах</summary>
     /// <exception cref="NotSupportedException" accessor="get">Неизвестный тип угла</exception>
     public SpaceAngle InDeg => _AngleType switch
@@ -405,39 +404,38 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
         ParameterExpression x, y, z, x0, x1, y1, z1;
         return Expression.Block
         (
-            new[]
-            {
-                th = nameof(th).ParameterOf(typeof(double)),
-                ph = nameof(ph).ParameterOf(typeof(double)),
-                s_th = nameof(s_th).ParameterOf(typeof(double)),
-                c_th = nameof(c_th).ParameterOf(typeof(double)),
-                s_ph = nameof(s_ph).ParameterOf(typeof(double)),
-                c_ph = nameof(c_ph).ParameterOf(typeof(double)),
-                x = nameof(x).ParameterOf(typeof(double)),
-                y = nameof(y).ParameterOf(typeof(double)),
-                z = nameof(z).ParameterOf(typeof(double)),
-                x0 = nameof(x0).ParameterOf(typeof(double)),
-                x1 = nameof(x1).ParameterOf(typeof(double)),
-                y1 = nameof(y1).ParameterOf(typeof(double)),
-                z1 = nameof(z1).ParameterOf(typeof(double)),
-                ph1 = nameof(ph1).ParameterOf(typeof(double)),
-                th1 = nameof(th1).ParameterOf(typeof(double))
-            },
+            [
+                th = nameof(th).ParameterOf<double>(),
+                ph = nameof(ph).ParameterOf<double>(),
+                s_th = nameof(s_th).ParameterOf<double>(),
+                c_th = nameof(c_th).ParameterOf<double>(),
+                s_ph = nameof(s_ph).ParameterOf<double>(),
+                c_ph = nameof(c_ph).ParameterOf<double>(),
+                x = nameof(x).ParameterOf<double>(),
+                y = nameof(y).ParameterOf<double>(),
+                z = nameof(z).ParameterOf<double>(),
+                x0 = nameof(x0).ParameterOf<double>(),
+                x1 = nameof(x1).ParameterOf<double>(),
+                y1 = nameof(y1).ParameterOf<double>(),
+                z1 = nameof(z1).ParameterOf<double>(),
+                ph1 = nameof(ph1).ParameterOf<double>(),
+                th1 = nameof(th1).ParameterOf<double>()
+            ],
             th.Assign(r.GetProperty(nameof(ThetaRad))),
             ph.Assign(r.GetProperty(nameof(PhiRad))),
             s_th.Assign(sin.GetCallExpression(th)),
             c_th.Assign(cos.GetCallExpression(th)),
             s_ph.Assign(sin.GetCallExpression(ph)),
             c_ph.Assign(cos.GetCallExpression(ph)),
-            x.Assign(c_ph.Multiply(s_th)),
-            y.Assign(s_ph.Multiply(s_th)),
+            x.Assign(c_ph.Mult(s_th)),
+            y.Assign(s_ph.Mult(s_th)),
             z.Assign(c_th),
-            x0.Assign(x.Multiply(c_ph0).Subtract(y.Multiply(s_ph0))),
-            x1.Assign(x0.Multiply(c_th0).Add(z.Multiply(s_th0))),
-            y1.Assign(x.Multiply(s_ph0).Add(y.Multiply(c_ph0))),
-            z1.Assign(z.Multiply(c_th0).Subtract(x0.Multiply(s_th0))),
+            x0.Assign(x.Mult(c_ph0).Subtract(y.Mult(s_ph0))),
+            x1.Assign(x0.Mult(c_th0).Add(z.Mult(s_th0))),
+            y1.Assign(x.Mult(s_ph0).Add(y.Mult(c_ph0))),
+            z1.Assign(z.Mult(c_th0).Subtract(x0.Mult(s_th0))),
             ph1.Assign(atan.GetCallExpression(y1, x1)),
-            th1.Assign(atan.GetCallExpression(sqrt.GetCallExpression(x1.Multiply(x1).Add(y1.Multiply(y1))), z1)),
+            th1.Assign(atan.GetCallExpression(sqrt.GetCallExpression(x1.Mult(x1).Add(y1.Mult(y1))), z1)),
             r.GetProperty(nameof(AngleType)).IsEqual(AngleType.Rad.ToExpression())
                .Condition
                 (

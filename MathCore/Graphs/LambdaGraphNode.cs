@@ -1,25 +1,24 @@
-﻿#nullable enable
-using System.Collections;
+﻿using System.Collections;
 
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore.Graphs;
 
-public class LambdaGraphNode<TValue, TWeight>(TValue Value, Func<TValue, IEnumerable<TValue>?>? GetChilds,
+public class LambdaGraphNode<TValue, TWeight>(TValue Value, Func<TValue, IEnumerable<TValue>?> GetChilds,
         Func<TValue, TValue, TWeight> GetWeight, bool Buffered = false)
     : IGraphNode<TValue, TWeight>, IEquatable<LambdaGraphNode<TValue, TWeight>>
 {
-    private readonly Func<TValue, IEnumerable<TValue>?>? _GetChilds = GetChilds;
+    private readonly Func<TValue, IEnumerable<TValue>?> _GetChilds = GetChilds;
 
     private readonly Func<TValue, TValue, TWeight> _GetWeight = GetWeight;
     private IGraphLink<TValue, TWeight>[]? _Links;
 
     /// <inheritdoc />
     public IEnumerable<IGraphLink<TValue, TWeight>> Links => Buffered
-        ? _Links ??= (_GetChilds(Value) ?? [])
+        ? _Links ??= [.. (_GetChilds(Value) ?? [])
            .Select(v => new LambdaGraphNode<TValue, TWeight>(v, _GetChilds, _GetWeight, Buffered))
            .Select(to => new LambdaGraphLink<TValue, TWeight>(this, to, _GetWeight, Buffered))
-           .Cast<IGraphLink<TValue, TWeight>>().ToArray()
+           .Cast<IGraphLink<TValue, TWeight>>()]
         : (_GetChilds(Value) ?? [])
        .Select(v => new LambdaGraphNode<TValue, TWeight>(v, _GetChilds, _GetWeight))
        .Select(to => new LambdaGraphLink<TValue, TWeight>(this, to, _GetWeight))
@@ -27,7 +26,7 @@ public class LambdaGraphNode<TValue, TWeight>(TValue Value, Func<TValue, IEnumer
 
     public TValue Value { get; } = Value;
 
-    public LambdaGraphNode<TValue, TWeight>[] Childs => this.Cast<LambdaGraphNode<TValue, TWeight>>().ToArray();
+    public LambdaGraphNode<TValue, TWeight>[] Childs => [.. this.Cast<LambdaGraphNode<TValue, TWeight>>()];
 
     public override int GetHashCode()
     {
@@ -50,14 +49,14 @@ public class LambdaGraphNode<TValue, TWeight>(TValue Value, Func<TValue, IEnumer
 
     public override bool Equals(object? obj) => obj != null &&
         (ReferenceEquals(this, obj) ||
-            obj.GetType() == GetType() &&
-            Equals((LambdaGraphNode<TValue, TWeight>)obj));
+            (obj.GetType() == GetType() &&
+            Equals((LambdaGraphNode<TValue, TWeight>)obj)));
 
     public bool Equals(LambdaGraphNode<TValue, TWeight>? other) => other != null
-        && (ReferenceEquals(this, other) 
-            || Equals(_GetChilds, other._GetChilds) 
-            && Equals(_GetWeight, other._GetWeight) 
-            && EqualityComparer<TValue>.Default.Equals(Value, other.Value));
+        && (ReferenceEquals(this, other)
+            || (Equals(_GetChilds, other._GetChilds)
+            && Equals(_GetWeight, other._GetWeight)
+            && EqualityComparer<TValue>.Default.Equals(Value, other.Value)));
 
     [DST]
     public IEnumerator<IGraphNode<TValue, TWeight>> GetEnumerator() => Links.Select(link => link.Node).GetEnumerator();
@@ -71,16 +70,15 @@ public class LambdaGraphNode<V>(V Value, Func<V, IEnumerable<V>?> GetChilds, boo
 
     /// <summary>Связи узла</summary>
     public IEnumerable<IGraphNode<V>> Childs => Buffered
-        ? _Childs ??= (GetChilds(Value) ?? [])
+        ? _Childs ??= [.. (GetChilds(Value) ?? [])
            .Select(value => new LambdaGraphNode<V>(value, GetChilds, Buffered))
-           .Cast<IGraphNode<V>>()
-           .ToArray()
+           .Cast<IGraphNode<V>>()]
         : (GetChilds(Value) ?? []).Select(value => new LambdaGraphNode<V>(value, GetChilds, Buffered));
 
     /// <summary>Значение узла</summary>
     public V Value { get; set; } = Value;
 
-    public LambdaGraphNode<V>[] ChildsArray => Childs.Cast<LambdaGraphNode<V>>().ToArray();
+    public LambdaGraphNode<V>[] ChildsArray => [.. Childs.Cast<LambdaGraphNode<V>>()];
 
     /// <inheritdoc />
     [DST]
@@ -96,7 +94,7 @@ public class LambdaGraphNode<V>(V Value, Func<V, IEnumerable<V>?> GetChilds, boo
 
     /// <inheritdoc />
     public bool Equals(LambdaGraphNode<V>? other) => other != null
-        && (ReferenceEquals(this, other) 
+        && (ReferenceEquals(this, other)
             || EqualityComparer<V>.Default.Equals(Value, other.Value));
 
     /// <inheritdoc />

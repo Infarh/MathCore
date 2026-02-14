@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections;
+﻿using System.Collections;
 using System.Globalization;
 using System.Text;
 using System.Xml.Serialization;
@@ -126,12 +125,12 @@ public partial class Polynom(params double[] a) : ICloneable<Polynom>, IEquatabl
             if (a == 0) continue;
 
             if (result.Length > 0 && a > 0)
-                result.Append("+");
+                result.Append('+');
 
             if (a != 1)
                 result.Append(a == -1 ? "-" : a.ToString(CultureInfo.CurrentCulture));
 
-            result.Append("x");
+            result.Append('x');
             if (n > 1)
                 result.AppendFormat("^{0}", n.ToString());
         }
@@ -237,7 +236,7 @@ public partial class Polynom(params double[] a) : ICloneable<Polynom>, IEquatabl
 
     /// <inheritdoc />
     [DST]
-    public override bool Equals(object obj) => Equals(obj as Polynom);
+    public override bool Equals(object? obj) => Equals(obj as Polynom);
 
     #endregion
 
@@ -377,7 +376,7 @@ public partial class Polynom(params double[] a) : ICloneable<Polynom>, IEquatabl
     /// <param name="format">Строка формата.</param>
     /// <param name="provider">Информация о формате.</param>
     /// <returns>Строковое представление полинома.</returns>
-    public string ToString(string Format, IFormatProvider provider)
+    public string ToString(string? Format, IFormatProvider? provider)
     {
         var result = new StringBuilder();
         var length = _a.Length;

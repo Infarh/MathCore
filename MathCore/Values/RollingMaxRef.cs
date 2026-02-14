@@ -12,14 +12,14 @@ public ref struct RollingMaxRef<T>(Span<T> Buffer, IComparer<T>? Comparer = null
 
     private int _Index;
     private int _Count;
-    private readonly IComparer<T>? _Comparer = Comparer ?? Comparer<T>.Default;
+    private readonly IComparer<T> _Comparer = Comparer ?? Comparer<T>.Default;
 
-    public int Count => _Count;
-    public int MaxCount => _Buffer.Length;
+    public readonly int Count => _Count;
+    public readonly int MaxCount => _Buffer.Length;
 
     public bool Inverted { get; } = Inverted;
 
-    public T this[int index]
+    public readonly T this[int index]
     {
         get => _Buffer[GetIndex(index, _Index, _Buffer.Length)];
         set => _Buffer[GetIndex(index, _Index, _Buffer.Length)] = value;
@@ -45,8 +45,8 @@ public ref struct RollingMaxRef<T>(Span<T> Buffer, IComparer<T>? Comparer = null
                 return max;
         }
         else
-        if (_Comparer.Compare(value, max) <= 0)
-            return max;
+            if (_Comparer.Compare(value, max) <= 0)
+                return max;
 
         if (_Count < MaxCount)
             _Count++;
@@ -81,7 +81,7 @@ public ref struct RollingMaxRef<T>(Span<T> Buffer, IComparer<T>? Comparer = null
         _Buffer.Clear();
     }
 
-    public override string ToString()
+    public override readonly string ToString()
     {
         var result = new StringBuilder(2 + _Count * 4).Append('[');
 

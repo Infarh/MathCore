@@ -5,7 +5,7 @@
 public class NamedFunctionEvaluation<T> : FunctionEvaluation<T>
 {
     /// <summary>Имя функции</summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     /// <summary>Инициализация нового вычисления значения функции</summary>
     public NamedFunctionEvaluation() { }

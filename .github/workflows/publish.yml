@@ -1,4 +1,4 @@
-name: Publish NuGet.org
+﻿name: Publish NuGet.org
 
 on:
   push:
@@ -22,17 +22,17 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.0.x
           
       - name: Cache NuGet  
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
@@ -41,8 +41,8 @@ jobs:
 
       - name: Building
         run: |
-          dotnet build MathCore -c Release --nowarn:CS1998,CS8625,CS8600,CS8603,CS8620,CS8618,CS8604,CS8602,CS8622,CS8619,CS8632,CS0108,NU1701,NU1702,MSB3277,NU1701
-          dotnet build Tests/MathCore.Tests -c Release --nowarn:CS1998,CS8625,CS8600,CS8603,CS8620,CS8618,CS8604,CS8602,CS8622,CS8619,CS8632,CS0108,NU1701,NU1702,MSB3277,NU1701
+          dotnet build MathCore -c Release
+          dotnet build Tests/MathCore.Tests -c Release
 
       - name: Test
         run: dotnet test Tests/MathCore.Tests -c Release --no-build
@@ -51,7 +51,7 @@ jobs:
         run: dotnet pack MathCore -c Release --no-build -v q -o ${{ github.workspace }}/ReleasePack --include-symbols
       
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4.4.0
+        uses: actions/upload-artifact@v6.0.0
         with:
           name: Release
           path: ${{ github.workspace }}/ReleasePack
@@ -64,7 +64,7 @@ jobs:
     
     steps:
       - name: Get artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         id: download
         with:
             name: Release
@@ -80,7 +80,7 @@ jobs:
     
     steps:
       - name: Get artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         id: download
         with:
             name: Release

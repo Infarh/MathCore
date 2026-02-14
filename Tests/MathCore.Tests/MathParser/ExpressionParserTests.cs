@@ -591,7 +591,7 @@ public class ExpressionParserTests
         Assert.IsFalse(var_collection.ExistInTree("test1"));
 #pragma warning disable 183
         // ReSharper disable IsExpressionAlwaysTrue
-        Assert.IsTrue(var_collection.ExistInTree(v => v.Variable is ExpressionVariable));
+        Assert.IsTrue(var_collection.ExistInTree(v => v.Variable is not null));
         // ReSharper restore IsExpressionAlwaysTrue
 #pragma warning restore 183
         Assert.IsTrue(var_collection.ExistInTree(v => v.Variable is LambdaExpressionVariable));
@@ -710,25 +710,22 @@ public class ExpressionParserTests
         var args = node.Arguments.Select(a => a.Value).ToArray();
         Assert.IsTrue(args[0] is ConstValueNode);
         Assert.IsTrue(args[1] is VariableValueNode);
-        Assert.IsTrue(((VariableValueNode)args[1]).Variable.IsConstant);
+        Assert.IsTrue(((VariableValueNode)args[1]!).Variable.IsConstant);
 
-        parser.FindFunction += (_, e) =>
+        parser.FindFunction += (_, e) => e.Function = e.Name switch
         {
-            e.Function = e.Name switch
+            "test" => e.ArgumentCount switch
             {
-                "test" => e.ArgumentCount switch
-                {
-                    3 => (Func<double, double, double, double>)((a, b, c) => a + b * c),
-                    _ => e.Function
-                },
-                "average" => e.ArgumentCount switch
-                {
-                    2 => (Func<double, double, double>)((a, b) => (a + b) / 2),
-                    3 => (Func<double, double, double, double>)((a, b, c) => (a + b + c) / 3),
-                    _ => e.Function
-                },
+                3 => (Func<double, double, double, double>)((a, b, c) => a + b * c),
                 _ => e.Function
-            };
+            },
+            "average" => e.ArgumentCount switch
+            {
+                2 => (Func<double, double, double>)((a, b) => (a + b) / 2),
+                3 => (Func<double, double, double, double>)((a, b, c) => (a + b + c) / 3),
+                _ => e.Function
+            },
+            _ => e.Function
         };
 
         var test_expr = parser.Parse("test(2,3,4)");
@@ -983,7 +980,7 @@ public class ExpressionParserTests
             var interval = Assert.That.Value(params_root.Right).As<IntervalNode>().ActualValue;
 
             var length_function = Assert.That.Value(interval.Right).As<FunctionNode>().ActualValue;
-            Assert.That.Value((((Func<double, double>?)length_function.Function.Delegate)!).Invoke(0)).IsEqual(6);
+            Assert.That.Value(((Func<double, double>?)length_function.Function.Delegate)!.Invoke(0)).IsEqual(6);
             Assert.IsTrue(LimitFunctionExecuted);
             LimitFunctionExecuted = false;
             Assert.That.Value(length_function.Function.GetValue([0.0])).IsEqual(6);

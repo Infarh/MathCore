@@ -10,10 +10,10 @@ namespace System;
 public sealed class HyperlinkAttribute : Attribute
 {
     /// <summary>Ссылка</summary>
-    public string Link { get; set; }
+    public string Link { get; set; } = null!;
 
     /// <summary>Инициализация нового экземпляра <see cref="HyperlinkAttribute"/></summary>
-    public HyperlinkAttribute() {  }
+    public HyperlinkAttribute() { }
 
     /// <summary>Инициализация нового экземпляра <see cref="HyperlinkAttribute"/></summary>
     /// <param name="Link">Текст ссылки</param>

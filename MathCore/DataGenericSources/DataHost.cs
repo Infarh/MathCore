@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Linq.Reactive;
+﻿using System.Linq.Reactive;
 
 namespace MathCore.DataGenericSources;
 
@@ -31,7 +30,8 @@ public abstract class DataHost<T> : DataHost, IObservable<T>
     protected virtual void OnUpdated(EventArgs args)
     {
         Updated.Start(this, args);
-        _ObservableObject.OnNext(args is EventArgs<T> event_args ? event_args.Argument : default);
+        if (args is EventArgs<T> { Argument: var arg })
+            _ObservableObject.OnNext(arg);
     }
 
     /* -------------------------------------------------------------------------------- */

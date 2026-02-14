@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 using MathCore;
 
 // ReSharper disable once CheckNamespace

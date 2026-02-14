@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable EventNeverSubscribedTo.Global
+﻿// ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedType.Global
 
@@ -13,7 +12,7 @@ public class ArgumentsString(string[] Arguments)
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>Строки значений аргументов</summary>
-    private readonly string[]? _Arguments = Arguments;
+    private readonly string[] _Arguments = Arguments;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -28,8 +27,8 @@ public class ArgumentsString(string[] Arguments)
     /* ------------------------------------------------------------------------------------------ */
 
     /// <inheritdoc />
-    public override string ToString() => _Arguments is { Length: > 0 } args 
-        ? string.Concat(args) 
+    public override string ToString() => _Arguments is { Length: > 0 } args
+        ? string.Concat(args)
         : string.Empty;
 
     /* ------------------------------------------------------------------------------------------ */

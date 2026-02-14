@@ -4,7 +4,7 @@ public class Table(params HElementBase[] elements) : TypedElement("table", eleme
 {
     private const StringComparison __StringComparison = StringComparison.InvariantCultureIgnoreCase;
 
-    public TableHeader Header
+    public TableHeader? Header
     {
         get
         {
@@ -17,20 +17,20 @@ public class Table(params HElementBase[] elements) : TypedElement("table", eleme
 
             if (header_element is null) return null;
             if (header_element is TableHeader header) return header;
-            
+
             header = new(header_element.ToArray<HElementBase>());
             var header_index = elements.IndexOf(header_element);
-            
+
             elements.Remove(header_element);
             elements.Insert(header_index, header);
-            
+
             return header;
         }
         set
         {
             if (value is null)
             {
-                if (HasElements) 
+                if (HasElements)
                     Elements.RemoveAll(e => (e as HElement)?.Name?.Equals("theader", __StringComparison) ?? false);
                 return;
             }
@@ -49,7 +49,7 @@ public class Table(params HElementBase[] elements) : TypedElement("table", eleme
         }
     }
 
-    public TableBody Body
+    public TableBody? Body
     {
         get
         {

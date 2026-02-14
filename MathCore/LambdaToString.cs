@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 // ReSharper disable UnusedType.Global
 
 namespace MathCore;
@@ -10,8 +9,8 @@ public class LambdaToString : Factory<string>
 {
     /// <summary>Новый лямбда-форматтер</summary>
     /// <param name="CreateMethod">Метод генерации строки</param>
-    public LambdaToString(Func<string> CreateMethod) : base(CreateMethod) => _RaiseLastChangedEvents = false; 
+    public LambdaToString(Func<string> CreateMethod) : base(CreateMethod) => _RaiseLastChangedEvents = false;
 
     /// <inheritdoc />
-    public override string ToString() => Create();
+    public override string? ToString() => Create();
 }

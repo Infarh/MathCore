@@ -7,31 +7,31 @@ namespace MathCore;
 internal class ComplexConverter : TypeConverter
 {
     /// <inheritdoc />
-    public override bool CanConvertFrom(ITypeDescriptorContext c, Type t) => 
+    public override bool CanConvertFrom(ITypeDescriptorContext? c, Type t) =>
         t == typeof(string) ||
-        t == typeof(double) || 
+        t == typeof(double) ||
         t == typeof(int) ||
         base.CanConvertFrom(c, t);
 
     /// <inheritdoc />
-    public override object ConvertFrom(ITypeDescriptorContext c, CultureInfo i, object v) => v switch
+    public override object? ConvertFrom(ITypeDescriptorContext? c, CultureInfo? i, object v) => v switch
     {
         string s => Complex.Parse(s),
         double x => new Complex(x),
-        int x    => new Complex(x),
-        _        => base.ConvertFrom(c, i, v)
+        int x => new Complex(x),
+        _ => base.ConvertFrom(c, i, v)
     };
 
     /// <inheritdoc />
-    public override bool CanConvertTo(ITypeDescriptorContext c, Type t) =>
+    public override bool CanConvertTo(ITypeDescriptorContext? c, Type? t) =>
         base.CanConvertTo(c, t)
         || t == typeof(double);
 
     /// <inheritdoc />
-    public override object ConvertTo(ITypeDescriptorContext c, CultureInfo i, object v, Type t) =>
+    public override object? ConvertTo(ITypeDescriptorContext? c, CultureInfo? i, object? v, Type t) =>
         t == typeof(string)
-            ? ((Complex) v).ToString()
-            : t == typeof(double) 
-                ? ((Complex) v).Abs 
+            ? (v as Complex?)?.ToString()
+            : t == typeof(double)
+                ? (v as Complex?)?.Abs
                 : base.ConvertTo(c, i, v, t);
 }

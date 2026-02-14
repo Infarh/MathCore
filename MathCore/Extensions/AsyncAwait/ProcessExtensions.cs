@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
@@ -21,7 +20,11 @@ public static class ProcessExtensions
     //    return result.Task.GetAwaiter();
     //}
 
-    public static async Task<Process> WaitAsync(this Process process, CancellationToken Cancel = default, bool KillIfCancel = false, int KillTimeout = 1000)
+    public static async Task<Process> WaitAsync(
+        this Process process,
+        CancellationToken Cancel = default,
+        bool KillIfCancel = false,
+        int KillTimeout = 1000)
     {
         if (process is null) throw new ArgumentNullException(nameof(process));
 
@@ -45,7 +48,7 @@ public static class ProcessExtensions
         var result = new TaskCompletionSource<Process>(TaskCreationOptions.RunContinuationsAsynchronously);
 
         using var registration_cancellation = Cancel.IsCancellationRequested
-            ? Cancel.Register(o => ((TaskCompletionSource<Process>)o).TrySetCanceled(), result)
+            ? Cancel.Register(o => ((TaskCompletionSource<Process>)o!).TrySetCanceled(), result)
             : (IDisposable?)null;
 
         process.EnableRaisingEvents = true;
@@ -71,7 +74,11 @@ public static class ProcessExtensions
         }
     }
 
-    public static async Task<Process> StartAsync(this Process process, CancellationToken Cancel = default, bool KillIfCancel = false, int KillTimeout = 1000)
+    public static async Task<Process> StartAsync(
+        this Process process,
+        CancellationToken Cancel = default,
+        bool KillIfCancel = false,
+        int KillTimeout = 1000)
     {
         if (process is null) throw new ArgumentNullException(nameof(process));
 
@@ -96,7 +103,7 @@ public static class ProcessExtensions
         var result = new TaskCompletionSource<Process>();
 
         using var cancel_cts_registration = Cancel.CanBeCanceled
-            ? Cancel.Register(o => ((TaskCompletionSource<Process>)o).TrySetCanceled(), result)
+            ? Cancel.Register(o => ((TaskCompletionSource<Process>)o!).TrySetCanceled(), result)
             : (IDisposable?)null;
 
         process.EnableRaisingEvents = true;
@@ -162,7 +169,7 @@ public static class ProcessExtensions
         if (handle == IntPtr.Zero)
             return null;
 
-        var proc_info = new PROCESSENTRY32 { dwSize = (uint)Marshal.SizeOf(typeof(PROCESSENTRY32)) };
+        var proc_info = new PROCESSENTRY32 { dwSize = (uint)Marshal.SizeOf<PROCESSENTRY32>() };
 
         if (!Process32First(handle, ref proc_info))
             return null;
@@ -190,7 +197,7 @@ public static class ProcessExtensions
         if (handle == IntPtr.Zero)
             yield break;
 
-        var proc_info = new PROCESSENTRY32 { dwSize = (uint)Marshal.SizeOf(typeof(PROCESSENTRY32)) };
+        var proc_info = new PROCESSENTRY32 { dwSize = (uint)Marshal.SizeOf<PROCESSENTRY32>() };
 
         if (!Process32First(handle, ref proc_info))
             yield break;

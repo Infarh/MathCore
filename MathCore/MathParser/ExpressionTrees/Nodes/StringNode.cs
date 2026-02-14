@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable UnusedMember.Global
+﻿// ReSharper disable UnusedMember.Global
 
 
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -11,20 +10,20 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes;
 public class StringNode : ParsedNode
 {
     /// <summary>Значение узла</summary>
-    public string Value { get; set; }
+    public string Value { get; set; } = null!;
 
     /// <summary>Инициализация нового строкового узла</summary>
     public StringNode() { }
 
     /// <summary>Инициализация нового строкового узла</summary>
     /// <param name="value">Значение узла</param>
-    public StringNode(string value) => Value = value;
+    public StringNode(string? value) => Value = value ?? string.Empty;
 
     /// <summary>Клонирование узла</summary>
     /// <returns>Клон узла</returns>
     public override ExpressionTreeNode Clone() => new StringNode(Value)
     {
-        Left  = Left?.Clone(),
+        Left = Left?.Clone(),
         Right = Right?.Clone()
     };
 

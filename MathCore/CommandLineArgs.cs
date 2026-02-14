@@ -37,7 +37,7 @@ public class CommandLineArgs
         for (var i = 0; i < values.Count; i++)
             yield return _ArgsSrc[values.Pos + i];
     }
-        
+
     /// <summary>Перечисление ключей со значениями</summary>
     public IEnumerable<KeyValuePair<string, string>> KeyValues =>
         _Args.SelectMany(v => EnumValues(v.Value), (v, s) => new KeyValuePair<string, string>(v.Key, s));
@@ -51,7 +51,7 @@ public class CommandLineArgs
     private static string[] CheckArgs(string[] args)
     {
         var corrected = false;
-        var count     = args.Length;
+        var count = args.Length;
         for (var i = 0; i < count; i++)
             //if (args[i] is { Length: > 2 } arg1 && arg1[0] is '"' or '\'')
             if (args[i] is [('"' or '\'') and var a0, _, ..])
@@ -65,7 +65,7 @@ public class CommandLineArgs
                         else if (an == a0)
                         {
                             corrected = true;
-                            args[i]   = string.Join(" ", EnumStrs(args, i, k + 1))[1..^1];
+                            args[i] = string.Join(" ", EnumStrs(args, i, k + 1))[1..^1];
                             static IEnumerable<string> EnumStrs(string[] str, int Min, int Max)
                             {
                                 for (var i = Min; i < Max; i++)
@@ -73,7 +73,7 @@ public class CommandLineArgs
                             }
 
                             for (var j = i + 1; j <= k; j++)
-                                args[j] = null;
+                                args[j] = null!;
                             i += k;
                             break;
                         }
@@ -81,7 +81,7 @@ public class CommandLineArgs
                 }
             }
 
-        return corrected ? args.Where(arg => arg is { Length: > 0 }).ToArray() : args;
+        return corrected ? [.. args.Where(arg => arg is { Length: > 0 })] : args;
     }
 
     /// <summary>Инициализация нового экземпляра парсера аргументов командной строки</summary>
@@ -106,7 +106,7 @@ public class CommandLineArgs
             var arg = _ArgsSrc[i];
             if (arg == "--") break;
 
-            var arg_name   = arg.TrimStart('-');
+            var arg_name = arg.TrimStart('-');
             var prefix_len = arg.Length - arg_name.Length;
 
             (int Pos, int Count) param_args = default;

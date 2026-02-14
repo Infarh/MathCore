@@ -4,7 +4,8 @@
 public sealed class GCWatcher
 {
     /// <summary>Событие запуска процесса сборки мусора</summary>
-    private static event EventHandler ApproachesHandlers;
+    private static event EventHandler? ApproachesHandlers;
+
     /// <summary>Событие запуска процесса сборки мусора</summary>
     public static event EventHandler Approaches
     {
@@ -28,7 +29,8 @@ public sealed class GCWatcher
     }
 
     /// <summary>Событие завершения процесса сборки мусора</summary>
-    private static event EventHandler CompleteHandlers;
+    private static event EventHandler? CompleteHandlers;
+
     /// <summary>Событие завершения процесса сборки мусора</summary>
     public static event EventHandler Complete
     {
@@ -54,14 +56,14 @@ public sealed class GCWatcher
     /// <summary>Генерация события начала сборки мусора</summary>
     private static void OnApproaches()
     {
-        if(ApproachesHandlers is not { } handlers) return;
+        if (ApproachesHandlers is not { } handlers) return;
         _ = Task.Run(() => handlers(__GcWatcher, EventArgs.Empty));
     }
 
     /// <summary>Генерация события окончания сборки мусора</summary>
     private static void OnComplete()
     {
-        if(CompleteHandlers is not { } handlers) return;
+        if (CompleteHandlers is not { } handlers) return;
         _ = Task.Run(() => handlers(__GcWatcher, EventArgs.Empty));
     }
 
@@ -69,10 +71,14 @@ public sealed class GCWatcher
     private static readonly GCWatcher __GcWatcher = new();
 
     /// <summary>Объект синхронизации потоков управления наблюдателем</summary>
-    private static readonly object __SyncRoot = new();
+#if NET9_0_OR_GREATER
+    private static readonly Lock __SyncRoot = new();
+#else
+    private static readonly object __SyncRoot = new(); 
+#endif
 
     /// <summary>Поток наблюдения с сборщиком мусора</summary>
-    private static Thread __WatcherThread;
+    private static Thread? __WatcherThread;
 
     /// <summary>Признак активности наблюдателя</summary>
     private static bool __Enabled;
@@ -87,7 +93,7 @@ public sealed class GCWatcher
         lock (__SyncRoot)
         {
             if (__Enabled) return;
-            __Enabled      = true;
+            __Enabled = true;
             __WatcherThread = new(Watch) { IsBackground = true };
             __WatcherThread.Start();
         }
@@ -100,7 +106,7 @@ public sealed class GCWatcher
         lock (__SyncRoot)
         {
             if (!__Enabled) return;
-            __Enabled      = false;
+            __Enabled = false;
             __WatcherThread = null;
         }
     }

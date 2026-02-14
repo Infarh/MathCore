@@ -864,9 +864,9 @@ public partial class Matrix<T>
         /// <exception cref="ArgumentOutOfRangeException">В случае если размерность матрицы <paramref name="matrix"/> меньше 1</exception>
         public static bool GetLUPDecomposition(
             T[,] matrix,
-            out T[,] l,
-            out T[,] u,
-            out T[,] p,
+             [NotNullWhen(true)] out T[,]? l,
+             [NotNullWhen(true)] out T[,]? u,
+             [NotNullWhen(true)] out T[,]? p,
             out T d
         )
         {
@@ -936,7 +936,7 @@ public partial class Matrix<T>
         /// <returns>Истина, если процедура декомпозиции прошла успешно. Ложь, если матрица вырождена</returns>
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
         /// <exception cref="ArgumentOutOfRangeException">В случае если размерность матрицы N меньше 1</exception>
-        public static bool GetLUDecomposition(T[,] matrix, out T[,] l, out T[,] u, out T d)
+        public static bool GetLUDecomposition(T[,] matrix, [NotNullWhen(true)] out T[,]? l, [NotNullWhen(true)] out T[,]? u, out T d)
         {
             GetRowsCount(matrix, out var N);
 
@@ -983,8 +983,8 @@ public partial class Matrix<T>
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
         public static bool GetLUPDecomposition(
             T[,] matrix,
-            out T[,] c,
-            out T[,] p,
+            [NotNullWhen(true)] out T[,]? c,
+            [NotNullWhen(true)] out T[,]? p,
             out T d)
         {
             GetRowsCount(matrix, out var N);
@@ -1046,7 +1046,7 @@ public partial class Matrix<T>
         /// <returns>Истина, если процедура выполнена успешно</returns>
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
         /// <exception cref="ArgumentException">Матрица не квадратная</exception>
-        public static bool GetLUPDecomposition(T[,] matrix, out T[,] c, out T d)
+        public static bool GetLUPDecomposition(T[,] matrix, [NotNullWhen(true)] out T[,]? c, out T d)
         {
             GetRowsCount(matrix, out var N);
             if (N != matrix.GetLength(1))
@@ -1100,7 +1100,7 @@ public partial class Matrix<T>
         /// <returns>Истина, если разложение выполнено успешно</returns>
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
         /// <exception cref="ArgumentException">Матрица не квадратная</exception>
-        public static bool GetLUDecomposition(T[,] matrix, out T[,] c)
+        public static bool GetLUDecomposition(T[,] matrix, [NotNullWhen(true)] out T[,]? c)
         {
             GetRowsCount(matrix, out var N);
             if (N != matrix.GetLength(1))
@@ -1735,23 +1735,23 @@ public partial class Matrix<T>
                 for (var k = 0; k < j; k++)
                 {
                     var s = default(T);
-                    n = default; // скалярное произведение столбца на самого себя
+                    n = default!; // скалярное произведение столбца на самого себя
                     // Вычисление скалярного произведения v*u и квадрата длины u
                     for (var i = 0; i < N; i++)
                     {
                         var v = u[i, k];
-                        s += matrix[i, j] * v;
+                        s = s! + matrix[i, j] * v;
                         n += v * v;
                     }
 
-                    s /= n;
+                    s = s! / n;
                     // Вычитание проекции
                     for (var i = 0; i < N; i++)
                         u[i, j] -= u[i, k] * s;
                 }
 
                 // Вычисление нормированного вектора
-                n = default;
+                n = default!;
                 for (var i = 0; i < N; i++)
                     n += u[i, j] * u[i, j];
                 n = T.Sqrt(n);
@@ -1764,8 +1764,8 @@ public partial class Matrix<T>
                 {
                     var s = default(T);
                     for (var k = 0; k < N; k++)
-                        s += q[k, i] * matrix[k, j];
-                    r[i, j] = s;
+                        s = s! + q[k, i] * matrix[k, j];
+                    r[i, j] = s!;
                 }
         }
 

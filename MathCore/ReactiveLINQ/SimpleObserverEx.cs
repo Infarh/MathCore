@@ -1,6 +1,4 @@
 ﻿// ReSharper disable VirtualMemberNeverOverridden.Global
-#nullable enable
-
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBeProtected.Global
 
@@ -20,10 +18,10 @@ public class SimpleObserverEx<T> : IObserverEx<T>
     /// <summary>Событие появления исключения</summary>
     public event Action<Exception>? Error;
 
-    private readonly IDisposable _Unsubscriber;
+    private readonly IDisposable _Unsubscriber = null!;
 
     /// <summary>Тэг наблюдателя</summary>
-    public object Tag { get; set; }
+    public object Tag { get; set; } = null!;
 
     /// <summary>Инициализация нового простейшего наблюдателя</summary>
     public SimpleObserverEx(IObservable<T> observable) => _Unsubscriber = observable.Subscribe(this);

@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Text;
+﻿namespace MathCore.Text;
 
 /// <summary>
 /// Сходство строк по метрике Джаро — Винклера<br/>

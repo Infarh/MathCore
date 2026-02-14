@@ -15,14 +15,14 @@
 
 using System.Collections;
 using System.Diagnostics;
-using MathCore.Annotations;
+
+using FT = System.Xml.XPath.Function.FunctionType;
+
 // ReSharper disable UnusedMember.Local
 // ReSharper disable UnusedParameter.Local
 
 // ReSharper disable once CheckNamespace
 namespace System.Xml.XPath;
-
-using FT = Function.FunctionType;
 
 internal class QueryBuilder
 {
@@ -71,7 +71,7 @@ internal class QueryBuilder
     private XmlNodeType MapNodeType(XPathNodeType type)
     {
         var ret = XmlNodeType.None;
-        switch(type)
+        switch (type)
         {
             case XPathNodeType.Element:
                 ret = XmlNodeType.Element;
@@ -93,36 +93,34 @@ internal class QueryBuilder
         return ret;
     }
 
-    [NotNull]
-    private Query ProcessFilter([NotNull] Filter root)
+    private FilterQuery ProcessFilter(Filter root)
     {
         //condition
-        var operand = ProcessNode(root.Condition, null);
+        var operand = ProcessNode(root.Condition, null!);
 
         //axis
-        var qy_input = ProcessNode(root.Input, null);
+        var qy_input = ProcessNode(root.Input, null!);
 
-        return new FilterQuery(qy_input, operand);
+        return new FilterQuery(qy_input!, operand!);
     }
 
-    [NotNull] private static Query ProcessOperand([NotNull] Operand root) => new OperandQuery(root.OperandValue, root.ReturnType);
+    private static OperandQuery ProcessOperand(Operand root) => new(root.OperandValue, root.ReturnType);
 
-    [CanBeNull]
-    private Query ProcessFunction([NotNull] Function root, Query InputQuery)
+    private Query? ProcessFunction(Function root, Query? _)
     {
-        Query query;
+        Query? query;
 
-        switch(root.TypeOfFunction)
+        switch (root.TypeOfFunction)
         {
             case FT.FuncPosition:
-                query = new MethodOperand(null, root.TypeOfFunction);
+                query = new MethodOperand(null!, root.TypeOfFunction);
                 return query;
 
             // we should be able to count how many attributes
             case FT.FuncCount:
-                query = ProcessNode((AstNode)root.ArgumentList[0], null);
+                query = ProcessNode((AstNode)root.ArgumentList[0]!, null!);
 
-                if(query is AttributeQuery)
+                if (query is AttributeQuery)
                     return new MethodOperand(query, FT.FuncCount);
                 //none attribute count function result in error.
 
@@ -131,10 +129,10 @@ internal class QueryBuilder
             case FT.FuncLocalName:
             case FT.FuncNameSpaceUri:
             case FT.FuncName:
-                if(root.ArgumentList is { Count: > 0 })
-                    return new MethodOperand(ProcessNode((AstNode)root.ArgumentList[0], null),
+                if (root.ArgumentList is { Count: > 0 })
+                    return new MethodOperand(ProcessNode((AstNode)root.ArgumentList[0]!, null!)!,
                         root.TypeOfFunction);
-                return new MethodOperand(null, root.TypeOfFunction);
+                return new MethodOperand(null!, root.TypeOfFunction);
 
             case FT.FuncString:
             case FT.FuncConcat:
@@ -147,10 +145,10 @@ internal class QueryBuilder
             case FT.FuncNormalize:
             case FT.FuncTranslate:
                 if (root.ArgumentList is null) return new StringFunctions([], root.TypeOfFunction);
-                var count    = 0;
+                var count = 0;
                 var arg_list = new ArrayList();
-                while(count < root.ArgumentList.Count)
-                    arg_list.Add(ProcessNode((AstNode)root.ArgumentList[count++], null));
+                while (count < root.ArgumentList.Count)
+                    arg_list.Add(ProcessNode((AstNode)root.ArgumentList[count++]!, null!));
                 return new StringFunctions(arg_list, root.TypeOfFunction);
 
             case FT.FuncNumber:
@@ -158,19 +156,18 @@ internal class QueryBuilder
             case FT.FuncFloor:
             case FT.FuncCeiling:
             case FT.FuncRound:
-                if(root.ArgumentList != null)
-                    return new NumberFunctions(ProcessNode((AstNode)root.ArgumentList[0], null),
+                if (root.ArgumentList != null)
+                    return new NumberFunctions(ProcessNode((AstNode)root.ArgumentList[0]!, null!)!,
                         root.TypeOfFunction);
-                return new NumberFunctions(null);
+                return new NumberFunctions(null!);
 
             case FT.FuncTrue:
             case FT.FuncFalse:
-                return new BooleanFunctions(null, root.TypeOfFunction);
-
+                return new BooleanFunctions(null!, root.TypeOfFunction);
             case FT.FuncNot:
             case FT.FuncLang:
             case FT.FuncBoolean:
-                return new BooleanFunctions(ProcessNode((AstNode)root.ArgumentList[0], null),
+                return new BooleanFunctions(ProcessNode((AstNode)root.ArgumentList[0]!, null!)!,
                     root.TypeOfFunction);
 
 
@@ -191,7 +188,7 @@ internal class QueryBuilder
                 throw new XPathReaderException("The XPath query is not supported.");
         }
 
-        return null;
+        return null!;
     }
 
     //
@@ -199,67 +196,54 @@ internal class QueryBuilder
     //           +, -, *, div,
     //           >, >=, <, <=, =, !=
     //
-    [CanBeNull]
-    private Query ProcessOperator([NotNull] Operator root, Query InputQuery)
+    private Query? ProcessOperator(Operator root, Query? _)
     {
-        switch(root.OperatorType)
+        return root.OperatorType switch
         {
-            case Operator.Op.Or:
-                return new OrExpr(ProcessNode(root.Operand1, null),
-                    ProcessNode(root.Operand2, null));
-
-            case Operator.Op.And:
-                return new AndExpr(ProcessNode(root.Operand1, null),
-                    ProcessNode(root.Operand2, null));
-        }
-
-        switch(root.ReturnType)
-        {
-            case XPathResultType.Number:
-                return new NumericExpr(root.OperatorType,
-                    ProcessNode(root.Operand1, null),
-                    ProcessNode(root.Operand2, null));
-
-            case XPathResultType.Boolean:
-                return new LogicalExpr(root.OperatorType,
-                    ProcessNode(root.Operand1, null),
-                    ProcessNode(root.Operand2, null));
-        }
-
-        return null;
+            Operator.Op.Or => new OrExpr(ProcessNode(root.Operand1, null!)!,
+                                ProcessNode(root.Operand2, null!)!),
+            Operator.Op.And => new AndExpr(ProcessNode(root.Operand1, null!)!,
+                                ProcessNode(root.Operand2, null!)!),
+            _ => root.ReturnType switch
+            {
+                XPathResultType.Number => new NumericExpr(root.OperatorType,
+                                    ProcessNode(root.Operand1, null!)!,
+                                    ProcessNode(root.Operand2, null!)!),
+                XPathResultType.Boolean => new LogicalExpr(root.OperatorType,
+                                    ProcessNode(root.Operand1, null!)!,
+                                    ProcessNode(root.Operand2, null!)!),
+                _ => null,
+            },
+        };
     }
 
-    //
-    ///
-    [NotNull]
-    private static Query ProcessAxis([NotNull] Axis root, Query QyInput) =>
+    private static Query ProcessAxis(Axis root, Query QyInput) =>
         root.TypeOfAxis switch
         {
-            Axis.AxisType.Attribute        => new AttributeQuery(QyInput, root.Name, root.Prefix, root.Type),
-            Axis.AxisType.Self             => new XPathSelfQuery(QyInput, root.Name, root.Prefix, root.Type),
-            Axis.AxisType.Child            => new ChildQuery(QyInput, root.Name, root.Prefix, root.Type),
-            Axis.AxisType.Descendant       => new DescendantQuery(QyInput, root.Name, root.Prefix, root.Type),
+            Axis.AxisType.Attribute => new AttributeQuery(QyInput, root.Name, root.Prefix, root.Type),
+            Axis.AxisType.Self => new XPathSelfQuery(QyInput, root.Name, root.Prefix, root.Type),
+            Axis.AxisType.Child => new ChildQuery(QyInput, root.Name, root.Prefix, root.Type),
+            Axis.AxisType.Descendant => new DescendantQuery(QyInput, root.Name, root.Prefix, root.Type),
             Axis.AxisType.DescendantOrSelf => new DescendantQuery(QyInput, root.Name, root.Prefix, root.Type),
-            _                              => throw new XPathReaderException("xpath is not supported!")
+            _ => throw new XPathReaderException("xpath is not supported!")
         };
 
-    [CanBeNull]
-    private Query ProcessNode([CanBeNull] AstNode root, Query QyInput)
+    private Query? ProcessNode(AstNode? root, Query QyInput)
     {
-        Query result = null;
+        Query? result = null;
 
-        if(root is null)
-            return null;
+        if (root is null)
+            return null!;
 
-        switch(root.TypeOfAst)
+        switch (root.TypeOfAst)
         {
             case AstNode.QueryType.Axis:
                 var axis = (Axis)root;
-                result = ProcessAxis(axis, ProcessNode(axis.Input, QyInput));
+                result = ProcessAxis(axis, ProcessNode(axis.Input, QyInput)!);
                 break;
 
             case AstNode.QueryType.Operator:
-                result = ProcessOperator((Operator)root, null);
+                result = ProcessOperator((Operator)root, null!);
                 break;
 
             case AstNode.QueryType.Filter:
@@ -279,7 +263,7 @@ internal class QueryBuilder
                 break;
 
             case AstNode.QueryType.Group:
-                result = new GroupQuery(ProcessNode(((Group)root).GroupNode, QyInput));
+                result = new GroupQuery(ProcessNode(((Group)root).GroupNode, QyInput)!);
                 break;
             default:
                 Debug.Assert(false, "Unknown QueryType encountered!!");
@@ -288,7 +272,7 @@ internal class QueryBuilder
         return result;
     }
 
-    public void Build(string xpath, [NotNull] ArrayList CompiledXPath, int depth)
+    public void Build(string xpath, ArrayList CompiledXPath, int depth)
     {
         //
         // build the AST node first
@@ -297,10 +281,10 @@ internal class QueryBuilder
 
         var stack = new Stack();
 
-        var query = ProcessNode(root, null);
+        var query = ProcessNode(root, null!);
 
-        while(query != null)
-            if(query is BaseAxisQuery axis_query)
+        while (query != null)
+            if (query is BaseAxisQuery axis_query)
             {
                 stack.Push(query);
                 query = axis_query.QueryInput;
@@ -310,23 +294,23 @@ internal class QueryBuilder
                 // for example, the primary expression not in the predicate.
                 throw new XPathReaderException("XPath query is not supported!");
 
-        query = (Query)stack.Peek();
+        query = (Query)stack.Peek()!;
 
-        if(query is AbsoluteQuery)
+        if (query is AbsoluteQuery)
             stack.Pop(); //AbsoluteQuery at root means nothing. Throw it away.
 
         // reverse the query
         // compute the query depth table
-        while(stack.Count > 0)
+        while (stack.Count > 0)
         {
             CompiledXPath.Add(stack.Pop());
-            var current_query = (BaseAxisQuery)CompiledXPath[^1];
+            var current_query = (BaseAxisQuery)CompiledXPath[^1]!;
 
-            FilterQuery filter_query = null;
+            FilterQuery filter_query = null!;
 
-            if(current_query is FilterQuery f)
+            if (current_query is FilterQuery f)
             {
-                filter_query  = f;
+                filter_query = f;
                 current_query = f.Axis;
             }
 
@@ -337,14 +321,14 @@ internal class QueryBuilder
                 case DescendantQuery:
                     depth++;
                     break;
-                case AbsoluteQuery: depth = 0;
+                case AbsoluteQuery:
+                    depth = 0;
                     break;
             }
 
             current_query.Depth = depth;
 
-            if(filter_query != null)
-                filter_query.Depth = depth;
+            filter_query?.Depth = depth;
         }
 
         //

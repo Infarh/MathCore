@@ -6,8 +6,8 @@ namespace MathCore.Net.Http.Html;
 public class HElement : HElementBase, IEnumerable<HElementBase>, IEnumerable<HAttribute>
 {
     private string _Name;
-    private List<HAttribute> _Attributes;
-    private List<HElementBase> _Elements;
+    private List<HAttribute> _Attributes = null!;
+    private List<HElementBase> _Elements = null!;
     private bool _AlwaysOpen;
     private bool _OnlyOpen;
 
@@ -28,7 +28,7 @@ public class HElement : HElementBase, IEnumerable<HElementBase>, IEnumerable<HAt
     public HElement(string Name, params HElementBase[] elements)
     {
         _Name = Name;
-        if (elements.Length > 0) _Elements = elements.ToList();
+        if (elements.Length > 0) _Elements = [.. elements];
     }
 
     public void Add(params HAttribute[] attribute) => Attributes.AddRange(attribute);
@@ -51,7 +51,7 @@ public class HElement : HElementBase, IEnumerable<HElementBase>, IEnumerable<HAt
                     Elements.Add(new Text(str));
                     break;
                 default:
-                    Elements.Add(new Text(item.ToString()));
+                    Elements.Add(new Text(item.ToString() ?? string.Empty));
                     break;
             }
         }

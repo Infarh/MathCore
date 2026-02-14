@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -19,7 +18,7 @@ public static class EventHandlerExtension
     public static Task InvokeAsync(this EventHandler? handler, object sender, EventArgs? e) =>
         handler is null
             ? Task.CompletedTask
-            : Task.Run(() => handler(sender, e));
+            : Task.Run(() => handler(sender, e ?? EventArgs.Empty));
 
     /// <summary>Асинхронный запуск обработчика события с созданием новой задачи</summary>
     /// <param name="handler">Запускаемый обработчик события</param>
@@ -153,7 +152,7 @@ public static class EventHandlerExtension
         object? State = null) =>
         Handler is null
             ? null
-            : ((Action)(() => Handler.Invoke(Sender, e))).BeginInvoke(CallBack, State);
+            : ((Action)(() => Handler.Invoke(Sender, e ?? EventArgs.Empty))).BeginInvoke(CallBack, State);
 
     /// <summary>Быстрая генерация события</summary>
     /// <param name="Handler">Обработчик события</param>
@@ -166,7 +165,7 @@ public static class EventHandlerExtension
     /// <param name="Sender">Источник события</param>
     /// <param name="e">Аргументы события</param>
     [DST]
-    public static void FastStart(this EventHandler? Handler, object? Sender, EventArgs? e) => Handler?.Invoke(Sender, e);
+    public static void FastStart(this EventHandler? Handler, object? Sender, EventArgs? e) => Handler?.Invoke(Sender, e ?? EventArgs.Empty);
 
     /// <summary>Быстрая генерация события</summary>
     /// <param name="Handler">Обработчик события</param>
@@ -243,9 +242,9 @@ public static class EventHandlerExtension
         TArgs Args) =>
         Handler is null
             ? []
-            : Handler
+            : [.. Handler
                .GetInvocationList()
-               .Select(d => (TResult)(d.Target is ISynchronizeInvoke { InvokeRequired: true } invoke
+               .Select(d => (TResult?)(d.Target is ISynchronizeInvoke { InvokeRequired: true } invoke
                     ? invoke.Invoke(d, [Sender, Args])
-                    : d.DynamicInvoke(Sender, Args))).ToArray();
+                    : d.DynamicInvoke(Sender, Args)))];
 }

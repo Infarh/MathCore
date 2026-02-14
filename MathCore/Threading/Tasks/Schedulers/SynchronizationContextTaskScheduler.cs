@@ -3,30 +3,45 @@
 
 namespace MathCore.Threading.Tasks.Schedulers;
 
-/// <summary>Provides a task scheduler that targets a specific SynchronizationContext.</summary>
-public sealed class SynchronizationContextTaskScheduler : TaskScheduler
+/// <summary>Планировщик задач, выполняющий задачи в указанном SynchronizationContext</summary>
+/// <remarks>Все задачи выполняются последовательно в контексте синхронизации</remarks>
+/// <example>
+/// <code>
+/// var scheduler = new SynchronizationContextTaskScheduler();
+/// var task_factory = new TaskFactory(scheduler);
+/// var task = task_factory.StartNew(() => DoWork());
+/// </code>
+/// </example>
+/// <remarks>
+/// Инициализирует экземпляр планировщика с указанным SynchronizationContext
+/// </remarks>
+/// <param name="context">Контекст синхронизации для выполнения задач</param>
+/// <exception cref="ArgumentNullException">Возникает, если context равен null</exception>
+/// <remarks>Переданный контекст используется для выполнения всех задач планировщика</remarks>
+/// <example>
+/// <code>
+/// var context = new SynchronizationContext();
+/// var scheduler = new SynchronizationContextTaskScheduler(context);
+/// </code>
+/// </example>
+public sealed class SynchronizationContextTaskScheduler(SynchronizationContext context) : TaskScheduler
 {
-    /// <summary>The queue of tasks to execute, maintained for debugging purposes.</summary>
-    private readonly ConcurrentQueue<Task> _Tasks;
-    /// <summary>The target context under which to execute the queued tasks.</summary>
-    private readonly SynchronizationContext _Context;
+    /// <summary>Очередь задач для выполнения, сохраняемая для отладки</summary>
+    private readonly ConcurrentQueue<Task> _Tasks = new();
+    /// <summary>Целевой контекст, в котором выполняются задачи</summary>
+    private readonly SynchronizationContext _Context = context.NotNull();
 
-    /// <summary>Initializes an instance of the SynchronizationContextTaskScheduler class.</summary>
-    public SynchronizationContextTaskScheduler() : this(SynchronizationContext.Current) { }
+    /// <summary>Инициализирует экземпляр планировщика для текущего SynchronizationContext</summary>
+    /// <remarks>Если текущий контекст отсутствует, создается новый SynchronizationContext</remarks>
+    /// <example>
+    /// <code>
+    /// var scheduler = new SynchronizationContextTaskScheduler();
+    /// </code>
+    /// </example>
+    public SynchronizationContextTaskScheduler() : this(SynchronizationContext.Current ?? new()) { }
 
-    /// <summary>
-    /// Initializes an instance of the SynchronizationContextTaskScheduler class
-    /// with the specified SynchronizationContext.
-    /// </summary>
-    /// <param name="context">The SynchronizationContext under which to execute tasks.</param>
-    public SynchronizationContextTaskScheduler(SynchronizationContext context)
-    {
-        _Context = context.NotNull();
-        _Tasks   = new();
-    }
-
-    /// <summary>Queues a task to the scheduler for execution on the I/O ThreadPool.</summary>
-    /// <param name="task">The Task to queue.</param>
+    /// <summary>Помещает задачу в очередь планировщика для выполнения в контексте синхронизации</summary>
+    /// <param name="task">Задача для постановки в очередь</param>
     protected override void QueueTask(Task task)
     {
         _Tasks.Enqueue(task);
@@ -36,16 +51,16 @@ public sealed class SynchronizationContextTaskScheduler : TaskScheduler
         }, null);
     }
 
-    /// <summary>Tries to execute a task on the current thread.</summary>
-    /// <param name="task">The task to be executed.</param>
-    /// <param name="TaskWasPreviouslyQueued">Ignored.</param>
-    /// <returns>Whether the task could be executed.</returns>
+    /// <summary>Пытается выполнить задачу в текущем потоке</summary>
+    /// <param name="task">Задача для выполнения</param>
+    /// <param name="TaskWasPreviouslyQueued">Признак прежней постановки в очередь</param>
+    /// <returns>Признак успешного выполнения задачи</returns>
     protected override bool TryExecuteTaskInline(Task task, bool TaskWasPreviouslyQueued) => _Context == SynchronizationContext.Current && TryExecuteTask(task);
 
-    /// <summary>Gets an enumerable of tasks queued to the scheduler.</summary>
-    /// <returns>An enumerable of tasks queued to the scheduler.</returns>
-    protected override IEnumerable<Task> GetScheduledTasks() => _Tasks.ToArray();
+    /// <summary>Возвращает перечисление задач, поставленных в очередь планировщика</summary>
+    /// <returns>Перечисление задач, поставленных в очередь</returns>
+    protected override IEnumerable<Task> GetScheduledTasks() => [.. _Tasks];
 
-    /// <summary>Gets the maximum concurrency level supported by this scheduler.</summary>
+    /// <summary>Возвращает максимальный уровень параллелизма, поддерживаемый планировщиком</summary>
     public override int MaximumConcurrencyLevel => 1;
 }

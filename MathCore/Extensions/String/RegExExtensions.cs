@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Globalization;
+﻿using System.Globalization;
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace

@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 using Ex = System.Linq.Expressions.Expression;
 // ReSharper disable UnusedMember.Global

@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+﻿// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 // ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable ConvertToAutoPropertyWhenPossible
 // ReSharper disable MemberCanBePrivate.Global

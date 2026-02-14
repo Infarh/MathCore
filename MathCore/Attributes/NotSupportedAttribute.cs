@@ -10,7 +10,7 @@ namespace System;
 public sealed class NotSupportedAttribute : Attribute
 {
     /// <summary>Сообщение</summary>
-    public string Message { get; set; }
+    public string Message { get; set; } = null!;
 
     /// <summary>Новый атрибут неподдерживаемости</summary>
     public NotSupportedAttribute() { }

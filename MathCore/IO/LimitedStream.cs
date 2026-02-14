@@ -6,7 +6,7 @@ public class LimitedStream(Stream BaseStream, long Offset, long DataLength) : St
     /// <summary>Создает ограниченный поток на основе всего базового потока</summary>
     /// <param name="BaseStream">Базовый поток</param>
     public LimitedStream(Stream BaseStream) : this(BaseStream, 0, BaseStream.Length) { }
-    
+
     /// <summary>Создает ограниченный поток с указанным смещением до конца базового потока</summary>
     /// <param name="BaseStream">Базовый поток</param>
     /// <param name="Offset">Смещение начала в базовом потоке</param>
@@ -16,13 +16,13 @@ public class LimitedStream(Stream BaseStream, long Offset, long DataLength) : St
     private readonly Stream _BaseStream = BaseStream.NotNull();
 
     /// <summary>Смещение потока относительно исходного</summary>
-    private long _DataOffset = Offset >= 0 
-        ? Offset 
+    private long _DataOffset = Offset >= 0
+        ? Offset
         : throw new ArgumentOutOfRangeException(nameof(Offset), Offset, "Смещение не может быть меньше нуля");
 
     /// <summary>Количество байт данных в потоке</summary>
-    private long _DataLength = DataLength >= 0 
-        ? DataLength 
+    private long _DataLength = DataLength >= 0
+        ? DataLength
         : throw new ArgumentOutOfRangeException(nameof(DataLength), DataLength, "Длина данных не может быть меньше нуля");
 
     /// <summary>Возможность растягивать исходный поток</summary>
@@ -32,7 +32,7 @@ public class LimitedStream(Stream BaseStream, long Offset, long DataLength) : St
 
     /// <summary>Переопределение возможности чтения из потока</summary>
     public bool? StreamCanRead { get => _CanRead; set => _CanRead = value; }
-    
+
     /// <summary>Переопределение возможности записи в поток</summary>
     public bool? StreamCanWrite { get => _CanWrite; set => _CanWrite = value; }
 
@@ -85,9 +85,9 @@ public class LimitedStream(Stream BaseStream, long Offset, long DataLength) : St
     /// <inheritdoc />
     public override long Seek(long offset, SeekOrigin origin)
     {
-        const SeekOrigin begin   = SeekOrigin.Begin;
+        const SeekOrigin begin = SeekOrigin.Begin;
         const SeekOrigin current = SeekOrigin.Current;
-        const SeekOrigin end     = SeekOrigin.End;
+        const SeekOrigin end = SeekOrigin.End;
 
         switch (origin)
         {
@@ -172,10 +172,10 @@ public class LimitedStream(Stream BaseStream, long Offset, long DataLength) : St
     }
 
     /// <summary>Событие, возникающее перед освобождением ресурсов</summary>
-    public event EventHandler Disposing;
-    
+    public event EventHandler? Disposing;
+
     /// <summary>Событие, возникающее после освобождения ресурсов</summary>
-    public event EventHandler Disposed;
+    public event EventHandler? Disposed;
 
     /// <inheritdoc />
     protected override void Dispose(bool disposing)

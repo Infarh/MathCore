@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -12,11 +11,11 @@ namespace MathCore;
 /// <typeparam name="T">Тип элементов коллекции</typeparam>
 public class SelectableCollection<T> :
     INotifyPropertyChanged, INotifyCollectionChanged,
-    ICollection<T>, ICollection,
-    IEnumerable<T>, IEnumerable,
-    IList<T>, IList,
-    IReadOnlyCollection<T>,
-    IReadOnlyList<T>
+    ICollection<T?>, ICollection,
+    IEnumerable<T?>, IEnumerable,
+    IList<T?>, IList,
+    IReadOnlyCollection<T?>,
+    IReadOnlyList<T?>
 {
     #region INotifyPropertyChanged
 
@@ -82,27 +81,27 @@ public class SelectableCollection<T> :
     #endregion
 
     /// <summary>Внутренняя коллекция</summary>
-    private readonly ICollection<T> _Collection;
+    private readonly ICollection<T?> _Collection;
 
     /// <summary>Коллекция поддерживает уведомления об изменениях</summary>
     private readonly bool _IsNotifyCollection;
 
-    public T this[int index]
+    public T? this[int index]
     {
         get => _Collection switch
         {
-            T[] array => array[index],
-            List<T> list => list[index],
-            IList<T> list => list[index],
+            T?[] array => array[index],
+            List<T?> list => list[index],
+            IList<T?> list => list[index],
             _ => _Collection.ElementAt(index),
         };
         set
         {
             switch (_Collection)
             {
-                case T[] array: array[index] = value; break;
-                case List<T> list: list[index] = value; break;
-                case IList<T> list: list[index] = value; break;
+                case T?[] array: array[index] = value; break;
+                case List<T?> list: list[index] = value; break;
+                case IList<T?> list: list[index] = value; break;
                 default:
                     var old_item = _Collection.ElementAt(index);
                     _Collection.Replace(old_item, value);
@@ -112,15 +111,15 @@ public class SelectableCollection<T> :
     }
 
     /// <summary>Инициализация новой коллекции с возможностью выбора элемента</summary>
-    public SelectableCollection() : this(new List<T>()) { }
+    public SelectableCollection() : this([]) { }
 
     /// <summary>Инициализация новой коллекции с возможностью выбора элемента</summary>
     /// <param name="Capacity">Ёмкость коллекции</param>
-    public SelectableCollection(int Capacity) : this(new List<T>(Capacity)) { }
+    public SelectableCollection(int Capacity) : this(new List<T?>(Capacity)) { }
 
     /// <summary>Инициализация новой коллекции с возможностью выбора элемента</summary>
     /// <param name="Collection">Внутренняя коллекция</param>
-    public SelectableCollection(ICollection<T> Collection)
+    public SelectableCollection(ICollection<T?> Collection)
     {
         if (Collection.NotNull() is not { IsReadOnly: false })
             throw new ArgumentException($"Коллекция {Collection.GetType()} доступна только для чтения", nameof(Collection));
@@ -144,7 +143,7 @@ public class SelectableCollection<T> :
         {
             case NotifyCollectionChangedAction.Remove:
             case NotifyCollectionChangedAction.Replace:
-                if (!Equals(_SelectedItem, default(T)) && E.OldItems.Contains(_SelectedItem))
+                if (!Equals(_SelectedItem, default(T)) && E.OldItems?.Contains(_SelectedItem) == true)
                     SelectedItem = default;
                 break;
             case NotifyCollectionChangedAction.Reset:
@@ -195,7 +194,7 @@ public class SelectableCollection<T> :
     public bool Contains(T? item) => _Collection.Contains(item);
 
     /// <inheritdoc />
-    public void CopyTo(T[] array, int Index) => _Collection.CopyTo(array, Index);
+    public void CopyTo(T?[] array, int Index) => _Collection.CopyTo(array, Index);
 
     /// <inheritdoc />
     public virtual bool Remove(T? item)
@@ -203,14 +202,14 @@ public class SelectableCollection<T> :
         var index = -1;
         switch (_Collection)
         {
-            case List<T> list:
+            case List<T?> list:
                 index = list.IndexOf(item);
                 if (index < 0) return false;
 
                 list.RemoveAt(index);
                 break;
 
-            case IList<T> list:
+            case IList<T?> list:
                 index = list.IndexOf(item);
                 if (index < 0) return false;
 
@@ -249,7 +248,7 @@ public class SelectableCollection<T> :
 
     /// <summary>Выбрать последний элемент коллекции</summary>
     /// <returns>Текущая коллекция</returns>
-    public SelectableCollection<T> SelectItem(T item)
+    public SelectableCollection<T?> SelectItem(T? item)
     {
         if (_Collection.Contains(item))
             SelectedItem = item;
@@ -258,20 +257,20 @@ public class SelectableCollection<T> :
 
     #region IList<T>
 
-    int IList<T>.IndexOf(T item) => _Collection.FirstIndexOf(item);
+    int IList<T?>.IndexOf(T? item) => _Collection.FirstIndexOf(item);
 
-    void IList<T>.Insert(int index, T item)
+    void IList<T?>.Insert(int index, T? item)
     {
         switch (_Collection)
         {
             default: throw new NotSupportedException($"Коллекция {_Collection.GetType()} не поддерживает операцию {typeof(IList<T>).Name}.Insert(index, item)");
-            case T[]: throw new NotSupportedException($"Невозможно свтавить элемент в массив по индексу {index}");
-            case List<T> list:
+            case T?[]: throw new NotSupportedException($"Невозможно свтавить элемент в массив по индексу {index}");
+            case List<T?> list:
                 list.Insert(index, item);
                 OnPropertyChanged(nameof(Count));
                 OnCollectionChanged(new(NotifyCollectionChangedAction.Add, item, index));
                 break;
-            case IList<T> list:
+            case IList<T?> list:
                 list.Insert(index, item);
                 OnPropertyChanged(nameof(Count));
                 OnCollectionChanged(new(NotifyCollectionChangedAction.Add, item, index));
@@ -279,19 +278,19 @@ public class SelectableCollection<T> :
         }
     }
 
-    void IList<T>.RemoveAt(int index)
+    void IList<T?>.RemoveAt(int index)
     {
         switch (_Collection)
         {
             default: throw new NotSupportedException($"Коллекция {_Collection.GetType()} не поддерживает операцию {typeof(IList<T>).Name}.RemoveAt(index)");
-            case T[]: throw new NotSupportedException($"Невозможно удалить элемент в массив по индексу {index}");
-            case List<T> list:
+            case T?[]: throw new NotSupportedException($"Невозможно удалить элемент в массив по индексу {index}");
+            case List<T?> list:
                 var item = this[index];
                 list.RemoveAt(index);
                 OnPropertyChanged(nameof(Count));
                 OnCollectionChanged(new(NotifyCollectionChangedAction.Remove, item, index));
                 break;
-            case IList<T> list:
+            case IList<T?> list:
                 item = this[index];
                 list.RemoveAt(index);
                 OnPropertyChanged(nameof(Count));
@@ -308,7 +307,7 @@ public class SelectableCollection<T> :
 
     bool IList.IsReadOnly => (_Collection as IList)?.IsReadOnly ?? true;
 
-    object? IList.this[int index] { get => this[index]; set => this[index] = (T)value; }
+    object? IList.this[int index] { get => this[index]; set => this[index] = (T?)value; }
 
     int IList.Add(object? value)
     {
@@ -317,10 +316,10 @@ public class SelectableCollection<T> :
 
         switch (_Collection)
         {
-            case T[]:
+            case T?[]:
             default: throw new NotSupportedException($"Коллекция {_Collection.GetType()} не поддерживает операцию ILIst.Add(object)");
-            case List<T>:
-            case IList<T>:
+            case List<T?>:
+            case IList<T?>:
             case IList:
                 Add((T?)value);
                 var index = Count - 1;
@@ -337,9 +336,9 @@ public class SelectableCollection<T> :
 
         return _Collection switch
         {
-            T[] array => array.Contains((T?)value),
-            List<T> list => list.Contains((T?)value),
-            IList<T> list => list.Contains((T?)value),
+            T?[] array => array.Contains((T?)value),
+            List<T?> list => list.Contains((T?)value),
+            IList<T?> list => list.Contains((T?)value),
             IList list => list.Contains((T?)value),
             _ => throw new NotSupportedException($"Коллекция {_Collection.GetType()} не поддерживает операцию ILIst.Contains(object)"),
         };
@@ -352,9 +351,9 @@ public class SelectableCollection<T> :
 
         return _Collection switch
         {
-            T[] array => Array.IndexOf(array, value),
-            List<T> list => list.IndexOf((T?)value),
-            IList<T> list => list.IndexOf((T?)value),
+            T?[] array => Array.IndexOf(array, value),
+            List<T?> list => list.IndexOf((T?)value),
+            IList<T?> list => list.IndexOf((T?)value),
             IList list => list.IndexOf((T?)value),
             _ => throw new NotSupportedException($"Коллекция {_Collection.GetType()} не поддерживает операцию ILIst.Contains(object)"),
         };
@@ -368,13 +367,13 @@ public class SelectableCollection<T> :
         switch (_Collection)
         {
             default: throw new NotSupportedException($"Коллекция {_Collection.GetType()} не поддерживает операцию IList.Insert(index, object)");
-            case T[]: throw new NotSupportedException($"Невозможно вставить элемент в массив по индексу {index}");
-            case List<T> list:
+            case T?[]: throw new NotSupportedException($"Невозможно вставить элемент в массив по индексу {index}");
+            case List<T?> list:
                 list.Insert(index, (T?)value);
                 OnPropertyChanged(nameof(Count));
                 OnCollectionChanged(new(NotifyCollectionChangedAction.Add, (T?)value, index));
                 break;
-            case IList<T> list:
+            case IList<T?> list:
                 list.Insert(index, (T?)value);
                 OnPropertyChanged(nameof(Count));
                 OnCollectionChanged(new(NotifyCollectionChangedAction.Add, (T?)value, index));
@@ -390,13 +389,13 @@ public class SelectableCollection<T> :
         switch (_Collection)
         {
             default: throw new NotSupportedException($"Коллекция {_Collection.GetType()} не поддерживает операцию IList.Remove(object)");
-            case T[]: throw new NotSupportedException($"Невозможно удалить элемент из массива");
-            case List<T>:
-            case IList<T>:
+            case T?[]: throw new NotSupportedException($"Невозможно удалить элемент из массива");
+            case List<T?>:
+            case IList<T?>:
                 if (Remove((T?)value))
                 {
                     OnPropertyChanged(nameof(Count));
-                    OnCollectionChanged(new(NotifyCollectionChangedAction.Remove, new T[] { (T?)value }));
+                    OnCollectionChanged(new(NotifyCollectionChangedAction.Remove, new T?[] { (T?)value }));
                 }
                 break;
         }
@@ -407,14 +406,14 @@ public class SelectableCollection<T> :
         switch (_Collection)
         {
             default: throw new NotSupportedException($"Коллекция {_Collection.GetType()} не поддерживает операцию IList.RemoveAt(index)");
-            case T[]: throw new NotSupportedException($"Невозможно удалить элемент из массива по индексу {index}");
-            case List<T> list:
+            case T?[]: throw new NotSupportedException($"Невозможно удалить элемент из массива по индексу {index}");
+            case List<T?> list:
                 var item = list[index];
                 list.RemoveAt(index);
                 OnPropertyChanged(nameof(Count));
                 OnCollectionChanged(new(NotifyCollectionChangedAction.Remove, item, index));
                 break;
-            case IList<T> list:
+            case IList<T?> list:
                 item = list[index];
                 list.RemoveAt(index);
                 OnPropertyChanged(nameof(Count));
@@ -427,7 +426,7 @@ public class SelectableCollection<T> :
 
     #region ICollection
 
-    bool ICollection<T>.IsReadOnly => _Collection.IsReadOnly;
+    bool ICollection<T?>.IsReadOnly => _Collection.IsReadOnly;
 
     int ICollection.Count => _Collection.Count;
 
@@ -450,7 +449,7 @@ public class SelectableCollection<T> :
     #region IEnumerable<T>
 
     /// <inheritdoc />
-    public IEnumerator<T> GetEnumerator() => _Collection.GetEnumerator();
+    public IEnumerator<T?> GetEnumerator() => _Collection.GetEnumerator();
 
     /// <inheritdoc />
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_Collection).GetEnumerator();

@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable once CheckNamespace
+﻿// ReSharper disable once CheckNamespace
 namespace System.Collections.Generic;
 
 /// <summary>Методы-расширения для <see cref="Stack{T}"/></summary>

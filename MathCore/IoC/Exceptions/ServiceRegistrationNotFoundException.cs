@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.IoC.Exceptions;
+﻿namespace MathCore.IoC.Exceptions;
 
 [Serializable]
 public class ServiceRegistrationNotFoundException : ServiceRegistrationException

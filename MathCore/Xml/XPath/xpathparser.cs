@@ -1,5 +1,4 @@
-﻿#nullable enable
-//------------------------------------------------------------------------------
+﻿//------------------------------------------------------------------------------
 // <copyright file="XPathParser.cs" company="Microsoft">
 //     
 //      Copyright (c) 2002 Microsoft Corporation.  All rights reserved.
@@ -42,9 +41,9 @@ internal class XPathParser
 
         internal ParamInfo(Function.FunctionType FType, int MinArgs, int MaxArgs, XPathResultType[] ArgTypes)
         {
-            this.FType    = FType;
-            this.MinArgs  = MinArgs;
-            this.MaxArgs  = MaxArgs;
+            this.FType = FType;
+            this.MinArgs = MinArgs;
+            this.MaxArgs = MaxArgs;
             this.ArgTypes = ArgTypes;
         }
 
@@ -101,8 +100,8 @@ internal class XPathParser
     public static AstNode ParseXPathExpression(string XPathExpression)
     {
         var scanner = new XPathScanner(XPathExpression);
-        var parser  = new XPathParser(scanner);
-        var result  = parser.ParseExpression(null);
+        var parser = new XPathParser(scanner);
+        var result = parser.ParseExpression(null);
         if (scanner.Kind != XPathScanner.LexKind.Eof)
             throw new XPathException($"'{scanner.SourceText}' has an invalid token.");
         return result;
@@ -112,8 +111,8 @@ internal class XPathParser
     public static AstNode ParseXPathPattern(string XpathPattern)
     {
         var scanner = new XPathScanner(XpathPattern);
-        var parser  = new XPathParser(scanner);
-        var result  = parser.ParsePattern();
+        var parser = new XPathParser(scanner);
+        var result = parser.ParsePattern();
         if (scanner.Kind != XPathScanner.LexKind.Eof)
             throw new XPathException($"'{scanner.SourceText}' has an invalid token.");
         return result;
@@ -183,7 +182,7 @@ internal class XPathParser
                 XPathScanner.LexKind.Le => Operator.Op.Le,
                 XPathScanner.LexKind.Gt => Operator.Op.Gt,
                 XPathScanner.LexKind.Ge => Operator.Op.Ge,
-                _                       => Operator.Op.Invalid
+                _ => Operator.Op.Invalid
             };
             if (@operator == Operator.Op.Invalid) return operand;
             NextLex();
@@ -201,9 +200,9 @@ internal class XPathParser
         {
             var @operator = _Scanner.Kind switch
             {
-                XPathScanner.LexKind.Plus  => Operator.Op.Plus,
+                XPathScanner.LexKind.Plus => Operator.Op.Plus,
                 XPathScanner.LexKind.Minus => Operator.Op.Minus,
-                _                          => Operator.Op.Invalid
+                _ => Operator.Op.Invalid
             };
             if (@operator == Operator.Op.Invalid) return operand;
             NextLex();
@@ -355,12 +354,12 @@ internal class XPathParser
             case XPathScanner.LexKind.Dot:
                 //>> '.'
                 NextLex();
-                operand = new Axis(Axis.AxisType.Self, QyInput);
+                operand = new Axis(Axis.AxisType.Self, QyInput!);
                 break;
             case XPathScanner.LexKind.DotDot:
                 //>> '..'
                 NextLex();
-                operand = new Axis(Axis.AxisType.Parent, QyInput);
+                operand = new Axis(Axis.AxisType.Parent, QyInput!);
                 break;
             default:
                 //>> ( AxisName '::' | '@' )? NodeTest Predicate*
@@ -403,14 +402,14 @@ internal class XPathParser
                 if (_Scanner.CanBeFunction && IsNodeType(_Scanner))
                 {
                     node_prefix = string.Empty;
-                    node_name   = string.Empty;
+                    node_name = string.Empty;
                     NodeType = _Scanner.Name switch
                     {
-                        "comment"                => XPathNodeType.Comment,
-                        "text"                   => XPathNodeType.Text,
-                        "node"                   => XPathNodeType.All,
+                        "comment" => XPathNodeType.Comment,
+                        "text" => XPathNodeType.Text,
+                        "node" => XPathNodeType.All,
                         "processing-instruction" => XPathNodeType.ProcessingInstruction,
-                        _                        => XPathNodeType.Root
+                        _ => XPathNodeType.Root
                     };
                     NextLex();
 
@@ -430,26 +429,26 @@ internal class XPathParser
                 else
                 {
                     node_prefix = _Scanner.Prefix;
-                    node_name   = _Scanner.Name;
+                    node_name = _Scanner.Name;
                     NextLex();
                     if (node_name == "*") node_name = string.Empty;
                 }
                 break;
             case XPathScanner.LexKind.Star:
                 node_prefix = string.Empty;
-                node_name   = string.Empty;
+                node_name = string.Empty;
                 NextLex();
                 break;
             default:
                 throw new XPathException($"Expression {_Scanner.SourceText} must evaluate to a node-set.");
         }
-        return new Axis(AxisType, QyInput, node_prefix, node_name, NodeType);
+        return new Axis(AxisType, QyInput!, node_prefix, node_name, NodeType);
     }
 
     private static bool IsPrimaryExpr(XPathScanner scanner) =>
-        scanner.Kind is XPathScanner.LexKind.String or XPathScanner.LexKind.Number or XPathScanner.LexKind.Dollar or XPathScanner.LexKind.LParens 
-        || scanner.Kind == XPathScanner.LexKind.Name
-        && scanner.CanBeFunction && !IsNodeType(scanner);
+        scanner.Kind is XPathScanner.LexKind.String or XPathScanner.LexKind.Number or XPathScanner.LexKind.Dollar or XPathScanner.LexKind.LParens
+        || (scanner.Kind == XPathScanner.LexKind.Name
+        && scanner.CanBeFunction && !IsNodeType(scanner));
 
     //>> PrimaryExpr ::= Literal | Number | VariableReference | '(' Expr ')' | FunctionCall
     private AstNode ParsePrimaryExpr(AstNode? QyInput)
@@ -488,8 +487,8 @@ internal class XPathParser
     private AstNode ParseMethod(AstNode? QyInput)
     {
         var arg_list = new ArrayList();
-        var name     = _Scanner.Name;
-        var prefix   = _Scanner.Prefix;
+        var name = _Scanner.Name;
+        var prefix = _Scanner.Prefix;
         PassToken(XPathScanner.LexKind.Name);
         PassToken(XPathScanner.LexKind.LParens);
         if (_Scanner.Kind != XPathScanner.LexKind.RParens)
@@ -510,7 +509,7 @@ internal class XPathParser
         if (pi.FType == Function.FunctionType.FuncConcat)
             for (var i = 0; i < arg_count; i++)
             {
-                var arg = (AstNode)arg_list[i];
+                var arg = (AstNode)arg_list[i]!;
                 if (arg.ReturnType != XPathResultType.String)
                     arg = new Function(Function.FunctionType.FuncString, arg);
                 arg_list[i] = arg;
@@ -523,7 +522,7 @@ internal class XPathParser
                 arg_count = pi.ArgTypes.Length; // argument we have the type specified (can be < pi.MinArgs)
             for (var i = 0; i < arg_count; i++)
             {
-                var arg = (AstNode)arg_list[i];
+                var arg = (AstNode)arg_list[i]!;
                 if (pi.ArgTypes[i] == XPathResultType.Any || pi.ArgTypes[i] == arg.ReturnType) continue;
                 switch (pi.ArgTypes[i])
                 {
@@ -610,7 +609,7 @@ internal class XPathParser
         switch (_Scanner.Name)
         {
             case "id":
-                var pi = (ParamInfo)__FunctionTable["id"];
+                var pi = (ParamInfo)__FunctionTable["id"]!;
                 NextLex();
                 PassToken(XPathScanner.LexKind.LParens);
                 CheckToken(XPathScanner.LexKind.String);
@@ -666,7 +665,7 @@ internal class XPathParser
                 break;
             case XPathScanner.LexKind.Axe: //>> AxisName '::'
                 axis_type = GetAxis(_Scanner);
-                if (axis_type != Axis.AxisType.Child && axis_type != Axis.AxisType.Attribute)
+                if (axis_type is not Axis.AxisType.Child and not Axis.AxisType.Attribute)
                     throw new XPathException($"'{_Scanner.SourceText}' has an invalid token.");
                 NextLex();
                 break;
@@ -713,7 +712,7 @@ internal class XPathParser
 
     private void CheckNodeSet(XPathResultType t)
     {
-        if (t != XPathResultType.NodeSet && t != XPathResultType.Error)
+        if (t is not XPathResultType.NodeSet and not XPathResultType.Error)
             throw new XPathException($"Expression {_Scanner.SourceText} must evaluate to a node-set");
     }
 
@@ -777,8 +776,9 @@ internal class XPathParser
     {
         Debug.Assert(Scanner.Kind == XPathScanner.LexKind.Axe);
         var axis = __AxesTable[Scanner.Name];
-        if (axis is null) throw new XPathException($"'{_Scanner.SourceText}' has an invalid token.");
-        return (Axis.AxisType)axis;
+        return axis is null
+            ? throw new XPathException($"'{_Scanner.SourceText}' has an invalid token.")
+            : (Axis.AxisType)axis;
     }
 
     #endregion

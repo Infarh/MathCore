@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable InconsistentNaming
+﻿// ReSharper disable InconsistentNaming
 // ReSharper disable UnusedType.Global
 
 namespace MathCore.DifferentialEquations.Numerical;

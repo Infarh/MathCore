@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 // ReSharper disable once CheckNamespace
 
 using System.Runtime.InteropServices;

@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 // ReSharper disable MemberCanBePrivate.Global
 
 // ReSharper disable UnusedMember.Global
@@ -8,7 +7,7 @@ namespace System;
 
 public class LambdaDisposableObject<T>(
     T obj,
-    Action<T, object>? ObjectDisposableAction = null,
+    Action<T, object?>? ObjectDisposableAction = null,
     object? parameter = null,
     Action? BaseDisposableAction = null) : LambdaDisposable(BaseDisposableAction)
 {

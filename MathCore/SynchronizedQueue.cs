@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable MemberCanBeInternal
+﻿// ReSharper disable MemberCanBeInternal
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedType.Global
 

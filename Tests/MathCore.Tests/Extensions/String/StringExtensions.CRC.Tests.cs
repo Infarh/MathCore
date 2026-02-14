@@ -54,13 +54,13 @@ public class StringExtensionsCRCTests
     {
         const string text = "Test Data For CRC";
 
-        var crc8  = text.ComputeCRC8();
+        var crc8 = text.ComputeCRC8();
         var crc16 = text.ComputeCRC16();
         var crc32 = text.ComputeCRC32(Polynomial: 0xEDB88320, InitialValue: 0xFFFFFFFF, XOROut: 0xFFFFFFFF, RefIn: true, RefOut: false);
         var crc64 = text.ComputeCRC64();
 
-        Assert.AreNotEqual((ulong)crc8, (ulong)crc16);
-        Assert.AreNotEqual((ulong)crc16, (ulong)crc32);
+        Assert.AreNotEqual(crc8, (ulong)crc16);
+        Assert.AreNotEqual(crc16, (ulong)crc32);
         Assert.AreNotEqual(crc32, (uint)crc64);
     }
 
@@ -80,6 +80,6 @@ public class StringExtensionsCRCTests
     {
         const string text = "Some random test text";
         var crc = text.ComputeCRC32(Polynomial: 0xEDB88320, InitialValue: 0xFFFFFFFF, XOROut: 0xFFFFFFFF, RefIn: true, RefOut: false);
-        Assert.IsTrue(crc >= 0);
+        Assert.IsGreaterThanOrEqualTo<uint>(0, crc);
     }
 }

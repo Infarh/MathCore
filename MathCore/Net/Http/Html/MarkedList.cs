@@ -5,7 +5,7 @@ namespace MathCore.Net.Http.Html;
 
 public class MarkedList : TypedElement
 {
-    private IEnumerable Items { get; set; }
+    private IEnumerable Items { get; set; } = null!;
 
     public MarkedList(params ListItem[] items) : base("ul", [.. items]) { }
 

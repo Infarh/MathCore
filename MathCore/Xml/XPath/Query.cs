@@ -26,7 +26,7 @@ internal abstract class Query
 
     #region Methods
 
-    internal virtual object GetValue(XPathReader reader) => null;
+    internal virtual object? GetValue(XPathReader reader) => null;
 
     //the default always not matched
     internal virtual bool MatchNode(XPathReader reader) => false;

@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Values;
+﻿namespace MathCore.Values;
 
 [Serializable]
 public struct ByteCountValue(double Value, ByteDimensionEnum Dimension)

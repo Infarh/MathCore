@@ -1,12 +1,11 @@
-﻿#nullable enable
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 // ReSharper disable once CheckNamespace
 namespace System.Threading.Tasks;
 
 public readonly ref struct SynchronizationContextAwaitable(SynchronizationContext Context, Task? Task = null)
 {
-    internal static readonly SendOrPostCallback StartAction = action => ((Action)action)();
+    internal static readonly SendOrPostCallback StartAction = action => ((Action)action!)();
     private readonly Task? _Task = Task;
 
     public SynchronizationContextAwaiter GetAwaiter() => new(Context, _Task);

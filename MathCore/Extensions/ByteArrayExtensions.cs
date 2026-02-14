@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 using System.Text;

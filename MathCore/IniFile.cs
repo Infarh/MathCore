@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 using System.Text;
 
 namespace MathCore;
@@ -14,13 +13,13 @@ public static class IniFile
         var category = string.Empty;
         foreach (var line in file.GetStringLines(encoding ?? Encoding.UTF8).Where(l => l is { Length: > 2 } and not [';', ..]))
         {
-            if (line.AsStringPtr().Trim().IsInBracket('[', ']'))
+            if (line!.AsStringPtr().Trim().IsInBracket('[', ']'))
             {
-                category = line.AsStringPtr(1, -1);
+                category = line!.AsStringPtr(1, -1);
                 continue;
             }
 
-            var index = line.IndexOf('=');
+            var index = line!.IndexOf('=');
             if (index < 0) continue;
 
             var name = line.AsStringPtr(0, index).Trim().ToString();

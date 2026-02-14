@@ -24,15 +24,15 @@ internal sealed class MethodOperand : Query
     //
     // ReSharper disable once CommentTypo
     //  /E/E1[namespaceuri(../E)= 'test']
-    internal override object GetValue(XPathReader reader) =>
+    internal override object? GetValue(XPathReader reader) =>
         _FuncType switch
         {
-            Function.FunctionType.FuncCount        => reader.AttributeCount,
-            Function.FunctionType.FuncPosition     => PositionCount,
+            Function.FunctionType.FuncCount => reader.AttributeCount,
+            Function.FunctionType.FuncPosition => PositionCount,
             Function.FunctionType.FuncNameSpaceUri => reader.NamespaceURI,
-            Function.FunctionType.FuncLocalName    => reader.LocalName,
-            Function.FunctionType.FuncName         => reader.Name,
-            _                                      => null
+            Function.FunctionType.FuncLocalName => reader.LocalName,
+            Function.FunctionType.FuncName => reader.Name,
+            _ => null
         };
 
     internal override XPathResultType ReturnType() => _FuncType <= Function.FunctionType.FuncCount

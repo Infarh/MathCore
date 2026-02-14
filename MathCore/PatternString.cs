@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections;
+﻿using System.Collections;
 using System.Globalization;
 using System.Text.RegularExpressions;
 // ReSharper disable UnusedMember.Global
@@ -9,10 +8,19 @@ namespace MathCore;
 /// <summary>Строковый процессор, формирующий строку на основе шаблона</summary>
 /// <remarks>Новый процессор шаблона строки</remarks>
 /// <param name="Pattern">Шаблон строки, содержащий набор полей для подстановки в них данных</param>
-public class PatternString(string Pattern) : IEnumerable<KeyValuePair<string, object>>
+public partial class PatternString(string Pattern) : IEnumerable<KeyValuePair<string, object>>
 {
+
+#if NET5_0_OR_GREATER
+    [GeneratedRegex(@"{(?<name>\w+)(?::(?<format>.+?))?}", RegexOptions.Compiled)]
+    private static partial Regex GetPatternStringRegex();
+
+    /// <summary>Регулярное выражение поиска составных частей шаблона</summary>
+    private static readonly Regex __Regex = GetPatternStringRegex();
+#else
     /// <summary>Регулярное выражение поиска составных частей шаблона</summary>
     private static readonly Regex __Regex = new(@"{(?<name>\w+)(?::(?<format>.+?))?}", RegexOptions.Compiled);
+#endif
 
     private readonly string _Pattern = Pattern.NotNull();
     private readonly Dictionary<string, object> _Fields = [];
@@ -104,19 +112,19 @@ public class PatternString(string Pattern) : IEnumerable<KeyValuePair<string, ob
     {
         var name = Match.Groups["name"].Value;
 
-        if (!_Fields.TryGetValue(name, out var selector)) 
+        if (!_Fields.TryGetValue(name, out var selector))
             return Match.Value;
 
         var value = selector switch
         {
-            Func<object> f         => f(),
+            Func<object> f => f(),
             Func<string, object> f => f(name),
-            _                      => selector
+            _ => selector
         };
 
         return Match.Groups["format"].Success && value is IFormattable formattable_value
             ? formattable_value.ToString(Match.Groups["format"].Value, FormatProvider)
-            : value as string ?? value.ToString();
+            : value as string ?? value.ToString()!;
     }
 
     public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => _Fields.GetEnumerator();

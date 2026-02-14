@@ -1,7 +1,6 @@
-﻿#nullable enable
-namespace MathCore;
+﻿namespace MathCore;
 
-public class LambdaStateMachine<TState, TValue>(TState state = default)
+public class LambdaStateMachine<TState, TValue>(TState state = default!)
 {
     public delegate TState Rule(TState State, TValue Value);
 
@@ -26,19 +25,20 @@ public class LambdaStateMachine<TState, TValue>(TState state = default)
     {
         var e = new NewValueEventArgs(state, Value);
         OnNewValue(e);
+        if (e.State is null) throw new InvalidOperationException("Состояние не может быть null");
         return e.State;
     }
 
     protected virtual void OnNewValue(NewValueEventArgs e) => NewValue?.Invoke(this, e);
 
-    protected virtual void OnNewState(TState OldState, TState NewState, TValue Value = default) => this.NewState?.Invoke(this, new(OldState, NewState, Value));
+    protected virtual void OnNewState(TState OldState, TState NewState, TValue Value = default!) => this.NewState?.Invoke(this, new(OldState, NewState, Value));
 
     public TState State
     {
         get => state;
         set
         {
-            if(Equals(state, value)) return;
+            if (Equals(state, value)) return;
             OnNewState(state, state = value);
         }
     }
@@ -46,7 +46,7 @@ public class LambdaStateMachine<TState, TValue>(TState state = default)
     public void Add(TValue Value)
     {
         var new_state = OnNewValue(Value);
-        if(Equals(new_state, state)) return;
+        if (Equals(new_state, state)) return;
         OnNewState(state, state = new_state, Value);
     }
 }

@@ -48,7 +48,7 @@ public partial struct Complex : IParsable<Complex>, ISpanParsable<Complex>, IUtf
         return str;
     }
 
-    public static Complex Parse(ReadOnlySpan<char> str, IFormatProvider provider) => throw new NotImplementedException();
+    public static Complex Parse(ReadOnlySpan<char> str, IFormatProvider? provider) => throw new NotImplementedException();
 
     private readonly ref struct SpanSplitEnumerable(ReadOnlySpan<char> str, ReadOnlySpan<char> separators)
     {
@@ -85,11 +85,13 @@ public partial struct Complex : IParsable<Complex>, ISpanParsable<Complex>, IUtf
         }
     }
 
-    public static bool TryParse(ReadOnlySpan<char> str, IFormatProvider provider, [MaybeNullWhen(false)] out Complex z)
+    public static bool TryParse(ReadOnlySpan<char> str, IFormatProvider? provider, [MaybeNullWhen(false)] out Complex z)
     {
         var str_ptr = ClearStringPtr(str);
 
-        var format = (NumberFormatInfo)provider.GetFormat(typeof(NumberFormatInfo));
+        provider ??= CultureInfo.CurrentCulture;
+
+        var format = (NumberFormatInfo)provider.GetFormat(typeof(NumberFormatInfo)).NotNull();
 
         var minus_char = format.NegativeSign[0];
 
@@ -148,15 +150,15 @@ public partial struct Complex : IParsable<Complex>, ISpanParsable<Complex>, IUtf
     /// <returns>Комплексное число, получаемое в результате разбора строки</returns>
     /// <exception cref="ArgumentNullException">В случае если передана пустая ссылка на строку</exception>
     /// <exception cref="FormatException">В случае ошибочной строки</exception>
-    public static Complex Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider provider) =>
+    public static Complex Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider) =>
         TryParse(utf8Text, provider, out var result)
             ? result
             : throw new FormatException("Строка имела неверный формат");
-    public static bool TryParse(ReadOnlySpan<byte> str, IFormatProvider provider, out Complex z) => TryParse(str.Cast<char>(), provider, out z);
+    public static bool TryParse(ReadOnlySpan<byte> str, IFormatProvider? provider, out Complex z) => TryParse(str.Cast<char>(), provider, out z);
 
     #endregion
 
-    public bool TryFormat(Span<char> destination, out int CharsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
+    public bool TryFormat(Span<char> destination, out int CharsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
         var re = Re;
         var im = Im;
@@ -168,12 +170,12 @@ public partial struct Complex : IParsable<Complex>, ISpanParsable<Complex>, IUtf
         {
             var re_was_written = re.TryFormat(destination, out var re_chars_written, format, provider);
             CharsWritten += re_chars_written;
-            if(!re_was_written) return false;
+            if (!re_was_written) return false;
         }
 
         if (im == 0) return true;
 
-        if(im > 0 && CharsWritten > 0)
+        if (im > 0 && CharsWritten > 0)
         {
             if (destination.Length < CharsWritten + 1)
                 return false;
@@ -181,14 +183,14 @@ public partial struct Complex : IParsable<Complex>, ISpanParsable<Complex>, IUtf
             CharsWritten++;
         }
 
-        if(im == -1)
+        if (im == -1)
         {
             if (destination.Length < CharsWritten + 1)
                 return false;
             destination[CharsWritten] = '-';
             CharsWritten++;
         }
-        else if(im != 1)
+        else if (im != 1)
         {
             var im_was_written = im.TryFormat(destination[CharsWritten..], out var im_chars_written, format, provider);
             CharsWritten += im_chars_written;
@@ -203,7 +205,7 @@ public partial struct Complex : IParsable<Complex>, ISpanParsable<Complex>, IUtf
         return true;
     }
 
-    public bool TryFormat(Span<byte> destination, out int BytesWritten, ReadOnlySpan<char> format, IFormatProvider provider)
+    public bool TryFormat(Span<byte> destination, out int BytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
         var re = Re;
         var im = Im;

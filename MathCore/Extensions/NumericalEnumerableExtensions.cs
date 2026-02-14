@@ -1,5 +1,4 @@
-﻿#nullable enable
-using MathCore.Values;
+﻿using MathCore.Values;
 
 // ReSharper disable once CheckNamespace
 namespace System;

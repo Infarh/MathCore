@@ -1,5 +1,4 @@
-﻿#nullable enable
-using MathCore.IoC.ServiceRegistrations;
+﻿using MathCore.IoC.ServiceRegistrations;
 
 namespace MathCore.IoC;
 

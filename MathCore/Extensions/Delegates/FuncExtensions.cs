@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections;
+﻿using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -8,6 +7,10 @@ using System.Runtime.InteropServices;
 using MathCore;
 using MathCore.DifferentialEquations.Numerical;
 using MathCore.Evaluations;
+
+//Вещественная функция одного вещественного аргумента
+using Function = System.Func<double, double>;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable MemberCanBeProtected.Global
@@ -18,10 +21,6 @@ using MathCore.Evaluations;
 
 // ReSharper disable once CheckNamespace
 namespace System;
-
-//Вещественная функция одного вещественного аргумента
-using Function = Func<double, double>;
-
 /// <summary>Класс методов-расширений для функции</summary>
 public static class FuncExtensions
 {
@@ -44,8 +43,8 @@ public static class FuncExtensions
     /// <param name="function">Преобразуемая функция</param>
     /// <param name="Name">Имя вычисления</param>
     /// <returns>Вычисление функции</returns>
-    public static FunctionEvaluation<T> ToEvaluation<T>(this Func<T> function, string? Name = null) => Name is null 
-        ? new FunctionEvaluation<T>(function) 
+    public static FunctionEvaluation<T> ToEvaluation<T>(this Func<T> function, string? Name = null) => Name is null
+        ? new FunctionEvaluation<T>(function)
         : new NamedFunctionEvaluation<T>(function, Name);
 
     /// <summary>Поиск нуля функции методом Ньютона</summary>
@@ -156,7 +155,7 @@ public static class FuncExtensions
     {
         const double k = Consts.GoldenRatio;
 
-        var d  = x2 - x1;
+        var d = x2 - x1;
         var X1 = x1 + k * d;
         var X2 = x2 - k * d;
 
@@ -201,9 +200,9 @@ public static class FuncExtensions
     {
         while (Math.Abs(x2 - x1) > Eps)
         {
-            var d                 = (x2 - x1) / 3;
-            var X1                = x1 + d;
-            var X2                = x2 - d;
+            var d = (x2 - x1) / 3;
+            var X1 = x1 + d;
+            var X2 = x2 - d;
             if (f(X1) < f(X2)) x1 = X1; else x2 = X2;
         }
         return (x2 - x1) / 2;
@@ -359,7 +358,7 @@ public static class FuncExtensions
         (1, _) => f.ArgumentShift(b),
         (_, 0) => x => f(k * x),
         (0, _) => _ => b,
-        _      => x => f(k * x + b)
+        _ => x => f(k * x + b)
     };
 
     /// <summary>Деление функции на число g(x) = f(x) / a</summary>
@@ -376,7 +375,7 @@ public static class FuncExtensions
         0 => x => x switch
         {
             > 0 => double.PositiveInfinity,
-            < 0 => double.NegativeInfinity, 
+            < 0 => double.NegativeInfinity,
             _ => double.NaN
         },
         _ => x => f(x) / a
@@ -453,22 +452,22 @@ public static class FuncExtensions
     {
         if (n == 0)
         {
-            var Dx    = dx / 2d;
+            var Dx = dx / 2d;
             var min_x = x - Dx;
             var max_x = x + Dx;
 
             return (dx, f(max_x) - f(min_x)) switch
             {
-                (0, >0)     => double.PositiveInfinity,
-                (0, <0)     => double.NegativeInfinity,
-                (0, 0)      => double.NaN,
+                (0, > 0) => double.PositiveInfinity,
+                (0, < 0) => double.NegativeInfinity,
+                (0, 0) => double.NaN,
                 var (_, dy) => dy / dx
             };
         }
         n--;
         var result = 0d;
 
-        for (var i = 0; i < 6; i++) 
+        for (var i = 0; i < 6; i++)
             result += Solver.Differential.diff_a[n, i] * f(x + i * dx);
 
         return result / Solver.Differential.diff_b[n] / dx;
@@ -537,9 +536,9 @@ public static class FuncExtensions
         if (x1 == x2) return f0;
 
         var dx05 = dx * .5;
-        var v    = f(x1);
-        x2      -= dx;
-        while (x1 < x2) 
+        var v = f(x1);
+        x2 -= dx;
+        while (x1 < x2)
             f0 += f1 + (f1 += (v + (v = f(x1 += dx))) * dx05);
 
         return f0 * dx05 + (f1 + (v + f(x2 += dx)) * (dx05 = .5 * (x2 - x1))) * dx05;
@@ -561,8 +560,8 @@ public static class FuncExtensions
         double f1 = 0,
         double f0 = 0,
         double dx = 0.0001
-    ) => x1 == x2 
-        ? Task.FromResult(f0) 
+    ) => x1 == x2
+        ? Task.FromResult(f0)
         : Task.Run(() => f.GetIntegral2Value(x1, x2, f1, f0, dx));
 
     /// <summary>Интегрирование функции с модификацией ядра интеграла</summary>
@@ -587,7 +586,7 @@ public static class FuncExtensions
 
         f0 += f(x1) / 2;
         x2 -= dx;
-        while ((x1 += dx) < x2) 
+        while ((x1 += dx) < x2)
             f0 += Core(f(x1), x1);
 
         var v = f(x1 += dx);
@@ -637,9 +636,9 @@ public static class FuncExtensions
         if (x1 == x2) return f0;
 
         var dx05 = dx * .5;
-        var v    = Core(f(x1), x1);
+        var v = Core(f(x1), x1);
         x2 -= dx;
-        while (x1 < x2) 
+        while (x1 < x2)
             f0 += f1 + (f1 += (v + (v = f(x1 += dx))) * dx05);
 
         return f0 * dx05 + (f1 + (v + Core(f(x2 += dx), x2)) * (dx05 = .5 * (x2 - x1))) * dx05;
@@ -661,8 +660,8 @@ public static class FuncExtensions
         double x2,
         double f0 = 0,
         double dx = 0.0001
-    ) => x1 == x2 
-        ? Task.FromResult(f0) 
+    ) => x1 == x2
+        ? Task.FromResult(f0)
         : Task.Run(() => f.GetIntegral2Value(Core, x1, x2, dx));
 
     /// <summary>Численный расчёт определённого интеграла методом Симпсона</summary>
@@ -675,14 +674,14 @@ public static class FuncExtensions
     {
         if (x1 == x2) return 0;
 
-        var dx     = Math.Abs(x2 - x1) / N;
-        var dx05   = dx / 2;
-        var x      = x1;
-        var s      = .0;
+        var dx = Math.Abs(x2 - x1) / N;
+        var dx05 = dx / 2;
+        var x = x1;
+        var s = .0;
         var s_dx05 = f(x + dx05);
         for (var i = 1; i < N; i++)
         {
-            s      += f(x += dx);
+            s += f(x += dx);
             s_dx05 += f(x + dx05);
         }
         return (f(x1) + 2 * s + 4 * s_dx05 + f(x2)) * dx / 6;
@@ -706,13 +705,13 @@ public static class FuncExtensions
     {
         if (x1 == x2) return 0;
 
-        var dx05   = 0.5 * dx;
-        var x      = x1;
-        var s      = .0;
+        var dx05 = 0.5 * dx;
+        var x = x1;
+        var s = .0;
         var s_dx05 = f(x + dx05);
         while ((x += dx) < x2)
         {
-            s      += f(x);
+            s += f(x);
             s_dx05 += f(x + dx05);
         }
         return f0 + (f(x1) + 2 * s + 4 * s_dx05 + f(x2)) * dx / 6;
@@ -774,7 +773,7 @@ public static class FuncExtensions
         if (x1 == x2) return 0;
 
         var dx = (x2 - x1) / N;
-        var I  = f.GetIntegralValue(x1, x2, dx);
+        var I = f.GetIntegralValue(x1, x2, dx);
         return Math.Abs(f.GetIntegralValue(x1, x2, dx / 2) - I) < Eps
             ? I
             : f.GetIntegralValue_AdaptiveTrapRecursive(x1, .5 * (x1 + x2), N <<= 2, Eps)
@@ -801,7 +800,7 @@ public static class FuncExtensions
 
         var I = await f.GetIntegralValue_SimpsonAsync(x1, x2, N <<= 1).ConfigureAwait(false);
 
-        if (Math.Abs(await f.GetIntegralValue_SimpsonAsync(x1, x2, N).ConfigureAwait(false) - I) < Eps) 
+        if (Math.Abs(await f.GetIntegralValue_SimpsonAsync(x1, x2, N).ConfigureAwait(false) - I) < Eps)
             return I;
 
         var t1 = f.GetIntegralValue_AdaptiveAsync(x1, .5 * (x1 + x2), N, Eps);
@@ -819,8 +818,8 @@ public static class FuncExtensions
         var dx = x2 - x1;
         if (dx is 0d) return 0;
 
-        var s0     = dx * (f(x1) + f(x2)) / 2;
-        var m      = 1;
+        var s0 = dx * (f(x1) + f(x2)) / 2;
+        var m = 1;
         var result = 0d;
         for (var k = 1; k < K; k++)
         {
@@ -833,9 +832,9 @@ public static class FuncExtensions
             }
 
             result = (s0 + s * dx) / 2;
-            if(k > 1 && Math.Abs(result - s0) < Eps) break;
-            s0 =  result;
-            m  *= 2;
+            if (k > 1 && Math.Abs(result - s0) < Eps) break;
+            s0 = result;
+            m *= 2;
             dx /= 2;
         }
 
@@ -892,15 +891,15 @@ public static class FuncExtensions
     {
         if (x1 == x2) return 0;
 
-        var    N1   = N - 1;
-        var    dx   = (x2 - x1) / N;
-        var    data = new double[N + 1];
+        var N1 = N - 1;
+        var dx = (x2 - x1) / N;
+        var data = new double[N + 1];
         double x;
-        int    i;
+        int i;
 
         for (i = 0; i <= N; i++)
         {
-            x       = x1 + dx * i;
+            x = x1 + dx * i;
             data[i] = f(x);
         }
 
@@ -912,7 +911,7 @@ public static class FuncExtensions
         for (i = 1; i < N1; i++)
         {
             alpha[i] = -1 / (alpha[i - 1] + 4);
-            beta[i]  = (data[i + 2] - 2 * data[i + 1] + data[i] - beta[i - 1]) / (alpha[i - 1] + 4);
+            beta[i] = (data[i + 2] - 2 * data[i + 1] + data[i] - beta[i - 1]) / (alpha[i - 1] + 4);
         }
 
         var c = new double[N1];
@@ -1032,13 +1031,13 @@ public static class FuncExtensions
     public static TResult[] GetValues<TResult>(this Func<double, TResult> f, double x1, double x2, double dx)
     {
         if (x1 == x2) return [f(x1)];
-        if (Math.Abs(x2 - x1) < dx) 
+        if (Math.Abs(x2 - x1) < dx)
             return [f(x1), f(x2)];
 
-        var N      = (int)((x2 - x1) / dx);
+        var N = (int)((x2 - x1) / dx);
         var result = new List<TResult>(N);
 
-        for (var i = 0; i < N; i++) 
+        for (var i = 0; i < N; i++)
             result.Add(f(x1 + i * dx));
 
         return [.. result];
@@ -1067,22 +1066,22 @@ public static class FuncExtensions
     /// <returns>Функция, значения которой равны возведению в указанную степень значений исходной функции</returns>
     public static Function Power(this Function f, double a) => a switch
     {
-        1    => f,
-        0    => _ => 1,
-        2    => x => x * x,
-        3    => x => x * x * x,
-        4    => x => x * x * x * x,
-        5    => x => x * x * x * x * x,
-        -1   => x => 1 / x,
-        -2   => x => 1 / (x * x),
-        -3   => x => 1 / (x * x * x),
-        -4   => x => 1 / (x * x * x * x),
-        -5   => x => 1 / (x * x * x * x * x),
-        0.5  => x => Math.Sqrt(x),
-        1.5  => x => x * Math.Sqrt(x),
+        1 => f,
+        0 => _ => 1,
+        2 => x => x * x,
+        3 => x => x * x * x,
+        4 => x => x * x * x * x,
+        5 => x => x * x * x * x * x,
+        -1 => x => 1 / x,
+        -2 => x => 1 / (x * x),
+        -3 => x => 1 / (x * x * x),
+        -4 => x => 1 / (x * x * x * x),
+        -5 => x => 1 / (x * x * x * x * x),
+        0.5 => Math.Sqrt,
+        1.5 => x => x * Math.Sqrt(x),
         -0.5 => x => 1 / Math.Sqrt(x),
         -1.5 => x => 1 / (x * Math.Sqrt(x)),
-        _    => x => Math.Pow(f(x), a)
+        _ => x => Math.Pow(f(x), a)
     };
 
     /// <summary>Получение отрицательной функции</summary>
@@ -1124,28 +1123,27 @@ public static class FuncExtensions
         => Arguments.Select(X => X.Async(f, (x, ff) => ff(x))).WhenAll().Result;
 
     /// <summary>Интегратор функции</summary>
-    public sealed class Integrator
+    /// <remarks>Инициализация нового интегратора функции</remarks>
+    /// <param name="f">Интегрируемая функция</param>
+    /// <param name="x0">Начальное положение интегратора</param>
+    /// <param name="C">Константа интегрирования</param>
+    public sealed class Integrator(Function f, double x0, double C = 0)
     {
         /// <summary>Объект синхронизации потоков при доступе к параметрам интегратора</summary>
+#if NET9_0_OR_GREATER
+        private readonly Lock _LockObject = new();
+#else
         private readonly object _LockObject = new();
+#endif
+
         /// <summary>Константа интегрирования</summary>
-        public double C { get; private set; }
+        public double C { get; private set; } = C;
+
         /// <summary>Начальное положение интегратора</summary>
-        public double x0 { get; private set; }
+        public double x0 { get; private set; } = x0;
 
         /// <summary>Интегрируемая функция</summary>
-        public Function f { get; }
-
-        /// <summary>Инициализация нового интегратора функции</summary>
-        /// <param name="f">Интегрируемая функция</param>
-        /// <param name="x0">Начальное положение интегратора</param>
-        /// <param name="C">Константа интегрирования</param>
-        public Integrator(Function f, double x0, double C = 0)
-        {
-            this.f  = f;
-            this.x0 = x0;
-            this.C  = C;
-        }
+        public Function f { get; } = f;
 
         /// <summary>Метод расчёта интеграла от предыдущего положения интегратора до указанного</summary>
         /// <param name="x">Требуемое значение конца интервала интегрирования</param>
@@ -1213,7 +1211,7 @@ public static class FuncExtensions
             new(0x40)             // EXECUTE_READWRITE
         );
         Marshal.Copy(sse_assembly_bytes, 0, code_buffer, sse_assembly_bytes.Length);
-        return __VectorAddDelegate = (VectorAddDelegate)Marshal.GetDelegateForFunctionPointer(code_buffer, typeof(VectorAddDelegate));
+        return __VectorAddDelegate = Marshal.GetDelegateForFunctionPointer<VectorAddDelegate>(code_buffer);
     }
 
     #region Адаптивная дискретизация функци
@@ -1236,7 +1234,7 @@ public static class FuncExtensions
             public Result(double Argument, TValue Value)
             {
                 this.Argument = Argument;
-                this.Value    = Value;
+                this.Value = Value;
             }
 
             /// <summary>Оператор неявного приведения отсчёта функции к кортежу двух элементов - значение отсчёта функции - значение функции</summary>
@@ -1255,7 +1253,7 @@ public static class FuncExtensions
         /// <param name="Accuracy">Оценка точности дискретизации</param>
         public SamplingResult(IEnumerable<Result> Values, double Accuracy)
         {
-            this.Values   = Values;
+            this.Values = Values;
             this.Accuracy = Accuracy;
         }
 
@@ -1283,11 +1281,11 @@ public static class FuncExtensions
             double dx
         )
         {
-            var result   = new LinkedList<Result>();
+            var result = new LinkedList<Result>();
             var accuracy = 0d;
-            var x        = x1;
-            var y        = f(x);
-            var node     = result.AddFirst(new Result(x, y));
+            var x = x1;
+            var y = f(x);
+            var node = result.AddFirst(new Result(x, y));
 
             do
             {
@@ -1295,13 +1293,14 @@ public static class FuncExtensions
                 var dy = -y + (y = f(x));
 
                 var l = Math.Sqrt(dx * dx + dy * dy);
-                l        -= dx;
+                l -= dx;
                 accuracy += l * l;
-                node     =  result.AddAfter(node, new Result(x, y));
+                node = result.AddAfter(node, new Result(x, y));
             } while (Math.Abs(x2 - x) / dx > 0.25);
 
-            if (result.Last.Value.Argument != x2)
-                result.Last.Value = new(x2, f(x2));
+            var last_node = result.Last.NotNull();
+            if (last_node.Value.Argument != x2)
+                last_node.Value = new(x2, f(x2));
             accuracy = Math.Sqrt(accuracy);
             return (result, accuracy);
         }
@@ -1344,31 +1343,31 @@ public static class FuncExtensions
             lock (_List)
             {
                 var current = _List.First;
-                var result  = 0d;
-                var next    = current.Next;
+                var result = 0d;
+                var next = current!.Next;
 
                 if (next is null) return 0d;
                 do
                 {
                     var current_value = current.Value;
-                    var next_value    = next.Value;
-                    var x0            = current_value.Argument;
-                    var y0            = current_value.Value;
-                    var y1            = next_value.Value;
-                    var x1            = next_value.Argument;
-                    var dx            = x1 - x0;
-                    var dy            = y1 - y0;
-                    var l             = Math.Sqrt(dx * dx + dy * dy);
+                    var next_value = next.Value;
+                    var x0 = current_value.Argument;
+                    var y0 = current_value.Value;
+                    var y1 = next_value.Value;
+                    var x1 = next_value.Argument;
+                    var dx = x1 - x0;
+                    var dy = y1 - y0;
+                    var l = Math.Sqrt(dx * dx + dy * dy);
 
                     if (l >= accuracy)
                     {
                         var x11 = x0 + (x1 - x0) * accuracy / l;
 
                         var y11 = _F(x11);
-                        dx     =  x11 - x0;
-                        dy     =  y11 - y0;
-                        l      =  Math.Sqrt(dx * dx + dy * dy);
-                        l      =  accuracy - l;
+                        dx = x11 - x0;
+                        dy = y11 - y0;
+                        l = Math.Sqrt(dx * dx + dy * dy);
+                        l = accuracy - l;
                         result += l * l;
                         current.AddAfter(new(x11, y11));
                     }
@@ -1434,25 +1433,25 @@ public static class FuncExtensions
             double dx
         )
         {
-            var result   = new LinkedList<Result>();
-            var x        = x1;
-            var v        = f(x);
-            var y        = converter(v);
-            var node     = result.AddFirst(new Result(x, v));
+            var result = new LinkedList<Result>();
+            var x = x1;
+            var v = f(x);
+            var y = converter(v);
+            var node = result.AddFirst(new Result(x, v));
             var accuracy = 0d;
 
             do
             {
                 x += dx;
-                v =  f(x);
+                v = f(x);
                 var dy = -y + (y = converter(v));
 
                 var l = Math.Sqrt(dx * dx + dy * dy);
-                l        -= dx;
+                l -= dx;
                 accuracy += l * l;
-                node     =  result.AddAfter(node, new Result(x, v));
+                node = result.AddAfter(node, new Result(x, v));
             } while (Math.Abs(x2 - x) / dx > 0.25);
-            if (result.Last.Value.Argument != x2)
+            if (result.Last!.Value.Argument != x2)
                 result.Last.Value = new(x2, f(x2));
             return (result, Math.Sqrt(accuracy));
         }
@@ -1486,13 +1485,10 @@ public static class FuncExtensions
             double dx
         ) : this(Sampling(f, converter, Math.Min(x1, x2), Math.Max(x1, x2), dx))
         { // ReSharper disable once JoinNullCheckWithUsage
-            if (f is null) throw new ArgumentNullException(nameof(f));
-            // ReSharper disable once JoinNullCheckWithUsage
-            if (converter is null) throw new ArgumentNullException(nameof(converter));
             if (dx <= 0) throw new ArgumentOutOfRangeException(nameof(dx), $"Error: {nameof(dx)} <= 0");
 
-            _F         = f;
-            _Converter = converter;
+            _F = f.NotNull();
+            _Converter = converter.NotNull();
         }
 
         /// <summary>Точная дискретизации</summary>
@@ -1506,34 +1502,34 @@ public static class FuncExtensions
 
             lock (_List)
             {
-                var current = _List.First;
-                var result  = 0d;
-                var next    = current.Next;
+                var current = _List.First.NotNull();
+                var result = 0d;
+                var next = current.Next;
 
                 if (next is null) return 0d;
                 do
                 {
                     var current_value = current.Value;
-                    var next_value    = next.Value;
-                    var x0            = current_value.Argument;
-                    var v0            = current_value.Value;
-                    var y0            = _Converter(v0);
-                    var v1            = next_value.Value;
-                    var y1            = _Converter(v1);
-                    var x1            = next_value.Argument;
-                    var dx            = x1 - x0;
-                    var dy            = y1 - y0;
-                    var l             = Math.Sqrt(dx * dx + dy * dy);
+                    var next_value = next.Value;
+                    var x0 = current_value.Argument;
+                    var v0 = current_value.Value;
+                    var y0 = _Converter(v0);
+                    var v1 = next_value.Value;
+                    var y1 = _Converter(v1);
+                    var x1 = next_value.Argument;
+                    var dx = x1 - x0;
+                    var dy = y1 - y0;
+                    var l = Math.Sqrt(dx * dx + dy * dy);
 
                     if (l >= accuracy)
                     {
                         var x11 = x0 + (x1 - x0) * accuracy / l;
                         var v11 = _F(x11);
                         var y11 = _Converter(v11);
-                        dx     =  x11 - x0;
-                        dy     =  y11 - y0;
-                        l      =  Math.Sqrt(dx * dx + dy * dy);
-                        l      =  accuracy - l;
+                        dx = x11 - x0;
+                        dy = y11 - y0;
+                        l = Math.Sqrt(dx * dx + dy * dy);
+                        l = accuracy - l;
                         result += l * l;
                         current.AddAfter(new(x11, v11));
                     }
@@ -1764,7 +1760,7 @@ public static class FuncExtensions
             var v2 = next_node.Value;
             var xx = v2.Argument - v1.Argument;
             var yy = v2.Value - v1.Value;
-            var l  = Math.Sqrt(xx * xx + yy * yy);
+            var l = Math.Sqrt(xx * xx + yy * yy);
 
             if (l > Eps)
             {
@@ -1773,8 +1769,8 @@ public static class FuncExtensions
             }
             else
             {
-                var x  = (v1.Argument + v2.Argument) / 2;
-                var y  = f(x);
+                var x = (v1.Argument + v2.Argument) / 2;
+                var y = f(x);
                 var dx = x - v1.Argument;
                 var dy = y - v1.Value;
                 l = Math.Sqrt(dx * dx + dy * dy);
@@ -1784,7 +1780,7 @@ public static class FuncExtensions
                 {
                     node = next_node;
                     var dl = Eps - l;
-                    dl       *= dl;
+                    dl *= dl;
                     accuracy += dl;
                 }
             }
@@ -1850,7 +1846,7 @@ public static class FuncExtensions
         result.AddLast(new SamplingResult<T>.Result(x2, f(x2)));
         var accuracy = 0d;
 
-        var node = result.First;
+        var node = result.First.NotNull();
 
         do
         {
@@ -1858,13 +1854,13 @@ public static class FuncExtensions
 
             var x11 = v1.Argument;
 
-            var y11       = converter(v1.Value);
+            var y11 = converter(v1.Value);
             var next_node = node.Next;
             if (next_node is null) break;
-            var v2  = next_node.Value;
+            var v2 = next_node.Value;
             var x22 = v2.Argument;
             var y22 = converter(v2.Value);
-            var l   = Math.Sqrt((x22 - x11) * (x22 - x11) + (y22 - y11) * (y22 - y11));
+            var l = Math.Sqrt((x22 - x11) * (x22 - x11) + (y22 - y11) * (y22 - y11));
 
             if (l > Eps)
             {
@@ -1873,9 +1869,9 @@ public static class FuncExtensions
             }
             else
             {
-                var x  = (x11 + x22) / 2;
-                var v  = f(x);
-                var y  = converter(v);
+                var x = (x11 + x22) / 2;
+                var v = f(x);
+                var y = converter(v);
                 var dx = x - x11;
                 var dy = y - y11;
                 l = Math.Sqrt(dx * dx + dy * dy);

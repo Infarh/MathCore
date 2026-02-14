@@ -11,7 +11,7 @@ internal sealed class GroupQuery : BaseAxisQuery
 
     #region Methods
 
-    internal override object GetValue(XPathReader reader) => QueryInput.GetValue(reader);
+    internal override object? GetValue(XPathReader reader) => QueryInput.GetValue(reader);
 
     internal override XPathResultType ReturnType() => QueryInput.ReturnType();
 

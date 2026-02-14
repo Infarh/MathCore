@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Diagnostics;
 // ReSharper disable UnusedMember.Local
 // ReSharper disable UnusedMember.Global
@@ -8,6 +7,27 @@ using System.Diagnostics;
 namespace MathCore.Threading.Tasks.Schedulers;
 
 /// <summary>Планировщик обеспечивает постановку задач в очередь с приоритетами</summary>
+/// <remarks>
+/// Планировщик поддерживает два режима работы:
+/// 1) запуск задач на собственной группе потоков;
+/// 2) упаковка задач и их выполнение поверх заданного <see cref="TaskScheduler"/> с ограничением параллелизма
+/// </remarks>
+/// <example>
+/// <code>
+/// using var scheduler = new QueuedTaskScheduler(ThreadCount: 2, ThreadName: "QTS");
+///
+/// var high_priority = scheduler.ActivateNewQueue(priority: -1);
+/// var normal       = scheduler.ActivateNewQueue(priority: 0);
+///
+/// var t1 = Task.Factory.StartNew(() => { /* срочно */ },
+///     CancellationToken.None, TaskCreationOptions.None, high_priority);
+///
+/// var t2 = Task.Factory.StartNew(() => { /* обычно */ },
+///     CancellationToken.None, TaskCreationOptions.None, normal);
+///
+/// Task.WaitAll(t1, t2);
+/// </code>
+/// </example>
 [DebuggerTypeProxy(typeof(QueuedTaskSchedulerDebugView))]
 [DebuggerDisplay("Id={Id}, Queues={DebugQueueCount}, ScheduledTasks = {DebugTaskCount}")]
 public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
@@ -17,7 +37,7 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
     /// <param name="scheduler">Рассматриваемый планировщик</param>
     private class QueuedTaskSchedulerDebugView(QueuedTaskScheduler scheduler)
     {
-        /// <summary>The scheduler.</summary>
+        /// <summary>Экземпляр планировщика</summary>
         private readonly QueuedTaskScheduler _Scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
 
         /// <summary>Извлечение всех задач, запланированных непосредственно в планировщике</summary>
@@ -26,9 +46,9 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
             get
             {
                 var tasks = _Scheduler._TargetScheduler is null
-                    ? (IEnumerable<Task>)_Scheduler._BlockingTaskQueue! 
+                    ? (IEnumerable<Task>)_Scheduler._BlockingTaskQueue!
                     : _Scheduler._NonThreadSafeTaskQueue!;
-                return tasks.Where(t => t != null).ToArray();
+                return [.. tasks.Where(t => t != null)];
             }
         }
 
@@ -37,8 +57,8 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
     }
 
     /// <summary>
-    /// Отсортированный список циклических списков.
-    /// Задачи с малыми приоритетами являются предпочтительными.
+    /// Отсортированный список циклических списков.<br/>
+    /// Задачи с малыми приоритетами являются предпочтительными.<br/>
     /// Группы приоритетов являются циклическими в пределах одного уровня приоритета.
     /// </summary>
     private readonly SortedList<int, QueueGroup> _QueueGroups = [];
@@ -47,50 +67,51 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
     private readonly CancellationTokenSource _DisposeCancellation = new();
 
     /// <summary>
-    /// Максимально допустимый уровень конкурентности для текущего планировщика.
+    /// Максимально допустимый уровень конкурентности для текущего планировщика.<br/>
     /// Если используются вручную создаваемые потоки, то данное поле отображает число создаваемых потоков.
     /// </summary>
     private readonly int _ConcurrencyLevel;
 
-    /// <summary>Whether we're processing tasks on the current thread.</summary>
+    /// <summary>Признак того, что текущий поток обрабатывает задачи этого планировщика</summary>
     private static readonly ThreadLocal<bool> __TaskProcessingThread = new();
 
     // ***
-    // *** For when using a target scheduler
+    // *** Режим выполнения поверх целевого планировщика
     // ***
 
-    /// <summary>The scheduler onto which actual work is scheduled.</summary>
+    /// <summary>Целевой планировщик, поверх которого запускается обработка</summary>
     private readonly TaskScheduler? _TargetScheduler;
 
-    /// <summary>The queue of tasks to process when using an underlying target scheduler.</summary>
+    /// <summary>Очередь задач для режима выполнения поверх целевого планировщика</summary>
     private readonly Queue<Task?>? _NonThreadSafeTaskQueue;
 
-    /// <summary>The number of Tasks that have been queued or that are running whiel using an underlying scheduler.</summary>
+    /// <summary>Число задач, поставленных в очередь или выполняющихся в режиме поверх целевого планировщика</summary>
     private int _DelegatesQueuedOrRunning;
 
     // ***
-    // *** For when using our own threads
+    // *** Режим выполнения на собственных потоках
     // ***
 
-    /// <summary>The collection of tasks to be executed on our custom threads.</summary>
+    /// <summary>Блокирующая коллекция задач для выполнения на собственных потоках</summary>
     private readonly BlockingCollection<Task?>? _BlockingTaskQueue;
 
     // ***
 
-    /// <summary>Initializes the scheduler.</summary>
+    /// <summary>Инициализирует новый экземпляр <see cref="QueuedTaskScheduler"/></summary>
     public QueuedTaskScheduler() : this(Default) { }
 
-    /// <summary>Initializes the scheduler.</summary>
-    /// <param name="TargetScheduler">The target underlying scheduler onto which this sceduler's work is queued.</param>
-    /// <param name="MaxConcurrencyLevel">The maximum degree of concurrency allowed for this scheduler's work.</param>
+    /// <summary>Инициализирует новый экземпляр <see cref="QueuedTaskScheduler"/></summary>
+    /// <param name="TargetScheduler">Целевой планировщик, в который будет направляться работа</param>
+    /// <param name="MaxConcurrencyLevel">Максимальный уровень параллелизма для обработчика</param>
+    /// <exception cref="ArgumentNullException">Если <paramref name="TargetScheduler"/> равен <see langword="null"/></exception>
+    /// <exception cref="ArgumentOutOfRangeException">Если <paramref name="MaxConcurrencyLevel"/> меньше 0</exception>
     public QueuedTaskScheduler(TaskScheduler TargetScheduler, int MaxConcurrencyLevel = 0)
     {
-        // Validate arguments
+        // Проверка аргументов
         if (MaxConcurrencyLevel < 0) throw new ArgumentOutOfRangeException(nameof(MaxConcurrencyLevel));
 
-        // Initialize only those fields relevant to use an underlying scheduler.  We don't
-        // initialize the fields relevant to using our own custom threads.
-        _TargetScheduler        = TargetScheduler ?? throw new ArgumentNullException(nameof(TargetScheduler));
+        // Инициализируем только поля для режима выполнения поверх целевого планировщика
+        _TargetScheduler = TargetScheduler ?? throw new ArgumentNullException(nameof(TargetScheduler));
         _NonThreadSafeTaskQueue = [];
 
         // If 0, use the number of logical processors.  But make sure whatever value we pick
@@ -126,8 +147,8 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
         _ConcurrencyLevel = ThreadCount switch
         {
             > 0 => ThreadCount,
-            0   => Environment.ProcessorCount,
-            _   => throw new ArgumentOutOfRangeException(nameof(ThreadCount))
+            0 => Environment.ProcessorCount,
+            _ => throw new ArgumentOutOfRangeException(nameof(ThreadCount))
         };
 
         //// Validates arguments (some validation is left up to the Thread type itself).
@@ -138,16 +159,16 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
         //    ? Environment.ProcessorCount 
         //    : ThreadCount;
 
-        // Initialize the queue used for storing tasks
+        // Инициализируем очередь задач
         _BlockingTaskQueue = [];
 
-        // Create all of the threads
+        // Создаём потоки
         var threads = new Thread[ThreadCount];
         for (var i = 0; i < ThreadCount; i++)
         {
             threads[i] = new(() => ThreadBasedDispatchLoop(ThreadInit, ThreadFinally), ThreadMaxStackSize)
             {
-                Priority     = ThreadPriority,
+                Priority = ThreadPriority,
                 IsBackground = !UseForegroundThreads,
             };
             if (ThreadName != null) threads[i].Name = $"{ThreadName} ({i})";
@@ -156,14 +177,14 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
 #pragma warning restore CA1416
         }
 
-        // Start all of the threads
+        // Запускаем потоки
         foreach (var thread in threads)
             thread.Start();
     }
 
-    /// <summary>The dispatch loop run by all threads in this scheduler.</summary>
-    /// <param name="ThreadInit">An initialization routine to run when the thread begins.</param>
-    /// <param name="ThreadFinally">A finalization routine to run before the thread ends.</param>
+    /// <summary>Цикл диспетчеризации, выполняемый каждым потоком планировщика</summary>
+    /// <param name="ThreadInit">Инициализация, выполняемая при старте потока</param>
+    /// <param name="ThreadFinally">Завершение, выполняемое перед остановкой потока</param>
     private void ThreadBasedDispatchLoop(Action? ThreadInit, Action? ThreadFinally)
     {
         __TaskProcessingThread.Value = true;
@@ -174,34 +195,31 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
             while (true)
                 try
                 {
-                    // For each task queued to the scheduler, try to execute it.
+                    // Для каждой задачи, поставленной в очередь, пытаемся выполнить её
                     foreach (var task in _BlockingTaskQueue!.GetConsumingEnumerable(_DisposeCancellation.Token))
-                        // If the task is not null, that means it was queued to this scheduler directly.
-                        // Run it.
+                        // Если задача не null — это задача, поставленная непосредственно в планировщик
                         if (task != null)
                             TryExecuteTask(task);
-                        // If the task is null, that means it's just a placeholder for a task
-                        // queued to one of the subschedulers.  Find the next task based on
-                        // priority and fairness and run it.
+                        // Если задача null — это маркер задач подочередей; тогда выбираем следующую задачу
+                        // по приоритету и справедливости
                         else
                         {
-                            // Find the next task based on our ordering rules...
-                            Task?                    target_task;
-                            QueuedTaskSchedulerQueue queue_for_target_task;
+                            // Находим следующую задачу по правилам упорядочивания
+                            Task? target_task;
+                            QueuedTaskSchedulerQueue? queue_for_target_task;
                             lock (_QueueGroups)
                                 FindNextTask_NeedsLock(out target_task, out queue_for_target_task);
 
-                            // ... and if we found one, run it
+                            // Если нашли — выполняем
                             if (target_task != null)
-                                queue_for_target_task.ExecuteTask(target_task);
+                                queue_for_target_task!.ExecuteTask(target_task);
                         }
                 }
                 catch (ThreadAbortException)
                 {
                     // Если вызвана отмена работы потока в ходе завершения работы системы, или выгрузки домена
-                    // If we received a thread abort, and that thread abort was due to shutting down
-                    // or unloading, let it pass through.  Otherwise, reset the abort so we can
-                    // continue processing work items.
+                    // Если получена отмена потока из-за завершения процесса/выгрузки домена — пропускаем,
+                    // иначе сбрасываем abort и продолжаем работу
 #if NET5_0_OR_GREATER
                     throw;
 #else
@@ -219,29 +237,26 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
         }
     }
 
-    /// <summary>Gets the number of queues currently activated.</summary>
+    /// <summary>Количество активированных очередей</summary>
     private int DebugQueueCount => _QueueGroups.Sum(group => group.Value.Count);
 
-    /// <summary>Gets the number of tasks currently scheduled.</summary>
-    private int DebugTaskCount => (_TargetScheduler is null ? (IEnumerable<Task?>?)_BlockingTaskQueue : _NonThreadSafeTaskQueue).Count(t => t != null);
+    /// <summary>Количество запланированных задач (для отладки)</summary>
+    private int DebugTaskCount => (_TargetScheduler is null ? (IEnumerable<Task?>)_BlockingTaskQueue! : _NonThreadSafeTaskQueue!).Count(t => t != null);
 
-    /// <summary>Find the next task that should be executed, based on priorities and fairness and the like.</summary>
-    /// <param name="TargetTask">The found task, or null if none was found.</param>
+    /// <summary>Ищет следующую задачу для выполнения с учётом приоритетов и справедливости</summary>
+    /// <param name="TargetTask">Найденная задача или <see langword="null"/>, если задач нет</param>
     /// <param name="QueueForTargetTask">
-    /// The scheduler associated with the found task.  Due to security checks inside of TPL,  
-    /// this scheduler needs to be used to execute that task.
+    /// Планировщик, связанный с найденной задачей
+    /// Из-за проверок безопасности внутри TPL этот планировщик должен использоваться для запуска
     /// </param>
     private void FindNextTask_NeedsLock(out Task? TargetTask, out QueuedTaskSchedulerQueue? QueueForTargetTask)
     {
-        TargetTask         = null;
+        TargetTask = null;
         QueueForTargetTask = null;
 
-        // Look through each of our queue groups in sorted order.
-        // This ordering is based on the priority of the queues.
+        // Проходим группы очередей в порядке приоритета
         foreach (var (_, queues) in _QueueGroups)
-            // Within each group, iterate through the queues in a round-robin
-            // fashion.  Every time we iterate again and successfully find a task, 
-            // we'll start in the next location in the group.
+            // Внутри группы применяем round-robin: следующий поиск стартует со следующей позиции
             foreach (var i in queues.CreateSearchOrder())
             {
                 QueueForTargetTask = queues[i];
@@ -293,8 +308,8 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
     }
 
     /// <summary>
-    /// Process tasks one at a time in the best order.  
-    /// This should be run in a Task generated by QueueTask.
+    /// Process tasks one at a time in the best order.<br/>
+    /// This should be run in a Task generated by QueueTask.<br/>
     /// It's been separated out into its own method to show up better in Parallel Tasks.
     /// </summary>
     private void ProcessPrioritizedAndBatchedTasks()
@@ -303,13 +318,13 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
         while (!_DisposeCancellation.IsCancellationRequested && continue_processing)
             try
             {
-                // Note that we're processing tasks on this thread
+                // Отмечаем, что текущий поток обрабатывает задачи
                 __TaskProcessingThread.Value = true;
 
                 // Until there are no more tasks to process
                 while (!_DisposeCancellation.IsCancellationRequested)
                 {
-                    // Try to get the next task.  If there aren't any more, we're done.
+                    // Берём следующую задачу; если задач больше нет — завершаем
                     Task? target_task;
                     lock (_NonThreadSafeTaskQueue!)
                     {
@@ -317,16 +332,13 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
                         target_task = _NonThreadSafeTaskQueue.Dequeue();
                     }
 
-                    // If the task is null, it's a placeholder for a task in the round-robin queues.
-                    // Find the next one that should be processed.
+                    // Если задача null — это маркер round-robin очередей; тогда выбираем настоящую задачу
                     QueuedTaskSchedulerQueue? queue_for_target_task = null;
                     if (target_task is null)
                         lock (_QueueGroups)
                             FindNextTask_NeedsLock(out target_task, out queue_for_target_task);
 
-                    // Now if we finally have a task, run it.  If the task
-                    // was associated with one of the round-robin schedulers, we need to use it
-                    // as a thunk to execute its task.
+                    // Если задача найдена — выполняем; если она из round-robin очереди, используем связанный планировщик
                     if (target_task is null) continue;
                     if (queue_for_target_task is null)
                         TryExecuteTask(target_task);
@@ -336,64 +348,63 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
             }
             finally
             {
-                // Now that we think we're done, verify that there really is
-                // no more work to do.  If there's not, highlight
-                // that we're now less parallel than we were a moment ago.
+                // Проверяем, действительно ли больше нет работы; если нет — уменьшаем число обработчиков
                 lock (_NonThreadSafeTaskQueue!)
                     if (_NonThreadSafeTaskQueue.Count == 0)
                     {
                         _DelegatesQueuedOrRunning--;
-                        continue_processing          = false;
+                        continue_processing = false;
                         __TaskProcessingThread.Value = false;
                     }
             }
     }
 
-    /// <summary>Notifies the pool that there's a new item to be executed in one of the round-robin queues.</summary>
+    /// <summary>Уведомляет планировщик о появлении работы в одной из round-robin очередей</summary>
     private void NotifyNewWorkItem() => QueueTask(null);
 
-    /// <summary>Tries to execute a task synchronously on the current thread.</summary>
-    /// <param name="task">The task to execute.</param>
-    /// <param name="TaskWasPreviouslyQueued">Whether the task was previously queued.</param>
-    /// <returns>true if the task was executed; otherwise, false.</returns>
+    /// <summary>Пытается выполнить задачу синхронно в текущем потоке</summary>
+    /// <param name="task">Задача для выполнения</param>
+    /// <param name="TaskWasPreviouslyQueued">Признак предварительной постановки в очередь</param>
+    /// <returns>Истина, если удалось выполнить задачу встроенно</returns>
     protected override bool TryExecuteTaskInline(Task task, bool TaskWasPreviouslyQueued) =>
-        // If we're already running tasks on this threads, enable inlining
+        // Если текущий поток уже обрабатывает задачи, разрешаем inlining
         __TaskProcessingThread.Value && TryExecuteTask(task);
 
-    /// <summary>Gets the tasks scheduled to this scheduler.</summary>
-    /// <returns>An enumerable of all tasks queued to this scheduler.</returns>
-    /// <remarks>This does not include the tasks on sub-schedulers.  Those will be retrieved by the debugger separately.</remarks>
+    /// <summary>Возвращает задачи, запланированные непосредственно в этот планировщик</summary>
+    /// <returns>Перечисление задач, поставленных в этот планировщик</returns>
+    /// <remarks>
+    /// Задачи подочередей сюда не входят и извлекаются отладчиком отдельно
+    /// </remarks>
     protected override IEnumerable<Task> GetScheduledTasks()
     {
-        // If we're running on our own threads, get the tasks from the blocking queue...
+        // Если работаем на собственных потоках — берём задачи из блокирующей очереди
         if (_TargetScheduler is null)
-            // Get all of the tasks, filtering out nulls, which are just placeholders
-            // for tasks in other sub-schedulers
+            // Фильтруем null, которые выступают маркерами задач подочередей
             return _BlockingTaskQueue!.Where(t => t != null).ToArray()!;
-        // otherwise get them from the non-blocking queue...
 
+        // Иначе берём из неблокирующей очереди
         return _NonThreadSafeTaskQueue!.Where(t => t != null).ToArray()!;
     }
 
-    /// <summary>Gets the maximum concurrency level to use when processing tasks.</summary>
+    /// <summary>Максимальный уровень параллелизма при обработке задач</summary>
     public override int MaximumConcurrencyLevel => _ConcurrencyLevel;
 
-    /// <summary>Initiates shutdown of the scheduler.</summary>
+    /// <summary>Инициирует остановку планировщика</summary>
     public void Dispose() => _DisposeCancellation.Cancel();
 
-    /// <summary>Creates and activates a new scheduling queue for this scheduler.</summary>
-    /// <returns>The newly created and activated queue at priority 0.</returns>
+    /// <summary>Создаёт и активирует новую очередь планирования для данного планировщика</summary>
+    /// <returns>Созданная и активированная очередь с приоритетом 0</returns>
     public TaskScheduler ActivateNewQueue() => ActivateNewQueue(0);
 
-    /// <summary>Creates and activates a new scheduling queue for this scheduler.</summary>
-    /// <param name="priority">The priority level for the new queue.</param>
-    /// <returns>The newly created and activated queue at the specified priority.</returns>
+    /// <summary>Создаёт и активирует новую очередь планирования для данного планировщика</summary>
+    /// <param name="priority">Приоритет очереди (меньше — выше приоритет)</param>
+    /// <returns>Созданная и активированная очередь с указанным приоритетом</returns>
     public TaskScheduler ActivateNewQueue(int priority)
     {
-        // Create the queue
+        // Создаём очередь
         var created_queue = new QueuedTaskSchedulerQueue(priority, this);
 
-        // Add the queue to the appropriate queue group based on priority
+        // Добавляем очередь в группу по приоритету
         lock (_QueueGroups)
         {
             if (!_QueueGroups.TryGetValue(priority, out var list))
@@ -404,34 +415,33 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
             list.Add(created_queue);
         }
 
-        // Hand the new queue back
+        // Возвращаем созданную очередь
         return created_queue;
     }
 
-    /// <summary>Removes a scheduler from the group.</summary>
-    /// <param name="queue">The scheduler to be removed.</param>
+    /// <summary>Удаляет очередь из группы (метод требует удержания блокировки)</summary>
+    /// <param name="queue">Очередь для удаления</param>
     private void RemoveQueue_NeedsLock(QueuedTaskSchedulerQueue queue)
     {
-        // Find the group that contains the queue and the queue's index within the group
+        // Находим группу и индекс очереди внутри группы
         var queue_group = _QueueGroups[queue.Priority];
-        var index       = queue_group.IndexOf(queue);
+        var index = queue_group.IndexOf(queue);
 
-        // We're about to remove the queue, so adjust the index of the next
-        // round-robin starting location if it'll be affected by the removal
+        // Корректируем индекс начала round-robin обхода
         if (queue_group.NextQueueIndex >= index) queue_group.NextQueueIndex--;
 
-        // Remove it
+        // Удаляем
         queue_group.RemoveAt(index);
     }
 
-    /// <summary>A group of queues a the same priority level.</summary>
+    /// <summary>Группа очередей одного уровня приоритета</summary>
     private class QueueGroup : List<QueuedTaskSchedulerQueue>
     {
-        /// <summary>The starting index for the next round-robin traversal.</summary>
+        /// <summary>Стартовый индекс для следующего round-robin обхода</summary>
         public int NextQueueIndex;
 
-        /// <summary>Creates a search order through this group.</summary>
-        /// <returns>An enumerable of indices for this group.</returns>
+        /// <summary>Формирует порядок обхода очередей в группе</summary>
+        /// <returns>Последовательность индексов очередей</returns>
         public IEnumerable<int> CreateSearchOrder()
         {
             for (var i = NextQueueIndex; i < Count; i++) yield return i;
@@ -439,96 +449,97 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
         }
     }
 
-    /// <summary>Provides a scheduling queue associatd with a QueuedTaskScheduler.</summary>
+    /// <summary>Очередь планирования, связанная с <see cref="QueuedTaskScheduler"/></summary>
     [DebuggerDisplay("QueuePriority = {Priority}, WaitingTasks = {WaitingTasks}")]
     [DebuggerTypeProxy(typeof(QueuedTaskSchedulerQueueDebugView))]
     private sealed class QueuedTaskSchedulerQueue : TaskScheduler, IDisposable
     {
-        /// <summary>A debug view for the queue.</summary>
-        private sealed class QueuedTaskSchedulerQueueDebugView
+        /// <summary>Отладочное представление очереди</summary>
+        /// <remarks>Инициализирует новое отладочное представление</remarks>
+        /// <param name="queue">Очередь, для которой строится представление</param>
+        /// <exception cref="ArgumentNullException">Если <paramref name="queue"/> равен <see langword="null"/></exception>
+        private sealed class QueuedTaskSchedulerQueueDebugView(QueuedTaskScheduler.QueuedTaskSchedulerQueue queue)
         {
-            /// <summary>The queue.</summary>
-            private readonly QueuedTaskSchedulerQueue _Queue;
+            /// <summary>Экземпляр очереди</summary>
+            private readonly QueuedTaskSchedulerQueue _Queue = queue ?? throw new ArgumentNullException(nameof(queue));
 
-            /// <summary>Initializes the debug view.</summary>
-            /// <param name="queue">The queue to be debugged.</param>
-            public QueuedTaskSchedulerQueueDebugView(QueuedTaskSchedulerQueue queue) => _Queue = queue ?? throw new ArgumentNullException(nameof(queue));
-
-            /// <summary>Gets the priority of this queue in its associated scheduler.</summary>
+            /// <summary>Приоритет очереди в связанном планировщике</summary>
             public int Priority => _Queue.Priority;
 
-            /// <summary>Gets the ID of this scheduler.</summary>
+            /// <summary>Идентификатор планировщика</summary>
             public int Id => _Queue.Id;
 
-            /// <summary>Gets all of the tasks scheduled to this queue.</summary>
+            /// <summary>Задачи, запланированные в данной очереди</summary>
             public IEnumerable<Task> ScheduledTasks => _Queue.GetScheduledTasks();
 
-            /// <summary>Gets the QueuedTaskScheduler with which this queue is associated.</summary>
+            /// <summary>Связанный планировщик</summary>
             public QueuedTaskScheduler AssociatedScheduler => _Queue._Pool;
         }
 
-        /// <summary>The scheduler with which this pool is associated.</summary>
+        /// <summary>Родительский планировщик</summary>
         private readonly QueuedTaskScheduler _Pool;
-        /// <summary>The work items stored in this queue.</summary>
+        /// <summary>Очередь задач</summary>
         internal readonly Queue<Task> WorkItems;
-        /// <summary>Whether this queue has been disposed.</summary>
+        /// <summary>Признак освобождения очереди</summary>
         internal bool Disposed;
-        /// <summary>Gets the priority for this queue.</summary>
+        /// <summary>Приоритет очереди</summary>
         internal int Priority;
 
-        /// <summary>Initializes the queue.</summary>
-        /// <param name="priority">The priority associated with this queue.</param>
-        /// <param name="pool">The scheduler with which this queue is associated.</param>
+        /// <summary>Инициализирует новую очередь</summary>
+        /// <param name="priority">Приоритет очереди</param>
+        /// <param name="pool">Связанный планировщик</param>
         internal QueuedTaskSchedulerQueue(int priority, QueuedTaskScheduler pool)
         {
-            Priority  = priority;
-            _Pool     = pool;
+            Priority = priority;
+            _Pool = pool;
             WorkItems = [];
         }
 
-        /// <summary>Gets the number of tasks waiting in this scheduler.</summary>
+        /// <summary>Количество задач, ожидающих выполнения</summary>
         internal int WaitingTasks => WorkItems.Count;
 
-        /// <summary>Gets the tasks scheduled to this scheduler.</summary>
-        /// <returns>An enumerable of all tasks queued to this scheduler.</returns>
-        protected override IEnumerable<Task> GetScheduledTasks() => WorkItems.ToList();
+        /// <summary>Возвращает задачи, запланированные в данную очередь</summary>
+        /// <returns>Перечисление задач очереди</returns>
+        protected override IEnumerable<Task> GetScheduledTasks() => [.. WorkItems];
 
-        /// <summary>Queues a task to the scheduler.</summary>
-        /// <param name="task">The task to be queued.</param>
+        /// <summary>Ставит задачу в очередь</summary>
+        /// <param name="task">Задача для постановки</param>
+        /// <exception cref="ObjectDisposedException">Если очередь уже освобождена</exception>
         protected override void QueueTask(Task task)
         {
             if (Disposed) throw new ObjectDisposedException(GetType().Name);
 
-            // Queue up the task locally to this queue, and then notify
-            // the parent scheduler that there's work available
+            // Ставим задачу в локальную очередь и уведомляем родителя о появлении работы
             lock (_Pool._QueueGroups) WorkItems.Enqueue(task);
             _Pool.NotifyNewWorkItem();
         }
 
-        /// <summary>Tries to execute a task synchronously on the current thread.</summary>
-        /// <param name="task">The task to execute.</param>
-        /// <param name="TaskWasPreviouslyQueued">Whether the task was previously queued.</param>
-        /// <returns>true if the task was executed; otherwise, false.</returns>
+        /// <summary>Пытается выполнить задачу синхронно в текущем потоке</summary>
+        /// <param name="task">Задача для выполнения</param>
+        /// <param name="TaskWasPreviouslyQueued">Признак предварительной постановки в очередь</param>
+        /// <returns>Истина, если задачу удалось выполнить встроенно</returns>
         protected override bool TryExecuteTaskInline(Task task, bool TaskWasPreviouslyQueued) =>
-            // If we're using our own threads and if this is being called from one of them,
-            // or if we're currently processing another task on this thread, try running it inline.
+            // Если текущий поток обрабатывает задачи планировщика — разрешаем inlining
             __TaskProcessingThread.Value && TryExecuteTask(task);
 
-        /// <summary>Runs the specified ask.</summary>
-        /// <param name="task">The task to execute.</param>
+        /// <summary>Выполняет задачу</summary>
+        /// <param name="task">Задача для выполнения</param>
         internal void ExecuteTask(Task task) => TryExecuteTask(task);
 
-        /// <summary>Gets the maximum concurrency level to use when processing tasks.</summary>
+        /// <summary>Максимальный уровень параллелизма при обработке задач</summary>
+        /// <returns>
+        /// В данном случае соответствует значению родительского планировщика
+        /// </returns>
         public override int MaximumConcurrencyLevel => _Pool.MaximumConcurrencyLevel;
 
-        /// <summary>Signals that the queue should be removed from the scheduler as soon as the queue is empty.</summary>
+        /// <summary>Помечает очередь на удаление из планировщика после опустошения</summary>
         public void Dispose()
         {
             if (Disposed) return;
             lock (_Pool._QueueGroups)
-                // We only remove the queue if it's empty.  If it's not empty,
-                // we still mark it as disposed, and the associated QueuedTaskScheduler
-                // will remove the queue when its count hits 0 and its _disposed is true.
+                // Удаляем очередь только если она пуста
+                // Если в ней есть задачи — помечаем как disposed, а удаление выполнит родитель,
+                // когда счётчик задач дойдёт до 0
                 if (WorkItems.Count == 0)
                     _Pool.RemoveQueue_NeedsLock(this);
             Disposed = true;

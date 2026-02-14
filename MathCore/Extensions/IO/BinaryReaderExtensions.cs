@@ -1,5 +1,4 @@
-﻿#nullable enable
-#if NET8_0_OR_GREATER
+﻿#if NET8_0_OR_GREATER
 using System.Buffers;
 #endif
 using System.Runtime.InteropServices;
@@ -90,12 +89,12 @@ public static class BinaryReaderExtensions
 
     public static T ReadStructure<T>(this BinaryReader reader) where T : struct
     {
-        var data = reader.ReadBytes(Marshal.SizeOf(typeof(T)));
+        var data = reader.ReadBytes(Marshal.SizeOf<T>());
         var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
         try
         {
             var ptr = gch.AddrOfPinnedObject();
-            return (T)Marshal.PtrToStructure(ptr, typeof(T))!;
+            return Marshal.PtrToStructure<T>(ptr)!;
         }
         finally
         {

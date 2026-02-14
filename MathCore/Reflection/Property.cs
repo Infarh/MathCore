@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Text;
 
 using MathCore.Values;
@@ -17,12 +16,12 @@ namespace System.Reflection;
 ///<summary>"Свойство" позднего связывания</summary>
 ///<typeparam name="TObject">Тип объекта, для которого определяется свойство</typeparam>
 ///<typeparam name="TValue">Тип значения свойства</typeparam>
-public class Property<TObject, TValue> : IValue<TValue>
+public class Property<TObject, TValue> : IValue<TValue?>
 {
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>Событие возникает если свойство <see cref="Value"/> изменило своё значение</summary>
-    public event EventHandler ValueChanged;
+    public event EventHandler? ValueChanged;
 
     /// <summary>Генерация события <see cref="ValueChanged"/></summary>
     /// <param name="E">Аргумент события</param>
@@ -33,17 +32,17 @@ public class Property<TObject, TValue> : IValue<TValue>
     /// <summary>Информация о свойстве</summary>
     private PropertyInfo? _PropertyInfo;
     /// <summary>Имя свойства</summary>
-    private string _Name;
+    private string _Name = null!;
     /// <summary>Объект, которому принадлежит свойство</summary>
-    private TObject _Object;
+    private TObject? _Object;
     /// <summary>Флаг приватности свойства</summary>
     private bool _Private;
 
     /// <summary>Действие, осуществляющее установку значения свойства</summary>
-    private Action<TValue?> _SetMethod;
+    private Action<TValue?> _SetMethod = null!;
 
     /// <summary>Функция, вычисляющая значение свойства</summary>
-    private Func<TValue?> _GetMethod;
+    private Func<TValue?> _GetMethod = null!;
 
     /// <summary>Описание свойства</summary>
     private PropertyDescriptor? _Descriptor;
@@ -57,7 +56,7 @@ public class Property<TObject, TValue> : IValue<TValue>
     public string Name { get => _Name; set => Initialize(_Object, value, _Private); }
 
     ///<summary>Объект, определяющий свойство</summary>
-    public TObject Object { get => _Object; set => Initialize(value, _Name, _Private); }
+    public TObject? Object { get => _Object; set => Initialize(value, _Name, _Private); }
 
     ///<summary>Признак - является ли свойство приватным</summary>
     public bool Private { get => _Private; set => Initialize(_Object, _Name, _Private = value); }
@@ -66,7 +65,7 @@ public class Property<TObject, TValue> : IValue<TValue>
     public bool IsExist => _PropertyInfo != null;
 
     ///<summary>Значение свойства</summary>
-    public TValue Value { get => _GetMethod(); set => _SetMethod(value); }
+    public TValue? Value { get => _GetMethod(); set => _SetMethod(value); }
 
     ///<summary>Признак возможности читать значение</summary>
     public bool CanRead => _PropertyInfo != null && _PropertyInfo.CanRead;
@@ -78,10 +77,10 @@ public class Property<TObject, TValue> : IValue<TValue>
     public bool SupportsChangeEvents => _Descriptor is { SupportsChangeEvents: true };
 
     ///<summary>Атрибуты свойства</summary>
-    public PropertyAttributes Attributes => _PropertyInfo.Attributes;
+    public PropertyAttributes Attributes => _PropertyInfo.NotNull().Attributes;
 
     /// <summary>Дескриптор свойства объекта</summary>
-    public PropertyDescriptor Descriptor => _Descriptor;
+    public PropertyDescriptor? Descriptor => _Descriptor;
 
     /// <summary>Значение <see cref="DisplayNameAttribute.DisplayName"/></summary>
     public string? DisplayName { get; private set; }
@@ -116,8 +115,8 @@ public class Property<TObject, TValue> : IValue<TValue>
             && _Name != PropertyName)
             _Descriptor.RemoveValueChanged(o.IsNotNull(), PropertyValueChanged);
 
-        _Object  = o;
-        _Name    = PropertyName;
+        _Object = o;
+        _Name = PropertyName;
         _Private = IsPrivate;
 
         _Descriptor = _Object != null
@@ -150,7 +149,7 @@ public class Property<TObject, TValue> : IValue<TValue>
 
         if (o is not ISynchronizeInvoke obj) return;
 
-        _GetMethod = () => (TValue)obj.Invoke(_GetMethod, null);
+        _GetMethod = () => (TValue?)obj.Invoke(_GetMethod, null);
         _SetMethod = value => obj.Invoke(_SetMethod, [value]);
 
         Description = _PropertyInfo?.GetCustomAttribute<DescriptionAttribute>()?.Description;
@@ -191,7 +190,7 @@ public class Property<TObject, TValue> : IValue<TValue>
             return $"Incorrect {property_type.ToLower()} of {typeof(TObject)} name {_Name}";
 
         var value = CanRead ? $" = {Value}" : string.Empty;
-        var host  = typeof(TObject).Name;
+        var host = typeof(TObject).Name;
         //return string.Format("{0}({4}{5}{6}): {1}.{2}{3}",
         //    property_type, host, _Name, value,
         //    CanRead ? "R" : string.Empty,

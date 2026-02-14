@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.InteropServices;
 // ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable UnusedType.Global
@@ -13,10 +12,10 @@ public class PrecisionTimer : IDisposable
     private volatile PrecisionTimerMode _Mode;
     private volatile int _Period;
     private volatile int _Resolution;
-    private ISynchronizeInvoke? _SynchronizingObject;
-    private EventRaiser _TickRaiser;
-    private TimeProc _TimeProcOneShot;
-    private TimeProc _TimeProcPeriodic;
+    private ISynchronizeInvoke? _SynchronizingObject = null!;
+    private EventRaiser _TickRaiser = null!;
+    private TimeProc _TimeProcOneShot = null!;
+    private TimeProc _TimeProcPeriodic = null!;
     private int _TimerId;
 
     static PrecisionTimer() => TimeGetDevCaps(ref __Caps, Marshal.SizeOf(__Caps));
@@ -100,11 +99,11 @@ public class PrecisionTimer : IDisposable
         }
     }
 
-    public event EventHandler? Started;
+    public event EventHandler? Started = null!;
 
-    public event EventHandler? Stopped;
+    public event EventHandler? Stopped = null!;
 
-    public event EventHandler? Tick;
+    public event EventHandler? Tick = null!;
 
     /// <inheritdoc />
     public void Dispose()

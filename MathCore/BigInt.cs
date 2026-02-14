@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable CommentTypo
+﻿// ReSharper disable CommentTypo
 //************************************************************************************
 // BigInteger Class Version 1.03
 //

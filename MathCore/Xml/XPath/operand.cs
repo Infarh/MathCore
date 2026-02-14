@@ -30,13 +30,13 @@ internal class Operand : AstNode
 
     internal override XPathResultType ReturnType => _Type;
 
-    internal string OperandType =>
+    internal string? OperandType =>
         _Type switch
         {
-            XPathResultType.Number  => "number",
-            XPathResultType.String  => "string",
+            XPathResultType.Number => "number",
+            XPathResultType.String => "string",
             XPathResultType.Boolean => "boolean",
-            _                       => null
+            _ => null
         };
 
     internal object OperandValue { get; }
@@ -50,19 +50,19 @@ internal class Operand : AstNode
     internal Operand(string var)
     {
         OperandValue = var;
-        _Type        = XPathResultType.String;
+        _Type = XPathResultType.String;
     }
 
     internal Operand(double var)
     {
         OperandValue = var;
-        _Type        = XPathResultType.Number;
+        _Type = XPathResultType.Number;
     }
 
     internal Operand(bool var)
     {
         OperandValue = var;
-        _Type        = XPathResultType.Boolean;
+        _Type = XPathResultType.Boolean;
     }
 
     #endregion
