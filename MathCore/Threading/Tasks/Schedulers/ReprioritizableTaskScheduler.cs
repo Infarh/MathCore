@@ -76,7 +76,7 @@ public sealed class ReprioritizableTaskScheduler : TaskScheduler
         lock (_Tasks)
         {
             if (_Tasks.Count == 0) return;
-            task = _Tasks.First.Value;
+            task = _Tasks.First!.Value;
             _Tasks.RemoveFirst();
         }
         TryExecuteTask(task);

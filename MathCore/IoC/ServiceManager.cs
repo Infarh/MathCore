@@ -155,7 +155,7 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
         ServiceRegistered(ObjectType)
             ? Get(ObjectType)
             ?? throw new InvalidOperationException("Менеджер сервисов вернул пустую ссылку на зарегистрированный сервис")
-            : ((ServiceRegistration?)Activator.CreateInstance(typeof(SingleCallServiceRegistration<>).MakeGenericType(ObjectType), this, ObjectType))
+            : ((ServiceRegistration)Activator.CreateInstance(typeof(SingleCallServiceRegistration<>).MakeGenericType(ObjectType), this, ObjectType).NotNull())
            .GetService(parameters);
 
     private object? CheckMergedManagers(Type ServiceType, object[] parameters)

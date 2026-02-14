@@ -5,7 +5,7 @@ namespace System.Threading.Tasks;
 [Copyright("Stephen Toub", url = "https://devblogs.microsoft.com/pfxteam/cooperatively-pausing-async-methods/")]
 public class PauseTokenSource
 {
-    private volatile TaskCompletionSource<bool> _Paused = null!;
+    private volatile TaskCompletionSource<bool>? _Paused;
 
     public bool IsPaused
     {
@@ -28,5 +28,5 @@ public class PauseTokenSource
 
     public PauseToken Token => new(this);
 
-    public Task WaitWhilePausedAsync() => _Paused.Task;
+    public Task WaitWhilePausedAsync() => _Paused.NotNull().Task;
 }

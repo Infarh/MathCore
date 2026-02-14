@@ -12,6 +12,6 @@ public class LambdaGraphLink<TValue, TWeight>(
     public IGraphNode<TValue, TWeight> Node { get; } = To;
 
     public TWeight Weight => Buffered
-        ? (TWeight)(_Weight ??= GetWeight(From.Value, Node.Value))!
+        ? (TWeight)(_Weight ??= GetWeight(From.Value, Node.Value)!)
         : GetWeight(From.Value, Node.Value);
 }

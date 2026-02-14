@@ -415,7 +415,7 @@ public static class ObjectExtensions
         if (args.Count == 0)
             Console.Write(Format, Obj);
         else
-            Console.Write(Format, args.AppendFirst(Obj).ToArray());
+            Console.Write(Format, [.. args.AppendFirst(Obj)]);
     }
 
     /// <summary>Печать объекта на консоли с переносом строки в конце</summary>
@@ -683,7 +683,7 @@ public static class ObjectExtensions
     /// <param name="obj">Оборачиваемый объект</param>
     /// <param name="Name">Имя вычисления</param>
     /// <returns>Вычисление, возвращающее указанный объект</returns>
-    public static ValueEvaluation<T> ToEvaluation<T>(this T? obj, string? Name) => new NamedValueEvaluation<T>(obj!, Name);
+    public static ValueEvaluation<T> ToEvaluation<T>(this T? obj, string Name) => new NamedValueEvaluation<T>(obj!, Name);
 
     /// <summary>Преобразование объекта в выражение-константу</summary>
     /// <param name="obj">Преобразуемый объект</param>
@@ -716,7 +716,7 @@ public static class ObjectExtensions
         var method = type.GetMethod(MethodName,
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
                 null,
-                p.Select(pp => pp.Type).ToArray(),
+                [.. p.Select(pp => pp.Type)],
                 null)
            .NotNull();
         return obj.GetCallExpression(method, p);

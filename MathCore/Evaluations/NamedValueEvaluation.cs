@@ -36,6 +36,6 @@ public class NamedValueEvaluation<T> : ValueEvaluation<T>
             ? $"({typeof(T)})p"
             : Name
         : Name.IsNullOrWhiteSpace()
-            ? Value.ToString()
+            ? Value?.ToString()
             : $"{Name}={Value}";
 }
