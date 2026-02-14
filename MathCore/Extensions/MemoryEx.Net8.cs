@@ -15,7 +15,7 @@ public static class MemoryEx
     public static Memory<T> Cast<T>(this Memory<byte> memory) where T : struct
     {
         var t_memory = Unsafe.BitCast<Memory<byte>, Memory<T>>(memory);
-        var size = Marshal.SizeOf(typeof(T));
+        var size = Marshal.SizeOf<T>();
         return t_memory[..(memory.Length / size)];
     }
 }

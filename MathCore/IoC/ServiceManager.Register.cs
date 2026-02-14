@@ -85,13 +85,13 @@ public sealed partial class ServiceManager
         if (!ServiceType.IsClass)
             throw new ServiceRegistrationNotFoundException(ServiceType, "Регистрируемый тип сервиса не является классом");
 
-        var type = !ServiceType.IsAbstract 
-            ? RegistrationBaseType.MakeGenericType(ServiceType) 
+        var type = !ServiceType.IsAbstract
+            ? RegistrationBaseType.MakeGenericType(ServiceType)
             : throw new ServiceRegistrationNotFoundException(ServiceType, "Регистрируемый тип сервиса не может являться абстрактным классом");
 
         lock (_SyncRoot)
         {
-            var instance = (ServiceRegistration)Activator.CreateInstance(type, this, ServiceType);
+            var instance = (ServiceRegistration?)Activator.CreateInstance(type, this, ServiceType);
             _Services[ServiceType] = instance;
             return instance;
         }
@@ -106,14 +106,14 @@ public sealed partial class ServiceManager
         if (!ServiceType.IsClass)
             throw new ServiceRegistrationNotFoundException(ServiceType, "Регистрируемый тип сервиса не является классом");
 
-        var type = !ServiceType.IsAbstract 
-            ? RegistrationBaseType.MakeGenericType(ServiceType) 
+        var type = !ServiceType.IsAbstract
+            ? RegistrationBaseType.MakeGenericType(ServiceType)
             : throw new ServiceRegistrationNotFoundException(ServiceType, "Регистрируемый тип сервиса не может являться абстрактным классом");
 
         lock (_SyncRoot)
         {
             var registration = _Services.Values.FirstOrDefault(r => r.ServiceType == ServiceType)
-                ?? (ServiceRegistration)Activator.CreateInstance(type, this, ServiceType);
+                ?? (ServiceRegistration?)Activator.CreateInstance(type, this, ServiceType);
             _Services[InterfaceType] = registration;
             return registration;
         }

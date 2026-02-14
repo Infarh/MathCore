@@ -24,5 +24,5 @@ public class LambdaComparer<T>(Comparison<T> Comparison) : IComparer<T>, ICompar
     public int Compare(T? x, T? y) => Comparison(x, y);
 
     /// <inheritdoc />
-    int IComparer.Compare(object? x, object? y) => Compare((T)x, (T)y);
+    int IComparer.Compare(object? x, object? y) => Compare((T?)x, (T?)y);
 }

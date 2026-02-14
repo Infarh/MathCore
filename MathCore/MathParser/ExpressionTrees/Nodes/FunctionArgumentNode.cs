@@ -12,11 +12,8 @@ public class FunctionArgumentNode : OperatorNode
     /// <returns>Перечисление пар имени-корня дерева аргумента</returns>
     public static IEnumerable<KeyValuePair<string, ExpressionTreeNode>> EnumArguments(FunctionArgumentNode Node)
     {
-        while(Node != null)
-        {
-            yield return new(Node.ArgumentName, Node.ArgumentSubtree);
-            Node = Node.Right as FunctionArgumentNode;
-        }
+        for (var node = Node; node is not null; node = node.Right as FunctionArgumentNode)
+            yield return new(node.ArgumentName, node.ArgumentSubtree);
     }
 
     /// <summary>Значение аргумента - правое поддерево</summary>

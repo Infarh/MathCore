@@ -157,7 +157,7 @@ public static class ObjectReflectionPropertiesExtensions
 
     public static TValue? GetPropertyValue<T, TValue>(this T obj, string PropertyName)
     {
-        if (!obj.TryGetPropertyValue(PropertyName, out TValue value))
+        if (!obj.TryGetPropertyValue(PropertyName, out TValue? value))
             throw new InvalidOperationException($"Тип {typeof(T)} не содержит свойства {PropertyName} доступного для чтения")
             {
                 Data =
@@ -174,7 +174,7 @@ public static class ObjectReflectionPropertiesExtensions
 
     public static TValue? GetPropertyValue<T, TValue>(this T obj, string PropertyName, bool NonPublic)
     {
-        if (!obj.TryGetPropertyValue(PropertyName, NonPublic, out TValue value))
+        if (!obj.TryGetPropertyValue(PropertyName, NonPublic, out TValue? value))
             throw new InvalidOperationException($"Тип {typeof(T)} не содержит свойства {PropertyName} доступного для чтения")
             {
                 Data =

@@ -1212,7 +1212,7 @@ public static class FuncExtensions
             new(0x40)             // EXECUTE_READWRITE
         );
         Marshal.Copy(sse_assembly_bytes, 0, code_buffer, sse_assembly_bytes.Length);
-        return __VectorAddDelegate = (VectorAddDelegate)Marshal.GetDelegateForFunctionPointer(code_buffer, typeof(VectorAddDelegate));
+        return __VectorAddDelegate = Marshal.GetDelegateForFunctionPointer<VectorAddDelegate>(code_buffer);
     }
 
     #region Адаптивная дискретизация функци

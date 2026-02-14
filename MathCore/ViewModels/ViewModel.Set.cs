@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 using MathCore.Annotations;
 
@@ -12,11 +13,11 @@ namespace MathCore.ViewModels;
 public partial class ViewModel
 {
     protected virtual bool Set<T>(
-        [CanBeNull] T value, 
-        [CanBeNull] T OldValue,
-        Action<T> Setter, 
-        [CanBeNull] Func<T, bool> ValueChecker = null, 
-        [NotNull, CallerMemberName] string PropertyName = null!)
+        T? value,
+        T? OldValue,
+        Action<T> Setter,
+        Func<T, bool>? ValueChecker = null,
+        [CallerMemberName] string PropertyName = null!)
     {
         if (Equals(value, OldValue)) return false;
         if (ValueChecker is { } checker && !checker(value)) return false;
@@ -31,7 +32,7 @@ public partial class ViewModel
     /// <param name="value">Значение, устанавливаемое для поля</param>
     /// <param name="PropertyName">Имя метода, вызывавшего обновление. По умолчанию должно быть равно пустоте</param>
     /// <returns>Истина, если метод изменил значение поля и вызвал событие <see cref="PropertyChanged"/></returns>
-    protected virtual bool Set<T>([CanBeNull/*, NotNullIfNotNull(nameof(field))*/] ref T field, [CanBeNull] T value, [NotNull, CallerMemberName] in string PropertyName = null)
+    protected virtual bool Set<T>([NotNullIfNotNull(nameof(value))] ref T? field, T? value, [CallerMemberName] in string PropertyName = null)
     {
         if (Equals(field, value) || OnPropertyChanging(field, ref value, PropertyName)) return false;
         field = value;
@@ -48,10 +49,10 @@ public partial class ViewModel
     /// <param name="PropertyName">Имя метода, вызывавшего обновление. По умолчанию должно быть равно пустоте</param>
     /// <returns>Истина, если метод изменил значение поля и вызвал событие <see cref="PropertyChanged"/></returns>
     protected virtual bool Set<T>(
-        [CanBeNull] ref T field, 
-        [CanBeNull] in T value,
-        [NotNull] in Func<T, bool> ValueChecker, 
-        [NotNull, CallerMemberName] in string PropertyName = null)
+        ref T? field,
+        in T? value,
+        Func<T, bool> ValueChecker,
+        [CallerMemberName] in string PropertyName = null)
         => ValueChecker(value) && Set(ref field, value, PropertyName);
 
     /// <summary>Установить значение поля модели, в котором хранится значение изменяющегося свойства</summary>
@@ -63,13 +64,13 @@ public partial class ViewModel
     /// <param name="PropertyName">Имя метода, вызывавшего обновление. По умолчанию должно быть равно пустоте</param>
     /// <returns>Истина, если метод изменил значение поля и вызвал событие <see cref="PropertyChanged"/></returns>
     protected virtual bool Set<T>(
-        [CanBeNull] ref T field, 
-        [CanBeNull] in T value,
-        [NotNull] in string ErrorMessage,
-        [NotNull] in Func<T, bool> Validator,
-        [NotNull, CallerMemberName] in string PropertyName = null) =>
-        Validator(value) 
-            ? Set(ref field, value, PropertyName) 
+        ref T? field,
+        in T? value,
+        string ErrorMessage,
+        Func<T, bool> Validator,
+        [CallerMemberName] in string PropertyName = null) =>
+        Validator(value)
+            ? Set(ref field, value, PropertyName)
             : throw new ArgumentOutOfRangeException(nameof(value), ErrorMessage);
 
     /// <summary>Установить значение поля модели, в котором хранится значение изменяющегося свойства</summary>
@@ -99,10 +100,10 @@ public partial class ViewModel
     /// <param name="PropertyName">Имя свойства</param>
     /// <returns>Истина, если значение свойства установлено успешно</returns>
     public static bool Set<T>(
-        [CanBeNull] ref T field,
-        [CanBeNull] in T value, 
-        [CanBeNull] in Action<string> OnPropertyChanged,
-        [NotNull] [CallerMemberName] in string PropertyName = null)
+        ref T? field,
+        in T? value,
+        Action<string>? OnPropertyChanged,
+        [CallerMemberName] in string PropertyName = null)
     {
         if (Equals(field, value)) return false;
         field = value;
@@ -120,10 +121,10 @@ public partial class ViewModel
     /// <param name="PropertyName">Имя свойства</param>
     /// <returns>Истина, если значение свойства установлено успешно</returns>
     public static bool Set<T>(
-        [CanBeNull] ref T field, 
-        [CanBeNull] in T value,
-        [CanBeNull] in Action<string> OnPropertyChanged, 
-        [NotNull] in Func<T, bool> Validator,
-        [NotNull, CallerMemberName] in string PropertyName = null)
+        ref T? field,
+        in T? value,
+        Action<string>? OnPropertyChanged,
+        Func<T, bool> Validator,
+        [CallerMemberName] in string PropertyName = null)
         => Validator(value) && Set(ref field, value, OnPropertyChanged, PropertyName);
 }

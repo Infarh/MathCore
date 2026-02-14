@@ -14,8 +14,8 @@ public static class StreamExtensions
     /// <param name="stream">Поток данных</param>
     /// <returns>Объект <see cref="StreamReader"/></returns>
     /// <exception cref="InvalidOperationException">Возникает в случае если поток не предоставляет возможности чтения</exception>
-    public static StreamReader GetStreamReader(this Stream stream) => stream.CanRead 
-        ? new(stream) 
+    public static StreamReader GetStreamReader(this Stream stream) => stream.CanRead
+        ? new(stream)
         : throw new InvalidOperationException("Поток не допускает операций чтения");
 
     /// <summary>Получить объект чтения текстовых данных</summary>
@@ -23,24 +23,24 @@ public static class StreamExtensions
     /// <param name="encoding">Кодировка текста</param>
     /// <returns>Объект <see cref="StreamReader"/></returns>
     /// <exception cref="InvalidOperationException">Возникает в случае если поток не предоставляет возможности чтения</exception>
-    public static StreamReader GetStreamReader(this Stream stream, Encoding encoding) => stream.CanRead 
-        ? new(stream, encoding) 
+    public static StreamReader GetStreamReader(this Stream stream, Encoding encoding) => stream.CanRead
+        ? new(stream, encoding)
         : throw new InvalidOperationException("Поток не допускает операций чтения");
 
     /// <summary>Получить объект чтения двоичных данных</summary>
     /// <param name="stream">Поток данных</param>
     /// <returns>Объект <see cref="BinaryReader"/></returns>
     /// <exception cref="InvalidOperationException">Возникает в случае если поток не предоставляет возможности чтения</exception>
-    public static BinaryReader GetBinaryReader(this Stream stream) => stream.CanRead 
-        ? new(stream) 
+    public static BinaryReader GetBinaryReader(this Stream stream) => stream.CanRead
+        ? new(stream)
         : throw new InvalidOperationException("Поток не допускает операций чтения");
 
     /// <summary>Получить объект записи текстовых данных</summary>
     /// <param name="stream">Поток данных</param>
     /// <returns>Объект <see cref="StreamWriter"/></returns>
     /// <exception cref="InvalidOperationException">Возникает в случае если поток не предоставляет возможности записи</exception>
-    public static StreamWriter GetStreamWriter(this Stream stream) => stream.CanWrite 
-        ? new(stream) 
+    public static StreamWriter GetStreamWriter(this Stream stream) => stream.CanWrite
+        ? new(stream)
         : throw new InvalidOperationException("Поток не допускает операций записи");
 
     /// <summary>Получить объект записи двоичных данных</summary>
@@ -48,7 +48,7 @@ public static class StreamExtensions
     /// <returns>Объект <see cref="BinaryWriter"/></returns>
     /// <exception cref="InvalidOperationException">Возникает в случае если поток не предоставляет возможности записи</exception>
     public static BinaryWriter GetBinaryWriter(this Stream stream) => stream.CanWrite
-        ? new(stream) 
+        ? new(stream)
         : throw new InvalidOperationException("Поток не допускает операций записи");
 
     /// <summary>Заполняет буфер данными из потока</summary>
@@ -416,7 +416,7 @@ public static class StreamExtensions
     /// <exception cref="InvalidOperationException">В потоке недостаточно данных для чтения структуры</exception>
     public static T ReadStructure<T>(this Stream stream)
     {
-        var size = Marshal.SizeOf(typeof(T));
+        var size = Marshal.SizeOf<T>();
         var data = new byte[size];
         if (stream.Read(data, 0, size) != size)
             throw new InvalidOperationException($"В потоке не достаточно данных для чтения структуры {typeof(T)} - требуется байт: {size}");
@@ -425,7 +425,7 @@ public static class StreamExtensions
         try
         {
             var ptr = gch.AddrOfPinnedObject();
-            return (T)Marshal.PtrToStructure(ptr, typeof(T));
+            return Marshal.PtrToStructure<T>(ptr);
         }
         finally
         {
@@ -439,15 +439,15 @@ public static class StreamExtensions
     /// <returns>Последовательность прочитанных структур</returns>
     public static IEnumerable<T> EnumStructures<T>(this Stream stream) where T : struct
     {
-        var size = Marshal.SizeOf(typeof(T));
+        var size = Marshal.SizeOf<T>();
         var data = new byte[size];
-        var gch  = GCHandle.Alloc(data, GCHandleType.Pinned);
+        var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
 
         try
         {
             var ptr = gch.AddrOfPinnedObject();
             while (stream.Read(data, 0, size) == size)
-                yield return (T)Marshal.PtrToStructure(ptr, typeof(T))!;
+                yield return Marshal.PtrToStructure<T>(ptr)!;
         }
         finally
         {
@@ -461,7 +461,7 @@ public static class StreamExtensions
     /// <param name="value">Значение структуры для записи</param>
     public static void WriteStructure<T>(this Stream stream, T value) where T : struct
     {
-        var size   = Marshal.SizeOf(value);
+        var size = Marshal.SizeOf(value);
         var buffer = new byte[size];
         var g_lock = GCHandle.Alloc(buffer, GCHandleType.Pinned);
         try

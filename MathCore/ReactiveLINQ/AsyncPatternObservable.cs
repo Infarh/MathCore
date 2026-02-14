@@ -14,14 +14,14 @@ internal sealed class AsyncPatternObservable<T> : SimpleObservableEx<T>
 
     private void CallBack(IAsyncResult result)
     {
-        _Result = ((Func<IAsyncResult, T>)result.AsyncState)(result);
+        _Result = ((Func<IAsyncResult, T>?)result.AsyncState)(result);
         OnNext(_Result);
     }
 
     public override IDisposable Subscribe(IObserver<T> observer)
     {
         var result = base.Subscribe(observer);
-        if(_AsyncResult.IsCompleted) observer.OnNext(_Result);
+        if (_AsyncResult.IsCompleted) observer.OnNext(_Result);
         return result;
     }
 }

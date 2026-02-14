@@ -475,7 +475,7 @@ public static class ObjectExtensions
     {
         if (values.Count == 0) return [];
 
-        var size   = Marshal.SizeOf(typeof(T));
+        var size   = Marshal.SizeOf<T>();
         var buffer = new byte[size * values.Count]; // создать массив
         var g_lock = default(GCHandle);
         try
@@ -496,7 +496,7 @@ public static class ObjectExtensions
 
     public static byte[] ArrayToByteArray<T>(this T[] values) where T : struct
     {
-        var buffer = new byte[Marshal.SizeOf(typeof(T)) * values.Length]; // создать массив
+        var buffer = new byte[Marshal.SizeOf<T>() * values.Length]; // создать массив
         var g_lock = default(GCHandle);
         try
         {
@@ -524,7 +524,7 @@ public static class ObjectExtensions
         {
             var ptr = gch.AddrOfPinnedObject();
             ptr += offset;
-            return (T)Marshal.PtrToStructure(ptr, typeof(T))!;
+            return Marshal.PtrToStructure<T>(ptr)!;
         }
         finally
         {

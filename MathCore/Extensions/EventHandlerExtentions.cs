@@ -242,9 +242,9 @@ public static class EventHandlerExtension
         TArgs Args) =>
         Handler is null
             ? []
-            : Handler
+            : [.. Handler
                .GetInvocationList()
-               .Select(d => (TResult)(d.Target is ISynchronizeInvoke { InvokeRequired: true } invoke
+               .Select(d => (TResult?)(d.Target is ISynchronizeInvoke { InvokeRequired: true } invoke
                     ? invoke.Invoke(d, [Sender, Args])
-                    : d.DynamicInvoke(Sender, Args))).ToArray();
+                    : d.DynamicInvoke(Sender, Args)))];
 }

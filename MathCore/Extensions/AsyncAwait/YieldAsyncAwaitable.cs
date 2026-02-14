@@ -28,7 +28,7 @@ public readonly struct YieldAsyncAwaitable
         /// <summary>Всегда возвращает false, чтобы заставить асинхронный метод отложить продолжение</summary>
         public readonly bool IsCompleted => false;
 
-        private static void RunAction(object? action) => ((Action)action)();
+        private static void RunAction(object? action) => ((Action)action!)();
 
         [SecurityCritical]
         private static void QueueContinuation(Action continuation, bool FlowContext)

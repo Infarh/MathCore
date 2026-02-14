@@ -50,7 +50,11 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
 
     private readonly Dictionary<Type, ServiceRegistration> _Services = [];
 
-    private readonly object _SyncRoot = new();
+#if NET9_0_OR_GREATER
+    private readonly Lock _SyncRoot = new();
+#else
+    private readonly object _SyncRoot = new(); 
+#endif
 
     public IServiceRegistrations ServiceRegistrations => this;
 
@@ -92,7 +96,7 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
 
             if (base_registration is null)
             {
-                if (_MergedServiceManagers is not { Count: > 0 } managers) 
+                if (_MergedServiceManagers is not { Count: > 0 } managers)
                     return null;
 
                 foreach (var manager in managers)
@@ -142,13 +146,13 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
         ServiceRegistered<TObject>()
             ? Get<TObject>()
             ?? throw new InvalidOperationException("Менеджер сервисов вернул пустую ссылку на зарегистрированный сервис")
-            : (TObject)new SingleCallServiceRegistration<TObject>(this, typeof(TObject)).GetService(parameters);
+            : (TObject?)new SingleCallServiceRegistration<TObject>(this, typeof(TObject)).GetService(parameters);
 
     public object? Create(Type ObjectType, params object[] parameters) =>
         ServiceRegistered(ObjectType)
             ? Get(ObjectType)
             ?? throw new InvalidOperationException("Менеджер сервисов вернул пустую ссылку на зарегистрированный сервис")
-            : ((ServiceRegistration)Activator.CreateInstance(typeof(SingleCallServiceRegistration<>).MakeGenericType(ObjectType), this, ObjectType))
+            : ((ServiceRegistration?)Activator.CreateInstance(typeof(SingleCallServiceRegistration<>).MakeGenericType(ObjectType), this, ObjectType))
            .GetService(parameters);
 
     private object? CheckMergedManagers(Type ServiceType, object[] parameters)
@@ -176,7 +180,7 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
         foreach (var method in methods)
         {
             var method_parameters = method.GetParameters();
-            if (method_parameters.Length != 0 && !method_parameters.All(p => ServiceRegistered(p.ParameterType))) 
+            if (method_parameters.Length != 0 && !method_parameters.All(p => ServiceRegistered(p.ParameterType)))
                 continue;
             call_method = method;
             parameter_infos = method_parameters;
@@ -205,7 +209,7 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
         foreach (var method in methods)
         {
             var method_parameters = method.GetParameters();
-            if (method_parameters.Length != 0 && !method_parameters.All(p => ServiceRegistered(p.ParameterType))) 
+            if (method_parameters.Length != 0 && !method_parameters.All(p => ServiceRegistered(p.ParameterType)))
                 continue;
             call_method = method;
             parameter_infos = method_parameters;

@@ -9,7 +9,7 @@ public readonly ref struct YieldAwaitableThread
 
     public readonly struct Awaiter : ICriticalNotifyCompletion
     {
-        private static readonly ParameterizedThreadStart __ThreadAction = action => ((Action)action)();
+        private static readonly ParameterizedThreadStart __ThreadAction = action => ((Action)action!)();
 
         public bool IsCompleted => false;
 

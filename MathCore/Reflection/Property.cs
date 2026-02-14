@@ -115,8 +115,8 @@ public class Property<TObject, TValue> : IValue<TValue>
             && _Name != PropertyName)
             _Descriptor.RemoveValueChanged(o.IsNotNull(), PropertyValueChanged);
 
-        _Object  = o;
-        _Name    = PropertyName;
+        _Object = o;
+        _Name = PropertyName;
         _Private = IsPrivate;
 
         _Descriptor = _Object != null
@@ -149,7 +149,7 @@ public class Property<TObject, TValue> : IValue<TValue>
 
         if (o is not ISynchronizeInvoke obj) return;
 
-        _GetMethod = () => (TValue)obj.Invoke(_GetMethod, null);
+        _GetMethod = () => (TValue?)obj.Invoke(_GetMethod, null);
         _SetMethod = value => obj.Invoke(_SetMethod, [value]);
 
         Description = _PropertyInfo?.GetCustomAttribute<DescriptionAttribute>()?.Description;
@@ -190,7 +190,7 @@ public class Property<TObject, TValue> : IValue<TValue>
             return $"Incorrect {property_type.ToLower()} of {typeof(TObject)} name {_Name}";
 
         var value = CanRead ? $" = {Value}" : string.Empty;
-        var host  = typeof(TObject).Name;
+        var host = typeof(TObject).Name;
         //return string.Format("{0}({4}{5}{6}): {1}.{2}{3}",
         //    property_type, host, _Name, value,
         //    CanRead ? "R" : string.Empty,

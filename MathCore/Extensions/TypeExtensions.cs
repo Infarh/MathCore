@@ -97,7 +97,7 @@ public static class TypeExtensions
         Expression? source = parameter;
         if (source is null) source                 = __ConvParameter;
         else if (source.Type != SourceType) source = source.ConvertTo(SourceType);
-        return source.ConvertTo(TargetType).ConvertTo(typeof(object));
+        return source.ConvertTo(TargetType).ConvertTo<object>();
     }
 
     /// <summary>Сформировать выражение, осуществляющее преобразование типа данных</summary>
@@ -112,7 +112,7 @@ public static class TypeExtensions
         if (!converter.CanConvertTo(TargetType) && !(converter_to = TargetType.GetTypeConverter()).CanConvertFrom(SourceType))
             throw new NotSupportedException($"Преобразование из {SourceType} в {TargetType} не поддерживается");
         var parameter_source     = Expression.Parameter(SourceType, "pFrom");
-        var source_to_object     = parameter_source.ConvertTo(typeof(object));
+        var source_to_object     = parameter_source.ConvertTo<object>();
         var converter_expression = (converter_to ?? converter).ToExpression();
         var converter_delegate = converter_to is null
             ? (Delegate)(Func<object, Type, object?>)converter.ConvertTo

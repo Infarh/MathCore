@@ -56,8 +56,8 @@ public class Method<TObject, TResult>
 
         _MethodInfo = type.GetMethod(MethodName, is_static | is_public);
 
-        _Method = obj is ISynchronizeInvoke
-            ? Args => (TResult)((ISynchronizeInvoke)obj).Invoke((Func<object[], TResult>)PrivateInvoke, new object[] { Args })
+        _Method = obj is ISynchronizeInvoke invoke
+            ? Args => (TResult?)invoke.Invoke((Func<object[], TResult>)PrivateInvoke, new object[] { Args })
             : PrivateInvoke;
     }
 
@@ -69,5 +69,5 @@ public class Method<TObject, TResult>
     /// <summary>Внутренний метод, осуществляющий вызов метода</summary>
     /// <param name="Args">Параметры вызова метода</param>
     /// <returns>Результат вызова метода</returns>
-    private TResult PrivateInvoke(params object[] Args) => (TResult)_MethodInfo.Invoke(_Object, Args);
+    private TResult PrivateInvoke(params object[] Args) => (TResult?)_MethodInfo.Invoke(_Object, Args);
 }

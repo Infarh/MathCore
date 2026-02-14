@@ -150,7 +150,7 @@ public readonly ref struct Value(string value, IFormatProvider Culture)
     public bool AsBoolOrDefault(bool Default) => bool.TryParse(TrimmedStringValue, out var v) ? v : Default;
 
     public T AsEnum<T>() where T : Enum => (T)Enum.Parse(typeof(T), TrimmedStringValue);
-    public T AsEnum<T>(bool IgnoreCase) where T : struct, Enum => (T)Enum.Parse(typeof(T), TrimmedStringValue, IgnoreCase);
+    public T AsEnum<T>(bool IgnoreCase) where T : struct, Enum => Enum.Parse<T>(TrimmedStringValue, IgnoreCase);
 
     public T? AsEnumOrNull<T>() where T : struct, Enum => Enum.TryParse(TrimmedStringValue, out T v) ? v : null;
     public T? AsEnumOrNull<T>(bool IgnoreCase) where T : struct, Enum => Enum.TryParse(TrimmedStringValue, IgnoreCase, out T v) ? v : null;

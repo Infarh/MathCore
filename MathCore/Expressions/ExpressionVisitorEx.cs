@@ -6,7 +6,6 @@ using MathCore.Annotations;
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Expressions;
 
-//[Diagnostics.DST]
 public abstract class ExpressionVisitorEx
 {
     [return: NotNullIfNotNull(nameof(Node))]
@@ -171,7 +170,7 @@ public abstract class ExpressionVisitorEx
 
     protected virtual ReadOnlyCollection<Expression> VisitExpressionList(ReadOnlyCollection<Expression> original)
     {
-        List<Expression> list = null;
+        List<Expression>? list = null;
         for (int i = 0, n = original.Count; i < n; i++)
         {
             var p = Visit(original[i]);
@@ -208,7 +207,7 @@ public abstract class ExpressionVisitorEx
 
     protected virtual IEnumerable<MemberBinding> VisitBindingList(ReadOnlyCollection<MemberBinding> original)
     {
-        List<MemberBinding> list = null;
+        List<MemberBinding>? list = null;
         for (int i = 0, n = original.Count; i < n; i++)
         {
             var b = VisitBinding(original[i]);
@@ -230,7 +229,7 @@ public abstract class ExpressionVisitorEx
 
     protected virtual IEnumerable<ElementInit> VisitElementInitializerList(ReadOnlyCollection<ElementInit> original)
     {
-        List<ElementInit> list = null;
+        List<ElementInit>? list = null;
         for (int i = 0, n = original.Count; i < n; i++)
         {
             var init = VisitElementInitializer(original[i]);
@@ -250,7 +249,9 @@ public abstract class ExpressionVisitorEx
     protected virtual Expression VisitLambda(LambdaExpression lambda)
     {
         var body = Visit(lambda.Body);
-        return body != lambda.Body ? Expression.Lambda(lambda.Type, body, lambda.Parameters) : lambda;
+        return body != lambda.Body
+            ? Expression.Lambda(lambda.Type, body, lambda.Parameters)
+            : lambda;
     }
 
     protected virtual NewExpression VisitNew(NewExpression nex)

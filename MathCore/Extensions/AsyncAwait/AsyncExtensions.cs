@@ -119,8 +119,8 @@ public static class AsyncExtensions
 
         return Task.Factory.StartNew(pp =>
         {
-            var method = (Action<T>)((object[])pp)[0];
-            var arg = (T)((object[])pp)[1];
+            var method = (Action<T>)((object[]?)pp)[0];
+            var arg = (T)((object[]?)pp)[1];
             method(arg);
         }, new object[] { action, obj }, Cancel);
     }
@@ -134,9 +134,9 @@ public static class AsyncExtensions
         : Task.Factory.StartNew(
             pp =>
             {
-                var method = (Action<T, CancellationToken>)((object[])pp)[0];
-                var arg = (T)((object[])pp)[1];
-                var c = (CancellationToken)((object[])pp)[2];
+                var method = (Action<T, CancellationToken>)((object[]?)pp)[0];
+                var arg = (T)((object[]?)pp)[1];
+                var c = (CancellationToken)((object[]?)pp)[2];
                 method(arg, c);
             },
             new object?[] { action, obj, Cancel },
@@ -152,9 +152,9 @@ public static class AsyncExtensions
         : Task.Factory.StartNew(
             pp =>
             {
-                var method = (Action<T, TP>)((object[])pp)[0];
-                var arg = (T)((object[])pp)[1];
-                var pp1 = (TP)((object[])pp)[2];
+                var method = (Action<T, TP>)((object[]?)pp)[0];
+                var arg = (T)((object[]?)pp)[1];
+                var pp1 = (TP)((object[]?)pp)[2];
                 method(arg, pp1);
             }, new object?[] { action, obj, p }, Cancel);
 
@@ -168,10 +168,10 @@ public static class AsyncExtensions
         : Task.Factory.StartNew(
             pp =>
             {
-                var method = (Action<T, TP, CancellationToken>)((object[])pp)[0];
-                var arg = (T)((object[])pp)[1];
-                var pp1 = (TP)((object[])pp)[2];
-                var c = (CancellationToken)((object[])pp)[3];
+                var method = (Action<T, TP, CancellationToken>)((object[]?)pp)[0];
+                var arg = (T)((object[]?)pp)[1];
+                var pp1 = (TP)((object[]?)pp)[2];
+                var c = (CancellationToken)((object[]?)pp)[3];
                 method(arg, pp1, c);
             }, new object?[] { action, obj, p, Cancel }, Cancel);
 
@@ -186,10 +186,10 @@ public static class AsyncExtensions
         : Task.Factory.StartNew(
             pp =>
             {
-                var method = (Action<T, TP1, TP2>)((object[])pp)[0];
-                var arg = (T)((object[])pp)[1];
-                var pp1 = (TP1)((object[])pp)[2];
-                var pp2 = (TP2)((object[])pp)[3];
+                var method = (Action<T, TP1, TP2>)((object[]?)pp)[0];
+                var arg = (T)((object[]?)pp)[1];
+                var pp1 = (TP1)((object[]?)pp)[2];
+                var pp2 = (TP2)((object[]?)pp)[3];
                 method(arg, pp1, pp2);
             }, new object?[] { action, obj, p1, p2 }, Cancel);
 
@@ -204,11 +204,11 @@ public static class AsyncExtensions
         : Task.Factory.StartNew(
             pp =>
             {
-                var method = (Action<T, TP1, TP2, CancellationToken>)((object[])pp)[0];
-                var arg = (T)((object[])pp)[1];
-                var pp1 = (TP1)((object[])pp)[2];
-                var pp2 = (TP2)((object[])pp)[3];
-                var c = (CancellationToken)((object[])pp)[4];
+                var method = (Action<T, TP1, TP2, CancellationToken>)((object[]?)pp)[0];
+                var arg = (T)((object[]?)pp)[1];
+                var pp1 = (TP1)((object[]?)pp)[2];
+                var pp2 = (TP2)((object[]?)pp)[3];
+                var c = (CancellationToken)((object[]?)pp)[4];
                 method(arg, pp1, pp2, c);
             }, new object?[] { action, obj, p1, p2, Cancel }, Cancel);
 
@@ -224,11 +224,11 @@ public static class AsyncExtensions
         : Task.Factory.StartNew(
             pp =>
             {
-                var method = (Action<T, TP1, TP2, TP3>)((object[])pp)[0];
-                var arg = (T)((object[])pp)[1];
-                var pp1 = (TP1)((object[])pp)[2];
-                var pp2 = (TP2)((object[])pp)[3];
-                var pp3 = (TP3)((object[])pp)[4];
+                var method = (Action<T, TP1, TP2, TP3>)((object[]?)pp)[0];
+                var arg = (T)((object[]?)pp)[1];
+                var pp1 = (TP1)((object[]?)pp)[2];
+                var pp2 = (TP2)((object[]?)pp)[3];
+                var pp3 = (TP3)((object[]?)pp)[4];
                 method(arg, pp1, pp2, pp3);
             },
             new object?[] { action, obj, p1, p2, p3 },
@@ -246,12 +246,12 @@ public static class AsyncExtensions
         : Task.Factory.StartNew(
             pp =>
             {
-                var method = (Action<T, TP1, TP2, TP3, CancellationToken>)((object[])pp)[0];
-                var arg = (T)((object[])pp)[1];
-                var pp1 = (TP1)((object[])pp)[2];
-                var pp2 = (TP2)((object[])pp)[3];
-                var pp3 = (TP3)((object[])pp)[4];
-                var c = (CancellationToken)((object[])pp)[5];
+                var method = (Action<T, TP1, TP2, TP3, CancellationToken>)((object[]?)pp)[0];
+                var arg = (T)((object[]?)pp)[1];
+                var pp1 = (TP1)((object[]?)pp)[2];
+                var pp2 = (TP2)((object[]?)pp)[3];
+                var pp3 = (TP3)((object[]?)pp)[4];
+                var c = (CancellationToken)((object[]?)pp)[5];
                 method(arg, pp1, pp2, pp3, c);
             },
             new object?[] { action, obj, p1, p2, p3, Cancel },
@@ -266,8 +266,8 @@ public static class AsyncExtensions
         : Task<TResult>.Factory.StartNew(
             pp =>
             {
-                var method = (Func<T, TResult>)((object[])pp)[0];
-                var arg = (T)((object[])pp)[1];
+                var method = (Func<T, TResult>)((object[]?)pp)[0];
+                var arg = (T)((object[]?)pp)[1];
                 return method(arg);
             },
             new object?[] { func, obj },
@@ -282,9 +282,9 @@ public static class AsyncExtensions
         : Task<TResult>.Factory.StartNew(
             pp =>
             {
-                var method = (Func<T, CancellationToken, TResult>)((object[])pp)[0];
-                var arg = (T)((object[])pp)[1];
-                var c = (CancellationToken)((object[])pp)[2];
+                var method = (Func<T, CancellationToken, TResult>)((object[]?)pp)[0];
+                var arg = (T)((object[]?)pp)[1];
+                var c = (CancellationToken)((object[]?)pp)[2];
                 return method(arg, c);
             }, new object?[] { func, obj, Cancel }, Cancel);
 
@@ -298,9 +298,9 @@ public static class AsyncExtensions
         : Task<TResult>.Factory.StartNew(
             pp =>
             {
-                var method = (Func<T, TP, TResult>)((object[])pp)[0];
-                var arg = (T)((object[])pp)[1];
-                var pp1 = (TP)((object[])pp)[2];
+                var method = (Func<T, TP, TResult>)((object[]?)pp)[0];
+                var arg = (T)((object[]?)pp)[1];
+                var pp1 = (TP)((object[]?)pp)[2];
                 return method(arg, pp1);
             },
             new object?[] { func, obj, p },
@@ -316,10 +316,10 @@ public static class AsyncExtensions
         : Task<TResult>.Factory.StartNew(
             pp =>
             {
-                var method = (Func<T, TP, CancellationToken, TResult>)((object[])pp)[0];
-                var arg = (T)((object[])pp)[1];
-                var pp1 = (TP)((object[])pp)[2];
-                var c = (CancellationToken)((object[])pp)[3];
+                var method = (Func<T, TP, CancellationToken, TResult>)((object[]?)pp)[0];
+                var arg = (T)((object[]?)pp)[1];
+                var pp1 = (TP)((object[]?)pp)[2];
+                var c = (CancellationToken)((object[]?)pp)[3];
                 return method(arg, pp1, c);
             }, new object?[] { func, obj, p, Cancel }, Cancel);
 
@@ -334,10 +334,10 @@ public static class AsyncExtensions
         : Task<TResult>.Factory.StartNew(
             pp =>
             {
-                var method = (Func<T, TP1, TP2, TResult>)((object[])pp)[0];
-                var arg = (T)((object[])pp)[1];
-                var pp1 = (TP1)((object[])pp)[2];
-                var pp2 = (TP2)((object[])pp)[3];
+                var method = (Func<T, TP1, TP2, TResult>)((object[]?)pp)[0];
+                var arg = (T)((object[]?)pp)[1];
+                var pp1 = (TP1)((object[]?)pp)[2];
+                var pp2 = (TP2)((object[]?)pp)[3];
                 return method(arg, pp1, pp2);
             }, new object?[] { func, obj, p1, p2 }, Cancel);
 
@@ -352,11 +352,11 @@ public static class AsyncExtensions
         : Task<TResult>.Factory.StartNew(
             pp =>
             {
-                var method = (Func<T, TP1, TP2, CancellationToken, TResult>)((object[])pp)[0];
-                var arg = (T)((object[])pp)[1];
-                var pp1 = (TP1)((object[])pp)[2];
-                var pp2 = (TP2)((object[])pp)[3];
-                var c = (CancellationToken)((object[])pp)[4];
+                var method = (Func<T, TP1, TP2, CancellationToken, TResult>)((object[]?)pp)[0];
+                var arg = (T)((object[]?)pp)[1];
+                var pp1 = (TP1)((object[]?)pp)[2];
+                var pp2 = (TP2)((object[]?)pp)[3];
+                var c = (CancellationToken)((object[]?)pp)[4];
                 return method(arg, pp1, pp2, c);
             }, new object[] { func, obj, p1, p2, Cancel }, Cancel);
 
@@ -379,11 +379,11 @@ public static class AsyncExtensions
             : Task<TResult>.Factory.StartNew(
                 pp =>
                 {
-                    var method = (Func<T, TP1, TP2, TP3, TResult>)((object[])pp)[0];
-                    var arg = (T)((object[])pp)[1];
-                    var pp1 = (TP1)((object[])pp)[2];
-                    var pp2 = (TP2)((object[])pp)[3];
-                    var pp3 = (TP3)((object[])pp)[4];
+                    var method = (Func<T, TP1, TP2, TP3, TResult>)((object[]?)pp)[0];
+                    var arg = (T)((object[]?)pp)[1];
+                    var pp1 = (TP1)((object[]?)pp)[2];
+                    var pp2 = (TP2)((object[]?)pp)[3];
+                    var pp3 = (TP3)((object[]?)pp)[4];
                     return method(arg, pp1, pp2, pp3);
                 },
                 new object?[] { func, obj, p1, p2, p3 },
@@ -408,12 +408,12 @@ public static class AsyncExtensions
             : Task<TResult>.Factory.StartNew(
                 pp =>
                 {
-                    var method = (Func<T, TP1, TP2, TP3, CancellationToken, TResult>)((object[])pp)[0];
-                    var arg = (T)((object[])pp)[1];
-                    var pp1 = (TP1)((object[])pp)[2];
-                    var pp2 = (TP2)((object[])pp)[3];
-                    var pp3 = (TP3)((object[])pp)[4];
-                    var c = (CancellationToken)((object[])pp)[5];
+                    var method = (Func<T, TP1, TP2, TP3, CancellationToken, TResult>)((object[]?)pp)[0];
+                    var arg = (T)((object[]?)pp)[1];
+                    var pp1 = (TP1)((object[]?)pp)[2];
+                    var pp2 = (TP2)((object[]?)pp)[3];
+                    var pp3 = (TP3)((object[]?)pp)[4];
+                    var c = (CancellationToken)((object[]?)pp)[5];
                     return method(arg, pp1, pp2, pp3, c);
                 },
                 new object?[] { func, obj, p1, p2, p3, Cancel },
