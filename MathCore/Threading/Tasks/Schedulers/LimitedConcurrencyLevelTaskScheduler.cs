@@ -3,6 +3,25 @@
 namespace MathCore.Threading.Tasks.Schedulers;
 
 /// <summary>Планировщик, способный выполнять не более указанного числа задач параллельно</summary>
+/// <example>
+/// <code>
+/// var limited = new LimitedConcurrencyLevelTaskScheduler(MaximumConcurrencyLevel: 2);
+///
+/// var tasks = Enumerable.Range(0, 10)
+///     .Select(i => Task.Factory.StartNew(
+///         () =>
+///         {
+///             // здесь одновременно будет выполняться не более 2 задач
+///             Thread.Sleep(100);
+///         },
+///         CancellationToken.None,
+///         TaskCreationOptions.None,
+///         limited))
+///     .ToArray();
+///
+/// Task.WaitAll(tasks);
+/// </code>
+/// </example>
 public class LimitedConcurrencyLevelTaskScheduler : TaskScheduler
 {
     /// <summary>Флаг, определяющий что текущий поток осуществляет выполнение задачи</summary>
@@ -68,7 +87,7 @@ public class LimitedConcurrencyLevelTaskScheduler : TaskScheduler
                             }
 
                             // Извлечение очередной задачи из очереди
-                            task = _Tasks.First.Value;
+                            task = _Tasks.First!.Value;
                             _Tasks.RemoveFirst();
                         }
 
@@ -90,7 +109,7 @@ public class LimitedConcurrencyLevelTaskScheduler : TaskScheduler
     /// Если этот параметр True, то задача, возможно, ранее была в очереди (по расписанию);
     /// Если False, то задача, не стояла в очереди, и её требуется выполнить без постановки в очередь.
     /// </param>
-    /// <returns>Ы</returns>
+    /// <returns>Истина, если задачу удалось выполнить встроенно</returns>
     protected sealed override bool TryExecuteTaskInline(Task task, bool TaskWasPreviouslyQueued)
     {
         // Если текущий поток не занят выполнением задач в планировщике, то задачу выполнить нельзя - возвращаем ложь

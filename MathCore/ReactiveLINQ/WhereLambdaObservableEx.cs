@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 // ReSharper disable NotAccessedField.Local
 
 // ReSharper disable once CheckNamespace

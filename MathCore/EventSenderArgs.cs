@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 // ReSharper disable UnusedType.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -51,7 +50,7 @@ public class EventSenderArgs<TSender, TArg>(TSender Sender, TArg Argument) : Eve
 public class EventSenderArgs<TSender, TArg1, TArg2, TArg3> : EventArgs<TArg1, TArg2, TArg3>
 {
     /// <summary>Источник события</summary>
-    public TSender Sender { get; set; }
+    public TSender Sender { get; set; } = default!;
 
     /// <summary>Новый аргумент события с тремя параметрами</summary>
     public EventSenderArgs() { }
@@ -73,7 +72,7 @@ public class EventSenderArgs<TSender, TArg1, TArg2, TArg3> : EventArgs<TArg1, TA
 public class EventSenderArgs<TSender, TArg1, TArg2> : EventArgs<TArg1, TArg2>
 {
     /// <summary>Источник события</summary>
-    public TSender Sender { get; set; }
+    public TSender Sender { get; set; } = default!;
 
     /// <summary>Новый аргумент события с двумя параметрами</summary>
     protected EventSenderArgs() { }

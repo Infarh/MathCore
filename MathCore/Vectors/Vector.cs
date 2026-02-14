@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections;
+﻿using System.Collections;
 
 namespace MathCore.Vectors;
 
@@ -22,16 +21,16 @@ public class Vector<T>(T[] Elements) : IEnumerable<T>, ICloneable<Vector<T>>, IE
     /* ------------------------------------------------------------------------------------------ */
 
     /// <inheritdoc />
-    public override int GetHashCode() => _Elements.Aggregate(Consts.BigPrime_int, (V, v) => V ^ v.GetHashCode());
+    public override int GetHashCode() => _Elements.Aggregate(Consts.BigPrime_int, (V, v) => V ^ v!.GetHashCode());
 
     /// <inheritdoc />
     public bool Equals(Vector<T>? other)
     {
-        if(other is null) return false;
-        if(ReferenceEquals(other, this)) return true;
-        if(other.Dimension != Dimension) return false;
+        if (other is null) return false;
+        if (ReferenceEquals(other, this)) return true;
+        if (other.Dimension != Dimension) return false;
 
-        return !_Elements.Where((v, i) => !v.Equals(other[i])).Any();
+        return !_Elements.Where((v, i) => !v!.Equals(other[i])).Any();
     }
 
     /// <inheritdoc />

@@ -1,5 +1,4 @@
-﻿#nullable enable
-using MathCore.Collections.Interfaces;
+﻿using MathCore.Collections.Interfaces;
 
 namespace MathCore.Collections;
 

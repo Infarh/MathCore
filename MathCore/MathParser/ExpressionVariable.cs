@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.MathParser;
+﻿namespace MathCore.MathParser;
 
 /// <summary>Переменная математического выражения</summary>
 public class ExpressionVariable : ExpressionItem, ICloneable<ExpressionVariable>

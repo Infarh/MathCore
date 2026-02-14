@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 using MathCore;
 using MathCore.Interpolation;
 using MathCore.Statistic;

@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.CommandProcessor;
+﻿namespace MathCore.CommandProcessor;
 
 using CommandHandler = Action<ProcessorCommand, int, IReadOnlyList<ProcessorCommand>>;
 

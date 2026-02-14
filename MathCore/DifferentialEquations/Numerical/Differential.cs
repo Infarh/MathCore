@@ -34,34 +34,34 @@ public static partial class Solver
         {
             var N = X.Length;
             var Y = new double[N];
-            if(N == 0) return Y;
-            if(n >= 0)
+            if (N == 0) return Y;
+            if (n >= 0)
             {
-                var a     = dif_a[n];
+                var a = dif_a[n];
                 var a_len = a.Length;
-                var b     = diff_b[n];
-                for(var i = 0; i < N; i++)
+                var b = diff_b[n];
+                for (var i = 0; i < N; i++)
                 {
                     var y = 0d;
-                    for(var j = 0; j < a_len && i + j < N; j++)
+                    for (var j = 0; j < a_len && i + j < N; j++)
                         y += a[j] * X[i + j];
                     Y[i] = y / b;
                 }
                 return Y;
             }
 
-            for(var i = 0; i < N; i++)
+            for (var i = 0; i < N; i++)
             {
                 n = N - i - 2;
-                if(n < 0) break;
-                if(n >= __MethodsCount) n = __MethodsCount - 1;
+                if (n < 0) break;
+                if (n >= __MethodsCount) n = __MethodsCount - 1;
 
-                var a     = dif_a[n];
+                var a = dif_a[n];
                 var a_len = a.Length;
-                var b     = diff_b[n];
+                var b = diff_b[n];
 
                 var y = 0d;
-                for(var j = 0; j < a_len && i + j < N; j++)
+                for (var j = 0; j < a_len && i + j < N; j++)
                     y += a[j] * X[i + j];
                 Y[i] = y / b;
             }
@@ -70,6 +70,6 @@ public static partial class Solver
         }
 
         [NotNull]
-        public static Task<double[]> GetDifferentialAsync([NotNull] double[] X, int N = -1) => (X, N).Async(v => GetDifferential(v.X, v.N));
+        public static Task<double[]> GetDifferentialAsync([NotNull] double[] X, int N = -1) => (X, N).Async(v => GetDifferential(v.X, v.N))!;
     }
 }

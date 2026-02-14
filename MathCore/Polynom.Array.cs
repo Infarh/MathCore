@@ -1,5 +1,4 @@
-﻿#nullable enable
-using SArray = System.Array;
+﻿using SArray = System.Array;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming

@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive;
 

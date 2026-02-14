@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 // ReSharper disable ConvertToAutoPropertyWhenPossible
 
@@ -9,10 +8,14 @@ using System.Linq.Expressions;
 namespace MathCore.MathParser.ExpressionTrees.Nodes;
 
 /// <summary>Функциональный узел</summary>
-public class FunctionalNode : ComputedNode
+/// <remarks>Инициализация нового экземпляра <see cref="FunctionNode"/></remarks>
+/// <param name="Name">Имя функционала</param>
+[method: DST]
+/// <summary>Функциональный узел</summary>
+public class FunctionalNode(string Name) : ComputedNode
 {
     /// <summary>Имя узла</summary>
-    public string Name { get; }
+    public string Name { get; } = Name;
 
     /// <summary>Выражение параметров</summary>
     private readonly MathExpression _ParametersExpression = new("Param");
@@ -28,11 +31,6 @@ public class FunctionalNode : ComputedNode
 
     /// <summary>Оператор</summary>
     public Functional Operator { get; set; } = null!;
-
-    /// <summary>Инициализация нового экземпляра <see cref="FunctionNode"/></summary>
-    /// <param name="Name">Имя функционала</param>
-    [DST]
-    public FunctionalNode(string Name) => this.Name = Name;
 
     /// <summary>Инициализация нового экземпляра <see cref="FunctionNode"/></summary>
     /// <param name="term">Блок определения функционала</param>
@@ -57,11 +55,11 @@ public class FunctionalNode : ComputedNode
            .Where(n => n is VariableValueNode) // проходим по всем узлам с переменными
            .Cast<VariableValueNode>()
            .Where(v => !v.Variable.IsConstant)
-           .Foreach(_ParametersExpression.Variable, _CoreExpression.Variable, 
+           .Foreach(_ParametersExpression.Variable, _CoreExpression.Variable,
                 (v, expr_vars, core_vars) =>
                 {
-                    expr_vars.RemoveFromCollection(v.Variable);
-                    expr_vars.Add(v.Variable = core_vars[v.Variable.Name]);
+                    expr_vars!.RemoveFromCollection(v.Variable);
+                    expr_vars.Add(v.Variable = core_vars![v.Variable.Name]);
                 });
 
         //Запрос к парсеру о операторе
@@ -73,9 +71,9 @@ public class FunctionalNode : ComputedNode
     /// <inheritdoc />
     public override IEnumerable<ExpressionVariable> GetVariables()
     {
-        ExpressionVariable? iterator    = null;
-        var                params_node = _ParametersExpression.Tree.Root;
-        if(params_node is EqualityOperatorNode && params_node.Left is VariableValueNode node)
+        ExpressionVariable? iterator = null;
+        var params_node = _ParametersExpression.Tree.Root;
+        if (params_node is EqualityOperatorNode && params_node.Left is VariableValueNode node)
             iterator = node.Variable;
         return _CoreExpression.Tree.Root.GetVariables().Where(v => v != iterator);
     }

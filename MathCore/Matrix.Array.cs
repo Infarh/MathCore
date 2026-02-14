@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 // ReSharper disable InconsistentNaming
 
@@ -38,7 +37,7 @@ public partial class Matrix
             for (var i = 0; i < N; i++)
             {
                 var row = new double[M];
-                for (var j = 0; j < M; j++) 
+                for (var j = 0; j < M; j++)
                     row[j] = matrix[i, j];
 
                 result[i] = row;
@@ -689,7 +688,7 @@ public partial class Matrix
 
             var temp_b = b.CloneObject();
             Triangulate(ref matrix, ref temp_b, out p, out var d);
-            if (d == 0) 
+            if (d == 0)
                 return false;
 
             GetColsCount(b, out var b_M);
@@ -923,9 +922,9 @@ public partial class Matrix
 
                 if (max_index == -1) // Если индекс ведущего элемента не изменился, то матрица вырождена
                 {
-                    l = null; // Очищаем выходные переменные
-                    u = null;
-                    p = null;
+                    l = null!; // Очищаем выходные переменные
+                    u = null!;
+                    p = null!;
                     d = 0d; // Приравниваем определитель к нулю
                     return false; // Возвращаем ложь - операция не может быть выполнена
                 }
@@ -978,8 +977,8 @@ public partial class Matrix
             {
                 if (u[j, j] == 0)
                 {
-                    l = null;
-                    u = null;
+                    l = null!;
+                    u = null!;
                     d = 0d;
                     return false;
                 }
@@ -1042,8 +1041,8 @@ public partial class Matrix
 
                 if (max_index < 0)
                 {
-                    p = null;
-                    c = null;
+                    p = null!;
+                    c = null!;
                     d = 0d;
                     return false;
                 }
@@ -1100,7 +1099,7 @@ public partial class Matrix
 
                 if (max_index < 0)
                 {
-                    c = null;
+                    c = null!;
                     d = 0d;
                     return false;
                 }
@@ -1142,7 +1141,7 @@ public partial class Matrix
             {
                 if (c[j, j] == 0)
                 {
-                    c = null;
+                    c = null!;
                     return false;
                 }
 
@@ -1386,7 +1385,7 @@ public partial class Matrix
                         var abs = Math.Abs(matrix[i1, i0]);
                         if (abs <= max) continue;
 
-                        max       = abs;
+                        max = abs;
                         max_index = i1;
                     }
 
@@ -1582,7 +1581,7 @@ public partial class Matrix
             if (B is null || A is null) return false;
 
             GetLength(A, out var N, out var M);
-            if (N != B.GetLength(0) || M != B.GetLength(1)) 
+            if (N != B.GetLength(0) || M != B.GetLength(1))
                 return false;
 
             for (var i = 0; i < N; i++)
@@ -2192,7 +2191,7 @@ public partial class Matrix
                 for (var p = 0; p < n - 1; p++)
                     for (var q = p + 1; q < n; q++)
                     {
-                        if (ComputeRotation(B, p, q) is not { c: not double.NaN, s: not double.NaN } rotation) 
+                        if (ComputeRotation(B, p, q) is not { c: not double.NaN, s: not double.NaN } rotation)
                             continue;
 
                         ApplyRotation(B, rotation, p, q);

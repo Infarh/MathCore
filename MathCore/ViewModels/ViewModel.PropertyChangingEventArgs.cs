@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.ComponentModel;
+﻿using System.ComponentModel;
 // ReSharper disable ConvertToAutoPropertyWhenPossible
 // ReSharper disable UnusedMember.Global
 

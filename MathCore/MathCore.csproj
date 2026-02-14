@@ -7,14 +7,15 @@
       net8.0;
       netstandard2.0
     </TargetFrameworks>
+    <Nullable>enable</Nullable>
     <LangVersion>preview</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.94.3</Version>
+    <Version>0.1.0</Version>
     <PackageReleaseNotes>
-        Оптимизация работы, комментарии
+        Включена поддержка Nullable, добавлены комментарии
     </PackageReleaseNotes>
   </PropertyGroup>
 
@@ -43,13 +44,8 @@
 
   <PropertyGroup>
     <NoWarn>
-      0168;
-      1572;1574;
-      1701;1702;1710;1734;
-      1591;1573;
-
-      8794;8604;8602;8625;8601;8618;8603;8600;8766;8765;8767
-    </NoWarn>
+     
+    </NoWarn> 
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">

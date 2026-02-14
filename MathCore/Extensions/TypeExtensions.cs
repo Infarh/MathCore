@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -18,7 +17,7 @@ public static class TypeExtensions
     /// <summary>Значение данного типа допускают <see langword="null"/></summary>
     /// <param name="type">Проверяемый тип</param>
     /// <returns>Истина, если значение проверяемого типа допускают возможность пустой ссылки</returns>
-    public static bool IsCanBeNullRef(this Type type) => type.IsClass || type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+    public static bool IsCanBeNullRef(this Type type) => type.IsClass || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>));
 
     /// <summary>Функция, ничего не делающая</summary>
     private static readonly Func<object, object> __NoChangeTypeFunction = o => o;
@@ -92,13 +91,13 @@ public static class TypeExtensions
     /// <param name="SourceType">Тип исходного значения</param>
     /// <param name="TargetType">Целевой тип данных</param>
     /// <returns>Выражение, осуществляющее приведение исходного значение к целевому типу данных</returns>
-    public static Expression GetCastExpression(this Type SourceType, Type TargetType, ref ParameterExpression? parameter)
+    public static Expression? GetCastExpression(this Type SourceType, Type TargetType, ref ParameterExpression? parameter)
     {
         if (SourceType == TargetType) return parameter;
         Expression? source = parameter;
-        if (source is null) source                 = __ConvParameter;
+        if (source is null) source = __ConvParameter;
         else if (source.Type != SourceType) source = source.ConvertTo(SourceType);
-        return source.ConvertTo(TargetType).ConvertTo(typeof(object));
+        return source.ConvertTo(TargetType).ConvertTo<object>();
     }
 
     /// <summary>Сформировать выражение, осуществляющее преобразование типа данных</summary>
@@ -108,12 +107,12 @@ public static class TypeExtensions
     /// <exception cref="NotSupportedException">Если преобразование невозможно в виду отсутствия определённых конвертеров типов</exception>
     public static LambdaExpression GetConvertExpression(this Type SourceType, Type TargetType)
     {
-        var            converter    = SourceType.GetTypeConverter();
+        var converter = SourceType.GetTypeConverter();
         TypeConverter? converter_to = null;
         if (!converter.CanConvertTo(TargetType) && !(converter_to = TargetType.GetTypeConverter()).CanConvertFrom(SourceType))
             throw new NotSupportedException($"Преобразование из {SourceType} в {TargetType} не поддерживается");
-        var parameter_source     = Expression.Parameter(SourceType, "pFrom");
-        var source_to_object     = parameter_source.ConvertTo(typeof(object));
+        var parameter_source = Expression.Parameter(SourceType, "pFrom");
+        var source_to_object = parameter_source.ConvertTo<object>();
         var converter_expression = (converter_to ?? converter).ToExpression();
         var converter_delegate = converter_to is null
             ? (Delegate)(Func<object, Type, object?>)converter.ConvertTo
@@ -133,11 +132,11 @@ public static class TypeExtensions
     /// <returns>Лямбда-выражение, осуществляющее конвертацию значения</returns>
     public static Expression<Func<object, object>> GetConvertExpression_Object(this Type SourceType, Type TargetType)
     {
-        var            converter    = SourceType.GetTypeConverter();
+        var converter = SourceType.GetTypeConverter();
         TypeConverter? converter_to = null;
         if (!converter.CanConvertTo(TargetType) && !(converter_to = TargetType.GetTypeConverter()).CanConvertFrom(SourceType))
             throw new NotSupportedException($"Преобразование из {SourceType} в {TargetType} не поддерживается");
-        var parameter_source     = Expression.Parameter(typeof(object), "pFrom");
+        var parameter_source = Expression.Parameter(typeof(object), "pFrom");
         var converter_expression = (converter_to ?? converter).ToExpression();
         var converter_delegate = converter_to is null
             ? (Delegate)(Func<object, Type, object?>)converter.ConvertTo
@@ -178,31 +177,31 @@ public static class TypeExtensions
     /// <param name="Inherited">Искать атрибуты в базовых классах типа</param>
     /// <returns>Массив найденных атрибутов</returns>
     public static TAttribute[] GetCustomAttributes<TAttribute>(this Type T, bool Inherited)
-        where TAttribute : Attribute => T.GetCustomAttributes(typeof(TAttribute), Inherited).OfType<TAttribute>().ToArray();
+        where TAttribute : Attribute => [.. T.GetCustomAttributes(typeof(TAttribute), Inherited).OfType<TAttribute>()];
 
     /// <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
     /// <param name="type">Тип создаваемого объекта</param>
     /// <returns>Созданный объект</returns>
-    public static object CreateObject(this Type type) => Activator.CreateInstance(type);
+    public static object? CreateObject(this Type type) => Activator.CreateInstance(type);
 
     /// <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
     /// <typeparam name="T">Тип необходимого объекта</typeparam>
     /// <param name="type">Тип создаваемого объекта</param>
     /// <returns>Созданный объект, приведённый к типу <typeparamref name="T"/></returns>
-    public static T Create<T>(this Type type) => (T)type.CreateObject();
+    public static T? Create<T>(this Type type) => (T?)type.CreateObject();
 
     /// <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
     /// <typeparam name="T">Тип необходимого объекта</typeparam>
     /// <param name="type">Тип создаваемого объекта</param>
     /// <param name="Params">Параметры конструктора</param>
     /// <returns>Созданный объект, приведённый к типу <typeparamref name="T"/></returns>
-    public static T Create<T>(this Type type, params object[] Params) => (T)type.CreateObject(Params);
+    public static T? Create<T>(this Type type, params object[] Params) => (T?)type.CreateObject(Params);
 
     /// <summary>Создать объект типа с помощью конструктора с заданным набором параметров</summary>
     /// <param name="type">Тип создаваемого объекта</param>
     /// <param name="Params">Параметры конструктора</param>
     /// <returns>Созданный объект</returns>
-    public static object CreateObject(this Type type, params object[] Params) =>
+    public static object? CreateObject(this Type type, params object[] Params) =>
         Activator.CreateInstance(type, Params);
 
     /// <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
@@ -211,13 +210,13 @@ public static class TypeExtensions
     /// <param name="binder">Объект, определяющий способ поиска конструктора</param>
     /// <param name="Params">Параметры конструктора</param>
     /// <returns>Созданный объект</returns>
-    public static object CreateObject(this Type type, BindingFlags Flags, Binder binder, params object[] Params) =>
+    public static object? CreateObject(this Type type, BindingFlags Flags, Binder binder, params object[] Params) =>
         Activator.CreateInstance(type, Flags, binder, Params);
 
     /// <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
     /// <param name="Params">Параметры конструктора</param>
     /// <returns>Созданный объект, приведённый к типу <typeparamref name="T"/></returns>
-    public static T Create<T>(params object[] Params) => (T)CreateObject(typeof(T), Params);
+    public static T? Create<T>(params object[] Params) => (T?)CreateObject(typeof(T), Params);
 
     /// <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
     /// <typeparam name="T">Тип необходимого объекта</typeparam>
@@ -225,8 +224,8 @@ public static class TypeExtensions
     /// <param name="binder">Объект, определяющий способ поиска конструктора</param>
     /// <param name="Params">Параметры конструктора</param>
     /// <returns>Созданный объект, приведённый к типу <typeparamref name="T"/></returns>
-    public static T Create<T>(BindingFlags Flags, Binder binder, params object[] Params) =>
-        (T)CreateObject(typeof(T), Flags, binder, Params);
+    public static T? Create<T>(BindingFlags Flags, Binder binder, params object[] Params) =>
+        (T?)CreateObject(typeof(T), Flags, binder, Params);
 
     /// <summary>Добавить конвертер к типу</summary>
     /// <param name="type">Тип, к которому требуется добавить конвертер</param>
@@ -238,12 +237,12 @@ public static class TypeExtensions
     /// <param name="type">Тип, к которому требуется добавить конвертер</param>
     /// <param name="ConverterTypes">Типы конвертеров, которые требуется добавить к описанию типа</param>
     public static void AddConverter(this Type type, params Type[] ConverterTypes) =>
-        TypeDescriptor.AddAttributes(type, ConverterTypes.Select(t => new TypeConverterAttribute(t)).Cast<Attribute>().ToArray());
+        TypeDescriptor.AddAttributes(type, [.. ConverterTypes.Select(t => new TypeConverterAttribute(t)).Cast<Attribute>()]);
 
     /// <summary>Получить объект-описатель типа <see cref="TypeDescriptionProvider"/></summary>
     /// <param name="type">Исследуемый тип</param>
     /// <returns>Объект, определяющий информацию о типе - <see cref="TypeDescriptionProvider"/></returns>
-    static TypeDescriptionProvider GetProvider(this Type type) => TypeDescriptor.GetProvider(type);
+    private static TypeDescriptionProvider GetProvider(this Type type) => TypeDescriptor.GetProvider(type);
 
     /// <summary>Добавить описатель типа - <see cref="TypeDescriptionProvider"/></summary>
     /// <param name="type">Тип, к которому требуется добавить описатель</param>

@@ -1,19 +1,16 @@
-﻿#nullable enable
-using MathCore;
-using MathCore.Evaluations;
-
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+using MathCore;
 using MathCore.Annotations;
-
-using NotNullAttribute = MathCore.Annotations.NotNullAttribute;
+using MathCore.Evaluations;
 
 using cEx = System.Linq.Expressions.ConstantExpression;
 using Ex = System.Linq.Expressions.Expression;
 using mcEx = System.Linq.Expressions.MethodCallExpression;
+using NotNullAttribute = MathCore.Annotations.NotNullAttribute;
 // ReSharper disable MemberCanBePrivate.Global
 
 // ReSharper disable UnusedMember.Global
@@ -132,7 +129,7 @@ public static class ObjectExtensions
         /// <param name="CanContinue">Продолжать выборку</param>
         public void Next(TResult? result, bool CanContinue = true)
         {
-            Result   = result;
+            Result = result;
             Continue = CanContinue;
         }
     }
@@ -252,8 +249,8 @@ public static class ObjectExtensions
     /// <exception cref="ArgumentNullException">В случае если переданное значение <paramref name="obj"/> == <c>null</c> и <paramref name="ParameterName"/> != <c>null</c></exception>
     [return: NotNull]
     [return: NotNullIfNotNull(nameof(obj))]
-    public static T NotNull<T>(this T? obj, string? Message = null, [CallerArgumentExpression(nameof(obj))] string? ParameterName = null!) 
-        where T : class => 
+    public static T NotNull<T>(this T? obj, string? Message = null, [CallerArgumentExpression(nameof(obj))] string? ParameterName = null!)
+        where T : class =>
         obj ?? throw (ParameterName is null
             ? new InvalidOperationException(Message ?? "Пустая ссылка на объект")
             : new ArgumentNullException(ParameterName, Message ?? "Пустая ссылка в значении параметра"));
@@ -418,7 +415,7 @@ public static class ObjectExtensions
         if (args.Count == 0)
             Console.Write(Format, Obj);
         else
-            Console.Write(Format, args.AppendFirst(Obj).ToArray());
+            Console.Write(Format, [.. args.AppendFirst(Obj)]);
     }
 
     /// <summary>Печать объекта на консоли с переносом строки в конце</summary>
@@ -476,7 +473,7 @@ public static class ObjectExtensions
     {
         if (values.Count == 0) return [];
 
-        var size   = Marshal.SizeOf(typeof(T));
+        var size = Marshal.SizeOf<T>();
         var buffer = new byte[size * values.Count]; // создать массив
         var g_lock = default(GCHandle);
         try
@@ -497,7 +494,7 @@ public static class ObjectExtensions
 
     public static byte[] ArrayToByteArray<T>(this T[] values) where T : struct
     {
-        var buffer = new byte[Marshal.SizeOf(typeof(T)) * values.Length]; // создать массив
+        var buffer = new byte[Marshal.SizeOf<T>() * values.Length]; // создать массив
         var g_lock = default(GCHandle);
         try
         {
@@ -525,7 +522,7 @@ public static class ObjectExtensions
         {
             var ptr = gch.AddrOfPinnedObject();
             ptr += offset;
-            return (T)Marshal.PtrToStructure(ptr, typeof(T))!;
+            return Marshal.PtrToStructure<T>(ptr)!;
         }
         finally
         {
@@ -535,10 +532,10 @@ public static class ObjectExtensions
 
     public static T[] ToStructArray<T>(this byte[] data) where T : struct
     {
-        var type   = typeof(T);
+        var type = typeof(T);
         var length = Marshal.SizeOf(type);
-        var count  = data.Length / length;
-        var ptr    = Marshal.AllocHGlobal(length * count);
+        var count = data.Length / length;
+        var ptr = Marshal.AllocHGlobal(length * count);
         try
         {
             var result = new T[count];
@@ -603,7 +600,7 @@ public static class ObjectExtensions
 
     //    private static StructureReader<T> CreateDelegate()
     //    {
-                
+
     //        var dm = new DynamicMethod
     //        (
     //            name: "Read",
@@ -686,7 +683,7 @@ public static class ObjectExtensions
     /// <param name="obj">Оборачиваемый объект</param>
     /// <param name="Name">Имя вычисления</param>
     /// <returns>Вычисление, возвращающее указанный объект</returns>
-    public static ValueEvaluation<T> ToEvaluation<T>(this T? obj, string? Name) => new NamedValueEvaluation<T>(obj!, Name);
+    public static ValueEvaluation<T> ToEvaluation<T>(this T? obj, string Name) => new NamedValueEvaluation<T>(obj!, Name);
 
     /// <summary>Преобразование объекта в выражение-константу</summary>
     /// <param name="obj">Преобразуемый объект</param>
@@ -719,7 +716,7 @@ public static class ObjectExtensions
         var method = type.GetMethod(MethodName,
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
                 null,
-                p.Select(pp => pp.Type).ToArray(),
+                [.. p.Select(pp => pp.Type)],
                 null)
            .NotNull();
         return obj.GetCallExpression(method, p);

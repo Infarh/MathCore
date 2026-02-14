@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.ObjectModel;
 
 // ReSharper disable UnusedMember.Global
@@ -8,13 +7,13 @@ using System.Collections.ObjectModel;
 namespace MathCore;
 
 public class LambdaDictionary<TKey, TValue>(
-    Func<IEnumerable<KeyValuePair<TKey, TValue>>> ElementsGetter,
-    Action<TKey, TValue>? ElementSetter = null,
+    Func<IEnumerable<KeyValuePair<TKey, TValue?>>> ElementsGetter,
+    Action<TKey, TValue?>? ElementSetter = null,
     Action? Clear = null,
     Func<TKey, bool>? Remove = null
-    ) : IDictionary<TKey, TValue>
+    ) : IDictionary<TKey, TValue?>
 {
-    private readonly Func<IEnumerable<KeyValuePair<TKey, TValue>>> _ElementsGetter = ElementsGetter ?? throw new ArgumentNullException(nameof(ElementsGetter), "Не задан метод получения значения");
+    private readonly Func<IEnumerable<KeyValuePair<TKey, TValue?>>> _ElementsGetter = ElementsGetter ?? throw new ArgumentNullException(nameof(ElementsGetter), "Не задан метод получения значения");
     private readonly Action? _Clear = Clear;
 
     private readonly Func<TKey, bool>? _Remove = Remove;
@@ -26,10 +25,10 @@ public class LambdaDictionary<TKey, TValue>(
     public int Count => _ElementsGetter().Count();
 
     /// <inheritdoc />
-    public ICollection<TKey> Keys => new Collection<TKey>(_ElementsGetter().Select(v => v.Key).ToList());
+    public ICollection<TKey> Keys => new Collection<TKey>([.. _ElementsGetter().Select(v => v.Key)]);
 
     /// <inheritdoc />
-    public ICollection<TValue> Values => new Collection<TValue>(_ElementsGetter().Select(v => v.Value).ToList());
+    public ICollection<TValue?> Values => new Collection<TValue?>(_ElementsGetter().Select(v => v.Value).ToList()!);
 
     /// <inheritdoc />
     public TValue? this[TKey key]
@@ -43,31 +42,31 @@ public class LambdaDictionary<TKey, TValue>(
     // ReSharper disable once AnnotateNotNullParameter
     private static void CheckSupported(Delegate action, string message)
     {
-        if(action is null)
+        if (action is null)
             throw new NotSupportedException(message);
     }
 
     /// <inheritdoc />
-    public void Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
+    public void Add(KeyValuePair<TKey, TValue?> item) => Add(item.Key, item.Value);
 
     /// <inheritdoc />
-    public void Add(TKey key, TValue value) => ElementSetter.NotNull("Словарь не поддерживает операции записи").Invoke(key, value);
+    public void Add(TKey key, TValue? value) => ElementSetter.NotNull("Словарь не поддерживает операции записи").Invoke(key, value);
 
     /// <inheritdoc />
     public void Clear() => _Clear.NotNull("Словарь не поддерживает операцию очистки")();
 
     /// <inheritdoc />
-    public bool Contains(KeyValuePair<TKey, TValue> item) => _ElementsGetter().Contains(item);
+    public bool Contains(KeyValuePair<TKey, TValue?> item) => _ElementsGetter().Contains(item);
 
     /// <inheritdoc />
-    public void CopyTo(KeyValuePair<TKey, TValue>[] array, int ArrayIndex)
+    public void CopyTo(KeyValuePair<TKey, TValue?>[] array, int ArrayIndex)
     {
         foreach (var item in _ElementsGetter())
             array[ArrayIndex++] = item;
     }
 
     /// <inheritdoc />
-    public bool Remove(KeyValuePair<TKey, TValue> item) => Remove(item.Key);
+    public bool Remove(KeyValuePair<TKey, TValue?> item) => Remove(item.Key);
 
     /// <inheritdoc />
     public bool Remove(TKey key) => _Remove.NotNull("Словарь не поддерживает операцию удаления")(key);
@@ -76,7 +75,7 @@ public class LambdaDictionary<TKey, TValue>(
     public bool ContainsKey(TKey key) => _ElementsGetter().Contains(v => Equals(v.Key, key));
 
     /// <inheritdoc />
-    public bool TryGetValue(TKey key, out TValue value)
+    public bool TryGetValue(TKey key, out TValue? value)
     {
         foreach (var v in _ElementsGetter().Where(v => Equals(v.Key, key)))
         {
@@ -88,7 +87,7 @@ public class LambdaDictionary<TKey, TValue>(
     }
 
     /// <inheritdoc />
-    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _ElementsGetter().GetEnumerator();
+    public IEnumerator<KeyValuePair<TKey, TValue?>> GetEnumerator() => _ElementsGetter().GetEnumerator();
 
     /// <inheritdoc />
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

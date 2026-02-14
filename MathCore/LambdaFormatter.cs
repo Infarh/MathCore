@@ -1,19 +1,21 @@
-﻿#nullable enable
-using System.Globalization;
+﻿using System.Globalization;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedType.Global
 
 namespace MathCore;
 
-public class LambdaFormatter<T>(Func<string, object, IFormatProvider, string> Formatter) : IFormatProvider, ICustomFormatter
+public class LambdaFormatter<T>(Func<string?, object?, IFormatProvider?, string> Formatter) : IFormatProvider, ICustomFormatter
 {
     /// <inheritdoc />
-    public object? GetFormat(Type FormatType) => FormatType == typeof(ICustomFormatter) ? this : null;
+    public object? GetFormat(Type? FormatType) => FormatType == typeof(ICustomFormatter) ? this : null;
 
     /// <inheritdoc />
-    public string Format(string format, object arg, IFormatProvider FormatProvider)
+    public string Format(string? format, object? arg, IFormatProvider? FormatProvider)
     {
+        if (format is null) throw new ArgumentNullException(nameof(format));
+        if (arg is null) throw new ArgumentNullException(nameof(arg));
+
         if (arg.GetType() == typeof(T)) return Formatter(format, arg, FormatProvider);
         try
         {
@@ -26,7 +28,7 @@ public class LambdaFormatter<T>(Func<string, object, IFormatProvider, string> Fo
     }
 
     private static string HandleOtherFormats(string format, object? arg) => (arg as IFormattable)?
-       .ToString(format, CultureInfo.CurrentCulture) 
-        ?? arg?.ToString() 
+       .ToString(format, CultureInfo.CurrentCulture)
+        ?? arg?.ToString()
         ?? string.Empty;
 }

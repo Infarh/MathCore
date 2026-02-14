@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable ReturnTypeCanBeEnumerable.Global
+﻿// ReSharper disable ReturnTypeCanBeEnumerable.Global
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -8,7 +7,7 @@
 namespace MathCore.CommandProcessor;
 
 /// <summary>Аргумент команды</summary>
-public readonly struct Argument: IEquatable<Argument>
+public readonly struct Argument : IEquatable<Argument>
 {
     /// <summary>Имя аргумента</summary>
     public string Name { get; }
@@ -38,10 +37,9 @@ public readonly struct Argument: IEquatable<Argument>
     {
         var arg_items = ArgStr.Split(ValueSplitter);
         Name = arg_items[0].ClearSystemSymbolsAtBeginAndEnd();
-        _Values = arg_items.Skip(1)
+        _Values = [.. arg_items.Skip(1)
            .Select(value => value.ClearSystemSymbolsAtBeginAndEnd())
-           .Where(value => !string.IsNullOrEmpty(value))
-           .ToArray();
+           .Where(value => !string.IsNullOrEmpty(value))];
     }
 
     /// <summary>Представление значения в указанном типе</summary>
@@ -53,7 +51,7 @@ public readonly struct Argument: IEquatable<Argument>
     /// <param name="value">Приведённое к типу <typeparamref name="T"/> значение аргумента</param>
     /// <typeparam name="T">Требуемый тип значения аргумента</typeparam>
     /// <returns>Исключение, возникшее в процессе преобразования строки значения аргумента к типу <typeparamref name="T"/></returns>
-    public bool TryGetValueAs<T>(out T value)
+    public bool TryGetValueAs<T>(out T? value)
     {
         try
         {
@@ -74,7 +72,7 @@ public readonly struct Argument: IEquatable<Argument>
     /// <param name="Error">Исключение, возникшее в процессе преобразования строки значения аргумента к типу <typeparamref name="T"/></param>
     /// <typeparam name="T">Требуемый тип значения аргумента</typeparam>
     /// <returns>Истина, если преобразование выполнено успешно</returns>
-    public bool TryGetValueAs<T>(out T value, out Exception? Error)
+    public bool TryGetValueAs<T>(out T? value, out Exception? Error)
     {
         try
         {
@@ -103,13 +101,7 @@ public readonly struct Argument: IEquatable<Argument>
     public override bool Equals(object? obj) => obj is Argument other && Equals(other);
 
     /// <inheritdoc />
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            return ((_Values != null ? _Values.GetHashCode() : 0) * 397) ^ (Name != null ? Name.GetHashCode() : 0);
-        }
-    }
+    public override int GetHashCode() => unchecked(((_Values != null ? _Values.GetHashCode() : 0) * 397) ^ (Name != null ? Name.GetHashCode() : 0));
 
     /// <summary>Оператор, проверяющий равенство между двумя экземплярами <see cref="Argument"/></summary>
     /// <returns>Истина, если все поля экземпляров равны между собой</returns>

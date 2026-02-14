@@ -1,5 +1,4 @@
-﻿#nullable enable
-#if NET8_0_OR_GREATER
+﻿#if NET8_0_OR_GREATER
 
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;

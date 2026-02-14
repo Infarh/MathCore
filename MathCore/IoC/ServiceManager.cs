@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Reflection;
+﻿using System.Reflection;
 
 using MathCore.IoC.Exceptions;
 using MathCore.IoC.ServiceRegistrations;
@@ -51,7 +50,11 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
 
     private readonly Dictionary<Type, ServiceRegistration> _Services = [];
 
-    private readonly object _SyncRoot = new();
+#if NET9_0_OR_GREATER
+    private readonly Lock _SyncRoot = new();
+#else
+    private readonly object _SyncRoot = new(); 
+#endif
 
     public IServiceRegistrations ServiceRegistrations => this;
 
@@ -63,7 +66,9 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
 
     public object? this[Type ServiceType] => Get(ServiceType);
 
-    ServiceRegistration? IServiceRegistrations.this[Type ServiceType] => _Services.TryGetValue(ServiceType, out var registration) ? registration : null;
+    ServiceRegistration? IServiceRegistrations.this[Type ServiceType] => _Services.TryGetValue(ServiceType, out var registration)
+        ? registration
+        : null;
 
     public ServiceManager()
     {
@@ -79,6 +84,7 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
 
     public TServiceInterface? Get<TServiceInterface>() where TServiceInterface : class => Get(typeof(TServiceInterface)) as TServiceInterface;
 
+    [NotImplemented]
     public TServiceInterface Get<TServiceInterface>(params object[] parameters) where TServiceInterface : class => throw new NotImplementedException();
 
     public object? Get(Type ServiceType)
@@ -93,7 +99,7 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
 
             if (base_registration is null)
             {
-                if (_MergedServiceManagers is not { Count: > 0 } managers) 
+                if (_MergedServiceManagers is not { Count: > 0 } managers)
                     return null;
 
                 foreach (var manager in managers)
@@ -139,17 +145,17 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
         }
     }
 
-    public TObject Create<TObject>(params object[] parameters) where TObject : class =>
+    public TObject? Create<TObject>(params object[] parameters) where TObject : class =>
         ServiceRegistered<TObject>()
             ? Get<TObject>()
             ?? throw new InvalidOperationException("Менеджер сервисов вернул пустую ссылку на зарегистрированный сервис")
-            : (TObject)new SingleCallServiceRegistration<TObject>(this, typeof(TObject)).GetService(parameters);
+            : (TObject?)new SingleCallServiceRegistration<TObject>(this, typeof(TObject)).GetService(parameters);
 
     public object? Create(Type ObjectType, params object[] parameters) =>
         ServiceRegistered(ObjectType)
             ? Get(ObjectType)
             ?? throw new InvalidOperationException("Менеджер сервисов вернул пустую ссылку на зарегистрированный сервис")
-            : ((ServiceRegistration)Activator.CreateInstance(typeof(SingleCallServiceRegistration<>).MakeGenericType(ObjectType), this, ObjectType))
+            : ((ServiceRegistration)Activator.CreateInstance(typeof(SingleCallServiceRegistration<>).MakeGenericType(ObjectType), this, ObjectType).NotNull())
            .GetService(parameters);
 
     private object? CheckMergedManagers(Type ServiceType, object[] parameters)
@@ -162,7 +168,7 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
 
     public ServiceManagerAccessor<TService> ServiceAccessor<TService>() where TService : class => new(this);
 
-    public object Run(object Instance, string MethodName)
+    public object? Run(object Instance, string MethodName)
     {
         if (Instance is null) throw new ArgumentNullException(nameof(Instance));
         if (MethodName is not { Length: > 0 }) throw new InvalidOperationException("Не указан метод для вызова");
@@ -177,7 +183,7 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
         foreach (var method in methods)
         {
             var method_parameters = method.GetParameters();
-            if (method_parameters.Length != 0 && !method_parameters.All(p => ServiceRegistered(p.ParameterType))) 
+            if (method_parameters.Length != 0 && !method_parameters.All(p => ServiceRegistered(p.ParameterType)))
                 continue;
             call_method = method;
             parameter_infos = method_parameters;
@@ -192,7 +198,7 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
         return result;
     }
 
-    public object Run<T>(string StaticMethodName)
+    public object? Run<T>(string StaticMethodName)
     {
         if (StaticMethodName is not { Length: > 0 }) throw new InvalidOperationException("Не указан метод для вызова");
 
@@ -206,7 +212,7 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
         foreach (var method in methods)
         {
             var method_parameters = method.GetParameters();
-            if (method_parameters.Length != 0 && !method_parameters.All(p => ServiceRegistered(p.ParameterType))) 
+            if (method_parameters.Length != 0 && !method_parameters.All(p => ServiceRegistered(p.ParameterType)))
                 continue;
             call_method = method;
             parameter_infos = method_parameters;

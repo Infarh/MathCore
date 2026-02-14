@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 using MathCore.Annotations;
@@ -41,10 +40,10 @@ public partial class ViewModel
         /// <param name="model">Модель-представления, для свойство которой изменилось</param>
         internal SetValueResult(bool Result, T? OldValue, T? NewValue, ViewModel model)
         {
-            _Result   = Result;
+            _Result = Result;
             _OldValue = OldValue;
             _NewValue = NewValue;
-            _Model    = model;
+            _Model = model;
         }
 
         /// <summary>В случае если значение было установлено, выполнить указанное действие</summary>
@@ -152,7 +151,7 @@ public partial class ViewModel
         /// </summary>
         /// <param name="execute">Действие, которое требуется выполнить над значением свойства</param>
         /// <returns>Истина, если свойство было изменено</returns>
-        public bool AnywayThen(Action<T, T, bool> execute)
+        public bool AnywayThen(Action<T?, T?, bool> execute)
         {
             execute(_OldValue, _NewValue, _Result);
             return _Result;
@@ -162,22 +161,24 @@ public partial class ViewModel
         /// <param name="other">The object to compare with the current instance.</param>
         public bool Equals(SetValueResult<T?> other) =>
             _Result == other._Result
-            && EqualityComparer<T>.Default.Equals(_OldValue, other._OldValue)
-            && EqualityComparer<T>.Default.Equals(_NewValue, other._NewValue)
+            && EqualityComparer<T?>.Default.Equals(_OldValue, other._OldValue)
+            && EqualityComparer<T?>.Default.Equals(_NewValue, other._NewValue)
             && _Model.Equals(other._Model);
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public override bool Equals(object obj) => throw new NotSupportedException("Невозможно выполнить метод Equals()");
+        public override bool Equals(object? obj) => throw new NotSupportedException("Невозможно выполнить метод Equals()");
 
         /// <inheritdoc />
         public override int GetHashCode()
         {
             unchecked
             {
-                var hash_code         = _Result.GetHashCode();
+                var hash_code = _Result.GetHashCode();
                 var equality_comparer = EqualityComparer<T>.Default;
-                hash_code = (hash_code * 397) ^ equality_comparer.GetHashCode(_OldValue);
-                hash_code = (hash_code * 397) ^ equality_comparer.GetHashCode(_NewValue);
+                if (_OldValue is not null)
+                    hash_code = (hash_code * 397) ^ equality_comparer.GetHashCode(_OldValue);
+                if (_NewValue is not null)
+                    hash_code = (hash_code * 397) ^ equality_comparer.GetHashCode(_NewValue);
                 hash_code = (hash_code * 397) ^ _Model.GetHashCode();
                 return hash_code;
             }

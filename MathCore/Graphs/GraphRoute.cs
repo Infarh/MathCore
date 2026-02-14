@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections;
+﻿using System.Collections;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -14,7 +13,7 @@ public class GraphRoute<TValue, TWeight>(IGraphNode<TValue, TWeight>[] Nodes) : 
     {
         get
         {
-            if(Nodes.Length == 0)
+            if (Nodes.Length == 0)
                 throw new("Попытка доступа к первому узлу пустого пути");
             return Nodes[0];
         }
@@ -24,7 +23,7 @@ public class GraphRoute<TValue, TWeight>(IGraphNode<TValue, TWeight>[] Nodes) : 
     {
         get
         {
-            if(Nodes.Length == 0)
+            if (Nodes.Length == 0)
                 throw new("Попытка доступа к последнему узлу пустого пути");
             return Nodes[^1];
         }
@@ -34,9 +33,9 @@ public class GraphRoute<TValue, TWeight>(IGraphNode<TValue, TWeight>[] Nodes) : 
 
     public ref readonly IGraphNode<TValue, TWeight> this[int i] => ref Nodes[i];
 
-    public GraphRoute(IEnumerable<IGraphNode<TValue, TWeight>> Collection) : this(Collection.ToArray()) { }
+    public GraphRoute(IEnumerable<IGraphNode<TValue, TWeight>> Collection) : this([.. Collection]) { }
 
-    public TWeight GetWeight(Func<TWeight, TWeight, TWeight> Aggregator) => this.SelectWithLastValue((last, next) => last.Links.First(l => l.Node.Equals(next)).Weight).Aggregate(Aggregator);
+    public TWeight GetWeight(Func<TWeight, TWeight, TWeight> Aggregator) => this.SelectWithLastValue((last, next) => last.NotNull().Links.First(l => l.Node.Equals(next)).Weight).Aggregate(Aggregator);
 
     /// <inheritdoc />
     public IEnumerator<IGraphNode<TValue, TWeight>> GetEnumerator() => Nodes.Cast<IGraphNode<TValue, TWeight>>().GetEnumerator();

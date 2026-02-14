@@ -28,7 +28,7 @@ internal class BaseAxisQuery : Query
 
     internal int Depth { get; set; } = -1;
 
-    internal Query QueryInput { get; set; }
+    internal Query QueryInput { get; set; } = null!;
 
     #endregion
 
@@ -54,11 +54,11 @@ internal class BaseAxisQuery : Query
 
     internal static bool MatchType(XPathNodeType XType, XmlNodeType type) => XType switch
     {
-        XPathNodeType.Element when type is XmlNodeType.Element or XmlNodeType.EndElement   => true,
-        XPathNodeType.Attribute when type is XmlNodeType.Attribute                         => true,
-        XPathNodeType.Text when type is XmlNodeType.Text                                   => true,
+        XPathNodeType.Element when type is XmlNodeType.Element or XmlNodeType.EndElement => true,
+        XPathNodeType.Attribute when type is XmlNodeType.Attribute => true,
+        XPathNodeType.Text when type is XmlNodeType.Text => true,
         XPathNodeType.ProcessingInstruction when type is XmlNodeType.ProcessingInstruction => true,
-        XPathNodeType.Comment when type is XmlNodeType.Comment                             => true,
+        XPathNodeType.Comment when type is XmlNodeType.Comment => true,
 
         _ => throw new XPathReaderException("Unknown nodeType")
     };

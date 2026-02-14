@@ -1,8 +1,8 @@
-﻿#nullable enable
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+
 using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
 
@@ -50,6 +50,7 @@ public sealed class Log : IEnumerable<LogItem>, INotifyPropertyChanged, INotifyC
         get
         {
             this.GetMinMax(i => i.Time.Ticks, out var begin, out var end);
+            if (begin is null || end is null) return TimeSpan.Zero;
             return end.Time - begin.Time;
         }
     }
@@ -61,7 +62,7 @@ public sealed class Log : IEnumerable<LogItem>, INotifyPropertyChanged, INotifyC
         get => _Type;
         set
         {
-            if(_Type == value) return;
+            if (_Type == value) return;
             _Type = value;
             OnPropertyChanged();
         }

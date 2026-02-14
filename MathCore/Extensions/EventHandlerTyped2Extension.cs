@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
@@ -47,7 +46,7 @@ public static class EventHandlerTyped2Extension
     public static void FastStart<TSender, TEventArgs1, TEventArgs2>(
         this EventHandler<TSender, TEventArgs1, TEventArgs2>? Handler,
         TSender Sender)
-        => Handler?.Invoke(Sender, default);
+        => Handler?.Invoke(Sender, default!);
 
     /// <summary>Быстрая генерация события</summary>
     /// <param name="Handler">Обработчик события</param>

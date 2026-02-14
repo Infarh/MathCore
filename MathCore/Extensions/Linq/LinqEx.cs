@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Extensions.Linq;
+﻿namespace MathCore.Extensions.Linq;
 
 public static class LinqEx
 {

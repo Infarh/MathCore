@@ -11,7 +11,7 @@ namespace System.Reflection;
 public class Field<TObject, TValue>
 {
     /// <summary>Информация о поле</summary>
-    private FieldInfo _FieldInfo;
+    private FieldInfo _FieldInfo = null!;
 
     /// <summary>Имя поля</summary>
     private string _Name;
@@ -35,7 +35,7 @@ public class Field<TObject, TValue>
     public bool Private { get => _Private; set => Initialize(_Object, _Name, _Private = value); }
 
     /// <summary>Значение поля</summary>
-    public TValue Value { get => (TValue)_FieldInfo.GetValue(_Object); set => _FieldInfo.SetValue(_Object, value); }
+    public TValue? Value { get => (TValue?)_FieldInfo.GetValue(_Object); set => _FieldInfo.SetValue(_Object, value); }
 
     /// <summary>Инициализация нового экземпляра <see cref="Field{TObject,TValue}"/></summary>
     /// <param name="o">Объект, в котором определено поле</param>
@@ -54,8 +54,8 @@ public class Field<TObject, TValue>
             type = o.GetType();
 
         var is_private = IsPrivate ? BindingFlags.NonPublic : BindingFlags.Public;
-        var is_static  = o is null ? BindingFlags.Static : BindingFlags.Instance;
+        var is_static = o is null ? BindingFlags.Static : BindingFlags.Instance;
 
-        _FieldInfo = type.GetField(FieldName, is_private | is_static);
+        _FieldInfo = type.GetField(FieldName, is_private | is_static).NotNull();
     }
 }

@@ -1,6 +1,4 @@
-﻿using MathCore.Annotations;
-
-using Ex = System.Linq.Expressions.Expression;
+﻿using Ex = System.Linq.Expressions.Expression;
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable MemberCanBeProtected.Global
@@ -12,7 +10,7 @@ namespace MathCore.Evaluations;
 public class ValueEvaluation<T> : Evaluation<T>
 {
     /// <summary>Возвращаемое значение</summary>
-    public T Value { get; set; }
+    public T Value { get; set; } = default!;
 
     /// <summary>Инициализация нового вычисления конкретного значения</summary>
     public ValueEvaluation() { }
@@ -25,14 +23,12 @@ public class ValueEvaluation<T> : Evaluation<T>
     public override T GetValue() => Value;
 
     /// <inheritdoc />
-    [NotNull]
     public override Ex GetExpression() => Value.ToExpression();
 
     /// <inheritdoc />
-    public override string ToString() => Value.ToString();
+    public override string? ToString() => Value?.ToString();
 
     /// <summary>Оператор неявного преобразования типа значения в тип вычисления этого значения</summary>
     /// <param name="Value">Оборачиваемое значение</param>
-    [NotNull]
     public static implicit operator ValueEvaluation<T>(T Value) => new(Value);
 }

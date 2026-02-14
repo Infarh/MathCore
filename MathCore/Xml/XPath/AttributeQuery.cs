@@ -1,57 +1,65 @@
 ﻿// ReSharper disable once CheckNamespace
 namespace System.Xml.XPath;
 
+/// <summary>Представляет запрос для выборки атрибутов узла</summary>
+/// <remarks>
+/// Используется для обработки XPath-запросов типа:
+/// - e/@a (выбор атрибута по имени)
+/// - e/attribute::node() (выбор всех атрибутов)
+/// - e/attribute::text() (не возвращает результатов)
+/// </remarks>
 internal sealed class AttributeQuery : BaseAxisQuery
 {
     #region Constructors
 
+    /// <summary>Инициализирует новый экземпляр класса AttributeQuery</summary>
+    /// <param name="QyParent">Родительский запрос</param>
+    /// <param name="name">Имя атрибута</param>
+    /// <param name="prefix">Префикс пространства имён</param>
+    /// <param name="type">Тип узла XPath</param>
     internal AttributeQuery(Query QyParent, string name, string prefix, XPathNodeType type) : base(QyParent, name, prefix, type) { }
 
     #endregion
 
     #region Methods
 
-    //
-    // we need to walk the attribute for
-    // query like e/@a and position the reader to that
-    // attribute node.
-
-    // example: e/attribute::node()
-    //          e/attribute::text() //no return
-    //          e/@a
-    //
-    // There are two situations to match the attributes
-    // 1). user has moved the reader to an attribute in the current element context
-    // 2). user still in the element context, since it's an attribute query, we
-    //     need to move to the attribute our self.
-
+    /// <summary>Проверяет, соответствует ли узел условиям запроса</summary>
+    /// <param name="reader">XPath-читатель для проверки узла</param>
+    /// <returns>true, если узел соответствует условиям запроса; иначе false</returns>
+    /// <remarks>
+    /// Существует две ситуации для сопоставления атрибутов:
+    /// 1) Пользователь переместил читатель к атрибуту в контексте текущего элемента
+    /// 2) Пользователь находится в контексте элемента, и поскольку это запрос атрибута, необходимо переместиться к атрибуту самостоятельно
+    /// </remarks>
     internal override bool MatchNode(XPathReader reader)
     {
         var ret = true;
 
-        if(NodeType == XPathNodeType.All) return ret;
-        if(!MatchType(NodeType, reader.NodeType))
+        if (NodeType == XPathNodeType.All) return ret;
+        if (!MatchType(NodeType, reader.NodeType))
             ret = false;
-        else if(Name != string.Empty && (Name != reader.Name || Prefix != reader.Prefix))
+        else if (Name != string.Empty && (Name != reader.Name || Prefix != reader.Prefix))
             ret = false;
 
         return ret;
     }
 
-    // The reader will be the current element node
-    // We need to restore the
+    /// <summary>Получает значение атрибута из указанного узла</summary>
+    /// <param name="reader">XPath-читатель, позиционированный на элементе</param>
+    /// <returns>Значение атрибута или null, если атрибут не найден</returns>
+    /// <remarks>Читатель должен быть позиционирован на узле элемента. После получения значения читатель возвращается к родительскому элементу</remarks>
     internal override object GetValue(XPathReader reader)
     {
-        var lv_BaseReader = reader.BaseReader;
+        var base_reader = reader.BaseReader;
 
-        object ret = null;
+        object? ret = null;
 
-        if(lv_BaseReader.MoveToAttribute(Name))
+        if (base_reader.MoveToAttribute(Name))
             ret = reader.Value;
 
-        //Move back to the parent
-        lv_BaseReader.MoveToElement();
-        return ret;
+        // Вернуться к родительскому элементу
+        base_reader.MoveToElement();
+        return ret!;
     }
 
     #endregion

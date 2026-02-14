@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Values;
+﻿namespace MathCore.Values;
 
 /// <summary>Объект, позволяющий определять значение</summary>
 /// <typeparam name="T">Тип значений объекта</typeparam>

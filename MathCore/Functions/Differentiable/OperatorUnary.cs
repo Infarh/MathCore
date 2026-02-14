@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Functions.Differentiable;
+﻿namespace MathCore.Functions.Differentiable;
 
 public abstract class OperatorUnary(Function f1) : Function
 {

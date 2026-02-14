@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore;
+﻿namespace MathCore;
 
 /// <summary>Рациональная функция - отношение полиномов</summary>
 public class RationalFunction(double[] P, double[] Q) : ICloneable

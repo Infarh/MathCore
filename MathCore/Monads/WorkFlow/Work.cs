@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Monads.WorkFlow;
+﻿namespace MathCore.Monads.WorkFlow;
 
 /// <summary>Работа, выполняющая преобразование данных указанным методом</summary>
 /// <typeparam name="TParameter">Тип сходных данных для преобразования</typeparam>
@@ -12,7 +11,7 @@ public class Work<TParameter, TResult> : Work<TResult>
     /// <summary>Внутренняя инициализация новой работы по преобразованию значения на основе указанной функции</summary>
     /// <param name="WorkFunction">Функция, преобразующая значение</param>
     /// <param name="BaseWork">Базовая работа, являющаяся источником аргумента функции</param>
-    private Work(Func<TParameter, TResult>? WorkFunction, Work BaseWork) : base(BaseWork) => _WorkFunction = WorkFunction ?? throw new ArgumentNullException(nameof(WorkFunction));
+    private Work(Func<TParameter, TResult>? WorkFunction, Work BaseWork) : base(BaseWork) => _WorkFunction = WorkFunction.NotNull();
 
     /// <summary>Инициализация новой работы по преобразованию значения на основе указанной функции</summary>
     /// <param name="WorkFunction">Функция, преобразующая значение</param>
@@ -22,16 +21,16 @@ public class Work<TParameter, TResult> : Work<TResult>
     /// <inheritdoc />
     protected override IWorkResult Execute(IWorkResult? BaseResult)
     {
-        var base_result = (IWorkResult<TParameter>?)BaseResult ?? throw new InvalidOperationException("Отсутствует базовая задача", new ArgumentNullException(nameof(BaseResult)));
+        var base_result = (IWorkResult<TParameter>)BaseResult.NotNull("Отсутствует базовая задача");
         var parameter = base_result.Result;
         try
         {
-            return new WorkResult<TParameter, TResult>(parameter, _WorkFunction(parameter), BaseResult.Error);
+            return new WorkResult<TParameter, TResult>(parameter, _WorkFunction(parameter), BaseResult!.Error);
         }
 #pragma warning disable CA1031 // Do not catch general exception types
         catch (Exception error)
         {
-            return new WorkResult<TParameter, TResult>(parameter, BaseResult.Error, error);
+            return new WorkResult<TParameter, TResult>(parameter, BaseResult!.Error, error);
         }
 #pragma warning restore CA1031 // Do not catch general exception types
     }
@@ -43,7 +42,8 @@ public class Work<TParameter, TResult> : Work<TResult>
 
 /// <summary>Работа, возвращающая значение</summary>
 /// <typeparam name="T">Тип результата работы</typeparam>
-public abstract class Work<T> : Work
+/// <remarks>Инициализация новой работы</remarks><param name="BaseWork">объект базовой работы</param>
+public abstract class Work<T>(Work? BaseWork) : Work(BaseWork)
 {
     #region Задачи с условием
 
@@ -59,27 +59,25 @@ public abstract class Work<T> : Work
 
         /// <inheritdoc />
         protected override IWorkResult Execute(IWorkResult? BaseResult) =>
-            (BaseResult ?? throw new InvalidOperationException("Отсутствует результат вычисления предыдущей работы")).Success
+            BaseResult.NotNull("Отсутствует результат вычисления предыдущей работы").Success
                 ? base.Execute(BaseResult)
-                : new WorkResult<TParameter, TResult>(BaseResult.Error);
+                : new WorkResult<TParameter, TResult>(BaseResult!.Error ?? new InvalidOperationException());
     }
 
     /// <summary>Работа, выполняемая над результатом предыдущей работы</summary>
     /// <typeparam name="TParameter">Тип результата предыдущей работы</typeparam>
-    private class ActionWork<TParameter> : Work
+    /// <remarks>Инициализация новой работы, выполняющей действие над результатом выполнения предыдущей работы</remarks>
+    /// <param name="WorkAction">Действие, выполняемое над результатом предыдущей работы</param>
+    /// <param name="BaseWork">Предыдущая работа</param>
+    private class ActionWork<TParameter>(Action<TParameter> WorkAction, Work<TParameter>? BaseWork) : Work(BaseWork)
     {
         /// <summary>Действие, выполняемое над результатом предыдущей работы</summary>
-        private readonly Action<TParameter> _WorkAction;
-
-        /// <summary>Инициализация новой работы, выполняющей действие над результатом выполнения предыдущей работы</summary>
-        /// <param name="WorkAction">Действие, выполняемое над результатом предыдущей работы</param>
-        /// <param name="BaseWork">Предыдущая работа</param>
-        public ActionWork(Action<TParameter> WorkAction, Work<TParameter>? BaseWork) : base(BaseWork) => _WorkAction = WorkAction ?? throw new ArgumentNullException(nameof(WorkAction));
+        private readonly Action<TParameter> _WorkAction = WorkAction.NotNull();
 
         /// <inheritdoc />
         protected override IWorkResult Execute(IWorkResult? BaseResult)
         {
-            var base_result = (IWorkResult<TParameter>?)BaseResult ?? throw new InvalidOperationException("Отсутствует результат выполнения предыдущей работы");
+            var base_result = (IWorkResult<TParameter>)BaseResult.NotNull("Отсутствует результат выполнения предыдущей работы");
             try
             {
                 _WorkAction(base_result.Result);
@@ -95,9 +93,6 @@ public abstract class Work<T> : Work
     }
 
     #endregion
-
-    /// <summary>Инициализация новой работы</summary><param name="BaseWork">объект базовой работы</param>
-    protected Work(Work? BaseWork) : base(BaseWork) { }
 
     /// <summary>Выполнение работы</summary><returns>Результат работы</returns>
     public new IWorkResult<T> Execute()
@@ -135,7 +130,8 @@ public abstract class Work<T> : Work
 }
 
 /// <summary>Класс-оболочка для выполняемой работы</summary>
-public abstract class Work
+/// <remarks>Инициализация нового работы</remarks><param name="BaseWork">Базовая работа</param>
+public abstract class Work(Work? BaseWork)
 {
     #region Задачи с условием
 
@@ -145,7 +141,7 @@ public abstract class Work
         /// <summary>Инициализация новой работы, выполняемой в случае успешного выполнения предыдущей работы</summary>
         /// <param name="WorkAction">Действие, выполняемое в рамках работы</param>
         /// <param name="BaseWork">Базовая работа</param>
-        internal ActionWorkIfSuccess(Action WorkAction, Work BaseWork) : base(WorkAction, BaseWork ?? throw new ArgumentNullException(nameof(BaseWork))) { }
+        internal ActionWorkIfSuccess(Action WorkAction, Work BaseWork) : base(WorkAction, BaseWork.NotNull()) { }
 
         /// <inheritdoc />
         protected override IWorkResult Execute(IWorkResult? BaseResult) => BaseResult?.Success ?? true ? base.Execute(BaseResult) : BaseResult;
@@ -157,7 +153,7 @@ public abstract class Work
         /// <summary>Инициализация новой работы, выполняемой в случае ошибочного выполнения предыдущей работы</summary>
         /// <param name="WorkAction">Действие, выполняемое в рамках работы</param>
         /// <param name="BaseWork">Базовая работа</param>
-        internal ActionWorkIfFailure(Action WorkAction, Work BaseWork) : base(WorkAction, BaseWork ?? throw new ArgumentNullException(nameof(BaseWork))) { }
+        internal ActionWorkIfFailure(Action WorkAction, Work BaseWork) : base(WorkAction, BaseWork.NotNull()) { }
 
         /// <inheritdoc />
         protected override IWorkResult Execute(IWorkResult? BaseResult) => BaseResult?.Failure ?? false ? base.Execute(BaseResult) : BaseResult ?? new WorkResult();
@@ -172,7 +168,7 @@ public abstract class Work
         /// <summary>Инициализация новой работы по обработке ошибок</summary>
         /// <param name="ErrorHandler">Действие-обработчик ошибок</param>
         /// <param name="BaseWork">Базовая работа</param>
-        internal ExceptionActionHandler(Action<Exception> ErrorHandler, Work BaseWork) : base(BaseWork ?? throw new ArgumentNullException(nameof(BaseWork))) => _ErrorHandler = ErrorHandler ?? throw new ArgumentNullException(nameof(ErrorHandler));
+        internal ExceptionActionHandler(Action<Exception> ErrorHandler, Work BaseWork) : base(BaseWork.NotNull()) => _ErrorHandler = ErrorHandler.NotNull();
 
         /// <inheritdoc />
         protected override IWorkResult Execute(IWorkResult? BaseResult)
@@ -182,7 +178,7 @@ public abstract class Work
                 return base_result;
             try
             {
-                _ErrorHandler(base_result.Error);
+                _ErrorHandler(base_result.Error!);
                 return new WorkResult(base_result.Error);
             }
 #pragma warning disable CA1031 // Do not catch general exception types
@@ -201,7 +197,7 @@ public abstract class Work
         /// <summary>Инициализация новой работы, возвращающей значение функции в случае если предыдущая работа завершилась успешно</summary>
         /// <param name="WorkFunction">Функция, выполняемая в рамках работы</param>
         /// <param name="BaseWork">Базовая работа</param>
-        internal FunctionWorkIfSuccess(Func<T> WorkFunction, Work BaseWork) : base(WorkFunction, BaseWork ?? throw new ArgumentNullException(nameof(BaseWork))) { }
+        internal FunctionWorkIfSuccess(Func<T> WorkFunction, Work BaseWork) : base(WorkFunction, BaseWork.NotNull()) { }
 
         /// <inheritdoc />
         protected override IWorkResult Execute(IWorkResult? BaseResult)
@@ -209,7 +205,7 @@ public abstract class Work
             var base_result = BaseResult.NotNull();
             return base_result.Success
                 ? base.Execute(base_result)
-                : new WorkResult<T>(default(T), base_result.Error);
+                : new WorkResult<T>(base_result.Error);
         }
     }
 
@@ -220,12 +216,12 @@ public abstract class Work
         /// <summary>Инициализация новой работы, выполняемой в случае неудачи предыдущей работы</summary>
         /// <param name="WorkFunction">Функция - генератор значения</param>
         /// <param name="BaseWork">Базовая работа</param>
-        internal FunctionWorkIfFailure(Func<T> WorkFunction, Work BaseWork) : base(WorkFunction, BaseWork ?? throw new ArgumentNullException(nameof(BaseWork))) { }
+        internal FunctionWorkIfFailure(Func<T> WorkFunction, Work BaseWork) : base(WorkFunction, BaseWork.NotNull()) { }
 
         /// <inheritdoc />
         protected override IWorkResult Execute(IWorkResult? BaseResult) =>
-            (BaseResult ?? throw new InvalidOperationException("Отсутствует результат выполнения базовой задачи")).Success
-                ? new WorkResult<T>(default(T), BaseResult.Error)
+            BaseResult.NotNull("Отсутствует результат выполнения базовой задачи").Success
+                ? new WorkResult<T>(BaseResult!.Error)
                 : base.Execute(BaseResult);
     }
 
@@ -238,7 +234,7 @@ public abstract class Work
         /// <summary>Инициализация новой работы по обработке ошибок</summary>
         /// <param name="ErrorHandler">Функция-обработчик ошибок</param>
         /// <param name="BaseWork">Базовая работа</param>
-        internal ExceptionFunctionHandler(Func<Exception, T> ErrorHandler, Work<T> BaseWork) : base(BaseWork ?? throw new ArgumentNullException(nameof(BaseWork))) => _ErrorHandler = ErrorHandler ?? throw new ArgumentNullException(nameof(ErrorHandler));
+        internal ExceptionFunctionHandler(Func<Exception, T> ErrorHandler, Work<T> BaseWork) : base(BaseWork.NotNull()) => _ErrorHandler = ErrorHandler.NotNull();
 
         /// <inheritdoc />
         protected override IWorkResult Execute(IWorkResult? BaseResult)
@@ -248,7 +244,7 @@ public abstract class Work
                 return base_result;
             try
             {
-                return new WorkResult<T>(_ErrorHandler(base_result.Error));
+                return new WorkResult<T>(_ErrorHandler(base_result.Error!));
             }
 #pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception error)
@@ -282,12 +278,6 @@ public abstract class Work
 
     #endregion
 
-    /// <summary>Базовая работа</summary>
-    private readonly Work? _BaseWork;
-
-    /// <summary>Инициализация нового работы</summary><param name="BaseWork">Базовая работа</param>
-    protected Work(Work? BaseWork) => _BaseWork = BaseWork;
-
     #region Execute
 
     /// <summary>Выполнить действие текущей работы</summary>
@@ -297,7 +287,7 @@ public abstract class Work
 
     /// <summary>Выполнить работу</summary>
     /// <returns>Результат выполнения работы</returns>
-    public IWorkResult Execute() => Execute(_BaseWork?.Execute());
+    public IWorkResult Execute() => Execute(BaseWork?.Execute());
 
     #endregion
 

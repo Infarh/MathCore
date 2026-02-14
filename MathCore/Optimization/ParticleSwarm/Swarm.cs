@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Optimization.ParticleSwarm;
+﻿namespace MathCore.Optimization.ParticleSwarm;
 
 public class Swarm(int ParticleCount = 100)
 {

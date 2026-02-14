@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 
 // ReSharper disable UnusedMemberInSuper.Global
 // ReSharper disable UnusedMember.Global
@@ -43,7 +42,7 @@ public partial interface IServiceManager : IDisposable, ICloneable<IServiceManag
     /// <typeparam name="TObject">Тип требуемого объекта</typeparam>
     /// <param name="parameters">Параметры объекта</param>
     /// <returns>Экземпляр объекта в случае его успешного создания</returns>
-    TObject Create<TObject>(params object[] parameters) where TObject : class;
+    TObject? Create<TObject>(params object[] parameters) where TObject : class;
 
     /// <summary>Создать объект, возможно неизвестный менеджеру</summary>
     /// <param name="ObjectType">Тип требуемого объекта</param>
@@ -60,11 +59,11 @@ public partial interface IServiceManager : IDisposable, ICloneable<IServiceManag
     /// <param name="Instance">Экземпляр объекта</param>
     /// <param name="MethodName">Имя метода, который требуется выполнить</param>
     /// <returns>Результат выполнения</returns>
-    object Run(object Instance, string MethodName);
+    object? Run(object Instance, string MethodName);
 
     /// <summary>Выполнить статический метод</summary>
     /// <typeparam name="T">Тип, в котором объявлен статический метод</typeparam>
     /// <param name="StaticMethodName">Имя статического метода, который требуется выполнить</param>
     /// <returns>Результат выполнения</returns>
-    object Run<T>(string StaticMethodName);
+    object? Run<T>(string StaticMethodName);
 }

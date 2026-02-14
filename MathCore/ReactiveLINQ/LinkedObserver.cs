@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable once CheckNamespace
+﻿// ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive;
 
 internal sealed class LinkedObserver<T>(IObservable<T> source, SimpleObservableEx<T>? destination) : SimpleObserverEx<T>(source)

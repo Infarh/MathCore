@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -13,9 +12,9 @@ public abstract class OperatorNode : ComputedNode
     {
         get
         {
-            var is_left_null  = Left is null;
+            var is_left_null = Left is null;
             var is_right_null = Right is null;
-            return !(is_left_null && is_right_null) && !is_left_null && Left.IsPrecomputable && !is_right_null && Right.IsPrecomputable;
+            return !(is_left_null && is_right_null) && !is_left_null && Left!.IsPrecomputable && !is_right_null && Right!.IsPrecomputable;
         }
     }
 
@@ -32,7 +31,7 @@ public abstract class OperatorNode : ComputedNode
     public int Priority { get; protected set; }
 
     /// <summary>Ипя оператора</summary>
-    public string Name { get; protected set; }
+    public string Name { get; protected set; } = null!;
 
     /// <summary>Инициализация оператора</summary>
     protected OperatorNode() { }
@@ -50,6 +49,6 @@ public abstract class OperatorNode : ComputedNode
     /// <returns>Строковое представление узла</returns>
     public override string ToString() => string.Format("{1}{0}{2}", Name, Left?.ToString() ?? string.Empty, Right?.ToString() ?? string.Empty);
 
-    protected OperatorNode CloneOperatorNode<TOperatorNode>() where TOperatorNode : OperatorNode, new() => 
+    protected OperatorNode CloneOperatorNode<TOperatorNode>() where TOperatorNode : OperatorNode, new() =>
         new TOperatorNode { Left = Left?.Clone(), Right = Right?.Clone() };
 }

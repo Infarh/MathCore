@@ -1,10 +1,8 @@
-﻿#nullable enable
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO.Compression;
 using System.Text;
 
 using MathCore;
-using MathCore.Annotations;
 using MathCore.Hash;
 using MathCore.Hash.CRC;
 
@@ -93,7 +91,7 @@ public static class FileInfoExtensions
         Process.Start(new ProcessStartInfo(File.FullName, Args)
         {
             UseShellExecute = UseShellExecute,
-            Verb            = Verb
+            Verb = Verb
         });
 
     /// <summary>Проверка на существование файла. Если файл не существует, то генерируется исключение</summary>
@@ -105,7 +103,7 @@ public static class FileInfoExtensions
     {
         file.Refresh();
         return file.Exists
-            ? file 
+            ? file
             : throw new FileNotFoundException(Message ?? $"Файл {(FullPathInMessage ? file.FullName : file)} не найден");
     }
 
@@ -120,23 +118,23 @@ public static class FileInfoExtensions
     //    return hash;
     //}
 
-//    /// <summary>Вычислить хеш-сумму CRC32</summary>
-//    /// <param name="file">Файл, контрольную сумму которого надо вычислить</param>
-//    /// <returns>Массив байт контрольной суммы</returns>
-//    public static async Task<uint> ComputeCRC32Async(
-//        this FileInfo file, 
-//        CRC32.Mode polynom = CRC32.Mode.Zip, 
-//        uint InitialCRC32 = 0, 
-//        CancellationToken Cancel = default)
-//    {
-//        var cec32 = new CRC32(polynom) { State = InitialCRC32 };
-//#if NET8_0_OR_GREATER
-//        await
-//#endif
-//        using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
-//        var hash = await cec32.ComputeAsync(stream, Cancel: Cancel).ConfigureAwait(false);
-//        return hash;
-//    }
+    //    /// <summary>Вычислить хеш-сумму CRC32</summary>
+    //    /// <param name="file">Файл, контрольную сумму которого надо вычислить</param>
+    //    /// <returns>Массив байт контрольной суммы</returns>
+    //    public static async Task<uint> ComputeCRC32Async(
+    //        this FileInfo file, 
+    //        CRC32.Mode polynom = CRC32.Mode.Zip, 
+    //        uint InitialCRC32 = 0, 
+    //        CancellationToken Cancel = default)
+    //    {
+    //        var cec32 = new CRC32(polynom) { State = InitialCRC32 };
+    //#if NET8_0_OR_GREATER
+    //        await
+    //#endif
+    //        using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
+    //        var hash = await cec32.ComputeAsync(stream, Cancel: Cancel).ConfigureAwait(false);
+    //        return hash;
+    //    }
 
     /// <summary>Вычислить хеш-сумму SHA256</summary>
     /// <param name="file">Файл, контрольную сумму которого надо вычислить</param>
@@ -144,12 +142,12 @@ public static class FileInfoExtensions
     public static byte[] ComputeSHA256(this FileInfo file)
     {
         using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
-        var       hash   = SHA256.Compute(stream);
+        var hash = SHA256.Compute(stream);
         return hash;
     }
 
     /// <summary>Вычислить хеш-сумму SHA256</summary>
-    /// <param name="file">Файл, контрольную сумму которого надо вычислить</param>
+    /// <param name="file">Файл, контрольную_sumму которого надо вычислить</param>
     /// <returns>Массив байт контрольной суммы</returns>
     public static async Task<byte[]> ComputeSHA256Async(this FileInfo file, CancellationToken Cancel = default)
     {
@@ -168,7 +166,7 @@ public static class FileInfoExtensions
     public static byte[] ComputeSHA512(this FileInfo file)
     {
         using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
-        var       hash   = SHA512.Compute(stream);
+        var hash = SHA512.Compute(stream);
         return hash;
     }
 
@@ -192,7 +190,7 @@ public static class FileInfoExtensions
     public static byte[] ComputeMD5(this FileInfo file)
     {
         using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
-        var       hash   = MD5.Compute(stream);
+        var hash = MD5.Compute(stream);
         return hash;
     }
 
@@ -207,7 +205,7 @@ public static class FileInfoExtensions
 #else
         using var stream = file.NotNull().ThrowIfNotFound().OpenRead(); 
 #endif
-        var hash   = await MD5.ComputeAsync(stream, Cancel).ConfigureAwait(false);
+        var hash = await MD5.ComputeAsync(stream, Cancel).ConfigureAwait(false);
         return hash;
     }
 
@@ -306,18 +304,18 @@ public static class FileInfoExtensions
 
     /// <summary>Вычисляет CRC-32 для файла</summary>
     /// <param name="file">Файл для вычисления CRC-32</param>
-    /// <param name="Polynomial">Полином для вычисления CRC-32 (по умолчанию 0x04C11DB7 - стандартный)</param>
+    /// <param name="Polynomial">Полином для вычисления CRC-32 (по умолчанию соответствует ZIP)</param>
     /// <param name="InitialValue">Начальное значение CRC (по умолчанию 0xFFFFFFFF)</param>
     /// <param name="XOROut">Значение для XOR с окончательным CRC (по умолчанию 0xFFFFFFFF)</param>
-    /// <param name="RefIn">Отражение входных байтов (по умолчанию false)</param>
-    /// <param name="RefOut">Отражение выходного значения (по умолчанию false)</param>
+    /// <param name="RefIn">Отражение входных байтов (по умолчанию true для ZIP)</param>
+    /// <param name="RefOut">Отражение выходного значения (по умолчанию false для ZIP)</param>
     /// <returns>Вычисленное значение CRC-32</returns>
     public static uint ComputeCRC32(
         this FileInfo file,
-        uint Polynomial = 0x04C11DB7,
+        uint Polynomial = (uint)CRC32.Mode.Zip,
         uint InitialValue = 0xFFFFFFFF,
         uint XOROut = 0xFFFFFFFF,
-        bool RefIn = false,
+        bool RefIn = true,
         bool RefOut = false)
     {
         using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
@@ -326,19 +324,19 @@ public static class FileInfoExtensions
 
     /// <summary>Асинхронно вычисляет CRC-32 для файла</summary>
     /// <param name="file">Файл для вычисления CRC-32</param>
-    /// <param name="Polynomial">Полином для вычисления CRC-32 (по умолчанию 0x04C11DB7 - стандартный)</param>
+    /// <param name="Polynomial">Полином для вычисления CRC-32 (по умолчанию соответствует ZIP)</param>
     /// <param name="InitialValue">Начальное значение CRC (по умолчанию 0xFFFFFFFF)</param>
     /// <param name="XOROut">Значение для XOR с окончательным CRC (по умолчанию 0xFFFFFFFF)</param>
-    /// <param name="RefIn">Отражение входных байтов (по умолчанию false)</param>
-    /// <param name="RefOut">Отражение выходного значения (по умолчанию false)</param>
+    /// <param name="RefIn">Отражение входных байтов (по умолчанию true для ZIP)</param>
+    /// <param name="RefOut">Отражение выходного значения (по умолчанию false для ZIP)</param>
     /// <param name="Cancel">Токен отмены операции</param>
     /// <returns>Вычисленное значение CRC-32</returns>
     public static async Task<uint> ComputeCRC32Async(
         this FileInfo file,
-        uint Polynomial = 0x04C11DB7,
+        uint Polynomial = (uint)CRC32.Mode.Zip,
         uint InitialValue = 0xFFFFFFFF,
         uint XOROut = 0xFFFFFFFF,
-        bool RefIn = false,
+        bool RefIn = true,
         bool RefOut = false,
         CancellationToken Cancel = default)
     {
@@ -377,7 +375,7 @@ public static class FileInfoExtensions
     /// <param name="XOROut">Значение для XOR с окончательным CRC (по умолчанию 0x0000000000000000)</param>
     /// <param name="RefIn">Отражение входных байтов (по умолчанию false)</param>
     /// <param name="RefOut">Отражение выходного значения (по умолчанию false)</param>
-    /// <param name="Cancel">Токен отмены операции</param>
+    /// <param name="Cancel">Токен cancellations операции</param>
     /// <returns>Вычисленное значение CRC-64</returns>
     public static async Task<ulong> ComputeCRC64Async(
         this FileInfo file,
@@ -429,13 +427,13 @@ public static class FileInfoExtensions
     }
 
     public static IEnumerable<string> ReadLines(
-        this FileInfo file, 
-        Action<StreamReader>? initializer, 
+        this FileInfo file,
+        Action<StreamReader>? initializer,
         int BufferSize = 3 * Consts.DataLength.Bytes.MB)
     {
         file.NotNull();
         Stream stream = file.ThrowIfNotFound().Open(FileMode.Open, FileAccess.Read, FileShare.Read);
-        if (BufferSize > 0) 
+        if (BufferSize > 0)
             stream = new BufferedStream(stream, BufferSize);
 
         using var reader = new StreamReader(stream);
@@ -455,7 +453,7 @@ public static class FileInfoExtensions
     /// <param name="SourceFile">Файл источник</param>
     /// <param name="DestinationDirectory">Директория назначения</param>
     /// <returns>Файл копия</returns>
-    public static FileInfo CopyTo(this FileInfo SourceFile, DirectoryInfo DestinationDirectory) => 
+    public static FileInfo CopyTo(this FileInfo SourceFile, DirectoryInfo DestinationDirectory) =>
         SourceFile.CopyTo(Path.Combine(DestinationDirectory.FullName, Path.GetFileName(SourceFile.Name)));
 
     /// <summary>Скопировать файл в директорию</summary>
@@ -466,8 +464,8 @@ public static class FileInfoExtensions
     public static FileInfo CopyTo(this FileInfo SourceFile, DirectoryInfo DestinationDirectory, bool Overwrite)
     {
         var new_file = Path.Combine(DestinationDirectory.FullName, Path.GetFileName(SourceFile.Name));
-        return !Overwrite && File.Exists(new_file) 
-            ? new(new_file) 
+        return !Overwrite && File.Exists(new_file)
+            ? new(new_file)
             : SourceFile.CopyTo(new_file, true);
     }
 
@@ -532,11 +530,11 @@ public static class FileInfoExtensions
         EventHandler<EventArgs<FileInfo, Stream>>? OnComplete = null)
     {
         var buffer = new byte[BufferSize];
-        var write  = true;
+        var write = true;
         using (var data = new FileStream(file.FullName, Append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read))
             do
             {
-                var read_count                     = DataStream.Read(buffer, 0, BufferSize);
+                var read_count = DataStream.Read(buffer, 0, BufferSize);
                 if (CompleteHandler != null) write = CompleteHandler(DataStream.Position, buffer);
                 if (write && read_count != 0) data.Write(buffer, 0, read_count);
                 else write = false;
@@ -645,14 +643,14 @@ public static class FileInfoExtensions
     {
         File.NotNull().ThrowIfNotFound();
 
-        if (ArchiveFileName is null) 
+        if (ArchiveFileName is null)
             ArchiveFileName = $"{File.FullName}.zip";
         else if (!Path.IsPathRooted(ArchiveFileName))
             ArchiveFileName = (File.Directory ?? throw new InvalidOperationException($"Не удалось получить директорию файла {File}")).CreateFileInfo(ArchiveFileName).FullName;
 
         using var zip_stream = IO.File.Open(ArchiveFileName, FileMode.OpenOrCreate, FileAccess.Write);
-        using var zip        = new ZipArchive(zip_stream);
-        var       file_entry = zip.GetEntry(File.Name);
+        using var zip = new ZipArchive(zip_stream);
+        var file_entry = zip.GetEntry(File.Name);
         if (file_entry != null)
         {
             if (!Override) return new(ArchiveFileName);
@@ -660,16 +658,16 @@ public static class FileInfoExtensions
         }
 
         using var file_entry_stream = zip.CreateEntry(File.Name).Open();
-        using var file_stream       = File.OpenRead();
+        using var file_stream = File.OpenRead();
         file_stream.CopyTo(file_entry_stream);
 
         return new(ArchiveFileName);
     }
 
     public static async Task<FileInfo> ZipAsync(
-        this FileInfo File, 
-        byte[] Buffer, 
-        string? ArchiveFileName = null, 
+        this FileInfo File,
+        byte[] Buffer,
+        string? ArchiveFileName = null,
         bool Override = true,
         IProgress<double>? Progress = null,
         CancellationToken Cancel = default)
@@ -687,8 +685,8 @@ public static class FileInfoExtensions
 #else
         using var zip_stream = IO.File.Open(ArchiveFileName, FileMode.OpenOrCreate, FileAccess.Write);
 #endif
-        using var zip        = new ZipArchive(zip_stream);
-        var       file_entry = zip.GetEntry(File.Name);
+        using var zip = new ZipArchive(zip_stream);
+        var file_entry = zip.GetEntry(File.Name);
         if (file_entry != null)
         {
             if (!Override) return new(ArchiveFileName);
@@ -697,7 +695,7 @@ public static class FileInfoExtensions
 
 #if NET8_0_OR_GREATER
         await using var file_entry_stream = zip.CreateEntry(File.Name).Open();
-        await using var file_stream       = File.OpenRead();
+        await using var file_stream = File.OpenRead();
 #else
         using var file_entry_stream = zip.CreateEntry(File.Name).Open();
         using var file_stream       = File.OpenRead();
@@ -720,9 +718,9 @@ public static class FileInfoExtensions
 
     public static FileInfo EnsureCreated(this FileInfo file)
     {
-        if(file.Exists) return file;
+        if (file.Exists) return file;
 
-        if(!file.Directory.Exists)
+        if (!file.Directory!.Exists)
             file.Directory.Create();
 
         using (file.Create())

@@ -30,24 +30,24 @@ public readonly struct DataLength : IFormattable, IEquatable<DataLength>
     /// <returns>Значение X в представлении value = Base^index</returns>
     public static double Value(ulong value, double Base, out string unit, out int index)
     {
-        if(value == 0)
+        if (value == 0)
         {
-            unit  = __Units[0];
+            unit = __Units[0];
             index = 0;
             return 0;
         }
 
         var v_base = Math.Log(value, Base);
-        var u      = (int)Math.Truncate(v_base);
-        var d      = v_base - u;
-        if(d > __Threshold)
+        var u = (int)Math.Truncate(v_base);
+        var d = v_base - u;
+        if (d > __Threshold)
         {
             u++;
             d--;
         }
 
         index = Math.Min(u, __Units.Length - 1);
-        unit  = __Units[index];
+        unit = __Units[index];
         return Math.Pow(Base, d);
     }
 
@@ -60,25 +60,25 @@ public readonly struct DataLength : IFormattable, IEquatable<DataLength>
     /// <returns>Значение X в представлении value = Base^index</returns>
     public static double Value(double value, double Base, out string unit, out int index)
     {
-        if(value < 0) throw new ArgumentOutOfRangeException(nameof(value), value, "Значение должно быть больше 0");
-        if(value == 0)
+        if (value < 0) throw new ArgumentOutOfRangeException(nameof(value), value, "Значение должно быть больше 0");
+        if (value == 0)
         {
-            unit  = __Units[0];
+            unit = __Units[0];
             index = 0;
             return 0;
         }
 
         var v_base = Math.Log(value, Base);
-        var u      = (int)Math.Truncate(v_base);
-        var d      = v_base - u;
-        if(d > __Threshold)
+        var u = (int)Math.Truncate(v_base);
+        var d = v_base - u;
+        if (d > __Threshold)
         {
             u++;
             d--;
         }
 
         index = Math.Min(u, __Units.Length - 1);
-        unit  = __Units[index];
+        unit = __Units[index];
         return Math.Pow(Base, d);
     }
 
@@ -120,13 +120,13 @@ public readonly struct DataLength : IFormattable, IEquatable<DataLength>
     [NotNull] public string ToString(string format) => $"{_FormattedLength.ToString(format)}{_Unit}";
 
     /// <inheritdoc />
-    public string ToString(string format, IFormatProvider FormatProvider) => $"{_FormattedLength.ToString(format, FormatProvider)}{_Unit}";
+    public string ToString(string? format, IFormatProvider? FormatProvider) => $"{_FormattedLength.ToString(format, FormatProvider)}{_Unit}";
 
     /// <inheritdoc />
     public bool Equals(DataLength other) => _Length.Equals(other._Length) && _Unit == other._Unit && _FormattedLength.Equals(other._FormattedLength) && _Base.Equals(other._Base);
 
     /// <inheritdoc />
-    public override bool Equals(object obj) => obj is DataLength other && Equals(other);
+    public override bool Equals(object? obj) => obj is DataLength other && Equals(other);
 
     /// <inheritdoc />
     public override int GetHashCode()

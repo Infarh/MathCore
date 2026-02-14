@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Reflection;
 
 #if NET8_0_OR_GREATER
@@ -23,11 +22,11 @@ namespace System.Linq.Expressions;
 
 public class ObjectDescriptor(object obj) : ObjectDescriptor<object>(obj);
 
-public class ObjectDescriptor<T>([DisallowNull] T obj)
+public class ObjectDescriptor<T>(T obj)
 {
     private const BindingFlags __BindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
-    private readonly Type _ObjectType = obj.GetType();
+    private readonly Type _ObjectType = obj!.GetType();
     private DictionaryReadOnly<string, Property>? _Properties;
     private DictionaryReadOnly<string, Field>? _Fields;
     private Func<PropertyInfo, bool>? _PropertiesFilter;
@@ -41,33 +40,33 @@ public class ObjectDescriptor<T>([DisallowNull] T obj)
     {
         get
         {
-            if(_Properties != null) return _Properties;
+            if (_Properties != null) return _Properties;
             var properties = _ObjectType.GetProperties(__BindingFlags)
                .Where(_PropertiesFilter ?? (_ => true))
-               .Select(p => new Property(obj, p)).ToArray();
+               .Select(p => new Property(obj!, p)).ToArray();
             _Properties = new(properties.ToDictionary(p => p.Name));
             return _Properties;
         }
     }
 
-    public Func<PropertyInfo, bool> PropertiesFilter
+    public Func<PropertyInfo, bool>? PropertiesFilter
     {
         get => _PropertiesFilter;
         set
         {
-            if(ReferenceEquals(_PropertiesFilter, value)) return;
+            if (ReferenceEquals(_PropertiesFilter, value)) return;
             _PropertiesFilter = value;
-            _Properties       = null;
+            _Properties = null;
         }
     }
-    public Func<FieldInfo, bool> FieldsFilter
+    public Func<FieldInfo, bool>? FieldsFilter
     {
         get => _FieldsFilter;
         set
         {
-            if(ReferenceEquals(_FieldsFilter, value)) return;
+            if (ReferenceEquals(_FieldsFilter, value)) return;
             _FieldsFilter = value;
-            _Fields       = null;
+            _Fields = null;
         }
     }
 
@@ -75,10 +74,10 @@ public class ObjectDescriptor<T>([DisallowNull] T obj)
     {
         get
         {
-            if(_Fields != null) return _Fields;
+            if (_Fields != null) return _Fields;
             var fields = _ObjectType.GetFields(__BindingFlags)
                .Where(_FieldsFilter ?? (_ => true))
-               .Select(p => new Field(obj, p)).ToArray();
+               .Select(p => new Field(obj!, p)).ToArray();
             _Fields = new(fields.ToDictionary(p => p.Name));
             return _Fields;
         }

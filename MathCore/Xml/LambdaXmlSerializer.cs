@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ConvertToAutoPropertyWhenPossible
@@ -34,24 +33,24 @@ public class LambdaXmlSerializer<T>(string? ElementName = null) : LambdaXmlSeria
     private readonly List<Func<T, object>> _Attributes = [];
 
     /// <summary>Список методов формирования дочерних элементов</summary>
-    private readonly List<Func<T, object>> _Elements = [];
+    private readonly List<Func<T, object?>> _Elements = [];
 
     /// <summary>Выполнение процесса сериализации</summary>
     /// <param name="value">Сериализуемый объект</param>
     /// <returns>xml-представление сериализуемого объекта</returns>
-    public XElement Serialize(T value) => new(ElementName ?? __EmptyName, Content(value).ToArray());
+    public XElement Serialize(T value) => new(ElementName ?? __EmptyName, [.. Content(value)]);
 
     /// <summary>Выполнение процесса сериализации</summary>
     /// <param name="Name">Название корневого элемента</param>
     /// <param name="value">Сериализуемый объект</param>
     /// <returns>xml-представление сериализуемого объекта</returns>
-    public XElement Serialize(string? Name, T value) => new(Name ?? ElementName ?? __EmptyName, Content(value).ToArray());
+    public XElement Serialize(string? Name, T value) => new(Name ?? ElementName ?? __EmptyName, [.. Content(value)]);
 
     /// <summary>Формирование содержимого элемента</summary>
     /// <remarks>Выполнение списков методов вычисления значений атрибутов, затем - дочерних элементов</remarks>
     /// <param name="value">Сериализуемый объект</param>
     /// <returns>Перечисление атрибутов и дочерних элементов, вкладываемых в корневой элемент</returns>
-    private IEnumerable<object> Content(T value) => _Attributes.Select(a => a(value)).Concat(_Elements.Select(e => e(value)));
+    private IEnumerable<object?> Content(T value) => _Attributes.Select(a => a(value)).Concat(_Elements.Select(e => e(value)));
 
     /// <summary>Добавление конфигурации атрибута</summary>
     /// <typeparam name="TValue">ТИп значения атрибута</typeparam>
@@ -60,7 +59,7 @@ public class LambdaXmlSerializer<T>(string? ElementName = null) : LambdaXmlSeria
     /// <returns>Исходный сериализатор</returns>
     public LambdaXmlSerializer<T> Attribute<TValue>(string? Name, Func<T, TValue> Selector)
     {
-        _Attributes.Add(v => new XAttribute(Name ?? __EmptyName, Selector(v)));
+        _Attributes.Add(v => new XAttribute(Name ?? __EmptyName, Selector(v)!));
         return this;
     }
 
@@ -76,7 +75,10 @@ public class LambdaXmlSerializer<T>(string? ElementName = null) : LambdaXmlSeria
         Func<TItem, string> NameSelector,
         Func<TItem, TValue> ValueSelector)
     {
-        _Attributes.Add(items => Selector(items).ToArray(item => new XAttribute(NameSelector(item), ValueSelector(item))));
+        _Attributes.Add(items => Selector(items)
+            .Select(item => (item, value: ValueSelector(item)))
+            .Where(item => item.value is not null)
+            .ToArray(item => new XAttribute(NameSelector(item.item), item.value!)));
         return this;
     }
 
@@ -94,7 +96,11 @@ public class LambdaXmlSerializer<T>(string? ElementName = null) : LambdaXmlSeria
         Func<TItem, bool> NeedToSerialize,
         Func<TItem, TValue> ValueSelector)
     {
-        _Attributes.Add(items => Selector(items).Where(NeedToSerialize).ToArray(item => new XAttribute(NameSelector(item), ValueSelector(item))));
+        _Attributes.Add(items => Selector(items)
+            .Where(NeedToSerialize)
+            .Select(item => (item, value: ValueSelector(item)))
+            .Where(item => item.value is not null)
+            .ToArray(item => new XAttribute(NameSelector(item.item), item.value!)));
         return this;
     }
 
@@ -110,7 +116,10 @@ public class LambdaXmlSerializer<T>(string? ElementName = null) : LambdaXmlSeria
         Func<TItem, int, string> NameSelector,
         Func<TItem, TValue> ValueSelector)
     {
-        _Attributes.Add(items => Selector(items).ToArray((item, i) => new XAttribute(NameSelector(item, i), ValueSelector(item))));
+        _Attributes.Add(items => Selector(items)
+            .Select((item, i) => (item, i, value: ValueSelector(item)))
+            .Where(item => item.value is not null)
+            .ToArray((item) => new XAttribute(NameSelector(item.item, item.i), item.value!)));
         return this;
     }
 
@@ -128,7 +137,11 @@ public class LambdaXmlSerializer<T>(string? ElementName = null) : LambdaXmlSeria
         Func<TItem, bool> NeedToSerialize,
         Func<TItem, TValue> ValueSelector)
     {
-        _Attributes.Add(items => Selector(items).Where(NeedToSerialize).ToArray((item, i) => new XAttribute(NameSelector(item, i), ValueSelector(item))));
+        _Attributes.Add(items => Selector(items)
+            .Where(NeedToSerialize)
+            .Select((item, i) => (item, i, value: ValueSelector(item)))
+            .Where(item => item.value is not null)
+            .ToArray(item => new XAttribute(NameSelector(item.item, item.i), item.value!)));
         return this;
     }
 
@@ -144,7 +157,10 @@ public class LambdaXmlSerializer<T>(string? ElementName = null) : LambdaXmlSeria
         Func<TItem, string> NameSelector,
         Func<TItem, int, TValue> ValueSelector)
     {
-        _Attributes.Add(element => Selector(element).ToArray((item, i) => new XAttribute(NameSelector(item), ValueSelector(item, i))));
+        _Attributes.Add(element => Selector(element)
+            .Select((item, i) => (item, i, value: ValueSelector(item, i)))
+            .Where(item => item.value is not null)
+            .ToArray(item => new XAttribute(NameSelector(item.item), item.value!)));
         return this;
     }
 
@@ -162,7 +178,11 @@ public class LambdaXmlSerializer<T>(string? ElementName = null) : LambdaXmlSeria
         Func<TItem, bool> NeedToSerialize,
         Func<TItem, int, TValue> ValueSelector)
     {
-        _Attributes.Add(element => Selector(element).Where(NeedToSerialize).ToArray((item, i) => new XAttribute(NameSelector(item, i), ValueSelector(item, i))));
+        _Attributes.Add(element => Selector(element)
+            .Where(NeedToSerialize)
+            .Select((item, i) => (item, i, value: ValueSelector(item, i)))
+            .Where(item => item.value is not null)
+            .ToArray(item => new XAttribute(NameSelector(item.item, item.i), item.value!)));
         return this;
     }
 

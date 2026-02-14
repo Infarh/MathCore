@@ -1,5 +1,4 @@
-﻿#nullable enable
-using MathCore.MathParser.ExpressionTrees.Nodes;
+﻿using MathCore.MathParser.ExpressionTrees.Nodes;
 // ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -45,9 +44,9 @@ public class ExpressionParser
                         case '.' when NewNode.Parent is CharNode { Value: '.' }:
                             var value_node = NewNode[n => n.Parent].Last(n => n is not OperatorNode || n.Left is null);
                             (NewNode["./."] ?? throw new InvalidOperationException("NewNode/. is null")).Right = null;
-                            var parent                       = value_node.Parent;
-                            var interval_node                = new IntervalNode(value_node);
-                            if (parent != null) parent.Right = interval_node;
+                            var parent = value_node.Parent;
+                            var interval_node = new IntervalNode(value_node);
+                            parent?.Right = interval_node;
                             NewNode = interval_node;
                             break;
                     }
@@ -75,27 +74,21 @@ public class ExpressionParser
     }
 
     /// <summary>Аргумент события обнаружения функции</summary>
-    public sealed class FindFunctionEventArgs : EventArgs
+    /// <remarks>Инициализация аргумента события обнаружения функции</remarks>
+    /// <param name="Name">Имя функции</param>
+    /// <param name="Arguments">Массив имён аргументов функции</param>
+    public sealed class FindFunctionEventArgs(string Name, IReadOnlyList<string> Arguments) : EventArgs
     {
         /// <summary>Имя обнаруженной функции</summary>
-        public string Name { get; }
+        public string Name { get; } = Name;
         /// <summary>Массив имён аргументов функции</summary>
-        public IReadOnlyList<string> Arguments { get; }
+        public IReadOnlyList<string> Arguments { get; } = Arguments;
 
         /// <summary>Количество аргументов функции</summary>
         public int ArgumentCount => Arguments.Count;
 
         /// <summary>Делегат функции, который надо использовать при её вычислении</summary>
         public Delegate? Function { get; set; }
-
-        /// <summary>Инициализация аргумента события обнаружения функции</summary>
-        /// <param name="Name">Имя функции</param>
-        /// <param name="Arguments">Массив имён аргументов функции</param>
-        public FindFunctionEventArgs(string Name, IReadOnlyList<string> Arguments)
-        {
-            this.Name      = Name;
-            this.Arguments = Arguments;
-        }
 
         /// <summary>Проверка на совпадение сигнатуры функции по имени и числу переменных</summary>
         /// <param name="name">Имя проверяемой функции</param>
@@ -134,7 +127,7 @@ public class ExpressionParser
     private void OnVariableProcessing(ExpressionVariable Variable) => OnVariableProcessing(new EventArgs<ExpressionVariable>(Variable));
 
     /// <summary>Множество запрещённых символов</summary>
-    private readonly HashSet<char> _ExcludeCharsSet = new(" \r\n");
+    private readonly HashSet<char> _ExcludeCharsSet = [.. " \r\n"];
 
     /// <summary>Словарь констант</summary>
     private readonly Dictionary<string, double> _Constants = [];
@@ -155,7 +148,7 @@ public class ExpressionParser
     public ExpressionParser()
     {
         ExpressionSeparator = ',';
-        DecimalSeparator    = '.';
+        DecimalSeparator = '.';
 
         #region Добавление стандартных констант
 
@@ -176,7 +169,7 @@ public class ExpressionParser
     /// <summary>Предварительная обработка входного строкового выражения</summary>
     /// <param name="Str">Обрабатываемая строка</param>
     // Удаление из строки всех символов, из множества запрещённых символов
-    protected virtual void StrPreprocessing(ref string Str) => Str = new(Str.WhereNot(_ExcludeCharsSet.Contains).ToArray());
+    protected virtual void StrPreprocessing(ref string Str) => Str = new([.. Str.WhereNot(_ExcludeCharsSet.Contains)]);
 
     /// <summary>Разобрать строку математического выражения</summary>
     /// <param name="StrExpression">Строковое представление математического выражения</param>
@@ -199,16 +192,18 @@ public class ExpressionParser
     internal void ProcessVariables(MathExpression Expression)
     {
         var tree_vars = Expression.Tree.Root.GetVariables().ToArray();
+
         Expression.Variable
            .Where(v => !tree_vars.Contains(v))
            .ToArray()
            .Foreach(v => Expression.Variable.Remove(v));
+
         foreach (var variable in Expression.Variable.ToArray())
         {
-            if (_Constants.ContainsKey(variable.Name))
+            if (_Constants.TryGetValue(variable.Name, out var value))
             {
                 Expression.Variable.MoveToConstCollection(variable);
-                variable.Value = _Constants[variable.Name];
+                variable.Value = value;
             }
             OnVariableProcessing(variable);
         }
@@ -349,7 +344,7 @@ public class ExpressionParser
         '?' => new SelectorOperatorNode(),
         '&' => new AndOperatorNode(),
         '|' => new OrOperatorNode(),
-        _   => new CharNode(Name)
+        _ => new CharNode(Name)
     };
 
     /// <summary>Метод определения функционала по имени</summary>
@@ -358,15 +353,15 @@ public class ExpressionParser
     /// <exception cref="NotSupportedException">Возникает для неопределённых имён функционалов</exception>
     public static Functional GetFunctional(string Name) => Name switch
     {
-        "sum"      => new SumOperator(Name),
-        "Sum"      => new SumOperator(Name),
-        "Σ"        => new SumOperator(Name),
-        "int"      => new IntegralOperator(Name),
+        "sum" => new SumOperator(Name),
+        "Sum" => new SumOperator(Name),
+        "Σ" => new SumOperator(Name),
+        "int" => new IntegralOperator(Name),
         "integral" => new IntegralOperator(Name),
-        "Int"      => new IntegralOperator(Name),
+        "Int" => new IntegralOperator(Name),
         "Integral" => new IntegralOperator(Name),
-        "∫"        => new IntegralOperator(Name),
-        _          => throw new NotSupportedException($"Функционал {Name} не поддерживается")
+        "∫" => new IntegralOperator(Name),
+        _ => throw new NotSupportedException($"Функционал {Name} не поддерживается")
     };
 
     /// <summary>Метод извлечения корня дерева из последовательности элементов математического выражения</summary>
@@ -458,9 +453,9 @@ public class ExpressionParser
                     {
                         // то надо подниматься вверх под дереву до тех пор
                         parent_operator = (OperatorNode?)parent_operator.Parents
-                            // пока встречаемые на пути операторы имеют приоритет выше приоритета текущего оператора
+                           // пока встречаемые на пути операторы имеют приоритет выше приоритета текущего оператора
                            .TakeWhile(n => n is OperatorNode node && priority <= node.Priority)
-                            // взять последний из последовательности
+                           // взять последний из последовательности
                            .LastOrDefault() ?? parent_operator; // если вернулась пустая ссылка, то взять предыдущий оператор
 
                         // На текущий момент предыдущий оператор имеет приоритет выше приоритета текущего оператора
@@ -480,7 +475,7 @@ public class ExpressionParser
                         else // Иначе если предыдущий оператор не корень
                         {
                             var parent = parent_operator.Parent;  // сохранить ссылку на родителя предыдущего оператора
-                            parent.Right       = Node;            // записать текущий оператор в качестве правого поддерева
+                            parent!.Right = Node;                 // записать текущий оператор в качестве правого поддерева
                             operator_node.Left = parent_operator; // записать предыдущий оператора левым поддеревом текущего
                         }
                     }
@@ -488,29 +483,29 @@ public class ExpressionParser
                     {
                         // то надо спускаться в правое поддерево до тех пор
                         parent_operator = (OperatorNode?)parent_operator.RightNodes
-                            // пока встречаемые на пути операторы имеют левые поддеревья и приоритет операторов меньше текущего
+                           // пока встречаемые на пути операторы имеют левые поддеревья и приоритет операторов меньше текущего
                            .TakeWhile(n => n is OperatorNode { Left: not null } node && node.Priority < priority)
-                            // взять последний из последовательности
+                           // взять последний из последовательности
                            .LastOrDefault() ?? parent_operator; // если вернулась пустая ссылка, то взять предыдущий оператор
 
                         // На текущий момент предыдущий оператор имеет приоритет ниже приоритета текущего оператора
 
                         var right = parent_operator.Right; // сохранить правое поддерево предыдущего оператора
                         parent_operator.Right = Node;      // в правое поддерево предыдущего оператора попадает текущий
-                        operator_node.Left    = right;     // в левое поддерево текущего оператора записывается сохранённое правое 
+                        operator_node.Left = right;     // в левое поддерево текущего оператора записывается сохранённое правое 
                     }
                 }
             }
             else // Если предыдущий узел не является оператором
             {
-                var parent   = Last.Parent;
-                var is_left  = Last.IsLeftSubtree;
+                var parent = Last.Parent;
+                var is_left = Last.IsLeftSubtree;
                 var is_right = Last.IsRightSubtree;
                 operator_node.Left = Last; // записать предыдущий узел левым поддеревом текущего
                 if (is_left)
-                    parent.Left = operator_node;
+                    parent!.Left = operator_node;
                 else if (is_right)
-                    parent.Right = operator_node;
+                    parent!.Right = operator_node;
             }
             return; // возврат
         }

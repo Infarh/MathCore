@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable UnusedMember.Global
+﻿// ReSharper disable UnusedMember.Global
 
 namespace MathCore.Values;
 
@@ -39,7 +38,7 @@ public sealed class ObjectSelector<T>(Func<T[], int> Selector, Func<bool> CanRea
     { }
 
     /// <summary>Массив "ленивых" значений, используемых в качестве генераторов объектов </summary>
-    private readonly LazyValue<T>[] _Values = new LazyValue<T>[Generator.Length].Initialize(Generator, (i, g) => new(g[i]));
+    private readonly Lazy<T>[] _Values = new Lazy<T>[Generator.Length].Initialize(Generator, (i, g) => new(g![i]));
     /// <summary>Метод, определяющий возможность чтения данных из источников</summary>
     private readonly Func<bool> _CanRead = CanRead;
 
@@ -51,13 +50,13 @@ public sealed class ObjectSelector<T>(Func<T[], int> Selector, Func<bool> CanRea
         get
         {
             //Получить массив значений от всех "ленивых" значений объектов
-            var values = new T[_Values.Length].Initialize(_Values, (i, vv) => vv[i].Value);
+            var values = new T[_Values.Length].Initialize(_Values, (i, vv) => vv![i].Value);
             //Выбрать индекс интересующего объекта
             var index = Selector(values);
             //Выбрать объект из массива значений
             var value = values[index];
             //Сбросить состояния выбранного "ленивого" значения
-            _Values[index].Reset();
+            _Values[index] = new(Generator[index]);
             return value;
         }
     }

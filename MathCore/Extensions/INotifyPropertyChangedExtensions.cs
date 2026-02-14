@@ -1,5 +1,5 @@
-﻿#nullable enable
-using System.Reflection;
+﻿using System.Reflection;
+
 using MathCore;
 // ReSharper disable EventNeverSubscribedTo.Global
 
@@ -97,22 +97,25 @@ public static class INotifyPropertyChangedExtensions
         {
             _Handler ??= (_, e) =>
             {
-                if (!_Dependencies.ContainsKey(e.PropertyName)) return;
-                if (e is DependentPropertyChangedEventArgs args)
+                if (e.PropertyName is not { Length: > 0 } property_name)
+                    return;
+
+                if (!_Dependencies.ContainsKey(property_name)) return;
+                if (e is DependentPropertyChangedEventArgs { PropertyName: { Length: > 0 } args_property_name } args)
                 {
                     var p_stack = args.FromProperties ?? [];
-                    if (p_stack.Contains(str => e.PropertyName.Equals(str))) return;
-                    foreach (var property in _Dependencies[args.PropertyName])
+                    if (p_stack.Contains(str => property_name.Equals(str))) return;
+                    foreach (var property in _Dependencies[args_property_name])
                     {
                         var new_p_stack = new string[p_stack.Length + 1];
-                        new_p_stack[0] = args.PropertyName;
+                        new_p_stack[0] = args_property_name;
                         Array.Copy(p_stack, 0, new_p_stack, 1, new_p_stack.Length);
                         OnPropertyChanged(new DependentPropertyChangedEventArgs(property, new_p_stack));
                     }
                 }
                 else
-                    foreach (var property in _Dependencies[e.PropertyName])
-                        OnPropertyChanged(new DependentPropertyChangedEventArgs(property, [e.PropertyName]));
+                    foreach (var property in _Dependencies[property_name])
+                        OnPropertyChanged(new DependentPropertyChangedEventArgs(property, [property_name]));
             };
             obj.PropertyChanged += _Handler;
         }
@@ -203,10 +206,10 @@ public static class INotifyPropertyChangedExtensions
             var dep = new Dictionary<string, List<string>>(properties.Length);
             foreach (var property in properties)
             {
-                foreach (AffectsTheAttribute affect_on in property.GetCustomAttributes(typeof(AffectsTheAttribute), true))
+                foreach (var affect_on in property.GetCustomAttributes(typeof(AffectsTheAttribute), true).Cast<AffectsTheAttribute>())
                     dep.GetValueOrAddNew(property.Name, () => []).Add(affect_on.Name);
 
-                foreach (DependencyOnAttribute dependence_on in property.GetCustomAttributes(typeof(DependencyOnAttribute), true))
+                foreach (var dependence_on in property.GetCustomAttributes(typeof(DependencyOnAttribute), true).Cast<DependencyOnAttribute>())
                     dep.GetValueOrAddNew(dependence_on.Name, () => []).Add(property.Name);
             }
 
@@ -271,9 +274,9 @@ public static class INotifyPropertyChangedExtensions
 
         public virtual bool IsEmpty => OnPropertyChangedEventHandlers is null && OnPropertyChangedHandlers is null && ValueChangeEventHandlers is null;
 
-        public INotifyPropertyChanged NotifyPropertyChangedObject => 
-            _NotifyPropertyChangedObject.TryGetTarget(out var obj) 
-                ? obj 
+        public INotifyPropertyChanged NotifyPropertyChangedObject =>
+            _NotifyPropertyChangedObject.TryGetTarget(out var obj)
+                ? obj
                 : throw new InvalidOperationException("Объект, для которого производится попытка доступа, удалён");
 
         private void OnPropertyChangedHandler(object? Sender, PropertyChangedEventArgs E)
@@ -285,7 +288,7 @@ public static class INotifyPropertyChangedExtensions
         protected virtual void OnObjectPropertyChanged(object? Sender, PropertyChangedEventArgs E)
         {
             OnPropertyChangedEventHandlers?.Invoke(Sender, E);
-            OnPropertyChangedHandlers?.Invoke(E.PropertyName);
+            OnPropertyChangedHandlers?.Invoke(E.PropertyName!);
             ValueChangeEventHandlers?.Invoke();
         }
 
@@ -295,8 +298,8 @@ public static class INotifyPropertyChangedExtensions
         internal virtual void ClearHandlers()
         {
             OnPropertyChangedEventHandlers = null;
-            OnPropertyChangedHandlers      = null;
-            ValueChangeEventHandlers       = null;
+            OnPropertyChangedHandlers = null;
+            ValueChangeEventHandlers = null;
         }
     }
     /// <summary>Класс подписчика на изменение свойства объекта типа T, реализующего INotifyPropertyChanged</summary>
@@ -324,7 +327,7 @@ public static class INotifyPropertyChangedExtensions
         protected override void OnObjectPropertyChanged(object? Sender, PropertyChangedEventArgs E)
         {
             base.OnObjectPropertyChanged(Sender, E);
-            OnObjectValueChangedHandlers?.Invoke((T?)Sender);
+            OnObjectValueChangedHandlers?.Invoke((T)Sender!);
         }
 
         internal override void ClearHandlers()
@@ -380,13 +383,13 @@ public static class INotifyPropertyChangedExtensions
         lock (__Subscribers)
         {
             var object_subscribers = __Subscribers.GetValue(obj);
-            var object_subscriber  = object_subscribers?.GetValue(EventName);
+            var object_subscriber = object_subscribers?.GetValue(EventName);
             if (object_subscriber is null) return;
 
             object_subscriber.OnPropertyChangedEvent -= Handler;
 
-            if (object_subscriber.IsEmpty) object_subscribers.Remove(EventName);
-            if (object_subscribers.Count == 0) __Subscribers.Remove(obj);
+            if (object_subscriber.IsEmpty && object_subscribers is not null) object_subscribers.Remove(EventName);
+            if (object_subscribers?.Count == 0) __Subscribers.Remove(obj);
         }
     }
     /// <summary>Очистить обработчики событий изменения свойств объекта</summary>

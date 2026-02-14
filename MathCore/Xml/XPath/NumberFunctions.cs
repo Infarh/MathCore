@@ -6,7 +6,7 @@ internal sealed class NumberFunctions : Query
     #region Fields
 
     private readonly Function.FunctionType _FuncType;
-    private readonly Query _Qy;
+    private readonly Query _Qy = null!;
 
     #endregion
 
@@ -14,7 +14,7 @@ internal sealed class NumberFunctions : Query
 
     public NumberFunctions(Query qy, Function.FunctionType FType)
     {
-        _Qy       = qy;
+        _Qy = qy;
         _FuncType = FType;
     }
 
@@ -22,7 +22,7 @@ internal sealed class NumberFunctions : Query
 
     public NumberFunctions(Query qy)
     {
-        _Qy       = qy;
+        _Qy = qy;
         _FuncType = Function.FunctionType.FuncNumber;
     }
 
@@ -35,11 +35,11 @@ internal sealed class NumberFunctions : Query
     internal override object GetValue(XPathReader reader) =>
         _FuncType switch
         {
-            Function.FunctionType.FuncNumber  => Number(reader),
-            Function.FunctionType.FuncFloor   => Floor(reader),
+            Function.FunctionType.FuncNumber => Number(reader),
+            Function.FunctionType.FuncFloor => Floor(reader),
             Function.FunctionType.FuncCeiling => Ceiling(reader),
-            Function.FunctionType.FuncRound   => Round(reader),
-            _                                 => new object()
+            Function.FunctionType.FuncRound => Round(reader),
+            _ => new object()
         };
 
     //
@@ -57,7 +57,8 @@ internal sealed class NumberFunctions : Query
         try
         {
             return Convert.ToDouble(Qy);
-        } catch(Exception)
+        }
+        catch (Exception)
         {
             return double.NaN;
         }
@@ -86,7 +87,7 @@ internal sealed class NumberFunctions : Query
 
     private double Number(XPathReader reader)
     {
-        if(_Qy is null) return double.NaN;
+        if (_Qy is null) return double.NaN;
         var obj = _Qy.GetValue(reader);
 
         return obj is null ? double.NaN : Convert.ToDouble(obj);

@@ -2,23 +2,38 @@
 
 namespace MathCore.Threading.Tasks.Schedulers;
 
-/// <summary>Provides a task scheduler that supports reprioritizing previously queued tasks.</summary>
+/// <summary>Предоставляет планировщик задач с поддержкой переприоритизации ранее поставленных задач</summary>
+/// <example>
+/// <code>
+/// var scheduler = new ReprioritizableTaskScheduler();
+///
+/// var t1 = Task.Factory.StartNew(() => { /* будет выполнено позже */ },
+///     CancellationToken.None, TaskCreationOptions.None, scheduler);
+///
+/// var t2 = Task.Factory.StartNew(() => { /* будет выполнено раньше */ },
+///     CancellationToken.None, TaskCreationOptions.None, scheduler);
+///
+/// scheduler.Prioritize(t2);
+///
+/// Task.WaitAll(t1, t2);
+/// </code>
+/// </example>
 public sealed class ReprioritizableTaskScheduler : TaskScheduler
 {
     private readonly LinkedList<Task> _Tasks = new(); // protected by lock(_tasks)
 
-    /// <summary>Queues a task to the scheduler.</summary>
-    /// <param name="task">The task to be queued.</param>
+    /// <summary>Ставит задачу в очередь планировщика</summary>
+    /// <param name="task">Задача для постановки в очередь</param>
     protected override void QueueTask(Task task)
     {
-        // Store the task, and notify the ThreadPool of work to be processed
+        // Сохраняем задачу и уведомляем ThreadPool о поступлении работы
         lock (_Tasks) _Tasks.AddLast(task);
         ThreadPool.UnsafeQueueUserWorkItem(ProcessNextQueuedItem, null);
     }
 
-    /// <summary>Reprioritizes a previously queued task to the front of the queue.</summary>
-    /// <param name="task">The task to be reprioritized.</param>
-    /// <returns>Whether the task could be found and moved to the front of the queue.</returns>
+    /// <summary>Переприоритизирует ранее поставленную задачу в начало очереди</summary>
+    /// <param name="task">Задача для переприоритизации</param>
+    /// <returns>Признак успешного перемещения задачи в начало очереди</returns>
     public bool Prioritize(Task task)
     {
         lock (_Tasks)
@@ -31,9 +46,9 @@ public sealed class ReprioritizableTaskScheduler : TaskScheduler
         }
     }
 
-    /// <summary>Reprioritizes a previously queued task to the back of the queue.</summary>
-    /// <param name="task">The task to be reprioritized.</param>
-    /// <returns>Whether the task could be found and moved to the back of the queue.</returns>
+    /// <summary>Переприоритизирует ранее поставленную задачу в конец очереди</summary>
+    /// <param name="task">Задача для переприоритизации</param>
+    /// <returns>Признак успешного перемещения задачи в конец очереди</returns>
     public bool Deprioritize(Task task)
     {
         lock (_Tasks)
@@ -46,36 +61,35 @@ public sealed class ReprioritizableTaskScheduler : TaskScheduler
         }
     }
 
-    /// <summary>Removes a previously queued item from the scheduler.</summary>
-    /// <param name="task">The task to be removed.</param>
-    /// <returns>Whether the task could be removed from the scheduler.</returns>
+    /// <summary>Удаляет ранее поставленную задачу из планировщика</summary>
+    /// <param name="task">Задача для удаления</param>
+    /// <returns>Признак успешного удаления задачи из планировщика</returns>
     protected override bool TryDequeue(Task task)
     {
         lock (_Tasks) return _Tasks.Remove(task);
     }
 
-    /// <summary>Picks up and executes the next item in the queue.</summary>
-    /// <param name="Ignored">Ignored.</param>
-    private void ProcessNextQueuedItem(object Ignored)
+    /// <summary>Забирает и выполняет следующий элемент очереди</summary>
+    private void ProcessNextQueuedItem(object? _)
     {
         Task task;
         lock (_Tasks)
         {
             if (_Tasks.Count == 0) return;
-            task = _Tasks.First.Value;
+            task = _Tasks.First!.Value;
             _Tasks.RemoveFirst();
         }
         TryExecuteTask(task);
     }
 
-    /// <summary>Executes the specified task inline.</summary>
-    /// <param name="task">The task to be executed.</param>
-    /// <param name="TaskWasPreviouslyQueued">Whether the task was previously queued.</param>
-    /// <returns>Whether the task could be executed inline.</returns>
+    /// <summary>Выполняет указанную задачу встроенно</summary>
+    /// <param name="task">Задача для выполнения</param>
+    /// <param name="TaskWasPreviouslyQueued">Признак предварительной постановки задачи в очередь</param>
+    /// <returns>Признак возможности встроенного выполнения</returns>
     protected override bool TryExecuteTaskInline(Task task, bool TaskWasPreviouslyQueued) => TryExecuteTask(task);
 
-    /// <summary>Gets all of the tasks currently queued to the scheduler.</summary>
-    /// <returns>An enumerable of the tasks currently queued to the scheduler.</returns>
+    /// <summary>Возвращает все задачи, находящиеся в очереди планировщика</summary>
+    /// <returns>Перечисление задач, находящихся в очереди планировщика</returns>
     protected override IEnumerable<Task> GetScheduledTasks()
     {
         var lock_taken = false;

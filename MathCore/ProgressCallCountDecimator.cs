@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore;
+﻿namespace MathCore;
 
 /// <summary>Информатор прогресса операции, осуществляющий прореживание вызовов к информатору по числу вызовов</summary>
 /// <typeparam name="T">Тип данных информатора</typeparam>

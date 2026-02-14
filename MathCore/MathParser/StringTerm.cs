@@ -1,5 +1,4 @@
-﻿#nullable enable
-using MathCore.MathParser.ExpressionTrees.Nodes;
+﻿using MathCore.MathParser.ExpressionTrees.Nodes;
 
 namespace MathCore.MathParser;
 

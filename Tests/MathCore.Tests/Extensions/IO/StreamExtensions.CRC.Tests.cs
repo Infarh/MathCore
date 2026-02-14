@@ -1,12 +1,11 @@
-﻿using System.IO;
-
-using MathCore.Hash.CRC;
-
-namespace MathCore.Tests.Extensions.IO;
+﻿namespace MathCore.Tests.Extensions.IO;
 
 [TestClass]
 public class StreamExtensionsCRCTests
 {
+    public TestContext TestContext { get; set; }
+
+
 #if NET5_0_OR_GREATER
     [TestMethod]
     public void ComputeCRC8_WithStandardPolynomial()
@@ -27,7 +26,7 @@ public class StreamExtensionsCRCTests
         const byte expected_crc = 0x18;
 
         using var stream = new MemoryStream(data);
-        var actual_crc = await stream.ComputeCRC8Async();
+        var actual_crc = await stream.ComputeCRC8Async(Cancel: TestContext.CancellationToken);
 
         actual_crc.AssertEquals(expected_crc);
     }
@@ -66,7 +65,7 @@ public class StreamExtensionsCRCTests
         const ushort expected_crc = 0x718E;
 
         using var stream = new MemoryStream(data);
-        var actual_crc = await stream.ComputeCRC16Async();
+        var actual_crc = await stream.ComputeCRC16Async(Cancel: TestContext.CancellationToken);
 
         actual_crc.AssertEquals(expected_crc);
     }
@@ -100,7 +99,8 @@ public class StreamExtensionsCRCTests
             InitialValue: 0xFFFFFFFF,
             XOROut: 0xFFFFFFFF,
             RefIn: true,
-            RefOut: false);
+            RefOut: false,
+            Cancel: TestContext.CancellationToken);
 
         actual_crc.AssertEquals(expected_crc);
     }
@@ -114,7 +114,7 @@ public class StreamExtensionsCRCTests
         var actual_crc = stream.ComputeCRC64();
 
         // Проверяем, что результат вычисляется (без проверки конкретного значения)
-        Assert.IsTrue(actual_crc >= 0);
+        Assert.IsGreaterThanOrEqualTo(0UL, actual_crc);
     }
 
     [TestMethod]
@@ -126,7 +126,7 @@ public class StreamExtensionsCRCTests
         var actual_crc = await stream.ComputeCRC64Async();
 
         // Проверяем, что результат вычисляется (без проверки конкретного значения)
-        Assert.IsTrue(actual_crc >= 0);
+        Assert.IsGreaterThanOrEqualTo(0UL, actual_crc);
     }
 
     [TestMethod]
@@ -138,7 +138,7 @@ public class StreamExtensionsCRCTests
             large_data[i] = (byte)(i % 256);
 
         using var stream = new MemoryStream(large_data);
-        
+
         var crc = stream.ComputeCRC32(
             Polynomial: 0xEDB88320,
             InitialValue: 0xFFFFFFFF,
@@ -147,7 +147,7 @@ public class StreamExtensionsCRCTests
             RefOut: false);
 
         // Проверяем, что CRC вычислен
-        Assert.IsTrue(crc > 0);
+        Assert.IsGreaterThan(0UL, crc);
     }
 
     [TestMethod]
@@ -169,7 +169,7 @@ public class StreamExtensionsCRCTests
             Cancel: cts.Token);
 
         // Проверяем, что CRC вычислен
-        Assert.IsTrue(crc > 0);
+        Assert.IsGreaterThan(0UL, crc);
     }
 
     [TestMethod]
@@ -189,14 +189,14 @@ public class StreamExtensionsCRCTests
 
         // Позиция потока изменится, т.к. мы читаем данные
         // Это нормальное поведение для хеш-функций
-        Assert.IsTrue(stream.Position > initial_position);
+        Assert.IsGreaterThan(initial_position, stream.Position);
     }
 
     [TestMethod]
     public void ComputeCRC32_EmptyStream()
     {
         using var stream = new MemoryStream(Array.Empty<byte>());
-        
+
         var crc = stream.ComputeCRC32(
             Polynomial: 0xEDB88320,
             InitialValue: 0xFFFFFFFF,
@@ -215,19 +215,19 @@ public class StreamExtensionsCRCTests
 
         using var stream1 = new MemoryStream(data);
         var crc8 = stream1.ComputeCRC8();
-        Assert.IsTrue(crc8 >= 0);
+        Assert.IsGreaterThanOrEqualTo(0UL, crc8);
 
         using var stream2 = new MemoryStream(data);
         var crc16 = stream2.ComputeCRC16();
-        Assert.IsTrue(crc16 >= 0);
+        Assert.IsGreaterThanOrEqualTo(0UL, crc16);
 
         using var stream3 = new MemoryStream(data);
         var crc32 = stream3.ComputeCRC32(0xEDB88320, 0xFFFFFFFF, 0xFFFFFFFF, true, false);
-        Assert.IsTrue(crc32 > 0);
+        Assert.IsGreaterThan(0UL, crc32);
 
         using var stream4 = new MemoryStream(data);
         var crc64 = stream4.ComputeCRC64();
-        Assert.IsTrue(crc64 >= 0);
+        Assert.IsGreaterThanOrEqualTo(0UL, crc64);
     }
 #endif
 }

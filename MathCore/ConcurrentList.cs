@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable once CheckNamespace
+﻿// ReSharper disable once CheckNamespace
 namespace System.Collections.Concurrent;
 
 public class ConcurrentList<T> : IList<T>, IDisposable
@@ -79,7 +78,7 @@ public class ConcurrentList<T> : IList<T>, IDisposable
     public ConcurrentList(IEnumerable<T> items)
     {
         _Lock = new(LockRecursionPolicy.NoRecursion);
-        _List = [..items];
+        _List = [.. items];
     }
 
     #endregion
@@ -207,7 +206,7 @@ public class ConcurrentList<T> : IList<T>, IDisposable
 
         public T Current => _Inner.Current;
 
-        object IEnumerator.Current => _Inner.Current;
+        object? IEnumerator.Current => _Inner.Current;
 
         #endregion
 
@@ -235,14 +234,17 @@ public class ConcurrentList<T> : IList<T>, IDisposable
 
     ~ConcurrentList() => Dispose(false);
 
-    public void Dispose() => Dispose(true);
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
     private void Dispose(bool disposing)
     {
-        if (disposing)
-            GC.SuppressFinalize(this);
-
+        if (!disposing) return;
         _Lock.Dispose();
     }
+
     #endregion
 }

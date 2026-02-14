@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Linq.Reactive;
+﻿using System.Linq.Reactive;
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
 
@@ -16,5 +15,6 @@ public static class FileSystemWatcherExtensions
 
     public static IObservable<FileSystemEventArgs> ToObservable_Disposed(this FileSystemWatcher Watcher) => Watcher.FromEvent<FileSystemEventArgs>("Disposed");
 
-    public static LambdaDisposableObject<FileSystemWatcher> SuspendEvents(this FileSystemWatcher watcher) => new(watcher.InitializeObject(w => w!.EnableRaisingEvents = false)!, (w, s) => w.EnableRaisingEvents = (bool)s, watcher.EnableRaisingEvents);
+    public static LambdaDisposableObject<FileSystemWatcher> SuspendEvents(this FileSystemWatcher watcher) =>
+        new(watcher.InitializeObject(w => w!.EnableRaisingEvents = false)!, (w, s) => w.EnableRaisingEvents = (bool)s!, watcher.EnableRaisingEvents);
 }

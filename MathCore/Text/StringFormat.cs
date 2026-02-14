@@ -57,7 +57,7 @@ public class StringFormat(string Format, RegexOptions Opts = default)
         return values
             .Cast<Group>()
             .Skip(1)
-            .Distinct(v => v.Name)
+            .Distinct(v => v!.Name)
             .ToDictionary(v => v.Name, v => v.Value);
 #else
         var result = new Dictionary<string, string>();

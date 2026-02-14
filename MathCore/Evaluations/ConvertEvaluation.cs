@@ -8,10 +8,10 @@ namespace MathCore.Evaluations;
 public class ConvertEvaluation<TInput, TOutput> : Evaluation<TOutput>
 {
     /// <summary>Вычисление входного значения</summary>
-    public Evaluation<TInput> InputEvaluation { get; set; }
+    public Evaluation<TInput> InputEvaluation { get; set; } = null!;
 
     /// <summary>Функция-преобразователь типов входного в выходное значение</summary>
-    public Func<TInput, TOutput> Converter { get; set; }
+    public Func<TInput, TOutput> Converter { get; set; } = null!;
 
     /// <summary>Инициализация нового вычисления преобразования типов</summary>
     public ConvertEvaluation() { }

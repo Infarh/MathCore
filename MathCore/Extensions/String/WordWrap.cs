@@ -18,7 +18,7 @@ internal static class WordWrap
     /// <summary>Массив специальных символов-разделителей</summary>
     private static readonly char[] __SpecSign = ['-', '-', 'N', '-', 'щ', 'г'];
     /// <summary>Массив гласных символов</summary>
-    private static readonly char[] __GlasChar = 
+    private static readonly char[] __GlasChar =
     [
         'e', 'L', 'х', '+', 'v',
         '-', 'р', '-', 'ю', '+',
@@ -29,8 +29,8 @@ internal static class WordWrap
     ];
 
     /// <summary>Массив согласных символов</summary>
-    private static readonly char[] __SoglChar = 
-    [ 
+    private static readonly char[] __SoglChar =
+    [
         '-', 'г', 'ъ', '|', 'э', '=', 'у', '+', '0',
         '+', '\u0007', '-', 'ч', '|', 'i', '-', 'I', 'L',
         'т', 'T', 'я', '|', 'Ё', '|', 'ы', 'T', 'ф',
@@ -69,7 +69,7 @@ internal static class WordWrap
     private static bool IsSlogMore(SymbType[] c, int Start)
     {
         var len = c.Length;
-        for(var i = Start; i < len - 1; i++)
+        for (var i = Start; i < len - 1; i++)
             switch (c[i])
             {
                 case SymbType.NoDefined: return false;
@@ -87,40 +87,40 @@ internal static class WordWrap
     {
         var cur = 0;
         var len = pc.Length;
-        if(MaxSize == 0 || len == 0) return null;
+        if (MaxSize == 0 || len == 0) return string.Empty;
 
         var hyp_buff = new char[MaxSize];
-        var h        = pc.Select(GetSymbType).ToArray();
+        var h = pc.Select(GetSymbType).ToArray();
 
-        var cw    = 0;
+        var cw = 0;
         var @lock = 0;
-        for(var i = 0; i < len; i++)
+        for (var i = 0; i < len; i++)
         {
             hyp_buff[cur++] = pc[i];
 
-            if(i >= len - 2) continue;
-            if(h[i] == SymbType.NoDefined)
+            if (i >= len - 2) continue;
+            if (h[i] == SymbType.NoDefined)
             {
                 cw = 0;
                 continue;
             }
 
             cw++;
-            if(@lock != 0)
+            if (@lock != 0)
             {
                 @lock--;
                 continue;
             }
 
-            if(cw <= 1 || !IsSlogMore(h, i + 1)) continue;
+            if (cw <= 1 || !IsSlogMore(h, i + 1)) continue;
 
-            if((h[i] == SymbType.Sogl && h[i - 1] == SymbType.Glas && h[i + 1] == SymbType.Sogl && h[i + 2] == SymbType.Spec)
+            if ((h[i] == SymbType.Sogl && h[i - 1] == SymbType.Glas && h[i + 1] == SymbType.Sogl && h[i + 2] == SymbType.Spec)
                || (h[i] == SymbType.Glas && h[i - 1] == SymbType.Sogl && h[i + 1] == SymbType.Sogl && h[i + 2] == SymbType.Glas)
                || (h[i] == SymbType.Glas && h[i - 1] == SymbType.Sogl && h[i + 1] == SymbType.Glas && h[i + 2] == SymbType.Sogl)
                || (h[i] == SymbType.Spec))
             {
                 hyp_buff[cur++] = __HypSymb;
-                @lock           = 1;
+                @lock = 1;
             }
         }
         return new(hyp_buff, 0, cur);
@@ -132,10 +132,10 @@ internal static class WordWrap
     /// <returns>True, если найдена гласная буква</returns>
     private static bool Red_GlasMore(string p, int pos)
     {
-        while(p[pos] != (char)0)
+        while (p[pos] != (char)0)
         {
-            if(__Spaces.Contains(p[pos])) return false;
-            if(IsGlas(p[pos++])) return true;
+            if (__Spaces.Contains(p[pos])) return false;
+            if (IsGlas(p[pos++])) return true;
         }
         return false;
     }
@@ -149,11 +149,11 @@ internal static class WordWrap
         var be_sogl = false;
         var be_glas = false;
 
-        while(p[pos] != (char)0)
+        while (p[pos] != (char)0)
         {
-            if(__Spaces.Contains(p[pos])) break;
-            if(!be_glas) be_glas = IsGlas(p[pos]);
-            if(!be_sogl) be_sogl = IsSogl(p[pos]);
+            if (__Spaces.Contains(p[pos])) break;
+            if (!be_glas) be_glas = IsGlas(p[pos]);
+            if (!be_sogl) be_sogl = IsSogl(p[pos]);
             pos++;
         }
         return be_glas && be_sogl;
@@ -165,7 +165,7 @@ internal static class WordWrap
     /// <returns>True, если перенос возможен</returns>
     private static bool MayBeHyph(string p, int pos) =>
         p.Length > 3 && pos > 2
-        && (!__Spaces.Contains(p[pos]) && !__Spaces.Contains(p[pos + 1]) && !__Spaces.Contains(p[pos - 1]))
+        && !__Spaces.Contains(p[pos]) && !__Spaces.Contains(p[pos + 1]) && !__Spaces.Contains(p[pos - 1])
         && ((IsSogl(p[pos]) && IsGlas(p[pos - 1]) && IsSogl(p[pos + 1]) && Red_SlogMore(p, pos + 1))
             || (IsGlas(p[pos]) && IsSogl(p[pos - 1]) && IsSogl(p[pos + 1]) && IsGlas(p[pos + 2]))
             || (IsGlas(p[pos]) && IsSogl(p[pos - 1]) && IsGlas(p[pos + 1]) && Red_SlogMore(p, pos + 1))

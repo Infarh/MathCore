@@ -8,9 +8,9 @@ public class NormalRandomGenerator : RandomGenerator
 
     /* ------------------------------------------------------------------------------------------ */
 
-    public NormalRandomGenerator(Random rnd = null) : base(rnd) { }
-    public NormalRandomGenerator(double sigma, Random rnd = null) : base(sigma, rnd) { }
-    public NormalRandomGenerator(double sigma, double mu, Random rnd = null) : base(sigma, mu, rnd) { }
+    public NormalRandomGenerator(Random? rnd = null) : base(rnd) { }
+    public NormalRandomGenerator(double sigma, Random? rnd = null) : base(sigma, rnd) { }
+    public NormalRandomGenerator(double sigma, double mu, Random? rnd = null) : base(sigma, mu, rnd) { }
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -46,7 +46,7 @@ public class NormalRandomGenerator : RandomGenerator
 
     protected override double GetNextValue()
     {
-        if(_Value is { } value)
+        if (_Value is { } value)
         {
             _Value = null;
             return value;

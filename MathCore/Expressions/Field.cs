@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using System.Reflection;
-using MathCore.Annotations;
+﻿using System.Reflection;
 // ReSharper disable UnusedMember.Local
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -14,11 +12,11 @@ namespace System.Linq.Expressions;
 
 public class Field<T> : ItemBase
 {
-    private readonly FieldInfo _FieldInfo;
+    private readonly FieldInfo _FieldInfo = null!;
 
-    private readonly Action<T> _Writer;
+    private readonly Action<T> _Writer = null!;
     private readonly Func<T> _Reader;
-    private AttributesExtractor _Attributes;
+    private AttributesExtractor _Attributes = null!;
 
     public bool IsReadOnly => (_FieldInfo.Attributes & FieldAttributes.InitOnly) == FieldAttributes.InitOnly;
 
@@ -40,15 +38,14 @@ public class Field<T> : ItemBase
     [Diagnostics.CodeAnalysis.SuppressMessage("Качество кода", "IDE0051:Удалите неиспользуемые закрытые члены", Justification = "<Ожидание>")]
     private static void Set(ref T field, T value) => field = value;
 
-    public Field(Type type, [NotNull] string Name, bool IsPublicOnly = true)
+    public Field(Type type, string Name, bool IsPublicOnly = true)
         : base(type, Name)
     {
         var value_type = typeof(T);
         _FieldInfo = _ObjectType.GetField(Name, BindingFlags.Static | (IsPublicOnly
             ? BindingFlags.Public
-            : BindingFlags.Public | BindingFlags.NonPublic));
-        Debug.Assert(_FieldInfo != null, "_FieldInfo != null");
-        var field      = Expression.Field(null, _FieldInfo);
+            : BindingFlags.Public | BindingFlags.NonPublic)).NotNull();
+        var field = Expression.Field(null, _FieldInfo);
         var ReaderExpr = Expression.Lambda<Func<T>>(field);
         _Reader = ReaderExpr.Compile();
         if (IsReadOnly) return;
@@ -61,20 +58,19 @@ public class Field<T> : ItemBase
         _Writer = expr.Compile();
     }
 
-    public Field([NotNull] object Obj, [NotNull] string Name, bool IsPublicOnly = true)
+    public Field(object Obj, string Name, bool IsPublicOnly = true)
         : this(Obj, Obj.GetType().GetField(Name, BindingFlags.Instance | (IsPublicOnly ? BindingFlags.Public : BindingFlags.Public | BindingFlags.NonPublic)) ?? throw new InvalidOperationException($"Не найдена информация о поле {Name}")) { }
 
-    public Field(object Obj, [NotNull] FieldInfo info)
+    public Field(object Obj, FieldInfo info)
         : base(Obj, info.Name)
     {
-        _FieldInfo = info;
-        Debug.Assert(_FieldInfo != null, "_FieldInfo != null");
-        var value_type  = info.FieldType;
+        _FieldInfo = info.NotNull();
+        var value_type = info.FieldType;
         var ObjConstant = Expression.Constant(Obj);
-        var field       = Expression.Field(ObjConstant, Name);
-        var ReaderExpr  = Expression.Lambda<Func<T>>(field);
+        var field = Expression.Field(ObjConstant, Name);
+        var ReaderExpr = Expression.Lambda<Func<T>>(field);
         _Reader = ReaderExpr.Compile();
-        
+
         if (IsReadOnly) return;
 
         var value = Expression.Parameter(value_type, "value");
@@ -90,11 +86,11 @@ public class Field<T> : ItemBase
 
 public class Field : ItemBase
 {
-    private readonly FieldInfo _FieldInfo;
+    private readonly FieldInfo _FieldInfo = null!;
 
-    private readonly Action<object> _Writer;
+    private readonly Action<object> _Writer = null!;
     private readonly Func<object> _Reader;
-    private AttributesExtractor _Attributes;
+    private AttributesExtractor _Attributes = null!;
 
     public bool IsReadOnly => (_FieldInfo.Attributes & FieldAttributes.InitOnly) == FieldAttributes.InitOnly;
 
@@ -117,17 +113,16 @@ public class Field : ItemBase
     [Diagnostics.CodeAnalysis.SuppressMessage("Качество кода", "IDE0051:Удалите неиспользуемые закрытые члены", Justification = "<Ожидание>")]
     private static void Set(ref object field, object value) => field = value;
 
-    public Field(Type type, [NotNull] string Name, bool IsPublicOnly = true)
+    public Field(Type type, string Name, bool IsPublicOnly = true)
         : base(type, Name)
     {
         _FieldInfo = _ObjectType.GetField(Name, BindingFlags.Static | (IsPublicOnly
             ? BindingFlags.Public
-            : BindingFlags.Public | BindingFlags.NonPublic));
-        Debug.Assert(_FieldInfo != null, "_FieldInfo != null");
+            : BindingFlags.Public | BindingFlags.NonPublic)).NotNull();
 
         var value_type = _FieldInfo.FieldType;
 
-        var field      = Expression.Field(null, _FieldInfo);
+        var field = Expression.Field(null, _FieldInfo);
         var ReaderExpr = Expression.Lambda<Func<object>>(Expression.Convert(field, typeof(object)));
         _Reader = ReaderExpr.Compile();
 
@@ -140,20 +135,19 @@ public class Field : ItemBase
         _Writer = expr.Compile();
     }
 
-    public Field([NotNull] object Obj, [NotNull] string Name, bool IsPublicOnly = true)
+    public Field(object Obj, string Name, bool IsPublicOnly = true)
         : this(Obj, Obj.GetType().GetField(Name, BindingFlags.Instance | (IsPublicOnly ? BindingFlags.Public : BindingFlags.Public | BindingFlags.NonPublic)) ?? throw new InvalidOperationException($"Не найдена информация о поле {Name}")) { }
 
-    public Field(object Obj, [NotNull] FieldInfo info)
+    public Field(object Obj, FieldInfo info)
         : base(Obj, info.Name)
     {
-        _FieldInfo = info;
-        Debug.Assert(_FieldInfo != null, "_FieldInfo != null");
+        _FieldInfo = info.NotNull();
 
         var value_type = info.FieldType;
 
         var ObjConstant = Expression.Constant(Obj);
-        var field       = Expression.Field(ObjConstant, Name);
-        var ReaderExpr  = Expression.Lambda<Func<object>>(Expression.Convert(field, typeof(object)));
+        var field = Expression.Field(ObjConstant, Name);
+        var ReaderExpr = Expression.Lambda<Func<object>>(Expression.Convert(field, typeof(object)));
         _Reader = ReaderExpr.Compile();
         if (IsReadOnly) return;
         var value = Expression.Parameter(value_type, "value");

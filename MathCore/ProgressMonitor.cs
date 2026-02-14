@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 using MathCore.Annotations;
@@ -30,8 +29,8 @@ public class ProgressMonitor : INotifyPropertyChanged
     /* ------------------------------------------------------------------------------------------ */
 
     private double _Progress;
-    private string _Information;
-    private string _Status;
+    private string _Information = null!;
+    private string _Status = null!;
 
     private Func<string>? _StatusStrFunc;
     private Func<string>? _InformationStrFunc;
@@ -44,11 +43,11 @@ public class ProgressMonitor : INotifyPropertyChanged
     public Func<string> StatusChecker
     {
         [MethodImpl(MethodImplOptions.Synchronized)]
-        get => _StatusStrFunc;
+        get => _StatusStrFunc!;
         [MethodImpl(MethodImplOptions.Synchronized)]
         set
         {
-            if(value == _StatusStrFunc) return;
+            if (value == _StatusStrFunc) return;
             _StatusStrFunc = value;
             StatusCheckerChanged.FastStart(this);
             OnPropertyChanged();
@@ -58,11 +57,11 @@ public class ProgressMonitor : INotifyPropertyChanged
     public Func<string> InformationChecker
     {
         [MethodImpl(MethodImplOptions.Synchronized)]
-        get => _InformationStrFunc;
+        get => _InformationStrFunc!;
         [MethodImpl(MethodImplOptions.Synchronized)]
         set
         {
-            if(value == _InformationStrFunc) return;
+            if (value == _InformationStrFunc) return;
             _InformationStrFunc = value;
             InformationCheckerChanged.FastStart(this);
             OnPropertyChanged();
@@ -72,11 +71,11 @@ public class ProgressMonitor : INotifyPropertyChanged
     public Func<double> ProgressChecker
     {
         [MethodImpl(MethodImplOptions.Synchronized)]
-        get => _ProgressFunc;
+        get => _ProgressFunc!;
         [MethodImpl(MethodImplOptions.Synchronized)]
         set
         {
-            if(value == _ProgressFunc) return;
+            if (value == _ProgressFunc) return;
             _ProgressFunc = value;
             ProgressCheckerChanged.FastStart(this);
             OnPropertyChanged();
@@ -96,7 +95,7 @@ public class ProgressMonitor : INotifyPropertyChanged
         [MethodImpl(MethodImplOptions.Synchronized)]
         set
         {
-            if(_Status == value) return;
+            if (_Status == value) return;
             _Status = value;
             StatusChanged.FastStart(this);
             OnPropertyChanged();
@@ -114,7 +113,7 @@ public class ProgressMonitor : INotifyPropertyChanged
         [MethodImpl(MethodImplOptions.Synchronized)]
         set
         {
-            if(_Information == value) return;
+            if (_Information == value) return;
             _Information = value;
             InformationChanged.FastStart(this);
             OnPropertyChanged();
@@ -132,7 +131,7 @@ public class ProgressMonitor : INotifyPropertyChanged
         [MethodImpl(MethodImplOptions.Synchronized)]
         set
         {
-            if(Math.Abs(_Progress - value) < double.Epsilon) return;
+            if (Math.Abs(_Progress - value) < double.Epsilon) return;
             _Progress = value;
             ProgressChanged.FastStart(this);
             OnPropertyChanged();
@@ -148,7 +147,7 @@ public class ProgressMonitor : INotifyPropertyChanged
     public ProgressMonitor ConnectedMonitor
     {
         [MethodImpl(MethodImplOptions.Synchronized)]
-        get => _ConnectedMonitor;
+        get => _ConnectedMonitor!;
     }
 
     /* ------------------------------------------------------------------------------------------ */
@@ -158,16 +157,16 @@ public class ProgressMonitor : INotifyPropertyChanged
         Func<string>? StatusFunc = null,
         Func<string>? InformationFunc = null)
     {
-        _StatusStrFunc      = StatusFunc;
+        _StatusStrFunc = StatusFunc;
         _InformationStrFunc = InformationFunc;
-        _ProgressFunc       = ProgressFunc;
+        _ProgressFunc = ProgressFunc;
     }
 
     public ProgressMonitor(string Status, string Information = "", double Progress = 0)
     {
-        _Status      = Status;
+        _Status = Status;
         _Information = Information;
-        _Progress    = Progress;
+        _Progress = Progress;
     }
 
     /* ------------------------------------------------------------------------------------------ */
@@ -175,65 +174,65 @@ public class ProgressMonitor : INotifyPropertyChanged
     [MethodImpl(MethodImplOptions.Synchronized)]
     public void Connect(ProgressMonitor Monitor)
     {
-        if(ReferenceEquals(Monitor, this))
+        if (ReferenceEquals(Monitor, this))
             throw new ArgumentException("Нельзя подключать монитор к себе по методам изъятия значений");
 
-        if(_ConnectedMonitor != null) ClearEventHandlers();
-        _ConnectedMonitor  = Monitor;
-        StatusChecker      = () => Monitor.Status;
-        ProgressChecker    = () => Monitor.Progress;
+        if (_ConnectedMonitor != null) ClearEventHandlers();
+        _ConnectedMonitor = Monitor;
+        StatusChecker = () => Monitor.Status;
+        ProgressChecker = () => Monitor.Progress;
         InformationChecker = () => Monitor.Information;
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
     public void ConnectStrong(ProgressMonitor Monitor)
     {
-        if(ReferenceEquals(Monitor, this))
+        if (ReferenceEquals(Monitor, this))
             throw new ArgumentException("Нельзя подключать монитор к себе по обработчикам событий");
 
         Disconnect();
-        _ConnectedMonitor          =  Monitor;
-        Monitor.StatusChanged      += OnMonitorStatusChanged;
+        _ConnectedMonitor = Monitor;
+        Monitor.StatusChanged += OnMonitorStatusChanged;
         Monitor.InformationChanged += OnMonitorInformationChanged;
-        Monitor.ProgressChanged    += OnMonitorProgressChanged;
+        Monitor.ProgressChanged += OnMonitorProgressChanged;
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
     public void Disconnect()
     {
-        StatusChecker      = null;
-        ProgressChecker    = null;
-        InformationChecker = null;
-        _ConnectedMonitor  = null;
+        StatusChecker = null!;
+        ProgressChecker = null!;
+        InformationChecker = null!;
+        _ConnectedMonitor = null;
     }
 
     public void SetStatus(string status, double progress, string information)
     {
-        Status      = status;
-        Progress    = progress;
+        Status = status;
+        Progress = progress;
         Information = information;
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
     public void ClearEventHandlers()
     {
-        if(_ConnectedMonitor is null) return;
+        if (_ConnectedMonitor is null) return;
 
-        _ConnectedMonitor.StatusChanged      -= OnMonitorStatusChanged;
+        _ConnectedMonitor.StatusChanged -= OnMonitorStatusChanged;
         _ConnectedMonitor.InformationChanged -= OnMonitorInformationChanged;
-        _ConnectedMonitor.ProgressChanged    -= OnMonitorProgressChanged;
-        _ConnectedMonitor                    =  null;
+        _ConnectedMonitor.ProgressChanged -= OnMonitorProgressChanged;
+        _ConnectedMonitor = null;
     }
 
     private void OnMonitorStatusChanged(object? sender, EventArgs e)
     {
-        var monitor = (ProgressMonitor)sender;
+        var monitor = (ProgressMonitor)sender!;
         Status = monitor.Status;
     }
 
-    private void OnMonitorInformationChanged(object? sender, EventArgs e) => Information = ((ProgressMonitor)sender).Information;
+    private void OnMonitorInformationChanged(object? sender, EventArgs e) => Information = ((ProgressMonitor)sender!).Information;
 
-    private void OnMonitorProgressChanged(object? sender, EventArgs e) => Progress = ((ProgressMonitor)sender).Progress;
+    private void OnMonitorProgressChanged(object? sender, EventArgs e) => Progress = ((ProgressMonitor)sender!).Progress;
 
     /* ------------------------------------------------------------------------------------------ */
 

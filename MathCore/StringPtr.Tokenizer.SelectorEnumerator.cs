@@ -10,7 +10,7 @@ public readonly ref partial struct StringPtr
     }
 
     [StructLayout(LayoutKind.Auto)]
-    public readonly ref struct TokenizerSelector<T>(string Buffer, char[] Separators, int StartIndex, int Length, bool SkipEmpty, Selector<T> selector) 
+    public readonly ref struct TokenizerSelector<T>(string Buffer, char[] Separators, int StartIndex, int Length, bool SkipEmpty, Selector<T> selector)
     {
         public SelectorEnumerator GetEnumerator() => new(Buffer, Separators, StartIndex, Length, SkipEmpty, selector);
 
@@ -21,7 +21,7 @@ public readonly ref partial struct StringPtr
             /// <summary>Текущая позиция в исходной строке</summary>
             private int _CurrentPos = StartIndex;
 
-            public T Current { get; private set; }
+            public T? Current { get; private set; }
 
             public bool MoveNext()
             {

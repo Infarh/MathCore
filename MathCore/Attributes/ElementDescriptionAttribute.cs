@@ -1,5 +1,4 @@
-﻿using MathCore.Annotations;
-// ReSharper disable UnusedType.Global
+﻿// ReSharper disable UnusedType.Global
 
 // ReSharper disable once CheckNamespace
 // ReSharper disable MemberCanBePrivate.Global
@@ -13,14 +12,14 @@ namespace System;
 public sealed class ElementDescriptionAttribute : Attribute
 {
     /// <summary>Описание</summary>
-    public string Description { set; get; }
+    public string Description { set; get; } = null!;
 
     /// <summary>Инициализация нового экземпляра <see cref="ElementDescriptionAttribute"/></summary> 
     public ElementDescriptionAttribute() { }
 
     /// <summary>Инициализация нового экземпляра <see cref="ElementDescriptionAttribute"/></summary>
     /// <param name="Description">Описание</param>
-    public ElementDescriptionAttribute([NotNull] string Description) => this.Description = Description;
+    public ElementDescriptionAttribute(string Description) => this.Description = Description;
 
     /// <inheritdoc />
     public override string ToString() => Description;

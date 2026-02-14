@@ -6,11 +6,21 @@ public sealed class NamedLock : IDisposable
     /// <summary>Информация о блокировке ресурса</summary>
     private sealed class ResourceLockInfo
     {
-        /// <summary>Семафор для блокировки доступа</summary>
-        public required SemaphoreSlim Semaphore { get; init; }
+        /// <summary>Признак занятости ресурса</summary>
+        public bool IsHeld { get; set; }
 
-        /// <summary>Счетчик активных блокировок</summary>
+        /// <summary>Счетчик активных операций блокировки (включая ожидающие)</summary>
         public int ActiveLocks { get; set; }
+
+        /// <summary>Очередь ожидающих захвата ресурса</summary>
+        public Queue<Waiter> Waiters { get; } = new();
+    }
+
+    /// <summary>Ожидающий входа в критическую секцию</summary>
+    private sealed class Waiter
+    {
+        public TaskCompletionSource<bool> Tcs { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously); // продолжения вне блокировки
+        public volatile bool Canceled; // признак отмены ожидания
     }
 
     /// <summary>Контроль блокировки</summary>
@@ -62,15 +72,26 @@ public sealed class NamedLock : IDisposable
     {
         _Lock.Wait();
 
-        if (_Resources.TryGetValue(Resource, out var lock_info))
+        if (_Resources.TryGetValue(Resource, out var info))
         {
-            lock_info.ActiveLocks++;
+            info.ActiveLocks++;
+            if (!info.IsHeld && info.Waiters.Count == 0)
+            {
+                info.IsHeld = true; // ресурс свободен, захватываем сразу
+                _Lock.Release();
+                return;
+            }
+
+            var waiter = new Waiter();
+            info.Waiters.Enqueue(waiter);
             _Lock.Release();
-            lock_info.Semaphore.Wait();
+
+            // Блокирующее ожидание выдачи доступа
+            waiter.Tcs.Task.GetAwaiter().GetResult();
         }
         else
         {
-            _Resources.Add(Resource, new() { Semaphore = new(0, 1), ActiveLocks = 1 });
+            _Resources.Add(Resource, new() { IsHeld = true, ActiveLocks = 1 });
             _Lock.Release();
         }
     }
@@ -83,17 +104,59 @@ public sealed class NamedLock : IDisposable
     {
         await _Lock.WaitAsync(Cancel).ConfigureAwait(false);
 
-        if (_Resources.TryGetValue(Resource, out var lock_info))
+        if (_Resources.TryGetValue(Resource, out var info))
         {
-            lock_info.ActiveLocks++;
+            info.ActiveLocks++;
+
+            // Если ресурс свободен и нет очереди ожидания, забираем сразу
+            if (!info.IsHeld && info.Waiters.Count == 0)
+            {
+                info.IsHeld = true;
+                _Lock.Release();
+                return;
+            }
+
+            var waiter = new Waiter();
+            info.Waiters.Enqueue(waiter);
             _Lock.Release();
-            await lock_info.Semaphore.WaitAsync(Cancel).ConfigureAwait(false);
+
+            using var _ = Cancel.CanBeCanceled
+                ? Cancel.Register(() => CancelWaiter(Resource, waiter))
+                : default;
+
+            await waiter.Tcs.Task.ConfigureAwait(false);
         }
         else
         {
-            _Resources.Add(Resource, new() { Semaphore = new(0, 1), ActiveLocks = 1 });
+            _Resources.Add(Resource, new() { IsHeld = true, ActiveLocks = 1 });
             _Lock.Release();
         }
+    }
+
+    private void CancelWaiter(string Resource, Waiter Waiter)
+    {
+        _Lock.Wait();
+        if (!_Resources.TryGetValue(Resource, out var info))
+        {
+            _Lock.Release();
+            Waiter.Tcs.TrySetCanceled();
+            return;
+        }
+
+        if (!Waiter.Tcs.Task.IsCompleted)
+        {
+            Waiter.Canceled = true;
+            info.ActiveLocks--;
+        }
+
+        var remove = info.ActiveLocks == 0 && info.Waiters.All(w => w.Canceled);
+
+        if (remove)
+            _Resources.Remove(Resource);
+
+        _Lock.Release();
+
+        Waiter.Tcs.TrySetCanceled();
     }
 
     /// <summary>Разблокировать указанный именованный ресурс</summary>
@@ -102,60 +165,45 @@ public sealed class NamedLock : IDisposable
     {
         _Lock.Wait();
 
-        if (!_Resources.TryGetValue(Resource, out var lock_info))
+        if (!_Resources.TryGetValue(Resource, out var info))
         {
             _Lock.Release();
             return;
         }
 
-        lock_info.ActiveLocks--;
-        var should_remove = lock_info.ActiveLocks == 0;
+        info.ActiveLocks--;
 
-        if (should_remove)
+        // Ищем следующего некорректно отменённого ожидателя
+        while (info.Waiters.Count > 0)
         {
-            _Resources.Remove(Resource);
+            var next = info.Waiters.Dequeue();
+            if (next.Canceled)
+                continue; // пропускаем отменённых
+
+            // Передаём владение следующему ожидающему
+            info.IsHeld = true;
+            _Lock.Release();
+            next.Tcs.TrySetResult(true);
+            return;
         }
+
+        // Очередь пуста
+        info.IsHeld = false;
+        var should_remove = info.ActiveLocks == 0;
+        if (should_remove)
+            _Resources.Remove(Resource);
 
         _Lock.Release();
-
-        lock_info.Semaphore.Release();
-
-        if (should_remove)
-        {
-            lock_info.Semaphore.Dispose();
-        }
     }
 
     /// <summary>Разблокировать указанный именованный ресурс асинхронно</summary>
     /// <param name="Resource">Имя блокируемого ресурса</param>
     /// <param name="Cancel">Флаг отмены асинхронно операции</param>
     /// <returns>Задача завершения процесса разблокировки указанного ресурса</returns>
-    public async Task UnlockAsync(string Resource, CancellationToken Cancel = default)
+    public Task UnlockAsync(string Resource, CancellationToken Cancel = default)
     {
-        _Lock.Wait();
-
-        if (!_Resources.TryGetValue(Resource, out var lock_info))
-        {
-            _Lock.Release();
-            return;
-        }
-
-        lock_info.ActiveLocks--;
-        var should_remove = lock_info.ActiveLocks == 0;
-
-        if (should_remove)
-        {
-            _Resources.Remove(Resource);
-        }
-
-        _Lock.Release();
-
-        lock_info.Semaphore.Release();
-
-        if (should_remove)
-        {
-            lock_info.Semaphore.Dispose();
-        }
+        Unlock(Resource); // асинхронных операций здесь нет
+        return Task.CompletedTask;
     }
 
     /// <summary>Уничтожить блокировщик ресурсов и освободить все блокировки</summary>
@@ -163,13 +211,21 @@ public sealed class NamedLock : IDisposable
     {
         _Lock.Wait();
 
-        foreach (var lock_info in _Resources.Values)
+        foreach (var (name, info) in _Resources.ToArray())
         {
-            lock_info.Semaphore.Release();
-            lock_info.Semaphore.Dispose();
-        }
+            // Отменяем всех ожидающих
+            while (info.Waiters.Count > 0)
+            {
+                var w = info.Waiters.Dequeue();
+                // выставляем отмену/ошибку вне блокировки, но флаг сразу
+                w.Canceled = true;
+            }
 
-        _Resources.Clear();
+            info.ActiveLocks = 0;
+            info.IsHeld = false;
+
+            _Resources.Remove(name);
+        }
 
         _Lock.Release();
         _Lock.Dispose();

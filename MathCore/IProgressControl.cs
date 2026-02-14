@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore;
+﻿namespace MathCore;
 
 /// <summary>Контроль над асинхронной операцией</summary>
 /// <typeparam name="T">Тип значения прогресса</typeparam>

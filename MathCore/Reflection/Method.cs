@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel;
 
-using MathCore.Annotations;
-
 // ReSharper disable UnusedMember.Global
 // ReSharper disable once CheckNamespace
 namespace System.Reflection;
@@ -12,10 +10,10 @@ namespace System.Reflection;
 public class Method<TObject, TResult>
 {
     /// <summary>Информация о контролируемом методе</summary>
-    private MethodInfo _MethodInfo;
+    private MethodInfo _MethodInfo = null!;
 
     /// <summary>Имя метод</summary>
-    private string _Name;
+    private string _Name = null!;
 
     /// <summary>Объект, метод которого контролируется</summary>
     private TObject _Object;
@@ -24,7 +22,7 @@ public class Method<TObject, TResult>
     private bool _Private;
 
     /// <summary>Функция, вычисляющая результат вызова метода</summary>
-    private Func<object[], TResult> _Method;
+    private Func<object?[], TResult?> _Method = null!;
 
     /// <summary>Имя контролируемого метода</summary>
     public string Name { get => _Name; set => Initialize(_Object, _Name = value, _Private); }
@@ -45,7 +43,7 @@ public class Method<TObject, TResult>
     /// <param name="obj">Объект, метод которого контролируется</param>
     /// <param name="MethodName">Имя контролируемого метода</param>
     /// <param name="IsPrivate">Метод не является публичным?</param>
-    private void Initialize([CanBeNull] TObject obj, [NotNull] string MethodName, bool IsPrivate)
+    private void Initialize(TObject? obj, string MethodName, bool IsPrivate)
     {
         var is_public = IsPrivate ? BindingFlags.NonPublic : BindingFlags.Public;
         var is_static = obj is null ? BindingFlags.Static : BindingFlags.Instance;
@@ -54,20 +52,20 @@ public class Method<TObject, TResult>
         if (type == typeof(object) && obj != null)
             type = obj.GetType();
 
-        _MethodInfo = type.GetMethod(MethodName, is_static | is_public);
+        _MethodInfo = type.GetMethod(MethodName, is_static | is_public).NotNull();
 
-        _Method = obj is ISynchronizeInvoke
-            ? Args => (TResult)((ISynchronizeInvoke)obj).Invoke((Func<object[], TResult>)PrivateInvoke, new object[] { Args })
+        _Method = obj is ISynchronizeInvoke invoke
+            ? Args => (TResult?)invoke.Invoke((Func<object[], TResult?>)PrivateInvoke, new object[] { Args })
             : PrivateInvoke;
     }
 
     /// <summary>Вызвать метод</summary>
     /// <param name="Args">Набор параметров, передаваемый методу</param>
     /// <returns>Результат вызова метода</returns>
-    public TResult Invoke(params object[] Args) => _Method(Args);
+    public TResult? Invoke(params object?[] Args) => _Method(Args);
 
     /// <summary>Внутренний метод, осуществляющий вызов метода</summary>
     /// <param name="Args">Параметры вызова метода</param>
     /// <returns>Результат вызова метода</returns>
-    private TResult PrivateInvoke(params object[] Args) => (TResult)_MethodInfo.Invoke(_Object, Args);
+    private TResult? PrivateInvoke(params object?[] Args) => (TResult?)_MethodInfo.Invoke(_Object, Args);
 }

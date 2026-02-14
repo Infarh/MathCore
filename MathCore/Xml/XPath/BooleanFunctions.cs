@@ -15,13 +15,13 @@ internal sealed class BooleanFunctions : Query
 
     internal BooleanFunctions(Query qy, Function.FunctionType FType)
     {
-        _Qy       = qy;
+        _Qy = qy;
         _FuncType = FType;
     }
 
     internal BooleanFunctions(Query qy)
     {
-        _Qy       = qy;
+        _Qy = qy;
         _FuncType = Function.FunctionType.FuncBoolean;
     }
 
@@ -34,11 +34,11 @@ internal sealed class BooleanFunctions : Query
         var obj = _FuncType switch
         {
             Function.FunctionType.FuncBoolean => ToBoolean(reader),
-            Function.FunctionType.FuncNot     => Not(reader),
-            Function.FunctionType.FuncTrue    => true,
-            Function.FunctionType.FuncFalse   => false,
-            Function.FunctionType.FuncLang    => Lang(reader),
-            _                                 => new object()
+            Function.FunctionType.FuncNot => Not(reader),
+            Function.FunctionType.FuncTrue => true,
+            Function.FunctionType.FuncFalse => false,
+            Function.FunctionType.FuncLang => Lang(reader),
+            _ => new object()
         };
         return obj;
     }
@@ -76,18 +76,19 @@ internal sealed class BooleanFunctions : Query
 
         var obj = _Qy.GetValue(reader);
 
-        if(obj is double)
+        if (obj is double)
         {
-            var number                                        = Convert.ToDouble(obj);
-            if(number.Equals(0d) || double.IsNaN(number)) ret = false;
+            var number = Convert.ToDouble(obj);
+            if (number is 0d or double.NaN) ret = false;
         }
-        else if(obj is string)
+        else if (obj is string)
         {
-            if(obj.ToString().Length == 0) ret = false;
+            if (obj.ToString() is not { Length: > 0 })
+                ret = false;
         }
-        else if(obj is bool)
+        else if (obj is bool)
             ret = Convert.ToBoolean(obj);
-        else if(obj is null && reader.NodeType != XmlNodeType.EndElement)
+        else if (obj is null && reader.NodeType != XmlNodeType.EndElement)
             ret = false;
 
         return ret;
@@ -103,7 +104,7 @@ internal sealed class BooleanFunctions : Query
     //
     private bool Lang(XPathReader reader)
     {
-        var str  = _Qy.GetValue(reader).ToString();
+        var str = _Qy.GetValue(reader)?.ToString() ?? string.Empty;
         var lang = reader.XmlLang.ToLower();
         return lang.Equals(str) || str.Equals(lang.Split('-')[0]);
     }

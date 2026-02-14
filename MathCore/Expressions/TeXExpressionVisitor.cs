@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using MathCore.Annotations;
 
 // ReSharper disable UnusedType.Global
 // ReSharper disable VirtualMemberCallInConstructor
@@ -28,14 +27,14 @@ public class TeXExpressionVisitor : ExpressionVisitor
 
     // Лямбда-выражение анализируется несколько по-иному, поскольку нам нужно только тело
     // выражения, без первого параметра
-    public TeXExpressionVisitor([NotNull] LambdaExpression expression) => Visit(expression.Body);
+    public TeXExpressionVisitor(LambdaExpression expression) => Visit(expression.Body);
 
 
     //----------------------------------------------------------------------------------------//
     // Открытые интерфейс
     //----------------------------------------------------------------------------------------//
     // Изменяем сгенерированную строку в зависимости от типа знака "умножения"
-    public string GenerateTeXExpression(string ExpressionName, MultiplicationSign MultiplicationSign = MultiplicationSign.Asterisk) => 
+    public string GenerateTeXExpression(string ExpressionName, MultiplicationSign MultiplicationSign = MultiplicationSign.Asterisk) =>
         GenerateTeXExpressionImpl(ExpressionName, MultiplicationSign);
 
     public string GenerateTeXExpression(MultiplicationSign MultiplicationSign = MultiplicationSign.Asterisk) =>
@@ -49,7 +48,7 @@ public class TeXExpressionVisitor : ExpressionVisitor
     protected override Expression VisitUnary(UnaryExpression node)
     {
         if (node.NodeType == ExpressionType.Negate)
-            _Result.Append("-");
+            _Result.Append('-');
         return base.VisitUnary(node);
     }
 
@@ -58,12 +57,12 @@ public class TeXExpressionVisitor : ExpressionVisitor
     protected override Expression VisitMember(MemberExpression node)
     {
         var strings = node.Member.Name.Split('.');
-        var name    = strings[^1];
+        var name = strings[^1];
         _Result.Append(name);
         return node;
     }
 
-    public override Expression Visit(Expression node)
+    public override Expression? Visit(Expression? node)
     {
         if (node is not ConstantExpression constant) return base.Visit(node);
         _Result.Append(constant.Value);
@@ -72,7 +71,7 @@ public class TeXExpressionVisitor : ExpressionVisitor
 
     protected override Expression VisitParameter(ParameterExpression node)
     {
-        var strings = node.Name.Split('.');
+        var strings = node.Name!.Split('.');
         _Result.Append(strings[^1]);
         return node;
     }
@@ -84,7 +83,7 @@ public class TeXExpressionVisitor : ExpressionVisitor
         // подобное, здесь же этого совершенно достаточно
         var pow_method = typeof(Math).GetMethod("Pow");
 
-        if (node.Method != pow_method) 
+        if (node.Method != pow_method)
             return base.Visit(node) ?? throw new InvalidOperationException();
 
         Visit(node.Arguments[0]);
@@ -100,9 +99,9 @@ public class TeXExpressionVisitor : ExpressionVisitor
     private static bool RequiresPrecedence(ExpressionType NodeType) =>
         NodeType switch
         {
-            ExpressionType.Add      => true,
+            ExpressionType.Add => true,
             ExpressionType.Subtract => true,
-            _                       => false
+            _ => false
         };
 
     // Оператор деления несколько отличается от всех остальных операторов с двумя аргументами,
@@ -111,25 +110,24 @@ public class TeXExpressionVisitor : ExpressionVisitor
 
     // Большинство операторов требуют аргументы в следующем порядке:
     // {arg1} op {arg2}
-    [NotNull]
-    private Expression VisitInfixBinary([NotNull] BinaryExpression node)
+    private BinaryExpression VisitInfixBinary(BinaryExpression node)
     {
         var requires_precedence = RequiresPrecedence(node.NodeType);
-        if (requires_precedence) _Result.Append("(");
+        if (requires_precedence) _Result.Append('(');
 
         Visit(node.Left);
 
         _Result.Append(node.NodeType switch
         {
             ExpressionType.Multiply => "*",
-            ExpressionType.Add      => "+",
+            ExpressionType.Add => "+",
             ExpressionType.Subtract => "-",
-            _                       => throw new NotSupportedException($"The binary operator '{node.NodeType}' is not supported")
+            _ => throw new NotSupportedException($"The binary operator '{node.NodeType}' is not supported")
         });
 
         Visit(node.Right);
 
-        if (requires_precedence) _Result.Append(")");
+        if (requires_precedence) _Result.Append(')');
         return node;
     }
 
@@ -141,8 +139,7 @@ public class TeXExpressionVisitor : ExpressionVisitor
     /// </summary>
     /// <param name="node"></param>
     /// <returns></returns>
-    [NotNull]
-    private Expression VisitPrefixBinary([NotNull] BinaryExpression node)
+    private BinaryExpression VisitPrefixBinary(BinaryExpression node)
     {
         // Для деления (x + 2) на 3, мы должны получить следующее выражение
         // \frac{x + 2}{3}
@@ -155,19 +152,18 @@ public class TeXExpressionVisitor : ExpressionVisitor
                 throw new InvalidOperationException($"Unknown prefix BinaryExpression {node.Type}");
         }
 
-        _Result.Append("{");
+        _Result.Append('{');
         Visit(node.Left);
-        _Result.Append("}");
+        _Result.Append('}');
 
-        _Result.Append("{");
+        _Result.Append('{');
         Visit(node.Right);
-        _Result.Append("}");
+        _Result.Append('}');
         return node;
     }
 
     // Метод, реализующий получение строкового представления полученного выражения
-    [NotNull]
-    private string GenerateTeXExpressionImpl([CanBeNull] string ExpressionName, MultiplicationSign MultiplicationSign)
+    private string GenerateTeXExpressionImpl(string? ExpressionName, MultiplicationSign MultiplicationSign)
     {
         switch (MultiplicationSign)
         {

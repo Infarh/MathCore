@@ -1,15 +1,12 @@
-﻿#nullable enable
-using MathCore.ViewModels;
+﻿using MathCore.ViewModels;
 
 namespace MathCore.MathParser;
 
 /// <summary>Элемент математического выражения</summary>
 public abstract class ExpressionItem : ViewModel
 {
-    private string _Name;
-
     /// <summary>Имя</summary>
-    public string Name { get => _Name; set => Set(ref _Name, value); }
+    public string Name { get; set => Set(ref field!, value); } = null!;
 
     /// <summary>Инициализация нового элемента математического выражения</summary>
     protected ExpressionItem() { }

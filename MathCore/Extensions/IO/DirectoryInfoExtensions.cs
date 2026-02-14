@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO.Compression;
 
 using MathCore;
@@ -94,13 +93,14 @@ public static class DirectoryInfoExtensions
     /// <summary>Представить директорию в виде узла дерева</summary>
     /// <param name="dir">Преобразуемая директория</param>
     /// <returns>Узел дерева каталогов</returns>
-    public static TreeNode<DirectoryInfo> AsTreeNode(this DirectoryInfo dir) => dir.AsTreeNode(d => d.EnumerateDirectories(), d => d.Parent);
+    public static TreeNode<DirectoryInfo> AsTreeNode(this DirectoryInfo dir) => dir.AsTreeNode(d => d.EnumerateDirectories(), d => d.Parent!);
 
     /// <summary>Представить директорию в виде узла дерева</summary>
     /// <param name="dir">Преобразуемая директория</param>
     /// <param name="OnError">Метод обработки ошибок доступа</param>
     /// <returns>Узел дерева каталогов</returns>
-    public static TreeNode<DirectoryInfo> AsTreeNode(this DirectoryInfo dir, Action<DirectoryInfo, Exception>? OnError) => dir.AsTreeNode(d => d.Try(v => v.EnumerateDirectories(), OnError), d => d.Parent);
+    public static TreeNode<DirectoryInfo> AsTreeNode(this DirectoryInfo dir, Action<DirectoryInfo, Exception>? OnError) =>
+        dir.AsTreeNode(d => d.Try(v => v.EnumerateDirectories(), OnError)!, d => d.Parent!);
 
     public static Process ShowInExplorer(this FileSystemInfo dir) => Process.Start("explorer", $"/select,\"{dir.FullName}\"") ?? throw new InvalidOperationException();
 
@@ -122,9 +122,9 @@ public static class DirectoryInfoExtensions
         return !string.Equals(Path.GetPathRoot(current), Path.GetPathRoot(other), str_cmp)
             ? null
             : current.StartsWith(other, str_cmp)
-                ? current.Remove(0, other.Length)
+                ? current[other.Length..]
                 : other.StartsWith(current, str_cmp)
-                    ? other.Remove(0, current.Length)
+                    ? other[current.Length..]
                     : null;
     }
 

@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Numerics;
+﻿using System.Numerics;
 
 using static System.Math;
 
@@ -23,7 +22,7 @@ public readonly struct Fraction(long numerator, ulong denominator)
     {
         var gcd = Numeric.GCD(Abs(Numerator), Abs(Denominator));
         if (gcd == 1) return false;
-        Numerator   /= gcd;
+        Numerator /= gcd;
         Denominator /= gcd;
         return true;
     }
@@ -36,7 +35,7 @@ public readonly struct Fraction(long numerator, ulong denominator)
     {
         var gcd = Numeric.GCD(Abs(Numerator), Abs(Denominator));
         if (gcd == 1) return false;
-        Numerator   /= gcd;
+        Numerator /= gcd;
         Denominator /= gcd;
         return true;
     }
@@ -49,7 +48,7 @@ public readonly struct Fraction(long numerator, ulong denominator)
     {
         var gcd = Numeric.GCD(Numerator, Denominator);
         if (gcd == 1) return false;
-        Numerator   /= gcd;
+        Numerator /= gcd;
         Denominator /= gcd;
         return true;
     }
@@ -62,7 +61,7 @@ public readonly struct Fraction(long numerator, ulong denominator)
     {
         var gcd = Numerator.Abs().Gcd(Denominator.Abs());
         if (gcd == 1) return false;
-        Numerator   /= gcd;
+        Numerator /= gcd;
         Denominator /= gcd;
         return true;
     }
@@ -75,7 +74,7 @@ public readonly struct Fraction(long numerator, ulong denominator)
     {
         var gcd = Numeric.GCD(BigInteger.Abs(Numerator), BigInteger.Abs(Denominator));
         if (gcd == 1) return false;
-        Numerator   /= gcd;
+        Numerator /= gcd;
         Denominator /= gcd;
         return true;
     }
@@ -118,10 +117,10 @@ public readonly struct Fraction(long numerator, ulong denominator)
         //                        F    FF       FF       FF       FF       FF       FF
 
         const ulong fraction_mask = 0xF_FFFF_FFFF_FFFF; // (1 << 52) - 1 :: младшие 52 бита
-        var         fraction      = bits & fraction_mask;
+        var fraction = bits & fraction_mask;
 
         const int exponent_mask = 0x7FF; // (1 << 11) - 1 :: 11 бит
-        var       exponent      = (int)((bits >> 52) & exponent_mask);
+        var exponent = (int)((bits >> 52) & exponent_mask);
 
         var sign = bits >> 63 == 1;
 
@@ -129,15 +128,15 @@ public readonly struct Fraction(long numerator, ulong denominator)
 
         var v0 = s * (1 + (double)fraction / (1L << 52)) * Pow(2, exponent - 1023);
 
-        var l  = 0x10000000000000UL; // 1 << 52
+        var l = 0x10000000000000UL; // 1 << 52
         var v2 = s * (double)(l + fraction) / l * Pow(2, exponent - 1023);
         var v3 = s * (double)(l + fraction) * Pow(2, exponent - (1023 + 52));
         var v4 = s * (double)(l + fraction) * Pow(2, exponent - 1075);
 
-        var ee  = 1075 - exponent;
+        var ee = 1075 - exponent;
         var pow = Pow(2, ee);
-        var ll  = l + fraction;
-        var v5  = ll / pow;
+        var ll = l + fraction;
+        var v5 = ll / pow;
 
         var ee1 = ee;
         var ll1 = ll;
@@ -151,8 +150,8 @@ public readonly struct Fraction(long numerator, ulong denominator)
         // x =         s * (1 +        f /    b) * e
         // x = s * (b + f )/b * e
 
-        const ulong b   = 0x10000000000000; // 2^52
-        var         exp = exponent - 1023;
+        const ulong b = 0x10000000000000; // 2^52
+        var exp = exponent - 1023;
 
         // 0x 3ff0 0000 0000 0000 =  1
         // 0x 3ff0 0000 0000 0001 ≈  1.0000000000000002
@@ -168,7 +167,7 @@ public readonly struct Fraction(long numerator, ulong denominator)
         // 0x 3fd5 5555 5555 5555 ≈  1/3
 
         var numerator = b + fraction;
-        var k         = 52 - exp;
+        var k = 52 - exp;
         while (numerator % 2 == 0 && k > 0)
         {
             numerator >>= 1;
@@ -189,14 +188,14 @@ public readonly struct Fraction(long numerator, ulong denominator)
     {
         if (!IsNormal) return this;
 
-        var sign          = Sign(_Numerator);
+        var sign = Sign(_Numerator);
         var numerator_abs = (ulong)Abs(_Numerator);
-        var gcd           = Numeric.GCD(numerator_abs, _Denominator);
+        var gcd = Numeric.GCD(numerator_abs, _Denominator);
         return gcd == 1
             ? this
             : new
             (
-                numerator:   (long)(numerator_abs / gcd) * sign,
+                numerator: (long)(numerator_abs / gcd) * sign,
                 denominator: _Denominator / gcd
             );
     }
@@ -204,26 +203,26 @@ public readonly struct Fraction(long numerator, ulong denominator)
     /// <inheritdoc />
     public override string ToString() => (_Numerator, _Denominator) switch
     {
-        (0,    0) => "NaN",
+        (0, 0) => "NaN",
         ( > 0, 0) => "+Infinity",
         ( < 0, 0) => "-Infinity",
-        _         => $"{_Numerator}/{_Denominator}"
+        _ => $"{_Numerator}/{_Denominator}"
     };
 
     /// <inheritdoc />
-    public override bool Equals(object obj) => base.Equals(obj);
+    public override bool Equals(object? obj) => base.Equals(obj);
 
     /// <summary>Проверка на эквивалентность дроби</summary>
     /// <param name="other">Проверяемая дробь</param>
     /// <returns>Истина, если дроби идентичные</returns>
     public bool Equals(Fraction other)
     {
-        var sign        = Sign(_Numerator);
-        var numerator   = (ulong)Abs(_Numerator);
+        var sign = Sign(_Numerator);
+        var numerator = (ulong)Abs(_Numerator);
         var denominator = _Denominator;
 
-        var other_sign        = Sign(other._Numerator);
-        var other_numerator   = (ulong)Abs(other._Numerator);
+        var other_sign = Sign(other._Numerator);
+        var other_numerator = (ulong)Abs(other._Numerator);
         var other_denominator = other._Denominator;
 
         Simplify(ref numerator, ref denominator);
@@ -237,8 +236,8 @@ public readonly struct Fraction(long numerator, ulong denominator)
     /// <inheritdoc />
     public override int GetHashCode()
     {
-        var sign        = Sign(_Numerator);
-        var numerator   = (ulong)Abs(_Numerator);
+        var sign = Sign(_Numerator);
+        var numerator = (ulong)Abs(_Numerator);
         var denominator = _Denominator;
         Simplify(ref numerator, ref denominator);
         unchecked

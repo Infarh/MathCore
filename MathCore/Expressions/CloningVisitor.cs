@@ -64,8 +64,8 @@ public class CloningVisitor : ExpressionVisitorEx
     /// <inheritdoc />
     [NotNull]
     protected override NewExpression VisitNew([NotNull] NewExpression nex) => nex.Members != null
-        ? Expression.New(nex.Constructor, VisitExpressionList(nex.Arguments), nex.Members)
-        : Expression.New(nex.Constructor, VisitExpressionList(nex.Arguments));
+        ? Expression.New(nex.Constructor!, VisitExpressionList(nex.Arguments), nex.Members)
+        : Expression.New(nex.Constructor!, VisitExpressionList(nex.Arguments));
 
     /// <inheritdoc />
     [NotNull]
@@ -78,8 +78,8 @@ public class CloningVisitor : ExpressionVisitorEx
     /// <inheritdoc />
     [NotNull]
     protected override Expression VisitNewArray([NotNull] NewArrayExpression na) => na.NodeType == ExpressionType.NewArrayInit
-        ? Expression.NewArrayInit(na.Type.GetElementType(), VisitExpressionList(na.Expressions))
-        : Expression.NewArrayBounds(na.Type.GetElementType(), VisitExpressionList(na.Expressions));
+        ? Expression.NewArrayInit(na.Type.GetElementType()!, VisitExpressionList(na.Expressions))
+        : Expression.NewArrayBounds(na.Type.GetElementType()!, VisitExpressionList(na.Expressions));
 
     /// <inheritdoc />
     [NotNull]

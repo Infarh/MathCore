@@ -1,5 +1,4 @@
-﻿#nullable enable
-using MathCore.Vectors;
+﻿using MathCore.Vectors;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedMember.Local
 
@@ -27,7 +26,7 @@ public class CubicSpline : Interpolator, IInterpolator
     /* -------------------------------------------------------------------------------------------- */
 
     /// <summary>Сплайн</summary>
-    private SplineState[] _SplineStates;
+    private SplineState[] _SplineStates = null!;
 
     /* -------------------------------------------------------------------------------------------- */
 
@@ -42,18 +41,18 @@ public class CubicSpline : Interpolator, IInterpolator
     public CubicSpline(IList<Complex> Points)
     {
         var count = Points.Count;
-        var x     = new double[count];
-        var y     = new double[count];
-        for(var i = 0; i < count; i++) (x[i], y[i]) = Points[i];
+        var x = new double[count];
+        var y = new double[count];
+        for (var i = 0; i < count; i++) (x[i], y[i]) = Points[i];
         Initialize(x, y);
     }
 
     public CubicSpline(IList<Vector2D> Points)
     {
         var count = Points.Count;
-        var x     = new double[count];
-        var y     = new double[count];
-        for(var i = 0; i < count; i++) (x[i], y[i]) = Points[i];
+        var x = new double[count];
+        var y = new double[count];
+        for (var i = 0; i < count; i++) (x[i], y[i]) = Points[i];
         Initialize(x, y);
     }
 
@@ -65,11 +64,11 @@ public class CubicSpline : Interpolator, IInterpolator
     public void Initialize(double[] X, double[] Y)
     {
         var count = X.Length;
-        if(count != Y.Length) throw new ArgumentException("Размеры массивов должны совпадать");
+        if (count != Y.Length) throw new ArgumentException("Размеры массивов должны совпадать");
 
         _SplineStates = new SplineState[count];
 
-        for(var i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
             _SplineStates[i] = new(Y[i], X[i]);
 
         _SplineStates[0].c = _SplineStates[count - 1].c = 0;
@@ -77,26 +76,26 @@ public class CubicSpline : Interpolator, IInterpolator
         // Решение СЛАУ относительно коэффициентов сплайнов c[i] методом прогонки для трехдиагональных матриц
         // Вычисление прогоночных коэффициентов - прямой ход метода прогонки
         var alpha = new double[count - 1];
-        var beta  = new double[count - 1];
-        for(var i = 1; i < count - 1; i++)
+        var beta = new double[count - 1];
+        for (var i = 1; i < count - 1; i++)
         {
-            var dx1  = X[i] - X[i - 1];
-            var dx2  = X[i + 1] - X[i];
-            var a    = dx1;
-            var c    = 2 * (dx1 + dx2);
-            var b    = dx2;
-            var f    = 6 * ((Y[i + 1] - Y[i]) / dx2 - (Y[i] - Y[i - 1]) / dx1);
-            var z    = a * alpha[i - 1] + c;
+            var dx1 = X[i] - X[i - 1];
+            var dx2 = X[i + 1] - X[i];
+            var a = dx1;
+            var c = 2 * (dx1 + dx2);
+            var b = dx2;
+            var f = 6 * ((Y[i + 1] - Y[i]) / dx2 - (Y[i] - Y[i - 1]) / dx1);
+            var z = a * alpha[i - 1] + c;
             alpha[i] = -b / z;
-            beta[i]  = (f - a * beta[i - 1]) / z;
+            beta[i] = (f - a * beta[i - 1]) / z;
         }
 
         // Нахождение решения - обратный ход метода прогонки
-        for(var i = count - 2; i > 0; i--)
+        for (var i = count - 2; i > 0; i--)
             _SplineStates[i].c = alpha[i] * _SplineStates[i + 1].c + beta[i];
 
         // По известным коэффициентам c[i] находим значения b[i] и d[i]
-        for(var i = count - 1; i > 0; i--)
+        for (var i = count - 1; i > 0; i--)
         {
             var h_i = X[i] - X[i - 1];
             _SplineStates[i].d = (_SplineStates[i].c - _SplineStates[i - 1].c) / h_i;
@@ -111,21 +110,21 @@ public class CubicSpline : Interpolator, IInterpolator
         var count = _SplineStates.Length;
 
         SplineState state;
-        if(x <= _SplineStates[0].x) // Если x меньше точки сетки x[0] - пользуемся первым эл-тов массива
+        if (x <= _SplineStates[0].x) // Если x меньше точки сетки x[0] - пользуемся первым эл-тов массива
             state = _SplineStates[0];
-        else if(x >= _SplineStates[count - 1].x) // Если x больше точки сетки x[n - 1] - пользуемся последним эл-том массива
+        else if (x >= _SplineStates[count - 1].x) // Если x больше точки сетки x[n - 1] - пользуемся последним эл-том массива
             state = _SplineStates[count - 1];
         else // Иначе x лежит между граничными точками сетки - производим бинарный поиск нужного эл-та массива
         {
             var i = 0;
             var j = count - 1;
-            while(i + 1 < j)
+            while (i + 1 < j)
             {
                 var k = i + (j - i) / 2;
 
-                if(x <= _SplineStates[k].x) 
-                    j = k; 
-                else 
+                if (x <= _SplineStates[k].x)
+                    j = k;
+                else
                     i = k;
             }
 

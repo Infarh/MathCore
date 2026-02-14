@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive;
@@ -28,7 +27,11 @@ internal sealed class ObserverLink<T> : IDisposable
     /// <summary>Коллекция наблюдателей, из которой требуется удалить отслеживаемый наблюдатель</summary>
     private ICollection<IObserver<T>> _Observers;
     /// <summary>Объект межпотоковой синхронизации</summary>
-    private readonly object _SyncRoot = new();
+#if NET9_0_OR_GREATER
+    private readonly Lock _SyncRoot = new();
+#else
+    private readonly object _SyncRoot = new(); 
+#endif
 
     /// <summary>Инициализация новой связи между списком наблюдателей и отслеживаемым наблюдателем</summary>
     /// <param name="Observers">Список наблюдателей</param>
@@ -36,7 +39,7 @@ internal sealed class ObserverLink<T> : IDisposable
     private ObserverLink(ICollection<IObserver<T>> Observers, IObserver<T> Observer)
     {
         _Observers = Observers;
-        _Observer  = Observer;
+        _Observer = Observer;
         if (!_Observers.Contains(_Observer))
             _Observers.Add(_Observer);
     }
@@ -51,8 +54,8 @@ internal sealed class ObserverLink<T> : IDisposable
             _IsDisposed = true;
             __Links.TryRemove(GetHash(_Observers, _Observer), out _);
             _Observers.Remove(_Observer);
-            _Observers = null;
-            _Observer  = null;
+            _Observers = null!;
+            _Observer = null!;
         }
     }
 }

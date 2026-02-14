@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace MathCore.Values;
 
@@ -31,7 +30,7 @@ public class MaxValue(double StartValue) : IValue<double>, IResettable, IFormatt
     /// <returns>Истина, если добавляемое значение является максимальным</returns>
     public bool AddValue(double value)
     {
-        if(value <= Value) return false;
+        if (value <= Value) return false;
         Value = value;
         _Count++;
         return true;
@@ -48,7 +47,7 @@ public class MaxValue(double StartValue) : IValue<double>, IResettable, IFormatt
     public override string ToString() => Value.ToString(CultureInfo.CurrentCulture);
 
     /// <inheritdoc />
-    public string ToString(string format, IFormatProvider FormatProvider) => Value.ToString(format, FormatProvider);
+    public string ToString(string? format, IFormatProvider? FormatProvider) => Value.ToString(format, FormatProvider);
 
     /// <summary>Возвращает форматированную строку значения </summary>
     /// <param name="FormatString">Формат значения</param>

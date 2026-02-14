@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -23,7 +22,7 @@ public static class ObjectReflectionFieldsExtensions
     {
         var (type, field_name) = field;
 
-        if (type.GetField(field_name) is not { FieldType: { IsValueType: var is_value_type } } field_info)
+        if (type.GetField(field_name) is not { FieldType.IsValueType: var is_value_type } field_info)
             return null;
 
         var obj_parameter = "obj".ParameterOf<object>();
@@ -48,7 +47,7 @@ public static class ObjectReflectionFieldsExtensions
     {
         var (type, field_name) = field;
 
-        if (type.GetField(field_name, __NonPublic) is not { FieldType: { IsValueType: var is_value_type } } field_info)
+        if (type.GetField(field_name, __NonPublic) is not { FieldType.IsValueType: var is_value_type } field_info)
             return null;
 
         var obj_parameter = "obj".ParameterOf<object>();
@@ -207,12 +206,12 @@ public static class ObjectReflectionFieldsExtensions
     /// <returns>Значение поля приведённое к типу TValue или null</returns>
     public static TValue? GetFieldValue<T, TValue>(this T obj, string FieldName)
     {
-        if (!obj.TryGetFieldValue(FieldName, out TValue value))
+        if (!obj.TryGetFieldValue(FieldName, out TValue? value))
             throw new InvalidOperationException($"Тип {typeof(T)} не содержит поля {FieldName}")
             {
                 Data =
                 {
-                    { nameof(obj), obj.GetType() },
+                    { nameof(obj), obj!.GetType() },
                     { nameof(T), typeof(T) },
                     { nameof(TValue), typeof(TValue) },
                     { nameof(FieldName), FieldName },
@@ -231,12 +230,12 @@ public static class ObjectReflectionFieldsExtensions
     /// <returns>Значение поля приведённое к типу TValue или null</returns>
     public static TValue? GetFieldValue<T, TValue>(this T obj, string FieldName, bool NonPublic)
     {
-        if (!obj.TryGetFieldValue(FieldName, NonPublic, out TValue value))
+        if (!obj.TryGetFieldValue(FieldName, NonPublic, out TValue? value))
             throw new InvalidOperationException($"Тип {typeof(T)} не содержит поля {FieldName}")
             {
                 Data =
                 {
-                    { nameof(obj), obj.GetType() },
+                    { nameof(obj), obj!.GetType() },
                     { nameof(T), typeof(T) },
                     { nameof(TValue), typeof(TValue) },
                     { nameof(FieldName), FieldName },

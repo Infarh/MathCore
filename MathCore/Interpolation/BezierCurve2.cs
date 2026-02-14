@@ -4,15 +4,15 @@ namespace MathCore.Interpolation;
 
 internal class BezierCurve2
 {
-    private double[] _FactorialLookup;
+    private double[] _FactorialLookup = null!;
 
     public BezierCurve2() => CreateFactorialTable();
 
     // just check if n is appropriate, then return the result
     private double FastFactorial(int n)
     {
-        if(n < 0) throw new ArgumentOutOfRangeException(nameof(n), n, "n is less than 0");
-        if(n > 32) return n.Factorial();
+        if (n < 0) throw new ArgumentOutOfRangeException(nameof(n), n, "n is less than 0");
+        if (n > 32) return n.Factorial();
 
         return _FactorialLookup[n];
     }
@@ -61,39 +61,39 @@ internal class BezierCurve2
     private double Bernstein(int n, int i, double t)
     {
         /* Prevent problems with pow */
-        var ti  = t.Equals(0d) && i == 0 ? 1.0 : Math.Pow(t, i);         // t^i
+        var ti = t.Equals(0d) && i == 0 ? 1.0 : Math.Pow(t, i);         // t^i
         var tni = n == i && t.Equals(1d) ? 1.0 : Math.Pow(1 - t, n - i); // (1 - t)^i
         return Ni(n, i) * ti * tni;
     }
 
-    public void Bezier2D([NotNull]double[] b, int CPts, [NotNull]double[] p)
+    public void Bezier2D([NotNull] double[] b, int CPts, [NotNull] double[] p)
     {
         var n_pts = b.Length / 2;
 
         // Calculate points on curve
 
         var i_count = 0;
-        var t       = 0d;
-        var step    = 1d / (CPts - 1);
+        var t = 0d;
+        var step = 1d / (CPts - 1);
 
-        for(var i1 = 0; i1 != CPts; i1++)
+        for (var i1 = 0; i1 != CPts; i1++)
         {
-            if(1.0 - t < 5e-6)
+            if (1.0 - t < 5e-6)
                 t = 1.0;
 
             var j_count = 0;
-            p[i_count]     = 0.0;
+            p[i_count] = 0.0;
             p[i_count + 1] = 0.0;
-            for(var i = 0; i != n_pts; i++)
+            for (var i = 0; i != n_pts; i++)
             {
                 var basis = Bernstein(n_pts - 1, i, t);
-                p[i_count]     += basis * b[j_count];
+                p[i_count] += basis * b[j_count];
                 p[i_count + 1] += basis * b[j_count + 1];
-                j_count        += 2;
+                j_count += 2;
             }
 
             i_count += 2;
-            t       += step;
+            t += step;
         }
     }
 }

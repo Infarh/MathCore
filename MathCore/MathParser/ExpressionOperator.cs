@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.MathParser;
+﻿namespace MathCore.MathParser;
 
 /// <summary>Оператор</summary>
 public class ExpressionOperator : ExpressionItem

@@ -11,8 +11,8 @@ public class TeXEvaluationExpressionVisitor : ExpressionVisitor
     // Вспомогательный класс для хранения значения и типа свойств
     private sealed class TypeValuePair
     {
-        public object Value { get; init; }
-        public Type Type { get; init; }
+        public required object Value { get; init; }
+        public required Type Type { get; init; }
     }
 
     // Словарь для хранения значения и типа свойств по имени свойства
@@ -29,8 +29,8 @@ public class TeXEvaluationExpressionVisitor : ExpressionVisitor
         _MemberProperties = member_props.ToDictionary(pi => pi.Name,
             pi => new TypeValuePair
             {
-                Value = pi.GetValue(MemberObject, null),
-                Type  = pi.PropertyType
+                Value = pi.GetValue(MemberObject, null).NotNull(),
+                Type = pi.PropertyType
             });
 
         ConvertedExpression = Visit(expression);
@@ -43,7 +43,7 @@ public class TeXEvaluationExpressionVisitor : ExpressionVisitor
     protected override Expression VisitMember(MemberExpression MemberExpression)
     {
         // Пробуем найти значение члена с указанным именем
-        if(_MemberProperties.TryGetValue(MemberExpression.Member.Name, out var type_value_pair))
+        if (_MemberProperties.TryGetValue(MemberExpression.Member.Name, out var type_value_pair))
             // И заменяем его на соответствующее константное выражение
             return Expression.Constant(value: type_value_pair.Value, type: type_value_pair.Type);
         return MemberExpression;

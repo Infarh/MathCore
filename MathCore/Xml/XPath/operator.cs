@@ -73,9 +73,9 @@ internal class Operator : AstNode
     {
         get
         {
-            if(OperatorType < Op.Lt)
+            if (OperatorType < Op.Lt)
                 return XPathResultType.Number;
-            if(OperatorType < Op.Union)
+            if (OperatorType < Op.Union)
                 return XPathResultType.Boolean;
             return XPathResultType.NodeSet;
         }
@@ -85,7 +85,7 @@ internal class Operator : AstNode
 
     internal AstNode Operand1 { get; }
 
-    internal AstNode Operand2 { get; }
+    internal AstNode? Operand2 { get; }
 
     internal string OperatorTypeName => _Str[(int)OperatorType - 1];
 
@@ -93,9 +93,9 @@ internal class Operator : AstNode
     {
         get
         {
-            if(OperatorType != Op.Union) return 0.5;
+            if (OperatorType != Op.Union) return 0.5;
             var pri1 = Operand1.DefaultPriority;
-            var pri2 = Operand2.DefaultPriority;
+            var pri2 = Operand2?.DefaultPriority ?? pri1;
 
             return pri1 > pri2 ? pri1 : pri2;
         }
@@ -105,11 +105,11 @@ internal class Operator : AstNode
 
     #region Constructors
 
-    internal Operator(Op op, AstNode operand1, AstNode operand2)
+    internal Operator(Op op, AstNode operand1, AstNode? operand2)
     {
         OperatorType = op;
-        Operand1     = operand1;
-        Operand2     = operand2;
+        Operand1 = operand1;
+        Operand2 = operand2;
     }
 
     #endregion

@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable ReturnTypeCanBeEnumerable.Global
+﻿// ReSharper disable ReturnTypeCanBeEnumerable.Global
 
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -13,7 +12,7 @@ public readonly struct ProcessorCommand : IEquatable<ProcessorCommand>
     public string Name { get; }
 
     /// <summary>Параметр команды</summary>
-    public string Parameter { get; }
+    public string? Parameter { get; }
 
     /// <summary>Массив аргументов команды</summary>
     private readonly Argument[] _Argument;
@@ -28,20 +27,19 @@ public readonly struct ProcessorCommand : IEquatable<ProcessorCommand>
     /// <param name="ValueSplitter">Разделитель имени аргумента и его значения</param>
     public ProcessorCommand(string CommandStr, char ParameterSplitter = ':', char ArgSplitter = ' ', char ValueSplitter = '=')
     {
-        var items      = CommandStr.Split(ArgSplitter);
+        var items = CommandStr.Split(ArgSplitter);
         var name_items = items[0].Split(ParameterSplitter);
-        Name      = name_items[0];
+        Name = name_items[0];
         Parameter = name_items.Length > 1 ? name_items[1] : null;
 
-        _Argument = items.Skip(1).Where(ArgStr => ArgStr is { Length: > 0 })
+        _Argument = [.. items.Skip(1).Where(ArgStr => ArgStr is { Length: > 0 })
            .Select(ArgStr => new Argument(ArgStr, ValueSplitter))
-           .Where(arg => arg.Name is { Length: > 0 })
-           .ToArray();
+           .Where(arg => arg.Name is { Length: > 0 })];
     }
 
     /// <summary>Преобразование в строку</summary>
     /// <returns>Строковое представление команды</returns>
-    public override string ToString() => 
+    public override string ToString() =>
         $"{Name}{(Parameter is null ? string.Empty : Parameter.ToFormattedString("({0})"))}{(_Argument is null || _Argument.Length == 0 ? string.Empty : _Argument.ToSeparatedStr(" ").ToFormattedString(" {0}"))}";
 
     /// <inheritdoc />

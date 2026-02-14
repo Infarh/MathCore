@@ -1,11 +1,10 @@
-﻿#nullable enable
-// ReSharper disable once CheckNamespace
+﻿// ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive;
 
 internal sealed class AsyncPatternObservable<T> : SimpleObservableEx<T>
 {
-    private readonly IAsyncResult _AsyncResult;
-    private T _Result;
+    private readonly IAsyncResult _AsyncResult = null!;
+    private T _Result = default!;
 
     public AsyncPatternObservable
     (
@@ -15,14 +14,17 @@ internal sealed class AsyncPatternObservable<T> : SimpleObservableEx<T>
 
     private void CallBack(IAsyncResult result)
     {
-        _Result = ((Func<IAsyncResult, T>)result.AsyncState)(result);
+        if (result is not { AsyncState: Func<IAsyncResult, T> func })
+            throw new InvalidOperationException();
+
+        _Result = func(result);
         OnNext(_Result);
     }
 
     public override IDisposable Subscribe(IObserver<T> observer)
     {
         var result = base.Subscribe(observer);
-        if(_AsyncResult.IsCompleted) observer.OnNext(_Result);
+        if (_AsyncResult.IsCompleted) observer.OnNext(_Result);
         return result;
     }
 }

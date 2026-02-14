@@ -14,7 +14,7 @@ public sealed class RoundRobinSchedulerGroup
     public TaskScheduler CreateScheduler()
     {
         var created_queue = new RoundRobinTaskSchedulerQueue(this);
-        lock (_Queues) 
+        lock (_Queues)
             _Queues.Add(created_queue);
         return created_queue;
     }
@@ -39,8 +39,8 @@ public sealed class RoundRobinSchedulerGroup
         // Queue a processing delegate to the ThreadPool
         ThreadPool.UnsafeQueueUserWorkItem(_ =>
         {
-            Task                         target_task           = null;
-            RoundRobinTaskSchedulerQueue queue_for_target_task = null;
+            Task? target_task = null;
+            RoundRobinTaskSchedulerQueue? queue_for_target_task = null;
             lock (_Queues)
             {
                 // Determine the order in which we'll search the schedulers for work
@@ -53,8 +53,8 @@ public sealed class RoundRobinSchedulerGroup
                     var items = queue_for_target_task.WorkItems;
                     if (items.Count == 0) continue;
                     target_task = items.Dequeue();
-                    _NextQueue  = i;
-                    if (queue_for_target_task.Disposed && items.Count == 0) 
+                    _NextQueue = i;
+                    if (queue_for_target_task.Disposed && items.Count == 0)
                         RemoveQueue_NeedsLock(queue_for_target_task);
                     break;
                 }
@@ -62,7 +62,7 @@ public sealed class RoundRobinSchedulerGroup
             }
 
             // If we found an item, run it
-            if (target_task != null) queue_for_target_task.RunQueuedTask(target_task);
+            if (target_task != null) queue_for_target_task!.RunQueuedTask(target_task);
         }, null);
 
     /// <summary>A scheduler that participates in round-robin scheduling.</summary>
@@ -76,8 +76,8 @@ public sealed class RoundRobinSchedulerGroup
 
         protected override IEnumerable<Task> GetScheduledTasks()
         {
-            object obj        = _Pool._Queues;
-            var    lock_taken = false;
+            object obj = _Pool._Queues;
+            var lock_taken = false;
             try
             {
                 Monitor.TryEnter(obj, ref lock_taken);
@@ -105,7 +105,7 @@ public sealed class RoundRobinSchedulerGroup
             if (Disposed) return;
             lock (_Pool._Queues)
             {
-                if (WorkItems.Count == 0) 
+                if (WorkItems.Count == 0)
                     _Pool.RemoveQueue_NeedsLock(this);
                 Disposed = true;
             }

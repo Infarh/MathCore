@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Values;
+﻿namespace MathCore.Values;
 
 /// <summary>Алгоритм Гёрцеля расчёта частотной компоненты спектра</summary>
 public class Goertzel(double f0) : IResettable

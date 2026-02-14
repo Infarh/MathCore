@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable UnusedMember.Global
+﻿// ReSharper disable UnusedMember.Global
 namespace MathCore.MathParser.ExpressionTrees.Nodes;
 
 /// <summary>Узел дерева мат.выражения, хранящий значение</summary>

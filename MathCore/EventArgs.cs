@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -18,7 +17,7 @@ public class EventArgs<TArgument> : EventArgs
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>Параметр аргумента</summary>
-    public TArgument Argument { get; set;}
+    public TArgument Argument { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -32,7 +31,7 @@ public class EventArgs<TArgument> : EventArgs
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>Строковое представление аргумента события</summary>
-    public override string ToString() => Argument.ToString();
+    public override string? ToString() => Argument?.ToString();
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -48,21 +47,21 @@ public class EventArgs<TArgument> : EventArgs
 
     /* ------------------------------------------------------------------------------------------ */
 }
- 
+
 /// <summary>Аргумент события с 2 типизированными параметрами</summary>
 /// <typeparam name="TArgument1">Тип аргумента 1</typeparam>
 /// <typeparam name="TArgument2">Тип аргумента 2</typeparam>
 [DST]
-public class EventArgs<TArgument1, TArgument2> 
+public class EventArgs<TArgument1, TArgument2>
     : EventArgs
 {
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>1 параметр аргумента</summary>
-    public TArgument1 Argument1 { get; set; }
+    public TArgument1 Argument1 { get; set; } = default!;
 
     /// <summary>2 параметр аргумента</summary>
-    public TArgument2 Argument2 { get; set; }
+    public TArgument2 Argument2 { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -72,7 +71,7 @@ public class EventArgs<TArgument1, TArgument2>
     /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgument1, TArgument2}"/></summary>
     /// <param name="Argument1">1 параметр аргумента</param>
     /// <param name="Argument2">2 параметр аргумента</param>
-    public EventArgs(TArgument1 Argument1, TArgument2 Argument2) 
+    public EventArgs(TArgument1 Argument1, TArgument2 Argument2)
     {
         this.Argument1 = Argument1;
         this.Argument2 = Argument2;
@@ -107,19 +106,19 @@ public class EventArgs<TArgument1, TArgument2>
 
     /* ------------------------------------------------------------------------------------------ */
 }
- 
+
 /// <summary>Аргумент события с 3 типизированными параметрами</summary>
 /// <typeparam name="TArgument1">Тип аргумента 1</typeparam>
 /// <typeparam name="TArgument2">Тип аргумента 2</typeparam>
 /// <typeparam name="TArgument3">Тип аргумента 3</typeparam>
 [DST]
-public class EventArgs<TArgument1, TArgument2, TArgument3> 
+public class EventArgs<TArgument1, TArgument2, TArgument3>
     : EventArgs<TArgument1, TArgument2>
 {
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>3 параметр аргумента</summary>
-    public TArgument3 Argument3 { get; set; }
+    public TArgument3 Argument3 { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -130,8 +129,8 @@ public class EventArgs<TArgument1, TArgument2, TArgument3>
     /// <param name="Argument1">1 параметр аргумента</param>
     /// <param name="Argument2">2 параметр аргумента</param>
     /// <param name="Argument3">3 параметр аргумента</param>
-    public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3) 
-        : base(Argument1, Argument2) 
+    public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3)
+        : base(Argument1, Argument2)
         => this.Argument3 = Argument3;
     /* ------------------------------------------------------------------------------------------ */
 
@@ -165,20 +164,20 @@ public class EventArgs<TArgument1, TArgument2, TArgument3>
 
     /* ------------------------------------------------------------------------------------------ */
 }
- 
+
 /// <summary>Аргумент события с 4 типизированными параметрами</summary>
 /// <typeparam name="TArgument1">Тип аргумента 1</typeparam>
 /// <typeparam name="TArgument2">Тип аргумента 2</typeparam>
 /// <typeparam name="TArgument3">Тип аргумента 3</typeparam>
 /// <typeparam name="TArgument4">Тип аргумента 4</typeparam>
 [DST]
-public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4> 
+public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4>
     : EventArgs<TArgument1, TArgument2, TArgument3>
 {
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>4 параметр аргумента</summary>
-    public TArgument4 Argument4 { get; set; }
+    public TArgument4 Argument4 { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -190,8 +189,8 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4>
     /// <param name="Argument2">2 параметр аргумента</param>
     /// <param name="Argument3">3 параметр аргумента</param>
     /// <param name="Argument4">4 параметр аргумента</param>
-    public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4) 
-        : base(Argument1, Argument2, Argument3) 
+    public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4)
+        : base(Argument1, Argument2, Argument3)
         => this.Argument4 = Argument4;
     /* ------------------------------------------------------------------------------------------ */
 
@@ -227,7 +226,7 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4>
 
     /* ------------------------------------------------------------------------------------------ */
 }
- 
+
 /// <summary>Аргумент события с 5 типизированными параметрами</summary>
 /// <typeparam name="TArgument1">Тип аргумента 1</typeparam>
 /// <typeparam name="TArgument2">Тип аргумента 2</typeparam>
@@ -235,13 +234,13 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4>
 /// <typeparam name="TArgument4">Тип аргумента 4</typeparam>
 /// <typeparam name="TArgument5">Тип аргумента 5</typeparam>
 [DST]
-public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5> 
+public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5>
     : EventArgs<TArgument1, TArgument2, TArgument3, TArgument4>
 {
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>5 параметр аргумента</summary>
-    public TArgument5 Argument5 { get; set; }
+    public TArgument5 Argument5 { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -254,8 +253,8 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
     /// <param name="Argument3">3 параметр аргумента</param>
     /// <param name="Argument4">4 параметр аргумента</param>
     /// <param name="Argument5">5 параметр аргумента</param>
-    public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4, TArgument5 Argument5) 
-        : base(Argument1, Argument2, Argument3, Argument4) 
+    public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4, TArgument5 Argument5)
+        : base(Argument1, Argument2, Argument3, Argument4)
         => this.Argument5 = Argument5;
     /* ------------------------------------------------------------------------------------------ */
 
@@ -293,7 +292,7 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
 
     /* ------------------------------------------------------------------------------------------ */
 }
- 
+
 /// <summary>Аргумент события с 6 типизированными параметрами</summary>
 /// <typeparam name="TArgument1">Тип аргумента 1</typeparam>
 /// <typeparam name="TArgument2">Тип аргумента 2</typeparam>
@@ -302,13 +301,13 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
 /// <typeparam name="TArgument5">Тип аргумента 5</typeparam>
 /// <typeparam name="TArgument6">Тип аргумента 6</typeparam>
 [DST]
-public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6> 
+public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6>
     : EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5>
 {
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>6 параметр аргумента</summary>
-    public TArgument6 Argument6 { get; set; }
+    public TArgument6 Argument6 { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -322,8 +321,8 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
     /// <param name="Argument4">4 параметр аргумента</param>
     /// <param name="Argument5">5 параметр аргумента</param>
     /// <param name="Argument6">6 параметр аргумента</param>
-    public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4, TArgument5 Argument5, TArgument6 Argument6) 
-        : base(Argument1, Argument2, Argument3, Argument4, Argument5) 
+    public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4, TArgument5 Argument5, TArgument6 Argument6)
+        : base(Argument1, Argument2, Argument3, Argument4, Argument5)
         => this.Argument6 = Argument6;
     /* ------------------------------------------------------------------------------------------ */
 
@@ -363,7 +362,7 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
 
     /* ------------------------------------------------------------------------------------------ */
 }
- 
+
 /// <summary>Аргумент события с 7 типизированными параметрами</summary>
 /// <typeparam name="TArgument1">Тип аргумента 1</typeparam>
 /// <typeparam name="TArgument2">Тип аргумента 2</typeparam>
@@ -373,13 +372,13 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
 /// <typeparam name="TArgument6">Тип аргумента 6</typeparam>
 /// <typeparam name="TArgument7">Тип аргумента 7</typeparam>
 [DST]
-public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7> 
+public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7>
     : EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6>
 {
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>7 параметр аргумента</summary>
-    public TArgument7 Argument7 { get; set; }
+    public TArgument7 Argument7 { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -394,8 +393,8 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
     /// <param name="Argument5">5 параметр аргумента</param>
     /// <param name="Argument6">6 параметр аргумента</param>
     /// <param name="Argument7">7 параметр аргумента</param>
-    public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4, TArgument5 Argument5, TArgument6 Argument6, TArgument7 Argument7) 
-        : base(Argument1, Argument2, Argument3, Argument4, Argument5, Argument6) 
+    public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4, TArgument5 Argument5, TArgument6 Argument6, TArgument7 Argument7)
+        : base(Argument1, Argument2, Argument3, Argument4, Argument5, Argument6)
         => this.Argument7 = Argument7;
     /* ------------------------------------------------------------------------------------------ */
 
@@ -437,7 +436,7 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
 
     /* ------------------------------------------------------------------------------------------ */
 }
- 
+
 /// <summary>Аргумент события с 8 типизированными параметрами</summary>
 /// <typeparam name="TArgument1">Тип аргумента 1</typeparam>
 /// <typeparam name="TArgument2">Тип аргумента 2</typeparam>
@@ -448,13 +447,13 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
 /// <typeparam name="TArgument7">Тип аргумента 7</typeparam>
 /// <typeparam name="TArgument8">Тип аргумента 8</typeparam>
 [DST]
-public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8> 
+public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8>
     : EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7>
 {
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>8 параметр аргумента</summary>
-    public TArgument8 Argument8 { get; set; }
+    public TArgument8 Argument8 { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -470,8 +469,8 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
     /// <param name="Argument6">6 параметр аргумента</param>
     /// <param name="Argument7">7 параметр аргумента</param>
     /// <param name="Argument8">8 параметр аргумента</param>
-    public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4, TArgument5 Argument5, TArgument6 Argument6, TArgument7 Argument7, TArgument8 Argument8) 
-        : base(Argument1, Argument2, Argument3, Argument4, Argument5, Argument6, Argument7) 
+    public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4, TArgument5 Argument5, TArgument6 Argument6, TArgument7 Argument7, TArgument8 Argument8)
+        : base(Argument1, Argument2, Argument3, Argument4, Argument5, Argument6, Argument7)
         => this.Argument8 = Argument8;
     /* ------------------------------------------------------------------------------------------ */
 
@@ -515,7 +514,7 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
 
     /* ------------------------------------------------------------------------------------------ */
 }
- 
+
 /// <summary>Аргумент события с 9 типизированными параметрами</summary>
 /// <typeparam name="TArgument1">Тип аргумента 1</typeparam>
 /// <typeparam name="TArgument2">Тип аргумента 2</typeparam>
@@ -527,13 +526,13 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
 /// <typeparam name="TArgument8">Тип аргумента 8</typeparam>
 /// <typeparam name="TArgument9">Тип аргумента 9</typeparam>
 [DST]
-public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9> 
+public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9>
     : EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8>
 {
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>9 параметр аргумента</summary>
-    public TArgument9 Argument9 { get; set; }
+    public TArgument9 Argument9 { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -550,8 +549,8 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
     /// <param name="Argument7">7 параметр аргумента</param>
     /// <param name="Argument8">8 параметр аргумента</param>
     /// <param name="Argument9">9 параметр аргумента</param>
-    public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4, TArgument5 Argument5, TArgument6 Argument6, TArgument7 Argument7, TArgument8 Argument8, TArgument9 Argument9) 
-        : base(Argument1, Argument2, Argument3, Argument4, Argument5, Argument6, Argument7, Argument8) 
+    public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4, TArgument5 Argument5, TArgument6 Argument6, TArgument7 Argument7, TArgument8 Argument8, TArgument9 Argument9)
+        : base(Argument1, Argument2, Argument3, Argument4, Argument5, Argument6, Argument7, Argument8)
         => this.Argument9 = Argument9;
     /* ------------------------------------------------------------------------------------------ */
 
@@ -597,7 +596,7 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
 
     /* ------------------------------------------------------------------------------------------ */
 }
- 
+
 /// <summary>Аргумент события с 10 типизированными параметрами</summary>
 /// <typeparam name="TArgument1">Тип аргумента 1</typeparam>
 /// <typeparam name="TArgument2">Тип аргумента 2</typeparam>
@@ -610,13 +609,13 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
 /// <typeparam name="TArgument9">Тип аргумента 9</typeparam>
 /// <typeparam name="TArgument10">Тип аргумента 10</typeparam>
 [DST]
-public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9, TArgument10> 
+public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9, TArgument10>
     : EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9>
 {
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>10 параметр аргумента</summary>
-    public TArgument10 Argument10 { get; set; }
+    public TArgument10 Argument10 { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -634,8 +633,8 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
     /// <param name="Argument8">8 параметр аргумента</param>
     /// <param name="Argument9">9 параметр аргумента</param>
     /// <param name="Argument10">10 параметр аргумента</param>
-    public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4, TArgument5 Argument5, TArgument6 Argument6, TArgument7 Argument7, TArgument8 Argument8, TArgument9 Argument9, TArgument10 Argument10) 
-        : base(Argument1, Argument2, Argument3, Argument4, Argument5, Argument6, Argument7, Argument8, Argument9) 
+    public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4, TArgument5 Argument5, TArgument6 Argument6, TArgument7 Argument7, TArgument8 Argument8, TArgument9 Argument9, TArgument10 Argument10)
+        : base(Argument1, Argument2, Argument3, Argument4, Argument5, Argument6, Argument7, Argument8, Argument9)
         => this.Argument10 = Argument10;
     /* ------------------------------------------------------------------------------------------ */
 
@@ -652,15 +651,15 @@ public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument
     /// <param name="Arg10">10 параметр аргумента</param>
     public void Deconstruct(out TArgument1 Arg1, out TArgument2 Arg2, out TArgument3 Arg3, out TArgument4 Arg4, out TArgument5 Arg5, out TArgument6 Arg6, out TArgument7 Arg7, out TArgument8 Arg8, out TArgument9 Arg9, out TArgument10 Arg10)
     {
-        Arg1  = Argument1;
-        Arg2  = Argument2;
-        Arg3  = Argument3;
-        Arg4  = Argument4;
-        Arg5  = Argument5;
-        Arg6  = Argument6;
-        Arg7  = Argument7;
-        Arg8  = Argument8;
-        Arg9  = Argument9;
+        Arg1 = Argument1;
+        Arg2 = Argument2;
+        Arg3 = Argument3;
+        Arg4 = Argument4;
+        Arg5 = Argument5;
+        Arg6 = Argument6;
+        Arg7 = Argument7;
+        Arg8 = Argument8;
+        Arg9 = Argument9;
         Arg10 = Argument10;
     }
 

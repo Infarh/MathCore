@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Text;
+﻿namespace MathCore.Text;
 
 /// <summary>
 /// Расстояние Левенштейна (редакционное расстояние)<br/>

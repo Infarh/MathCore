@@ -1,5 +1,4 @@
-﻿#nullable enable
-// ReSharper disable UnusedType.Global
+﻿// ReSharper disable UnusedType.Global
 
 namespace MathCore.Threading.Tasks.Schedulers;
 
@@ -14,7 +13,7 @@ public class ThreadPerTaskScheduler(Action<Thread>? ThreadInitializer = null) : 
     protected override void QueueTask(Task task)
     {
         //var thread = new Thread(() => TryExecuteTask(task)) {IsBackground = true};
-        var thread = new Thread(p => ((ThreadPerTaskScheduler)p).TryExecuteTask(task)) { IsBackground = true };
+        var thread = new Thread(p => ((ThreadPerTaskScheduler)p!).TryExecuteTask(task)) { IsBackground = true };
         ThreadInitializer?.Invoke(thread);
         thread.Start(this);
     }

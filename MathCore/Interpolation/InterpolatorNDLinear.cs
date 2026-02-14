@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections;
+﻿using System.Collections;
 using System.Globalization;
 using System.IO.Compression;
 using System.Text;
@@ -93,7 +92,7 @@ public class InterpolatorNDLinear
         string line;
 
         var line_index = Header ? 1 : 0;
-        var arguments_count = 0;
+        int arguments_count;
         do
         {
             line = reader.ReadLine() ?? throw new InvalidOperationException("Отсутствуют данные для загрузки");
@@ -121,7 +120,7 @@ public class InterpolatorNDLinear
                 if (!double.TryParse(s, NumberStyles.Any, culture, out var v))
                 {
                     if (!SkipWrongLines)
-                        throw new InvalidOperationException($"Ошибка формата файла в строке {line_index}: невозможно прочитать вещественное число из значения {i} ({s.ToString()}");
+                        throw new InvalidOperationException($"Ошибка формата файла в строке {line_index}: невозможно прочитать вещественное число из значения {i} ({s}");
 
                     error_line = true;
                     break;
@@ -213,13 +212,16 @@ public class InterpolatorNDLinear
                 nodes.Insert(~index, new(head_arg, [new(value)]));
         }
 
+        /// <summary>Дочерние узлы</summary>
+        public List<ValueTreeNode>? Childs { get; } = Childs;
+
         /// <summary>Значение узла</summary>
         public double Value { get; } = Value;
 
         /// <summary>Добавить узел в дерево значений</summary>
         /// <param name="args">Аргументы</param>
         /// <param name="value">Значение</param>
-        private void Add(ArrayPtr<double> args, double value) => Add(Childs, args, value);
+        private void Add(ArrayPtr<double> args, double value) => Add(Childs!, args, value);
 
         /// <summary>Получить значение по аргументам</summary>
         /// <param name="args">Аргументы</param>
@@ -229,6 +231,11 @@ public class InterpolatorNDLinear
             var childs = Childs;
             if (args.Length == 0 || childs is null)
                 return childs?[0].Value ?? double.NaN;
+
+            // если остался один аргумент и у дочерних узлов нет своих потомков,
+            // то на этом уровне уже хранятся только значения функции
+            if (args.Length == 1 && childs.Count > 0 && childs[0].Childs is null)
+                return childs[0].Value;
 
             var (x, xx) = args;
 
@@ -297,7 +304,7 @@ public class InterpolatorNDLinear
 
         /// <summary>Получить перечислитель для дочерних узлов</summary>
         /// <returns>Перечислитель</returns>
-        public IEnumerator<ValueTreeNode> GetEnumerator() => Childs.GetEnumerator();
+        public IEnumerator<ValueTreeNode> GetEnumerator() => Childs!.GetEnumerator();
 
         public static implicit operator ValueTreeNode(double value) => new(value);
         public static implicit operator double(ValueTreeNode node) => node.Value;
@@ -307,7 +314,7 @@ public class InterpolatorNDLinear
     /// <param name="args">Аргументы</param>
     public double this[params double[] args] => GetValue(args);
 
-    /// <summary>Конструктор интерполятора</summary>
+    /// <summary>Конструктор интерполятара</summary>
     /// <param name="ArgumentsCount">Количество аргументов</param>
     /// <param name="nodes">Список узлов</param>
     private InterpolatorNDLinear(int ArgumentsCount, List<ValueTreeNode> nodes, bool ShapeResult = false)

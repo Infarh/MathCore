@@ -7,7 +7,7 @@ namespace MathCore.Net.Http.Html;
 
 public class NumberedList : TypedElement
 {
-    private IEnumerable Items { get; set; }
+    private IEnumerable Items { get; set; } = null!;
 
     public NumberedList(params ListItem[] items) : base("ol", items.Cast<HElementBase>().ToArray()) { }
 
@@ -35,9 +35,9 @@ public class NumberedList : TypedElement
         if (Items is { } items)
             foreach (var item in items)
             {
-                if (item is null) continue;
+                var inner_text = item?.ToString();
+                if (inner_text is null) continue;
 
-                var inner_text = item.ToString();
                 var spacer2 = GetSpacer(level + 1);
 
                 if (inner_text.Contains('\n'))

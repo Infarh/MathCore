@@ -63,9 +63,9 @@ internal class Axis : AstNode
 
     #region Fields
 
-    internal AstNode _Input;
-    internal string _Name;
-    internal string _Prefix;
+    internal AstNode _Input = null!;
+    internal string _Name = null!;
+    internal string _Prefix = null!;
     internal bool _AbbrAxis;
 
     internal AxisType _AxisType;
@@ -96,7 +96,7 @@ internal class Axis : AstNode
 
     internal override double DefaultPriority => _Input != null
         ? 0.5
-        : _AxisType != AxisType.Child && _AxisType != AxisType.Attribute
+        : _AxisType is not AxisType.Child and not AxisType.Attribute
             ? 0.5
             : !string.IsNullOrEmpty(_Name) ? 0 : (!string.IsNullOrEmpty(_Prefix) ? -0.25 : -0.5);
 
@@ -112,20 +112,20 @@ internal class Axis : AstNode
         string name,
         XPathNodeType NodeType)
     {
-        _AxisType      = AxisType;
-        _Input         = input;
-        _Prefix        = prefix;
-        _Name          = name;
-        this._NodeType = NodeType;
+        _AxisType = AxisType;
+        _Input = input;
+        _Prefix = prefix;
+        _Name = name;
+        _NodeType = NodeType;
     }
 
     // constructor
     internal Axis(AxisType AxisType, AstNode input)
     {
         _AxisType = AxisType;
-        _Input    = input;
-        _Prefix   = string.Empty;
-        _Name     = string.Empty;
+        _Input = input;
+        _Prefix = string.Empty;
+        _Name = string.Empty;
         _NodeType = XPathNodeType.All;
         _AbbrAxis = true;
     }

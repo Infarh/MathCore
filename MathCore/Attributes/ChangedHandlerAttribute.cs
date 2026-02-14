@@ -9,7 +9,7 @@ namespace System;
 public sealed class ChangedHandlerAttribute : Attribute
 {
     /// <summary>Имя метода-реакции на изменение значения свойства</summary>
-    public string MethodName { get; set; }
+    public string MethodName { get; set; } = null!;
 
     /// <summary>Инициализация нового экземпляра <see cref="DependencyOnAttribute"/></summary>
     public ChangedHandlerAttribute() { }

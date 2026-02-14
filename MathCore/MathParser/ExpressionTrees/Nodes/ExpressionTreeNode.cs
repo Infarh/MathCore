@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections;
+﻿using System.Collections;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable VirtualMemberNeverOverridden.Global
@@ -79,7 +78,7 @@ public abstract class ExpressionTreeNode : IDisposable, ICloneable<ExpressionTre
         get => _Left;
         set
         {
-            if (_Left != null) _Left.Parent = null;
+            _Left?.Parent = null;
             _Left = value;
             if (value is null) return;
             if (value.IsLeftSubtree)
@@ -97,7 +96,7 @@ public abstract class ExpressionTreeNode : IDisposable, ICloneable<ExpressionTre
         get => _Right;
         set
         {
-            if (_Right != null) _Right.Parent = null;
+            _Right?.Parent = null;
             _Right = value;
             if (value is null) return;
             if (value.IsLeftSubtree)
@@ -253,10 +252,8 @@ public abstract class ExpressionTreeNode : IDisposable, ICloneable<ExpressionTre
         var child_left  = Child.Left;
         var child_right = Child.Right;
 
-        if (child_left != null)
-            child_left.Parent = null;
-        if (child_right != null)
-            child_right.Parent = null;
+        child_left?.Parent = null;
+        child_right?.Parent = null;
 
         Child.Parent = null;
 
@@ -264,8 +261,7 @@ public abstract class ExpressionTreeNode : IDisposable, ICloneable<ExpressionTre
         {
             var parent_right = Parent.Right;
             Parent.Right = null;
-            if (parent_right != null)
-                parent_right.Parent = null;
+            parent_right?.Parent = null;
 
             Parent.Left = null;
 
@@ -284,8 +280,7 @@ public abstract class ExpressionTreeNode : IDisposable, ICloneable<ExpressionTre
         {
             var parent_left = Parent.Left;
             Parent.Left = null;
-            if (parent_left != null)
-                parent_left.Parent = null;
+            parent_left?.Parent = null;
 
             Parent.Right = null;
 
@@ -394,14 +389,12 @@ public abstract class ExpressionTreeNode : IDisposable, ICloneable<ExpressionTre
             // Проверяем случаи когда есть лишь одно из поддеревьев
             if (left is null) // Если левого поддерева не было...
             {
-                if (right != null)       // и при этом правое поддерево есть, то...
-                    right.Parent = null; //    у правого поддерева убираем ссылку на корень (на текущий узел)
+                right?.Parent = null; //    у правого поддерева убираем ссылку на корень (на текущий узел)
                 return right;            // В любом случае результатом будет правое поддерево что бы там не было.
             }
             if (right is null) // Если правого поддерева не было...
             {
-                if (left != null)       // и при этом левое поддерево есть, то...
-                    left.Parent = null; //    у левого поддерева убираем ссылку на текущий узел (его корень)
+                left?.Parent = null; //    у левого поддерева убираем ссылку на текущий узел (его корень)
                 return left;            // и всё что есть в левом поддереве возвращаем в качестве результата.
             }
 

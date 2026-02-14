@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 // ReSharper disable MemberCanBeProtected.Global
 
 namespace MathCore.Functions.Differentiable;

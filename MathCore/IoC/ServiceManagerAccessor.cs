@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.IoC;
+﻿namespace MathCore.IoC;
 
 /// <summary>Объект доступа к экземплярам сервиса <typeparamref name="TService"/></summary>
 /// <typeparam name="TService">Тип сервиса</typeparam>

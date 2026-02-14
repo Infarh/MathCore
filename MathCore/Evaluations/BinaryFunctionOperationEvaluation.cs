@@ -8,13 +8,13 @@ namespace MathCore.Evaluations;
 public class BinaryFunctionOperationEvaluation<T> : Evaluation<T>
 {
     /// <summary>Первый операнд вычисления</summary>
-    public Evaluation<T> A { get; set; }
+    public Evaluation<T> A { get; set; } = null!;
 
     /// <summary>Второй операнд вычисления</summary>
-    public Evaluation<T> B { get; set; }
+    public Evaluation<T> B { get; set; } = null!;
 
     /// <summary>Метод вычисления значения вычисления</summary>
-    public Func<T, T, T> Operation { get; set; }
+    public Func<T, T, T> Operation { get; set; } = null!;
 
     /// <summary>Инициализация нового бинарного вычисления</summary>
     protected BinaryFunctionOperationEvaluation() { }

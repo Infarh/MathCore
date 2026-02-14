@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace MathCore.Values;
+﻿namespace MathCore.Values;
 
 [Serializable]
 public class DifferentialWithAveraging(double Tau) : IResettable, IValue<double>

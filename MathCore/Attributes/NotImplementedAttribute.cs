@@ -10,7 +10,7 @@ namespace System;
 public sealed class NotImplementedAttribute : Attribute
 {
     /// <summary>Сообщение</summary>
-    public string Message { get; set; }
+    public string Message { get; set; } = null!;
 
     /// <summary>Новый атрибут нереализованности</summary>
     public NotImplementedAttribute() { }

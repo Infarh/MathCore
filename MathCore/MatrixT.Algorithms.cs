@@ -57,9 +57,9 @@ public partial class Matrix<T>
     /// <param name="RightPart">Правая часть системы уравнений</param>
     public static T[] TridiagonalAlgorithm(T[] Down, T[] Middle, T[] Up, T[] RightPart)
     {
-        T[] result = null!;
+        T[]? result = null;
         TridiagonalAlgorithm(Down, Middle, Up, RightPart, ref result);
-        return result;
+        return result!;
     }
 
     /// <summary>Метод прогонки</summary>

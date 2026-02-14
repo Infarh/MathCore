@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections;
+﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Reactive;
 using System.Text;
@@ -215,7 +214,7 @@ public static partial class IEnumerableExtensions
     /// <param name="Comparer">Функция сравнения элементов</param>
     /// <param name="Hasher">Функция вычисления хеш-кода элемента</param>
     /// <returns>Новая хеш-таблица, созданная из указанной последовательности элементов</returns>
-    public static HashSet<T> GetHashSet<T>(this IEnumerable<T> items, Func<T, T, bool> Comparer, Func<T, int> Hasher)
+    public static HashSet<T> GetHashSet<T>(this IEnumerable<T> items, Func<T?, T?, bool> Comparer, Func<T?, int> Hasher)
     {
         var set = new HashSet<T>(Comparer.Create(Hasher));
         foreach (var item in items)
@@ -230,7 +229,7 @@ public static partial class IEnumerableExtensions
     /// <param name="enumerable">Исходное перечисление объектов</param>
     /// <param name="KeySelector">Критерий определения повторения значения</param>
     /// <returns>Перечисление, из которого исключены повторения по указанному критерию</returns>
-    public static IEnumerable<T> Distinct<T, TKey>(this IEnumerable<T> enumerable, Func<T, TKey> KeySelector) =>
+    public static IEnumerable<T> Distinct<T, TKey>(this IEnumerable<T> enumerable, Func<T?, TKey> KeySelector) =>
         enumerable.Distinct(PropertyEqualityComparer.Create(KeySelector));
 
     /// <summary>Дисперсия значений</summary>
@@ -945,7 +944,7 @@ public static partial class IEnumerableExtensions
     public static IEnumerable<string> WhereNot(
         this IEnumerable<string> strings,
         Regex regex)
-        => strings.WhereNot(str => regex.IsMatch(str));
+        => strings.WhereNot(regex.IsMatch);
 
     /// <summary>Фильтрация последовательности строк по указанному регулярному выражению</summary>
     /// <param name="strings">Последовательность строк</param>
@@ -1008,7 +1007,7 @@ public static partial class IEnumerableExtensions
     {
         switch (enumerable)
         {
-            default: return enumerable.Select(converter).ToArray();
+            default: return [.. enumerable.Select(converter)];
 
             case T[] array:
                 {
@@ -1057,7 +1056,7 @@ public static partial class IEnumerableExtensions
     {
         switch (enumerable)
         {
-            default: return enumerable.Select(converter).ToArray();
+            default: return [.. enumerable.Select(converter)];
 
             case T[] array:
                 {
@@ -1106,7 +1105,7 @@ public static partial class IEnumerableExtensions
     {
         switch (enumerable)
         {
-            default: return enumerable.Select(converter).ToList();
+            default: return [.. enumerable.Select(converter)];
 
             case T[] array:
                 {
@@ -1307,7 +1306,7 @@ public static partial class IEnumerableExtensions
     /// <summary>Объединение перечисления строк в единую строку с разделителем - переносом строки</summary>
     /// <param name="Lines">Перечисление строк</param>
     /// <returns>Если ссылка на перечисление пуста, то пустая ссылка на строку, иначе - объединение строк с разделителем - переносом строки</returns>
-    [return: NotNullIfNotNull("Lines")]
+    [return: NotNullIfNotNull(nameof(Lines))]
     public static string? Aggregate(this IEnumerable<string>? Lines)
     {
         if (Lines is null) return null;
@@ -1404,7 +1403,7 @@ public static partial class IEnumerableExtensions
                 }
 
             default:
-                return source.Select(item => collection.Remove(item)).ToArray();
+                return [.. source.Select(collection.Remove)];
         }
     }
 
@@ -1670,13 +1669,13 @@ public static partial class IEnumerableExtensions
 
     /// <summary>История перечисления последовательности элементов</summary>
     /// <typeparam name="T">Тип элементов последовательности</typeparam>
-    public sealed class EnumerableHistory<T> : IEnumerable<T>, IObservable<T>
+    /// <remarks>Инициализация нового экземпляра <see cref="EnumerableHistory{T}"/></remarks>
+    /// <param name="HistoryLength">Длина истории</param>
+    public sealed class EnumerableHistory<T>([MinValue(0)] int HistoryLength) : IEnumerable<T>, IObservable<T>
     {
-        /// <summary>Длина истории</summary>
-        private int _HistoryLength;
 
         /// <summary>Список элементов в истории</summary>
-        private readonly List<T> _Queue;
+        private readonly List<T> _Queue = new(HistoryLength);
 
         /// <summary>Объект-наблюдения за историей</summary>
         private readonly SimpleObservableEx<T> _ObservableObject = new();
@@ -1686,7 +1685,7 @@ public static partial class IEnumerableExtensions
 
         /// <summary>Длина истории</summary>
         [MinValue(0)]
-        public int Length { get => _HistoryLength; set { _HistoryLength = value; Check(); } }
+        public int Length { get => HistoryLength; set { HistoryLength = value; Check(); } }
 
         /// <summary>Количество элементов в истории</summary>
         [MinValue(0)]
@@ -1697,18 +1696,10 @@ public static partial class IEnumerableExtensions
         /// <returns>Элемент истории перечисления</returns>
         public T this[[MinValue(0)] int i] => _Queue[^i];
 
-        /// <summary>Инициализация нового экземпляра <see cref="EnumerableHistory{T}"/></summary>
-        /// <param name="HistoryLength">Длина истории</param>
-        public EnumerableHistory([MinValue(0)] int HistoryLength)
-        {
-            _HistoryLength = HistoryLength;
-            _Queue = new(HistoryLength);
-        }
-
         /// <summary>Удаление лишних элементов из истории</summary>
         private void Check()
         {
-            while (_Queue.Count > _HistoryLength) _Queue.RemoveAt(0);
+            while (_Queue.Count > HistoryLength) _Queue.RemoveAt(0);
         }
 
         /// <summary>Добавить элемент в историю перечисления</summary>
@@ -1760,7 +1751,7 @@ public static partial class IEnumerableExtensions
     {
         if (Length > 0)
             return new StatisticValue(Length)
-                   .InitializeObject(collection, (sv, items) => sv.AddEnumerable(items))
+                   .InitializeObject(collection, (sv, items) => sv.AddEnumerable(items!))
                 ?? throw new InvalidOperationException();
         var values = collection.ToArray();
         var result = new StatisticValue(values.Length);
@@ -2514,7 +2505,7 @@ public static partial class IEnumerableExtensions
     /// <typeparam name="T">Тип элементов последовательности</typeparam>
     /// <param name="Enum">Последовательность, преобразуемая в список</param>
     /// <returns>Список элементов последовательности</returns>
-    public static IList<T> ToListFast<T>(this IEnumerable<T> Enum) => Enum as IList<T> ?? Enum.ToList();
+    public static IList<T> ToListFast<T>(this IEnumerable<T> Enum) => Enum as IList<T> ?? [.. Enum];
 
     /// <summary>Сумма последовательности комплексных чисел</summary>
     /// <param name="collection">Последовательность комплексных чисел</param>
@@ -3034,11 +3025,11 @@ public static partial class IEnumerableExtensions
     /// <param name="Comparer">Метод сравнения элементов</param>
     /// <param name="Hasher">Функция вычисления хеш-кода элемента</param>
     /// <returns>Последовательность элементов, таких, что ранее они отсутствовали во входной последовательности</returns>
-    public static IEnumerable<T> GetUnique<T>(this IEnumerable<T> values, Func<T, T, bool> Comparer, Func<T, int>? Hasher = null)
+    public static IEnumerable<T> GetUnique<T>(this IEnumerable<T> values, Func<T?, T?, bool> Comparer, Func<T, int>? Hasher = null)
     {
         var hash = new HashSet<T>(new LambdaEqualityComparer<T>(Comparer, Hasher ?? (item => item!.GetHashCode())));
 
-        foreach (var value in values.Where(value => hash.Add(value)))
+        foreach (var value in values.Where(hash.Add))
             yield return value;
     }
 
@@ -3049,7 +3040,7 @@ public static partial class IEnumerableExtensions
     public static IEnumerable<T> GetUnique<T>(this IEnumerable<T> values)
     {
         var set = new HashSet<T>();
-        return values.Where(v => set.Add(v));
+        return values.Where(set.Add);
     }
 
     /// <summary>Найти элементы, которые не входят во вторую последовательность</summary>
@@ -3071,7 +3062,7 @@ public static partial class IEnumerableExtensions
     public static IEnumerable<T> Intersection<T>(this IEnumerable<T> A, IEnumerable<T> B)
     {
         var b = B.GetHashSet();
-        return A.Where(a => b.Contains(a));
+        return A.Where(b.Contains);
     }
 
     /// <summary>Последовательности элементов поэлементно равны</summary>
@@ -3941,7 +3932,7 @@ public static partial class IEnumerableExtensions
         if (exceptions.Count == 0)
             return;
 
-        throw new AggregateException("Ошибка в ходе вызова освобождения ресурсов", exceptions.ToArray());
+        throw new AggregateException("Ошибка в ходе вызова освобождения ресурсов", [.. exceptions]);
 
     }
 
