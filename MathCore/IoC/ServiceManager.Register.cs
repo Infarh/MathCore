@@ -1,5 +1,4 @@
-﻿
-using MathCore.IoC.Exceptions;
+﻿using MathCore.IoC.Exceptions;
 using MathCore.IoC.ServiceRegistrations;
 
 namespace MathCore.IoC;
@@ -15,6 +14,7 @@ public sealed partial class ServiceManager
                 ServiceRegistrationMode.Singleton => RegisterSingleton<TServiceType>(),
                 ServiceRegistrationMode.SingleCall => RegisterSingleCall<TServiceType>(),
                 ServiceRegistrationMode.SingleThread => RegisterSingleThread<TServiceType>(),
+                ServiceRegistrationMode.SingleTask => RegisterSingleTask<TServiceType>(),
                 _ => throw new ArgumentOutOfRangeException(nameof(Mode), Mode, null)
             };
     }
@@ -30,6 +30,7 @@ public sealed partial class ServiceManager
                 ServiceRegistrationMode.Singleton => RegisterSingleton<TServiceInterface, TService>(),
                 ServiceRegistrationMode.SingleCall => RegisterSingleCall<TServiceInterface, TService>(),
                 ServiceRegistrationMode.SingleThread => RegisterSingleThread<TServiceInterface, TService>(),
+                ServiceRegistrationMode.SingleTask => RegisterSingleTask<TServiceInterface, TService>(),
                 _ => throw new ArgumentOutOfRangeException(nameof(Mode), Mode, null)
             };
     }
@@ -43,6 +44,7 @@ public sealed partial class ServiceManager
                 ServiceRegistrationMode.Singleton => RegisterSingleton(FactoryMethod),
                 ServiceRegistrationMode.SingleCall => RegisterSingleCall(FactoryMethod),
                 ServiceRegistrationMode.SingleThread => RegisterSingleThread(FactoryMethod),
+                ServiceRegistrationMode.SingleTask => RegisterSingleTask(FactoryMethod),
                 _ => throw new ArgumentOutOfRangeException(nameof(Mode), Mode, null)
             };
     }
@@ -66,6 +68,7 @@ public sealed partial class ServiceManager
             ServiceRegistrationMode.Singleton => RegisterTypeSingleton(ServiceType),
             ServiceRegistrationMode.SingleCall => RegisterTypeSingleCall(ServiceType),
             ServiceRegistrationMode.SingleThread => RegisterTypeSingleThread(ServiceType),
+            ServiceRegistrationMode.SingleTask => RegisterTypeSingleTask(ServiceType),
             _ => throw new ArgumentOutOfRangeException(nameof(Mode), Mode, null)
         };
 
@@ -75,6 +78,7 @@ public sealed partial class ServiceManager
             ServiceRegistrationMode.Singleton => RegisterTypeSingleton(InterfaceType, ServiceType),
             ServiceRegistrationMode.SingleCall => RegisterTypeSingleCall(InterfaceType, ServiceType),
             ServiceRegistrationMode.SingleThread => RegisterTypeSingleThread(InterfaceType, ServiceType),
+            ServiceRegistrationMode.SingleTask => RegisterTypeSingleTask(InterfaceType, ServiceType),
             _ => throw new ArgumentOutOfRangeException(nameof(Mode), Mode, null)
         };
 
@@ -125,6 +129,8 @@ public sealed partial class ServiceManager
 
     public ServiceRegistration RegisterTypeSingleThread(Type ServiceType) => Register(ServiceType, typeof(SingleThreadServiceRegistration<>));
 
+    public ServiceRegistration RegisterTypeSingleTask(Type ServiceType) => Register(ServiceType, typeof(SingleTaskServiceRegistration<>));
+
     public ServiceRegistration RegisterTypeSingleton(Type InterfaceType, Type ServiceType) =>
         Register(InterfaceType, ServiceType, typeof(SingletonServiceRegistration<>));
 
@@ -133,6 +139,9 @@ public sealed partial class ServiceManager
 
     public ServiceRegistration RegisterTypeSingleThread(Type InterfaceType, Type ServiceType) =>
         Register(InterfaceType, ServiceType, typeof(SingleThreadServiceRegistration<>));
+
+    public ServiceRegistration RegisterTypeSingleTask(Type InterfaceType, Type ServiceType) =>
+        Register(InterfaceType, ServiceType, typeof(SingleTaskServiceRegistration<>));
 
     #endregion
 
