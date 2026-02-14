@@ -191,7 +191,7 @@ public partial class Matrix<T>
         for (var j = 0; j < cols_count; j++)
         {
             var col = cols[j];
-            for (var i = 0; i < col.Count && i < rows_count; i++) 
+            for (var i = 0; i < col.Count && i < rows_count; i++)
                 data[i, j] = col[i];
         }
         return data;
@@ -325,7 +325,7 @@ public partial class Matrix<T>
     ) => _Data.ToStringFormatView(Format, Splitter, provider) ?? throw new InvalidOperationException();
 
     /// <inheritdoc/>
-    [DST] public string ToString(string format, IFormatProvider? provider) => _Data.ToStringFormatView(format, "\t", provider) ?? throw new InvalidOperationException();
+    [DST] public string ToString(string? format, IFormatProvider? provider) => _Data.ToStringFormatView(format, "\t", provider) ?? throw new InvalidOperationException();
 
     /// <summary>Структура-оболочка для матрицы, которая обеспечивает вывод матрицы в виде строки C#-инициализации</summary>
     /// <param name="Matrix">Матрица, которую нужно вывести</param>
@@ -516,7 +516,7 @@ public partial class Matrix<T>
 
     /// <summary>Оператор равенства двух матриц</summary>
     /// <returns>Истина, если матрицы совпадают по размеру и поэлементно</returns>
-    [DST] public static bool operator ==(Matrix<T>? A, Matrix<T>? B) => A is null && B is null || A is not null && B is not null && A.Equals(B);
+    [DST] public static bool operator ==(Matrix<T>? A, Matrix<T>? B) => (A is null && B is null) || (A is not null && B is not null && A.Equals(B));
 
     /// <summary>Оператор неравенства двух матриц</summary>
     /// <returns>Истина, если матрицы не совпадают по размеру или поэлементно</returns>
@@ -528,7 +528,7 @@ public partial class Matrix<T>
 
     /// <summary>Оператор равенства матрицы и двумерного массива</summary>
     /// <returns>Истина, если матрица и двумерный массив совпадают по размеру и поэлементно</returns>
-    [DST] public static bool operator ==(Matrix<T>? A, T[,]? B) => A is null && B is null || A is not null && B is not null && A.Equals(B);
+    [DST] public static bool operator ==(Matrix<T>? A, T[,]? B) => (A is null && B is null) || (A is not null && B is not null && A.Equals(B));
 
     /// <summary>Оператор неравенства матрицы и двумерного массива</summary>
     /// <returns>Истина, если матрица и двумерный массив не совпадают по размеру или поэлементно</returns>
@@ -610,7 +610,7 @@ public partial class Matrix<T>
                     n = -n;
                 }
                 var result = Array.GetUnitaryArrayMatrix(M._N);
-                for (var i = 0; i < n; i++) 
+                for (var i = 0; i < n; i++)
                     result = Array.Operator.Multiply(result, m);
                 return new(result);
         }

@@ -376,7 +376,7 @@ public partial class Polynom(params double[] a) : ICloneable<Polynom>, IEquatabl
     /// <param name="format">Строка формата.</param>
     /// <param name="provider">Информация о формате.</param>
     /// <returns>Строковое представление полинома.</returns>
-    public string ToString(string Format, IFormatProvider provider)
+    public string ToString(string? Format, IFormatProvider? provider)
     {
         var result = new StringBuilder();
         var length = _a.Length;

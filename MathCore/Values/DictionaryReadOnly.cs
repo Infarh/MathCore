@@ -113,7 +113,7 @@ public class DictionaryReadOnly<TKey, TValue>(IDictionary<TKey, TValue> dictiona
     /// Значение true, если объект, реализующий <see cref="T:System.Collections.Generic.IDictionary`2"/>, содержит элемент с указанным ключом, в противном случае — значение false.
     /// </returns>
     /// <param name="key">Ключ, значение которого необходимо получить.</param><param name="value">Этот метод возвращает значение, связанное с указанным ключом, если он найден; в противном случае — значение по умолчанию для данного типа параметра <paramref name="value"/>. Этот параметр передается не инициализированным.</param><exception cref="T:System.ArgumentNullException">Параметр <paramref name="key"/> имеет значение null.</exception>
-    public bool TryGetValue(TKey key, out TValue? value) => dictionary.TryGetValue(key, out value);
+    public bool TryGetValue(TKey key, out TValue value) => dictionary.TryGetValue(key, out value);
 
     /// <summary>
     /// Получает или задает элемент с указанным ключом.

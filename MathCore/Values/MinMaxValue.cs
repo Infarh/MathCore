@@ -32,8 +32,8 @@ public class MinMaxValue(double Min, double Max) : IResettable, IFormattable
 
     public void SetValue(double x)
     {
-        if(x < _Min) _Min = x;
-        if(x > _Max) _Max = x;
+        if (x < _Min) _Min = x;
+        if (x > _Max) _Max = x;
     }
 
     public double AddValue(double x)
@@ -50,7 +50,7 @@ public class MinMaxValue(double Min, double Max) : IResettable, IFormattable
     public override string ToString() => $"Min:{_Min}; Max:{_Max}";
 
     /// <inheritdoc />
-    public string ToString(string format, IFormatProvider FormatProvider) => 
+    public string ToString(string? format, IFormatProvider? FormatProvider) =>
         $"Min:{_Min.ToString(format, FormatProvider)}; Max:{_Max.ToString(format, FormatProvider)}";
 
     public string ToString(string format) => $"Min:{_Min.ToString(format)}; Max:{_Max.ToString(format)}";

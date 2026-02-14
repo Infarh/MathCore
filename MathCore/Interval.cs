@@ -19,8 +19,8 @@ namespace MathCore;
 /// <typeparam name="T">Тип сравнимых величин</typeparam>
 [StructLayout(LayoutKind.Sequential)]
 [method: DST]
-public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclude, IComparer<T> Comparer) 
-    : IEquatable<Interval<T>>, IEquatable<(T Min, T Max)>, ICloneable<Interval<T>> 
+public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclude, IComparer<T> Comparer)
+    : IEquatable<Interval<T>>, IEquatable<(T Min, T Max)>, ICloneable<Interval<T>>
 {
     /* ------------------------------------------------------------------------------------------ */
 
@@ -172,10 +172,10 @@ public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclud
         if ((max_to_min_compare < 0 && min_to_min_compare < 0) || (min_to_max_compare > 0 && max_to_max_compare > 0)) return false;
 
         if (min_to_min_compare < 0)
-            return max_to_min_compare > 0 || MinInclude && I.MaxInclude;
+            return max_to_min_compare > 0 || (MinInclude && I.MaxInclude);
 
         if (max_to_max_compare > 0)
-            return min_to_max_compare < 0 || MaxInclude && I.MinInclude;
+            return min_to_max_compare < 0 || (MaxInclude && I.MinInclude);
 
         throw new NotSupportedException($"Ошибка реализации метода проверки на пересечение интервалов {this}|{I}");
     }
@@ -204,8 +204,8 @@ public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclud
 
     public void Deconstruct(out T min, out bool IncludeMin, out T max, out bool IncludeMax)
     {
-        min        = _Min;
-        max        = _Max;
+        min = _Min;
+        max = _Max;
         IncludeMin = _MinInclude;
         IncludeMax = _MaxInclude;
     }
@@ -361,9 +361,9 @@ public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclud
 [TypeConverter(typeof(IntervalConverter))]
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 [method: DST]
-public readonly struct Interval(double Min, bool MinInclude, double Max, bool MaxInclude) : 
-    IComparable<double>, IFormattable, 
-    IEquatable<Interval>, 
+public readonly struct Interval(double Min, bool MinInclude, double Max, bool MaxInclude) :
+    IComparable<double>, IFormattable,
+    IEquatable<Interval>,
     IEquatable<(double Min, double Max)>,
     IEquatable<(int Min, double Max)>,
     IEquatable<(double Min, int Max)>
@@ -394,8 +394,8 @@ public readonly struct Interval(double Min, bool MinInclude, double Max, bool Ma
 
     public static IEnumerable<double> RangeN(double Min, double Max, int Count) => Range
     (
-        Min:  Min,
-        Max:  Max,
+        Min: Min,
+        Max: Max,
         Step: (Max - Min) / (Count - 1)
     );
 
@@ -499,8 +499,8 @@ public readonly struct Interval(double Min, bool MinInclude, double Max, bool Ma
 
     public void Deconstruct(out double min, out bool IncludeMinMin, out double max, out bool IncludeMinMax)
     {
-        min           = _Min;
-        max           = _Max;
+        min = _Min;
+        max = _Max;
         IncludeMinMin = _MinInclude;
         IncludeMinMax = _MaxInclude;
     }
@@ -521,7 +521,7 @@ public readonly struct Interval(double Min, bool MinInclude, double Max, bool Ma
     /// <param name="Value">Проверяемое значение</param>
     public void Normalize(ref double Value)
     {
-        if (Value > _Max) Value      = _Max;
+        if (Value > _Max) Value = _Max;
         else if (Value < _Min) Value = _Min;
     }
 
@@ -540,8 +540,8 @@ public readonly struct Interval(double Min, bool MinInclude, double Max, bool Ma
     /// <returns>Истина, если значение входит в интервал</returns>
     [DST]
     public bool Check(double Value) =>
-        (_MinInclude && _Min.CompareTo(Value) == 0) || 
-        (_MaxInclude && _Max.CompareTo(Value) == 0) || 
+        (_MinInclude && _Min.CompareTo(Value) == 0) ||
+        (_MaxInclude && _Max.CompareTo(Value) == 0) ||
         (Value.CompareTo(_Min) > 0 && Value.CompareTo(_Max) < 0);
 
     public bool Check(double X, double Offset) => Check(X, Offset, -Offset);
@@ -553,7 +553,7 @@ public readonly struct Interval(double Min, bool MinInclude, double Max, bool Ma
     public bool IsExclude(Interval I) => !IsInclude(I);
 
     public bool IsInclude(Interval I) =>
-        Check(I._MinInclude ? I._Min : I._Min + double.Epsilon) && 
+        Check(I._MinInclude ? I._Min : I._Min + double.Epsilon) &&
         Check(I._MaxInclude ? I._Max : I._Max - double.Epsilon);
 
     public bool IsIntersect(Interval I)
@@ -599,8 +599,8 @@ public readonly struct Interval(double Min, bool MinInclude, double Max, bool Ma
     #endregion
 
     public int CompareTo(double x) =>
-        (x > _Min && x < _Max) || 
-        (_MinInclude && Math.Abs(Min - x) < double.Epsilon) || 
+        (x > _Min && x < _Max) ||
+        (_MinInclude && Math.Abs(Min - x) < double.Epsilon) ||
         (_MaxInclude && Math.Abs(Max - x) < double.Epsilon)
             ? 0
             : x < _Min ? -1 : 1;
@@ -609,8 +609,8 @@ public readonly struct Interval(double Min, bool MinInclude, double Max, bool Ma
 
     public void For(int samples, Action<double> Do)
     {
-        var len               = Length;
-        var min               = _Min;
+        var len = Length;
+        var min = _Min;
         if (!_MaxInclude) len -= double.Epsilon;
         if (!_MinInclude)
         {
@@ -624,8 +624,8 @@ public readonly struct Interval(double Min, bool MinInclude, double Max, bool Ma
 
     public void For(int samples, Action<int, double> Do)
     {
-        var len               = Length;
-        var min               = _Min;
+        var len = Length;
+        var min = _Min;
         if (!_MaxInclude) len -= double.Epsilon;
         if (!_MinInclude)
         {
@@ -649,8 +649,8 @@ public readonly struct Interval(double Min, bool MinInclude, double Max, bool Ma
 
     public IEnumerable<double> GetValues(int Count)
     {
-        var len               = Length;
-        var min               = _Min;
+        var len = Length;
+        var min = _Min;
         if (!_MaxInclude) len -= double.Epsilon;
         if (!_MinInclude)
         {
@@ -728,7 +728,7 @@ public readonly struct Interval(double Min, bool MinInclude, double Max, bool Ma
     /// стандарта операционной системы. 
     /// </param>
     /// <filterpriority>2</filterpriority>
-    public string ToString(string Format, IFormatProvider FormatProvider) => new StringBuilder()
+    public string ToString(string? Format, IFormatProvider? FormatProvider) => new StringBuilder()
        .Append(_MinInclude ? '[' : '(')
        .Append(_Min.ToString(Format, FormatProvider))
        .Append(", ")
@@ -756,19 +756,19 @@ public readonly struct Interval(double Min, bool MinInclude, double Max, bool Ma
     /// <inheritdoc />
     [DST]
     public bool Equals((double Min, double Max) other) =>
-        _Min.Equals(other.Min) && 
+        _Min.Equals(other.Min) &&
         _Max.Equals(other.Max);
 
     /// <inheritdoc />
     [DST]
     public bool Equals((int Min, double Max) other) =>
-        _Min.Equals(other.Min) && 
+        _Min.Equals(other.Min) &&
         _Max.Equals(other.Max);
 
     /// <inheritdoc />
     [DST]
     public bool Equals((double Min, int Max) other) =>
-        _Min.Equals(other.Min) && 
+        _Min.Equals(other.Min) &&
         _Max.Equals(other.Max);
 
     /// <inheritdoc />

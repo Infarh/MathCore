@@ -13,7 +13,7 @@ public class PropertyEqualityComparer(Func<object, object> Selector) : IEquality
 {
     public static PropertyEqualityComparer<T, TValue> Create<T, TValue>(Func<T, TValue> Selector) => new(Selector);
 
-    public new bool Equals(object x, object y) => object.Equals(Selector(x), Selector(y));
+    public new bool Equals(object? x, object? y) => object.Equals(Selector(x), Selector(y));
 
     public int GetHashCode(object obj) => Selector(obj).GetHashCode();
 }

@@ -57,7 +57,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
             : throw new FormatException("Строка имела неверный формат") { Data = { [nameof(str)] = str } };
 
     public static Complex Parse(string str, IFormatProvider? provider) =>
-        TryParse(str.NotNull(), provider!, out var result)
+        TryParse(str.NotNull(), provider, out var result)
             ? result
             : throw new FormatException("Строка имела неверный формат") { Data = { [nameof(str)] = str } };
 
@@ -148,7 +148,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     /// <param name="z">Комплексное число, получаемое в результате разбора строки</param>
     /// <returns>Истина, если преобразование выполнено успешно</returns>
     /// <exception cref="ArgumentNullException">В случае если передана пустая ссылка на строку</exception>
-    public static bool TryParse([NotNullWhen(true)] string str, IFormatProvider provider, out Complex z)
+    public static bool TryParse([NotNullWhen(true)] string? str, IFormatProvider? provider, out Complex z)
     {
         // Если получили пустую строку, то это ошибка преобразования
         if (str is { Length: > 0 })
@@ -164,14 +164,15 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     /// <param name="z">Комплексное число, получаемое в результате разбора строки</param>
     /// <returns>Истина, если преобразование выполнено успешно</returns>
     /// <exception cref="ArgumentNullException">В случае если передана пустая ссылка на строку</exception>
-    public static bool TryParse(StringPtr str, IFormatProvider provider, out Complex z)
+    public static bool TryParse(StringPtr str, IFormatProvider? provider, out Complex z)
     {
+        provider ??= CultureInfo.CurrentCulture;
         var str_ptr = ClearStringPtr(str);
 
-        var format = (NumberFormatInfo)provider.GetFormat(typeof(NumberFormatInfo));
+        var format = (NumberFormatInfo?)provider.GetFormat(typeof(NumberFormatInfo));
 
-        var plus_char = format.PositiveSign[0];
-        var minus_char = format.NegativeSign[0];
+        var plus_char = format?.PositiveSign[0] ?? '+';
+        var minus_char = format?.NegativeSign[0] ?? '-';
 
         var values_ptr = str_ptr.Split(true, plus_char, minus_char);
 
@@ -551,7 +552,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
 
     /// <inheritdoc />
     [DST]
-    public string ToString(string format, IFormatProvider FormatProvider)
+    public string ToString(string? format, IFormatProvider? FormatProvider)
     {
         var re = Re;
         var im = Im;
@@ -576,7 +577,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
 
 
     /// <inheritdoc />
-    [DST] public override bool Equals(object obj) => obj is Complex z && Equals(z);
+    [DST] public override bool Equals(object? obj) => obj is Complex z && Equals(z);
 
     #region IEquatable Members
 

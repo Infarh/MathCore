@@ -48,8 +48,8 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
         var (n, m) = (IntArray.GetLength(0), IntArray.GetLength(1));
 
         var array = new double[n, m];
-        for(var i = 0; i < n; i++)
-            for(var j = 0; j < n; j++)
+        for (var i = 0; i < n; i++)
+            for (var j = 0; j < n; j++)
                 array[i, j] = IntArray[i, j];
 
         return new(array);
@@ -222,7 +222,7 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
     public Matrix(int[,] Data)
     {
         var (n, m) = (Data.GetLength(0), Data.GetLength(1));
-        (_N, _M)   = (n, m);
+        (_N, _M) = (n, m);
 
         var array = new double[n, m];
         for (var i = 0; i < n; i++)
@@ -238,8 +238,8 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
     [DST]
     public Matrix(double[,] Data, bool clone = false)
     {
-        _N    = Data.GetLength(0);
-        _M    = Data.GetLength(1);
+        _N = Data.GetLength(0);
+        _M = Data.GetLength(1);
         _Data = clone ? Data.CloneObject() : Data;
     }
 
@@ -250,7 +250,7 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
     public Matrix(IList<double> DataCol, bool IsColumn = true) : this(IsColumn ? DataCol.Count : 1, IsColumn ? 1 : DataCol.Count)
     {
         if (IsColumn) for (var i = 0; i < _N; i++) _Data[i, 0] = DataCol[i];
-        else for (var j = 0; j < _M; j++) _Data[0, j]          = DataCol[j];
+        else for (var j = 0; j < _M; j++) _Data[0, j] = DataCol[j];
     }
 
     /// <summary>Инициализация новой матрицы на основе перечисления строк (перечисления элементов строк) </summary>
@@ -263,13 +263,13 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
     [DST]
     private static double[,] GetElements(IEnumerable<IEnumerable<double>> ColsItems)
     {
-        var cols       = ColsItems.Select(col => col.ToListFast()).ToList();
+        var cols = ColsItems.Select(col => col.ToListFast()).ToList();
         var cols_count = cols.Count;
         var rows_count = cols.Max(col => col.Count);
-        var data       = new double[rows_count, cols_count];
+        var data = new double[rows_count, cols_count];
         for (var j = 0; j < cols_count; j++)
         {
-            var col                                                          = cols[j];
+            var col = cols[j];
             for (var i = 0; i < col.Count && i < rows_count; i++) data[i, j] = col[i];
         }
         return data;
@@ -306,8 +306,8 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
     /// <exception cref="ArgumentNullException">Если <paramref name="B"/> <see langword="null"/></exception>
     public Matrix GetTriangle(ref Matrix B, bool CloneB = true)
     {
-        var b         = CloneB ? B._Data.CloneObject() : B._Data;
-        var result    = new Matrix(Array.GetTriangle(_Data, b, out _, out _));
+        var b = CloneB ? B._Data.CloneObject() : B._Data;
+        var result = new Matrix(Array.GetTriangle(_Data, b, out _, out _));
         if (CloneB) B = new(b);
         return result;
     }
@@ -321,7 +321,7 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
     /// <returns>Треугольная матрица</returns>
     public Matrix GetTriangle(ref Matrix B, out Matrix P, out int rank, out double d, bool CloneB = true)
     {
-        var b      = B._Data;
+        var b = B._Data;
         var result = new Matrix(Array.GetTriangle(_Data, ref b, out var p, out rank, out d, CloneB));
         P = new(p);
         if (CloneB) B = new(b);
@@ -403,7 +403,7 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
     ) => _Data.ToStringFormatView(Format, Splitter, provider) ?? throw new InvalidOperationException();
 
     /// <inheritdoc/>
-    [DST] public string ToString(string format, IFormatProvider? provider) => _Data.ToStringFormatView(format, "\t", provider) ?? throw new InvalidOperationException();
+    [DST] public string ToString(string? format, IFormatProvider? provider) => _Data.ToStringFormatView(format, "\t", provider) ?? throw new InvalidOperationException();
 
     /// <summary>Структура-оболочка для матрицы, которая обеспечивает вывод матрицы в виде строки C#-инициализации</summary>
     /// <param name="Matrix">Матрица, которую нужно вывести</param>
@@ -424,7 +424,7 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
                 {
                     var s = nn[i, j].ToString(CultureInfo.CurrentCulture);
                     ss[i, j] = s;
-                    ll[j]    = Math.Max(ll[j], s.Length);
+                    ll[j] = Math.Max(ll[j], s.Length);
                 }
             var colum_nums = string.Join(", ", Enumerable.Range(1, n).Select(i => i.ToString().PadLeft(ll[i - 1])));
 
@@ -441,7 +441,7 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
                 for (var j = 0; j < m; j++)
                     result.Append("{0}, ", ss[i, j].PadLeft(ll[j]));
 
-                result.Length      -= 2;
+                result.Length -= 2;
                 result.AppendLine(" },");
             }
 
@@ -465,7 +465,7 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
                 {
                     var s = nn[i, j].ToString(Format);
                     ss[i, j] = s;
-                    ll[j]    = Math.Max(ll[j], s.Length);
+                    ll[j] = Math.Max(ll[j], s.Length);
                 }
             var colum_nums = string.Join(", ", Enumerable.Range(1, n).Select(i => i.ToString().PadLeft(ll[i - 1])));
 
@@ -505,7 +505,7 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
                 {
                     var s = nn[i, j].ToString(Provider);
                     ss[i, j] = s;
-                    ll[j]    = Math.Max(ll[j], s.Length);
+                    ll[j] = Math.Max(ll[j], s.Length);
                 }
             var colum_nums = string.Join(", ", Enumerable.Range(1, n).Select(i => i.ToString().PadLeft(ll[i - 1])));
 
@@ -546,7 +546,7 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
                 {
                     var s = nn[i, j].ToString(Format, Provider);
                     ss[i, j] = s;
-                    ll[j]    = Math.Max(ll[j], s.Length);
+                    ll[j] = Math.Max(ll[j], s.Length);
                 }
             var colum_nums = string.Join(", ", Enumerable.Range(1, n).Select(i => i.ToString().PadLeft(ll[i - 1])));
 
@@ -594,7 +594,7 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
 
     /// <summary>Оператор равенства двух матриц</summary>
     /// <returns>Истина, если матрицы совпадают по размеру и поэлементно</returns>
-    [DST] public static bool operator ==(Matrix? A, Matrix? B) => A is null && B is null || A is not null && B is not null && A.Equals(B);
+    [DST] public static bool operator ==(Matrix? A, Matrix? B) => (A is null && B is null) || (A is not null && B is not null && A.Equals(B));
 
     /// <summary>Оператор неравенства двух матриц</summary>
     /// <returns>Истина, если матрицы не совпадают по размеру или поэлементно</returns>
@@ -606,7 +606,7 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
 
     /// <summary>Оператор равенства матрицы и двумерного массива</summary>
     /// <returns>Истина, если матрица и двумерный массив совпадают по размеру и поэлементно</returns>
-    [DST] public static bool operator ==(Matrix? A, double[,]? B) => A is null && B is null || A is not null && B is not null && A.Equals(B);
+    [DST] public static bool operator ==(Matrix? A, double[,]? B) => (A is null && B is null) || (A is not null && B is not null && A.Equals(B));
 
     /// <summary>Оператор неравенства матрицы и двумерного массива</summary>
     /// <returns>Истина, если матрица и двумерный массив не совпадают по размеру или поэлементно</returns>
@@ -678,7 +678,7 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
         if (!M.IsSquare) throw new ArgumentException("Матрица не квадратная", nameof(M));
         switch (n)
         {
-            case 1:  return M.Clone();
+            case 1: return M.Clone();
             case -1: return M.GetInverse(out _);
             default:
                 var m = M._Data;
@@ -687,7 +687,7 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
                     m = Array.Inverse(m, out _);
                     n = -n;
                 }
-                var result                         = Array.GetUnitaryArrayMatrix(M._N);
+                var result = Array.GetUnitaryArrayMatrix(M._N);
                 for (var i = 0; i < n; i++) result = Multiply(result, m);
                 return new(result);
         }

@@ -11,10 +11,10 @@ namespace MathCore.Vectors;
 
 /// <summary>Трёхмерный вектор</summary>
 [TypeConverter(typeof(Vector3DConverter))]
-public readonly partial struct Vector3D : 
-    ICloneable<Vector3D>, 
-    IFormattable, 
-    IEquatable<Vector3D>, 
+public readonly partial struct Vector3D :
+    ICloneable<Vector3D>,
+    IFormattable,
+    IEquatable<Vector3D>,
     IEquatable<(double X, double Y, double Z)>
 {
 
@@ -201,12 +201,12 @@ public readonly partial struct Vector3D :
         if (Angle.AngleType == AngleType.Deg)
         {
             theta = Angle.InRad.Theta;
-            phi   = Angle.InRad.Phi;
+            phi = Angle.InRad.Phi;
         }
         else
         {
             theta = Angle.Theta;
-            phi   = Angle.Phi;
+            phi = Angle.Phi;
         }
 
         (_Z, (_Y, _X)) = (R * Cos(theta), Complex.SinCos(phi, R * Sin(theta)));
@@ -333,7 +333,7 @@ public readonly partial struct Vector3D :
     /// <param name="Provider">Провайдер форматирования данных</param>
     /// <returns>Форматированное строковое представление</returns>
     [DST]
-    public string ToString(string Format, IFormatProvider Provider) => $"({_X.ToString(Format, Provider)};{_Y.ToString(Format, Provider)};{_Z.ToString(Format, Provider)})";
+    public string ToString(string? Format, IFormatProvider? Provider) => $"({_X.ToString(Format, Provider)};{_Y.ToString(Format, Provider)};{_Z.ToString(Format, Provider)})";
 
     /// <summary>Деконструктор вектора на значения его координат</summary>
     public void Deconstruct(out double x, out double y, out double z) { x = _X; y = _Y; z = _Z; }
@@ -349,7 +349,7 @@ public readonly partial struct Vector3D :
     public bool Equals(Vector3D other) => Equals(other, ComparisonsAccuracy);
 
     public bool Equals(Vector3D other, double Accuracy) =>
-        Abs(other._X - _X) < Accuracy && 
+        Abs(other._X - _X) < Accuracy &&
         Abs(other._Y - _Y) < Accuracy &&
         Abs(other._Z - _Z) < Accuracy;
 
@@ -357,8 +357,8 @@ public readonly partial struct Vector3D :
     public bool Equals((double X, double Y, double Z) other) => Equals(other, ComparisonsAccuracy);
 
     public bool Equals((double X, double Y, double Z) other, double Accuracy) =>
-        Abs(other.X - _X) < Accuracy && 
-        Abs(other.Y - _Y) < Accuracy && 
+        Abs(other.X - _X) < Accuracy &&
+        Abs(other.Y - _Y) < Accuracy &&
         Abs(other.Z - _Z) < Accuracy;
 
     #endregion

@@ -391,13 +391,13 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
     ///     где lower - нижняя граница, upper - верхняя граница, 
     ///     value - значение, associated with the interval.
     /// </returns>
-    public override string ToString() => new StringBuilder()
-       .Append(_MinInclude ? "[" : "(")
+    public override string ToString() => new StringBuilder(771)
+       .Append(_MinInclude ? '[' : '(')
        .Append(_Min)
-       .Append(";")
+       .Append(';')
        .Append(_Max)
-       .Append(_MaxInclude ? "]" : ")")
-       .Append(":")
+       .Append(_MaxInclude ? ']' : ')')
+       .Append(':')
        .Append(_Value)
        .ToString();
 
@@ -416,12 +416,13 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
     ///         <item>Скобка, обозначающая верхнюю границу ( <c>"]"</c> или <c>")"</c> )</item>
     ///     </list>
     /// </remarks>
-    public string ToString(string Format) => string.Format(
-        "{0}{2};{3}{1}",
-        _MinInclude ? "[" : "(",
-        _MaxInclude ? "]" : ")",
-        _Min.ToString(Format),
-        _Max.ToString(Format));
+    public string ToString(string Format) => new StringBuilder(771)
+        .Append(_MinInclude ? '[' : '(')
+        .Append(_Min.ToString(Format))
+        .Append(';')
+        .Append(_Min.ToString(Format))
+        .Append(_MinInclude ? ']' : ')')
+        .ToString();
 
     /// <summary>Форматирует значение текущего экземпляра с использованием заданного формата.</summary>
     /// <returns>Объект <see cref="T:System.String"/> содержит значение текущего экземпляра в заданном формате.</returns>
@@ -436,12 +437,13 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
     /// стандарта операционной системы. 
     /// </param>
     /// <filterpriority>2</filterpriority>
-    public string ToString(string Format, IFormatProvider FormatProvider) => string.Format(
-        "{0}{2};{3}{1}",
-        _MinInclude ? "[" : "(",
-        _MaxInclude ? "]" : ")",
-        _Min.ToString(Format, FormatProvider),
-        _Max.ToString(Format, FormatProvider));
+    public string ToString(string? Format, IFormatProvider? FormatProvider) => new StringBuilder(771)
+        .Append(_MinInclude ? '[' : '(')
+        .Append(_Min.ToString(Format, FormatProvider))
+        .Append(';')
+        .Append(_Min.ToString(Format, FormatProvider))
+        .Append(_MinInclude ? ']' : ')')
+        .ToString();
 
     /* ------------------------------------------------------------------------------------------ */
 

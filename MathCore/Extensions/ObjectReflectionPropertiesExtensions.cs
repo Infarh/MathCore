@@ -6,6 +6,7 @@ using System.Reflection;
 using MathCore.Extensions.Expressions;
 
 namespace MathCore.Extensions;
+
 public static class ObjectReflectionPropertiesExtensions
 {
     private const BindingFlags __NonPublic = BindingFlags.Instance | BindingFlags.NonPublic;
@@ -16,7 +17,7 @@ public static class ObjectReflectionPropertiesExtensions
     {
         var (type, property_name) = property;
 
-        if (type.GetProperty(property_name) is not { CanRead: true, PropertyType: { IsValueType: var is_value_type } } property_info)
+        if (type.GetProperty(property_name) is not { CanRead: true, PropertyType.IsValueType: var is_value_type } property_info)
             return null;
 
         var obj_parameter = "obj".ParameterOf<object>();
@@ -38,7 +39,7 @@ public static class ObjectReflectionPropertiesExtensions
     {
         var (type, property_name) = property;
 
-        if (type.GetProperty(property_name, __NonPublic) is not { CanRead: true, PropertyType: { IsValueType: var is_value_type } } property_info)
+        if (type.GetProperty(property_name, __NonPublic) is not { CanRead: true, PropertyType.IsValueType: var is_value_type } property_info)
             return null;
 
         var obj_parameter = "obj".ParameterOf<object>();
@@ -58,10 +59,10 @@ public static class ObjectReflectionPropertiesExtensions
 
     public static object? GetPropertyValue(this object obj, string PropertyName)
     {
-        if(!obj.TryGetPropertyValue(PropertyName, out var value))
+        if (!obj.TryGetPropertyValue(PropertyName, out var value))
             throw new InvalidOperationException($"Тип {obj.GetType()} не содержит свойства {PropertyName} доступного для чтения")
             {
-                Data = 
+                Data =
                 {
                     { nameof(obj), obj.GetType() },
                     { nameof(PropertyName), PropertyName },
@@ -102,7 +103,7 @@ public static class ObjectReflectionPropertiesExtensions
 
     public static bool TryGetPropertyValue(this object obj, string PropertyName, bool NonPublic, out object? value)
     {
-        if(!NonPublic)
+        if (!NonPublic)
             return obj.TryGetPropertyValue(PropertyName, out value);
 
         var type = obj.NotNull().GetType();
@@ -156,7 +157,7 @@ public static class ObjectReflectionPropertiesExtensions
 
     public static TValue? GetPropertyValue<T, TValue>(this T obj, string PropertyName)
     {
-        if(!obj.TryGetPropertyValue(PropertyName, out TValue value))
+        if (!obj.TryGetPropertyValue(PropertyName, out TValue value))
             throw new InvalidOperationException($"Тип {typeof(T)} не содержит свойства {PropertyName} доступного для чтения")
             {
                 Data =
@@ -173,7 +174,7 @@ public static class ObjectReflectionPropertiesExtensions
 
     public static TValue? GetPropertyValue<T, TValue>(this T obj, string PropertyName, bool NonPublic)
     {
-        if(!obj.TryGetPropertyValue(PropertyName, NonPublic, out TValue value))
+        if (!obj.TryGetPropertyValue(PropertyName, NonPublic, out TValue value))
             throw new InvalidOperationException($"Тип {typeof(T)} не содержит свойства {PropertyName} доступного для чтения")
             {
                 Data =
@@ -198,7 +199,7 @@ public static class ObjectReflectionPropertiesExtensions
         {
             value = default;
             return false;
-        }    
+        }
 
         value = getter(obj);
         return true;
@@ -206,7 +207,7 @@ public static class ObjectReflectionPropertiesExtensions
 
     public static bool TryGetPropertyValue<T, TValue>(this T obj, string PropertyName, bool NonPublic, out TValue? value)
     {
-        if(!NonPublic)
+        if (!NonPublic)
             return obj.TryGetPropertyValue(PropertyName, out value);
 
         if (obj is null) throw new ArgumentNullException(nameof(obj));
@@ -216,7 +217,7 @@ public static class ObjectReflectionPropertiesExtensions
         {
             value = default;
             return false;
-        }    
+        }
 
         value = getter(obj);
         return true;
@@ -235,7 +236,7 @@ public static class ObjectReflectionPropertiesExtensions
         var value_parameter = "value".ParameterOf<object>();
 
         var call_expr = set_method.GetCallExpression(
-            parameter.ConvertTo(type), 
+            parameter.ConvertTo(type),
             value_parameter.ConvertTo(set_method.GetParameters()[0].ParameterType));
 
         var action = call_expr.
@@ -256,7 +257,7 @@ public static class ObjectReflectionPropertiesExtensions
         var value_parameter = "value".ParameterOf<object>();
 
         var call_expr = set_method.GetCallExpression(
-            parameter.ConvertTo(type), 
+            parameter.ConvertTo(type),
             value_parameter.ConvertTo(set_method.GetParameters()[0].ParameterType));
 
         var action = call_expr.
@@ -268,8 +269,8 @@ public static class ObjectReflectionPropertiesExtensions
 
     public static void SetPropertyValue(this object obj, string PropertyName, object? Value)
     {
-        if(!obj.TrySetPropertyValue(PropertyName, Value))
-            throw new InvalidOperationException($"Тип {obj.GetType()} не содержит свойства {PropertyName} доступного для записи") 
+        if (!obj.TrySetPropertyValue(PropertyName, Value))
+            throw new InvalidOperationException($"Тип {obj.GetType()} не содержит свойства {PropertyName} доступного для записи")
             {
                 Data =
                 {
@@ -281,8 +282,8 @@ public static class ObjectReflectionPropertiesExtensions
 
     public static void SetPropertyValue(this object obj, string PropertyName, object? Value, bool NonPublic)
     {
-        if(!obj.TrySetPropertyValue(PropertyName, Value, NonPublic))
-            throw new InvalidOperationException($"Тип {obj.GetType()} не содержит свойства {PropertyName} доступного для записи") 
+        if (!obj.TrySetPropertyValue(PropertyName, Value, NonPublic))
+            throw new InvalidOperationException($"Тип {obj.GetType()} не содержит свойства {PropertyName} доступного для записи")
             {
                 Data =
                 {
@@ -306,7 +307,7 @@ public static class ObjectReflectionPropertiesExtensions
 
     public static bool TrySetPropertyValue(this object obj, string PropertyName, object? Value, bool NonPublic)
     {
-        if(!NonPublic)
+        if (!NonPublic)
             return TrySetPropertyValue(obj, PropertyName, Value);
 
         var type = obj.NotNull().GetType();
@@ -342,7 +343,7 @@ public static class ObjectReflectionPropertiesExtensions
 
     public static void SetPropertyValue<T, TValue>(this T obj, string PropertyName, TValue? Value)
     {
-        if(!obj.TrySetPropertyValue(PropertyName, Value))
+        if (!obj.TrySetPropertyValue(PropertyName, Value))
             throw new InvalidOperationException($"Тип {typeof(T)} не содержит свойства {PropertyName} доступного для записи")
             {
                 Data =
@@ -381,7 +382,7 @@ public static class ObjectReflectionPropertiesExtensions
                 if (!_PropertyNames.Value.Contains(key))
                     throw new InvalidOperationException($"В объекте типа {typeof(T)} свойство {key} отсутствует");
 
-                if(obj.TryGetPropertyValue(key, out var value)) 
+                if (obj.TryGetPropertyValue(key, out var value))
                     return value;
 
                 throw new InvalidOperationException($"Свойство {typeof(T)}.{key} не доступно для чтения");
@@ -404,14 +405,14 @@ public static class ObjectReflectionPropertiesExtensions
 
         public bool IsReadOnly => false;
 
-        public void Add(string key, object value) => this[key] = value;
+        public void Add(string key, object? value) => this[key] = value;
 
         public void Add(KeyValuePair<string, object?> item) => Add(item.Key, item.Value);
 
         public void Clear() => throw new NotSupportedException();
 
         public bool Contains(KeyValuePair<string, object?> item) => Equals(this[item.Key], item.Value);
-        
+
         public bool ContainsKey(string key) => _PropertyNames.Value.Contains(key);
 
         public void CopyTo(KeyValuePair<string, object?>[] array, int Index)
@@ -421,7 +422,7 @@ public static class ObjectReflectionPropertiesExtensions
                 throw new InvalidOperationException("Недостаточная длина массива");
 
             var i = 0;
-            foreach(var property in properties)
+            foreach (var property in properties)
                 array[i++] = new(property, this[property]);
         }
 
