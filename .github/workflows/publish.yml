@@ -1,4 +1,4 @@
-name: Publish NuGet.org
+﻿name: Publish NuGet.org
 
 on:
   push:
@@ -31,7 +31,7 @@ jobs:
         with:
           dotnet-version: 10.0.x
           
-      - name: Cache NuGet  
+      - name: Cache NuGet
         uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
@@ -41,8 +41,8 @@ jobs:
 
       - name: Building
         run: |
-          dotnet build MathCore -c Release --nowarn:CS1998,CS8625,CS8600,CS8603,CS8620,CS8618,CS8604,CS8602,CS8622,CS8619,CS8632,CS0108,NU1701,NU1702,MSB3277,NU1701
-          dotnet build Tests/MathCore.Tests -c Release --nowarn:CS1998,CS8625,CS8600,CS8603,CS8620,CS8618,CS8604,CS8602,CS8622,CS8619,CS8632,CS0108,NU1701,NU1702,MSB3277,NU1701
+          dotnet build MathCore -c Release
+          dotnet build Tests/MathCore.Tests -c Release
 
       - name: Test
         run: dotnet test Tests/MathCore.Tests -c Release --no-build
