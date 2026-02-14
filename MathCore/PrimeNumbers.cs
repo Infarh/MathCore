@@ -138,7 +138,7 @@ public static class PrimeNumbers
         {
             private const long __MaxChunkLength = 2_000_000_000L;
             private readonly byte[] _FirstBuffer;
-            private readonly byte[]? _SecondBuffer;
+            private readonly byte[] _SecondBuffer = null!;
 
             /// <summary>Инициализирует новый экземпляр класса LongArray, создавая буферы для хранения данных определенной длины</summary>
             /// <param name="length">Длина массива, который необходимо создать</param>

@@ -173,7 +173,7 @@ public abstract class ExpressionVisitorEx
         List<Expression>? list = null;
         for (int i = 0, n = original.Count; i < n; i++)
         {
-            var p = Visit(original[i]);
+            var p = Visit(original[i]).NotNull();
             if (list != null)
                 list.Add(p);
             else if (p != original[i])
@@ -259,8 +259,8 @@ public abstract class ExpressionVisitorEx
         var args = VisitExpressionList(nex.Arguments);
         return args != nex.Arguments
             ? (nex.Members != null
-                ? Expression.New(nex.Constructor, args, nex.Members)
-                : Expression.New(nex.Constructor, args))
+                ? Expression.New(nex.Constructor!, args, nex.Members)
+                : Expression.New(nex.Constructor!, args))
             : nex;
     }
 
@@ -285,8 +285,8 @@ public abstract class ExpressionVisitorEx
         var expr = VisitExpressionList(na.Expressions);
         return expr != na.Expressions
             ? (na.NodeType == ExpressionType.NewArrayInit
-                ? Expression.NewArrayInit(na.Type.GetElementType(), expr)
-                : Expression.NewArrayBounds(na.Type.GetElementType(), expr))
+                ? Expression.NewArrayInit(na.Type.GetElementType()!, expr)
+                : Expression.NewArrayBounds(na.Type.GetElementType()!, expr))
             : na;
     }
 

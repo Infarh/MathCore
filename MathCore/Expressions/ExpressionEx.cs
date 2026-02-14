@@ -61,9 +61,9 @@ public static class ExpressionEx
         var param = Expression.Parameter(typeof(TFirstParam), "param");
 
         var new_first = first.Body.Replace(first.Parameters[0], param);
-        var new_second = second.Body.Replace(second.Parameters[0], new_first);
+        var new_second = second.Body.Replace(second.Parameters[0], new_first.NotNull());
 
-        return Expression.Lambda<Func<TFirstParam, TResult>>(new_second, param);
+        return Expression.Lambda<Func<TFirstParam, TResult>>(new_second.NotNull(), param);
     }
 
     public static Expression? Replace(this Expression expression,
@@ -79,7 +79,7 @@ public static class ExpressionEx
     {
         var inpine_parameter = Source.Parameters.First(p => p.Name == Parameter);
         return Expression.Lambda<TResultDelegate>(
-            Source.Body.Replace(inpine_parameter, Converter.Body),
+            Source.Body.Replace(inpine_parameter, Converter.Body).NotNull(),
             Source.Parameters.Replace(inpine_parameter, Converter.Parameters.Single()));
     }
 }

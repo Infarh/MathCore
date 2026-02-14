@@ -20,7 +20,7 @@ public static class EnumExtensions
     {
         var attribute_type = typeof(TAttribute);
         var value_type = value.GetType();
-        var field = value_type.GetField(value.ToString());
+        var field = value_type.GetField(value.ToString()).NotNull();
         return (TAttribute[]?)field.GetCustomAttributes(attribute_type, false);
     }
 

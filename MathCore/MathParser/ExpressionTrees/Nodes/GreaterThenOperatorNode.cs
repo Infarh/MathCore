@@ -15,7 +15,7 @@ public class GreaterThenOperatorNode : LogicOperatorNode
     public GreaterThenOperatorNode(ExpressionTreeNode Left, ExpressionTreeNode Right)
         : this()
     {
-        this.Left  = Left;
+        this.Left = Left;
         this.Right = Right;
     }
 
@@ -27,16 +27,16 @@ public class GreaterThenOperatorNode : LogicOperatorNode
 
     /// <summary>Вычисление значения узла</summary>
     /// <returns>0 - если разность между x и y по модулю меньше Epsilon и 1 во всех остальных случаях</returns>
-    public override double Compute() => Comparer(((ComputedNode?)Left).Compute(), ((ComputedNode?)Right).Compute());
+    public override double Compute() => Comparer(((ComputedNode)Left!).Compute(), ((ComputedNode)Right!).Compute());
 
     /// <summary>Компиляция логики узла</summary>
     /// <returns>Скомпилированное логическое выражение, реализующее операцию сравнения Больше</returns>
-    public override Expression LogicCompile() => Expression.GreaterThan(((ComputedNode?)Left).Compile(), ((ComputedNode?)Right).Compile());
+    public override Expression LogicCompile() => Expression.GreaterThan(((ComputedNode)Left!).Compile(), ((ComputedNode)Right!).Compile());
 
     /// <summary>Компиляция логики узла</summary>
     /// <param name="Args">Параметры компиляции</param>
     /// <returns>Скомпилированное логическое выражение, реализующее операцию сравнения Больше</returns>
-    public override Expression LogicCompile(ParameterExpression[] Args) => Expression.GreaterThan(((ComputedNode?)Left).Compile(Args), ((ComputedNode?)Right).Compile(Args));
+    public override Expression LogicCompile(ParameterExpression[] Args) => Expression.GreaterThan(((ComputedNode)Left!).Compile(Args), ((ComputedNode)Right!).Compile(Args));
 
     /// <summary>Клонирование узла</summary>
     /// <returns>Клон узла</returns>

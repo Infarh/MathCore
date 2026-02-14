@@ -6,12 +6,12 @@ namespace MathCore;
 
 public static class LambdaComparer
 {
-    public static LambdaComparer<T> New<T>(Comparison<T> comparison) => new(comparison);
+    public static LambdaComparer<T> New<T>(Comparison<T?> comparison) => new(comparison);
 }
 
 /// <summary>Объект, представляющий метод сравнения двух объектов типа <typeparamref name="T"/>, задаваемый lambda-выражением</summary>
 /// <typeparam name="T">Тип сравниваемых объектов</typeparam>
-public class LambdaComparer<T>(Comparison<T> Comparison) : IComparer<T>, IComparer
+public class LambdaComparer<T>(Comparison<T?> Comparison) : IComparer<T>, IComparer
 {
     /// <summary>Сравнивает два объекта и возвращает значение, показывающее, что один объект меньше или больше другого или равен ему</summary>
     /// <param name="x">Первый сравниваемый объект.</param>

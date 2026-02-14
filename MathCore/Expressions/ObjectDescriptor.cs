@@ -22,11 +22,11 @@ namespace System.Linq.Expressions;
 
 public class ObjectDescriptor(object obj) : ObjectDescriptor<object>(obj);
 
-public class ObjectDescriptor<T>([DisallowNull] T obj)
+public class ObjectDescriptor<T>(T obj)
 {
     private const BindingFlags __BindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
-    private readonly Type _ObjectType = obj.GetType();
+    private readonly Type _ObjectType = obj!.GetType();
     private DictionaryReadOnly<string, Property>? _Properties;
     private DictionaryReadOnly<string, Field>? _Fields;
     private Func<PropertyInfo, bool>? _PropertiesFilter;
@@ -43,7 +43,7 @@ public class ObjectDescriptor<T>([DisallowNull] T obj)
             if (_Properties != null) return _Properties;
             var properties = _ObjectType.GetProperties(__BindingFlags)
                .Where(_PropertiesFilter ?? (_ => true))
-               .Select(p => new Property(obj, p)).ToArray();
+               .Select(p => new Property(obj!, p)).ToArray();
             _Properties = new(properties.ToDictionary(p => p.Name));
             return _Properties;
         }
@@ -77,7 +77,7 @@ public class ObjectDescriptor<T>([DisallowNull] T obj)
             if (_Fields != null) return _Fields;
             var fields = _ObjectType.GetFields(__BindingFlags)
                .Where(_FieldsFilter ?? (_ => true))
-               .Select(p => new Field(obj, p)).ToArray();
+               .Select(p => new Field(obj!, p)).ToArray();
             _Fields = new(fields.ToDictionary(p => p.Name));
             return _Fields;
         }

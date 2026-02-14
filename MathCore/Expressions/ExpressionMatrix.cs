@@ -350,7 +350,7 @@ public class ExpressionMatrix : ICloneable<ExpressionMatrix>, IEquatable<Express
                                 diagonal_item)));
         }
 
-        return det.Simplify().NotNull();
+        return det.NotNull().Simplify().NotNull();
     }
 
     /* -------------------------------------------------------------------------------------------- */

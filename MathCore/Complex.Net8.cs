@@ -89,7 +89,9 @@ public partial struct Complex : IParsable<Complex>, ISpanParsable<Complex>, IUtf
     {
         var str_ptr = ClearStringPtr(str);
 
-        var format = (NumberFormatInfo?)provider.GetFormat(typeof(NumberFormatInfo));
+        provider ??= CultureInfo.CurrentCulture;
+
+        var format = (NumberFormatInfo)provider.GetFormat(typeof(NumberFormatInfo)).NotNull();
 
         var minus_char = format.NegativeSign[0];
 

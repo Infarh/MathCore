@@ -39,10 +39,10 @@ internal sealed class UnionQuery : BaseAxisQuery
     //
     internal override object GetValue(XPathReader reader)
     {
-        var lv_ObjArray = new object[2];
-        lv_ObjArray[0] = _Query1.GetValue(reader);
-        lv_ObjArray[1] = _Query2.GetValue(reader);
-        return lv_ObjArray;
+        var obj_array = new object[2];
+        obj_array[0] = _Query1.GetValue(reader).NotNull();
+        obj_array[1] = _Query2.GetValue(reader).NotNull();
+        return obj_array;
     }
 
     #endregion

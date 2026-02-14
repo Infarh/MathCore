@@ -48,7 +48,7 @@ public static class ProcessExtensions
         var result = new TaskCompletionSource<Process>(TaskCreationOptions.RunContinuationsAsynchronously);
 
         using var registration_cancellation = Cancel.IsCancellationRequested
-            ? Cancel.Register(o => ((TaskCompletionSource<Process>?)o).TrySetCanceled(), result)
+            ? Cancel.Register(o => ((TaskCompletionSource<Process>)o!).TrySetCanceled(), result)
             : (IDisposable?)null;
 
         process.EnableRaisingEvents = true;
@@ -103,7 +103,7 @@ public static class ProcessExtensions
         var result = new TaskCompletionSource<Process>();
 
         using var cancel_cts_registration = Cancel.CanBeCanceled
-            ? Cancel.Register(o => ((TaskCompletionSource<Process>?)o).TrySetCanceled(), result)
+            ? Cancel.Register(o => ((TaskCompletionSource<Process>)o!).TrySetCanceled(), result)
             : (IDisposable?)null;
 
         process.EnableRaisingEvents = true;

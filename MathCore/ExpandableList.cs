@@ -25,10 +25,10 @@ public class ExpandableList<T>(List<T> BaseList) : IList<T>, IReadOnlyList<T>
     #region Implementation of IList<T>
 
     /// <inheritdoc />
-    public int IndexOf(T? item) => BaseList.IndexOf(item);
+    public int IndexOf(T item) => BaseList.IndexOf(item);
 
     /// <inheritdoc />
-    public void Insert(int index, T? item) => BaseList.Insert(index, item);
+    public void Insert(int index, T item) => BaseList.Insert(index, item);
 
     /// <inheritdoc />
     public void RemoveAt(int index) => BaseList.RemoveAt(index);
@@ -56,7 +56,7 @@ public class ExpandableList<T>(List<T> BaseList) : IList<T>, IReadOnlyList<T>
                 list.Capacity = index + 1;
 
             for (var i = count; i < index; i++)
-                list.Add(default);
+                list.Add(default!);
 
             list.Add(value);
         }
@@ -87,19 +87,19 @@ public class ExpandableList<T>(List<T> BaseList) : IList<T>, IReadOnlyList<T>
     #region Implementation of ICollection<T>
 
     /// <inheritdoc />
-    public void Add(T? item) => BaseList.Add(item);
+    public void Add(T item) => BaseList.Add(item);
 
     /// <inheritdoc />
     public void Clear() => BaseList.Clear();
 
     /// <inheritdoc />
-    public bool Contains(T? item) => BaseList.Contains(item);
+    public bool Contains(T item) => BaseList.Contains(item);
 
     /// <inheritdoc />
     public void CopyTo(T[] array, int index) => BaseList.CopyTo(array, index);
 
     /// <inheritdoc />
-    public bool Remove(T? item) => BaseList.Remove(item);
+    public bool Remove(T item) => BaseList.Remove(item);
 
     /// <summary>Число элементов списка</summary>
     public int Count
@@ -125,7 +125,7 @@ public class ExpandableList<T>(List<T> BaseList) : IList<T>, IReadOnlyList<T>
                         list.Capacity = list.Count + delta;
 
                     for (var i = 0; i < delta; i++)
-                        list.Add(default);
+                        list.Add(default!);
 
                     break;
 

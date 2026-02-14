@@ -363,13 +363,14 @@ public static class StringBuilderExtensions
     /// <param name="start">Искомый префикс</param>
     /// <param name="comparison">Вариант сравнения строк</param>
     /// <returns>Строка, начинающаяся с указанного прфикса</returns>
-    public static StringBuilder EnsureStartWith(this StringBuilder str, string? start, StringComparison comparison = StringComparison.Ordinal)
+    public static StringBuilder EnsureStartWith(this StringBuilder str, string? s, StringComparison comparison = StringComparison.Ordinal)
     {
-        if (str.StartWith(start, comparison))
+        var not_empty_s = s is { Length: > 0 };
+        if (not_empty_s && str.StartWith(s!, comparison))
             return str;
 
-        if (start is { Length: > 0 })
-            str.Insert(0, start);
+        if (s is { Length: > 0 })
+            str.Insert(0, s);
 
         return str;
     }
@@ -381,10 +382,11 @@ public static class StringBuilderExtensions
     /// <returns>Строка, завершающаяся указанным суффиксом</returns>
     public static StringBuilder EnsureEndWith(this StringBuilder str, string? s, StringComparison comparison = StringComparison.Ordinal)
     {
-        if (str.EndWith(s, comparison))
+        var not_empty_s = s is { Length: > 0 };
+        if (not_empty_s && str.EndWith(s!, comparison))
             return str;
 
-        if (s is { Length: > 0 })
+        if (not_empty_s)
             str.Append(s);
 
         return str;

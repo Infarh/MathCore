@@ -15,8 +15,8 @@ public partial class ViewModel
     protected virtual bool Set<T>(
         T? value,
         T? OldValue,
-        Action<T> Setter,
-        Func<T, bool>? ValueChecker = null,
+        Action<T?> Setter,
+        Func<T?, bool>? ValueChecker = null,
         [CallerMemberName] string PropertyName = null!)
     {
         if (Equals(value, OldValue)) return false;
@@ -51,7 +51,7 @@ public partial class ViewModel
     protected virtual bool Set<T>(
         ref T? field,
         in T? value,
-        Func<T, bool> ValueChecker,
+        Func<T?, bool> ValueChecker,
         [CallerMemberName] in string PropertyName = null)
         => ValueChecker(value) && Set(ref field, value, PropertyName);
 
@@ -67,7 +67,7 @@ public partial class ViewModel
         ref T? field,
         in T? value,
         string ErrorMessage,
-        Func<T, bool> Validator,
+        Func<T?, bool> Validator,
         [CallerMemberName] in string PropertyName = null) =>
         Validator(value)
             ? Set(ref field, value, PropertyName)
@@ -81,9 +81,9 @@ public partial class ViewModel
     /// <param name="PropertyName">Имя метода, вызывавшего обновление. По умолчанию должно быть равно пустоте</param>
     /// <returns>Истина, если метод изменил значение поля и вызвал событие <see cref="PropertyChanged"/></returns>
     protected virtual bool Set<T>(
-        T value,
-        in T OldValue,
-        Action<T> Setter,
+        T? value,
+        in T? OldValue,
+        Action<T?> Setter,
         [CallerMemberName] string PropertyName = null)
     {
         if (Equals(value, OldValue)) return false;
@@ -124,7 +124,7 @@ public partial class ViewModel
         ref T? field,
         in T? value,
         Action<string>? OnPropertyChanged,
-        Func<T, bool> Validator,
+        Func<T?, bool> Validator,
         [CallerMemberName] in string PropertyName = null)
         => Validator(value) && Set(ref field, value, OnPropertyChanged, PropertyName);
 }

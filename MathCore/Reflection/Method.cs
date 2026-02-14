@@ -22,7 +22,7 @@ public class Method<TObject, TResult>
     private bool _Private;
 
     /// <summary>Функция, вычисляющая результат вызова метода</summary>
-    private Func<object[], TResult?> _Method = null!;
+    private Func<object?[], TResult?> _Method = null!;
 
     /// <summary>Имя контролируемого метода</summary>
     public string Name { get => _Name; set => Initialize(_Object, _Name = value, _Private); }
@@ -52,7 +52,7 @@ public class Method<TObject, TResult>
         if (type == typeof(object) && obj != null)
             type = obj.GetType();
 
-        _MethodInfo = type.GetMethod(MethodName, is_static | is_public);
+        _MethodInfo = type.GetMethod(MethodName, is_static | is_public).NotNull();
 
         _Method = obj is ISynchronizeInvoke invoke
             ? Args => (TResult?)invoke.Invoke((Func<object[], TResult?>)PrivateInvoke, new object[] { Args })
@@ -62,10 +62,10 @@ public class Method<TObject, TResult>
     /// <summary>Вызвать метод</summary>
     /// <param name="Args">Набор параметров, передаваемый методу</param>
     /// <returns>Результат вызова метода</returns>
-    public TResult? Invoke(params object[] Args) => _Method(Args);
+    public TResult? Invoke(params object?[] Args) => _Method(Args);
 
     /// <summary>Внутренний метод, осуществляющий вызов метода</summary>
     /// <param name="Args">Параметры вызова метода</param>
     /// <returns>Результат вызова метода</returns>
-    private TResult? PrivateInvoke(params object[] Args) => (TResult?)_MethodInfo.Invoke(_Object, Args);
+    private TResult? PrivateInvoke(params object?[] Args) => (TResult?)_MethodInfo.Invoke(_Object, Args);
 }

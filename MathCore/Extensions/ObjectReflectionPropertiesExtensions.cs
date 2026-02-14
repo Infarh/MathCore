@@ -162,7 +162,7 @@ public static class ObjectReflectionPropertiesExtensions
             {
                 Data =
                 {
-                    { nameof(obj), obj.GetType() },
+                    { nameof(obj), obj!.GetType() },
                     { nameof(T), typeof(T) },
                     { nameof(TValue), typeof(TValue) },
                     { nameof(PropertyName), PropertyName },
@@ -179,7 +179,7 @@ public static class ObjectReflectionPropertiesExtensions
             {
                 Data =
                 {
-                    { nameof(obj), obj.GetType() },
+                    { nameof(obj), obj!.GetType() },
                     { nameof(T), typeof(T) },
                     { nameof(TValue), typeof(TValue) },
                     { nameof(PropertyName), PropertyName },
@@ -235,9 +235,9 @@ public static class ObjectReflectionPropertiesExtensions
         var parameter = "obj".ParameterOf<object>();
         var value_parameter = "value".ParameterOf<object>();
 
-        var call_expr = set_method.GetCallExpression(
+        var call_expr = set_method!.GetCallExpression(
             parameter.ConvertTo(type),
-            value_parameter.ConvertTo(set_method.GetParameters()[0].ParameterType));
+            value_parameter.ConvertTo(set_method!.GetParameters()[0].ParameterType));
 
         var action = call_expr.
             CreateLambda<Action<object, object?>>(parameter, value_parameter)
@@ -256,9 +256,9 @@ public static class ObjectReflectionPropertiesExtensions
         var parameter = "obj".ParameterOf<object>();
         var value_parameter = "value".ParameterOf<object>();
 
-        var call_expr = set_method.GetCallExpression(
+        var call_expr = set_method!.GetCallExpression(
             parameter.ConvertTo(type),
-            value_parameter.ConvertTo(set_method.GetParameters()[0].ParameterType));
+            value_parameter.ConvertTo(set_method!.GetParameters()[0].ParameterType));
 
         var action = call_expr.
             CreateLambda<Action<object, object?>>(parameter, value_parameter)
@@ -332,7 +332,7 @@ public static class ObjectReflectionPropertiesExtensions
         var value_parameter = "value".ParameterOf<TValue>();
 
         Expression instance_expr = type == typeof(T) ? parameter : parameter.ConvertTo(type);
-        var call_expr = set_method.GetCallExpression(instance_expr, value_parameter);
+        var call_expr = set_method!.GetCallExpression(instance_expr, value_parameter);
 
         var action = call_expr
             .CreateLambda<Action<T, TValue?>>(parameter, value_parameter)
@@ -348,7 +348,7 @@ public static class ObjectReflectionPropertiesExtensions
             {
                 Data =
                 {
-                    { nameof(obj), obj.GetType() },
+                    { nameof(obj), obj!.GetType() },
                     { nameof(T), typeof(T) },
                     { nameof(TValue), typeof(TValue) },
                     { nameof(PropertyName), PropertyName },
@@ -382,7 +382,7 @@ public static class ObjectReflectionPropertiesExtensions
                 if (!_PropertyNames.Value.Contains(key))
                     throw new InvalidOperationException($"В объекте типа {typeof(T)} свойство {key} отсутствует");
 
-                if (obj.TryGetPropertyValue(key, out var value))
+                if (obj!.TryGetPropertyValue(key, out var value))
                     return value;
 
                 throw new InvalidOperationException($"Свойство {typeof(T)}.{key} не доступно для чтения");
@@ -430,7 +430,7 @@ public static class ObjectReflectionPropertiesExtensions
 
         public bool Remove(KeyValuePair<string, object?> item) => throw new NotSupportedException();
 
-        public bool TryGetValue(string key, out object value) => obj.TryGetPropertyValue(key, out value);
+        public bool TryGetValue(string key, out object? value) => obj.TryGetPropertyValue(key, out value);
 
         public IEnumerator<KeyValuePair<string, object?>> GetEnumerator()
         {

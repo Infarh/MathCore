@@ -28,7 +28,7 @@ public class HElement : HElementBase, IEnumerable<HElementBase>, IEnumerable<HAt
     public HElement(string Name, params HElementBase[] elements)
     {
         _Name = Name;
-        if (elements.Length > 0) _Elements = elements.ToList();
+        if (elements.Length > 0) _Elements = [.. elements];
     }
 
     public void Add(params HAttribute[] attribute) => Attributes.AddRange(attribute);
@@ -51,7 +51,7 @@ public class HElement : HElementBase, IEnumerable<HElementBase>, IEnumerable<HAt
                     Elements.Add(new Text(str));
                     break;
                 default:
-                    Elements.Add(new Text(item.ToString()));
+                    Elements.Add(new Text(item.ToString() ?? string.Empty));
                     break;
             }
         }

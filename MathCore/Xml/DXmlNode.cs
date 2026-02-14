@@ -10,7 +10,7 @@ public class DXmlNode(XElement node) : DynamicObject
 {
     public DXmlNode(string name = "obj") : this(new XElement(name)) { }
 
-    public static DXmlNode From(XmlElement xml) => new(XElement.Load(xml.CreateNavigator().ReadSubtree()));
+    public static DXmlNode From(XmlElement xml) => new(XElement.Load(xml.CreateNavigator().NotNull().ReadSubtree()));
 
     public static DXmlNode From(XElement xml) => new(xml);
 
@@ -20,9 +20,9 @@ public class DXmlNode(XElement node) : DynamicObject
     {
         var node = _Node.Element(binder.Name);
         if (node != null)
-            node.SetValue(value);
+            node.SetValue(value!);
         else
-            _Node.Add(value.GetType() == typeof(DXmlNode)
+            _Node.Add(value is not null && value.GetType() == typeof(DXmlNode)
                 ? new(binder.Name)
                 : new XElement(binder.Name, value));
         return true;

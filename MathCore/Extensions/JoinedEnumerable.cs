@@ -76,7 +76,7 @@ public static class JoinedEnumerable
         IEnumerable<TInner> inner,
         Func<TOuter, TKey> OuterKeySelector,
         Func<TInner, TKey> InnerKeySelector,
-        Func<TOuter, TInner, TResult> ResultSelector,
+        Func<TOuter?, TInner?, TResult> ResultSelector,
         IEqualityComparer<TKey>? comparer = null)
     {
         if (outer is null) throw new ArgumentNullException(nameof(outer));
@@ -85,7 +85,7 @@ public static class JoinedEnumerable
         if (InnerKeySelector is null) throw new ArgumentNullException(nameof(InnerKeySelector));
         if (ResultSelector is null) throw new ArgumentNullException(nameof(ResultSelector));
 
-        var left_outer  = outer.IsOuter;
+        var left_outer = outer.IsOuter;
         var right_outer = inner is JoinedEnumerable<TInner> { IsOuter: true } inners;
 
         if (left_outer && right_outer)
@@ -112,7 +112,7 @@ public static class JoinedEnumerable
         IEnumerable<TInner> inner,
         Func<TOuter, TKey> OuterKeySelector,
         Func<TInner, TKey> InnerKeySelector,
-        Func<TOuter, TInner, TResult> ResultSelector,
+        Func<TOuter?, TInner?, TResult> ResultSelector,
         IEqualityComparer<TKey>? comparer = null)
     {
         var inner_lookup = inner.ToLookup(InnerKeySelector, comparer);
@@ -135,7 +135,7 @@ public static class JoinedEnumerable
         IEnumerable<TInner> inner,
         Func<TOuter, TKey> OuterKeySelector,
         Func<TInner, TKey> InnerKeySelector,
-        Func<TOuter, TInner, TResult> ResultSelector,
+        Func<TOuter?, TInner?, TResult> ResultSelector,
         IEqualityComparer<TKey>? comparer = null)
     {
         var outer_lookup = outer.ToLookup(OuterKeySelector, comparer);
@@ -167,11 +167,11 @@ public static class JoinedEnumerable
         foreach (var inner_grouping in inner_lookup)
             if (!outer_lookup.Contains(inner_grouping.Key))
                 foreach (var inner_item in inner_grouping)
-                    yield return ResultSelector(default, inner_item);
+                    yield return ResultSelector(default!, inner_item);
 
         foreach (var outer_grouping in outer_lookup)
             foreach (var inner_item in inner_lookup[outer_grouping.Key].DefaultIfEmpty())
                 foreach (var outer_item in outer_grouping)
-                    yield return ResultSelector(outer_item, inner_item);
+                    yield return ResultSelector(outer_item, inner_item!);
     }
 }

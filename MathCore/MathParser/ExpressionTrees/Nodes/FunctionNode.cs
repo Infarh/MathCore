@@ -9,10 +9,10 @@ public class FunctionNode : ComputedNode
     public string Name { get; } = null!;
 
     /// <summary>Массив имён аргументов функции</summary>
-    public string[] ArgumentsNames => Arguments.Select(a => a.Key).ToArray();
+    public string[] ArgumentsNames => [.. Arguments.Select(a => a.Key).Where(s => s is { Length: > 0 })!];
 
     /// <summary>Перечисление аргументов функции</summary>
-    public IEnumerable<KeyValuePair<string, ExpressionTreeNode>> Arguments => GetFunctionArgumentNodes(this);
+    public IEnumerable<KeyValuePair<string?, ExpressionTreeNode?>> Arguments => GetFunctionArgumentNodes(this);
 
     /// <summary>Функция узла</summary>
     public ExpressionFunction Function { get; set; } = null!;
@@ -41,23 +41,22 @@ public class FunctionNode : ComputedNode
             arg = arg switch
             {
                 FunctionArgumentNameNode name => new(name),
-                VariableValueNode             => new(null, arg),
-                VariantOperatorNode when arg.Left is VariableValueNode => new(
-                    ((VariableValueNode) arg.Left).Name, arg.Right),
+                VariableValueNode => new(null, arg),
+                VariantOperatorNode when arg.Left is VariableValueNode node => new(node.Name, arg.Right!),
                 _ => new FunctionArgumentNode(null, arg)
             };
-        Right    = arg;
+        Right = arg;
         Function = Expression.Functions[Name, ArgumentsNames];
     }
 
     /// <summary>Вычисление значения узла</summary>
     /// <returns>Значение функции</returns>
-    public override double Compute() => Function.GetValue(Arguments.Select(k => ((ComputedNode)k.Value).Compute()).ToArray());
+    public override double Compute() => Function.GetValue([.. Arguments.Select(k => ((ComputedNode)k.Value!).Compute())]);
 
     /// <summary>Получить перечисление аргументов функции</summary>
     /// <param name="FunctionNode">Узел функции</param>
     /// <returns>Перечисление аргументов функции</returns>
-    private static IEnumerable<KeyValuePair<string, ExpressionTreeNode>> GetFunctionArgumentNodes(ExpressionTreeNode FunctionNode) => 
+    private static IEnumerable<KeyValuePair<string?, ExpressionTreeNode?>> GetFunctionArgumentNodes(ExpressionTreeNode FunctionNode) =>
         FunctionNode.Right is FunctionArgumentNode node
             ? FunctionArgumentNode.EnumArguments(node)
             : throw new FormatException();
@@ -67,7 +66,7 @@ public class FunctionNode : ComputedNode
     public override Expression Compile() =>
         Expression.Call(Function.Delegate.Target != null ? Expression.Constant(Function.Delegate.Target) : null,
             Function.Delegate.Method,
-            Arguments.Select(a => ((ComputedNode)a.Value).Compile()));
+            Arguments.Select(a => ((ComputedNode)a.Value!).Compile()));
 
     /// <summary>Компиляция узла</summary>
     /// <param name="Args">Список параметров выражения</param>
@@ -75,18 +74,18 @@ public class FunctionNode : ComputedNode
     public override Expression Compile(params ParameterExpression[] Args) =>
         Expression.Call(Function.Delegate.Target != null ? Expression.Constant(Function.Delegate.Target) : null,
             Function.Delegate.Method,
-            Arguments.Select(a => ((ComputedNode)a.Value).Compile(Args)));
+            Arguments.Select(a => ((ComputedNode)a.Value!).Compile(Args)));
 
     /// <summary>Клонирование узла</summary>
     /// <returns>Клон узла</returns>
     public override ExpressionTreeNode Clone() => new FunctionNode(Name)
     {
-        Left     = Left?.Clone(),
-        Right    = Right?.Clone(),
+        Left = Left?.Clone(),
+        Right = Right?.Clone(),
         Function = Function.Clone()
     };
 
     /// <summary>Строковое представление узла</summary>
     /// <returns>Строковое представление узла</returns>
-    public override string ToString() => $"{Name}({Arguments.Select(v => string.IsNullOrEmpty(v.Key) ? v.Value.ToString() : $"{v.Key}:{v.Value.ToString()}").ToSeparatedStr(", ")})";
+    public override string ToString() => $"{Name}({Arguments.Select(v => string.IsNullOrEmpty(v.Key) ? v.Value?.ToString() : $"{v.Key}:{v.Value ?? "<null>"}").ToSeparatedStr(", ")})";
 }

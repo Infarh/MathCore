@@ -12,7 +12,7 @@ public readonly struct ProcessorCommand : IEquatable<ProcessorCommand>
     public string Name { get; }
 
     /// <summary>Параметр команды</summary>
-    public string Parameter { get; } = null!;
+    public string? Parameter { get; }
 
     /// <summary>Массив аргументов команды</summary>
     private readonly Argument[] _Argument;

@@ -18,32 +18,32 @@ public class ComputedBracketNode : ComputedNode
     public ComputedBracketNode(Bracket bracket, ExpressionTreeNode? Node = null)
     {
         _Bracket = bracket;
-        Left     = Node;
+        Left = Node;
     }
 
     /// <summary>Вычислить значение узла</summary>
     /// <returns>Значение вложенного узла</returns>
-    public override double Compute() => ((ComputedNode?)Left).Compute();
+    public override double Compute() => ((ComputedNode)Left!).Compute();
 
     /// <summary>Компиляция узла</summary>
     /// <returns>Компиляция содержимого узла</returns>
-    public override Expression Compile() => ((ComputedNode?)Left).Compile();
+    public override Expression Compile() => ((ComputedNode)Left!).Compile();
 
     /// <summary>Компиляция узла с параметрами</summary>
     /// <param name="Args">Список параметров выражения</param>
     /// <returns>Компиляция вложенного узла</returns>
-    public override Expression Compile(ParameterExpression[] Args) => ((ComputedNode?)Left).Compile(Args);
+    public override Expression Compile(ParameterExpression[] Args) => ((ComputedNode)Left!).Compile(Args);
 
     /// <summary>Клон узла</summary>
     /// <returns>Клон узла</returns>
     public override ExpressionTreeNode Clone() => new ComputedBracketNode(_Bracket)
     {
-        Left  = Left?.Clone(),
+        Left = Left?.Clone(),
         Right = Right?.Clone()
     };
 
     /// <summary>Строковое представление узла</summary>
     /// <returns>Строковое представление узла</returns>
-    public override string ToString() => 
+    public override string ToString() =>
         $"{_Bracket.Surround((Left ?? throw new InvalidOperationException()).ToString())}{Right?.ToString() ?? string.Empty}";
 }

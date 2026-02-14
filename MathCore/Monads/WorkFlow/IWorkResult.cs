@@ -4,7 +4,7 @@
 public interface IWorkResult
 {
     /// <summary>Ошибка, которая произошла в ходе выполнения работы</summary>
-    Exception Error { get; }
+    Exception? Error { get; }
 
     /// <summary>Признак того, что работа завершилась успешно</summary>
     bool Success { get; }

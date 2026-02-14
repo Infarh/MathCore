@@ -220,8 +220,10 @@ public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclud
         {
             var result = _MinInclude.GetHashCode();
             result = (result * 397) ^ _MaxInclude.GetHashCode();
-            result = (result * 397) ^ _Min.GetHashCode();
-            result = (result * 397) ^ _Max.GetHashCode();
+            if (_Min is not null)
+                result = (result * 397) ^ _Min.GetHashCode();
+            if (_Max is not null)
+                result = (result * 397) ^ _Max.GetHashCode();
             return result;
         }
     }

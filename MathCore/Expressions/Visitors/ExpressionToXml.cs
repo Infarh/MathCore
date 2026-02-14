@@ -68,10 +68,10 @@ public sealed class ExpressionToXml : ExpressionVisitor
     protected override Expression VisitParameter(ParameterExpression node)
     {
         var full_name = node.Name;
-        var point_index = full_name.LastIndexOf('.');
+        var point_index = full_name?.LastIndexOf('.') ?? -1;
         if (point_index != -1) return node;
 
-        var name = full_name[(point_index + 1)..];
+        var name = full_name![(point_index + 1)..];
         _Result.Append(name);
         return node;
     }
@@ -111,7 +111,7 @@ public sealed class ExpressionToXml : ExpressionVisitor
     private Expression VisitInfixBinary(BinaryExpression node)
     {
         var requires_precedence = RequiresPrecedence(node.NodeType);
-        if (requires_precedence) _Result.Append("(");
+        if (requires_precedence) _Result.Append('(');
 
         Visit(node.Left);
 
@@ -125,7 +125,7 @@ public sealed class ExpressionToXml : ExpressionVisitor
 
         Visit(node.Right);
 
-        if (requires_precedence) _Result.Append(")");
+        if (requires_precedence) _Result.Append(')');
         return node;
     }
 

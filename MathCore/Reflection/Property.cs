@@ -34,7 +34,7 @@ public class Property<TObject, TValue> : IValue<TValue?>
     /// <summary>Имя свойства</summary>
     private string _Name = null!;
     /// <summary>Объект, которому принадлежит свойство</summary>
-    private TObject _Object = default!;
+    private TObject? _Object;
     /// <summary>Флаг приватности свойства</summary>
     private bool _Private;
 
@@ -56,7 +56,7 @@ public class Property<TObject, TValue> : IValue<TValue?>
     public string Name { get => _Name; set => Initialize(_Object, value, _Private); }
 
     ///<summary>Объект, определяющий свойство</summary>
-    public TObject Object { get => _Object; set => Initialize(value, _Name, _Private); }
+    public TObject? Object { get => _Object; set => Initialize(value, _Name, _Private); }
 
     ///<summary>Признак - является ли свойство приватным</summary>
     public bool Private { get => _Private; set => Initialize(_Object, _Name, _Private = value); }
@@ -77,7 +77,7 @@ public class Property<TObject, TValue> : IValue<TValue?>
     public bool SupportsChangeEvents => _Descriptor is { SupportsChangeEvents: true };
 
     ///<summary>Атрибуты свойства</summary>
-    public PropertyAttributes Attributes => _PropertyInfo.Attributes;
+    public PropertyAttributes Attributes => _PropertyInfo.NotNull().Attributes;
 
     /// <summary>Дескриптор свойства объекта</summary>
     public PropertyDescriptor? Descriptor => _Descriptor;

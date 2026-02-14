@@ -14,7 +14,7 @@ public class VectorND_double : Vector<double>
     public VectorND_double GetProduction(VectorND_double b)
     {
         if (Dimension != b.Dimension) throw new ArgumentException("Размерности векторов не совпадают");
-        return new(new double[Dimension].Initialize(this, b, (i, v, bb) => v[i] * bb[i]));
+        return new(new double[Dimension].Initialize(this, b, (i, v, bb) => v![i] * bb![i]));
     }
 
     public double GetScalarProduction(VectorND_double b)
@@ -46,37 +46,37 @@ public class VectorND_double : Vector<double>
         return new(new double[N].Initialize(i => M.GetMinor(i, 0).GetDeterminant() * (k *= -1)));
     }
 
-    public VectorND_double GetInversed() => new(new double[Dimension].Initialize(this, (i, v) => 1 / v[i]));
+    public VectorND_double GetInversed() => new(new double[Dimension].Initialize(this, (i, v) => 1 / v![i]));
 
     public static VectorND_double operator +(VectorND_double a, VectorND_double b)
     {
         if (a.Dimension != b.Dimension) throw new ArgumentException("Размерности векторов не совпадают");
-        return new(new double[a.Dimension].Initialize(a, b, (i, aa, bb) => aa[i] + bb[i]));
+        return new(new double[a.Dimension].Initialize(a, b, (i, aa, bb) => aa![i] + bb![i]));
     }
 
-    public static VectorND_double operator +(VectorND_double a, double b) => new(new double[a.Dimension].Initialize(a, b, (i, aa, bb) => aa[i] + bb));
+    public static VectorND_double operator +(VectorND_double a, double b) => new(new double[a.Dimension].Initialize(a, b, (i, aa, bb) => aa![i] + bb));
 
-    public static VectorND_double operator +(double a, VectorND_double b) => new(new double[b.Dimension].Initialize(a, b, (i, aa, bb) => aa + bb[i]));
+    public static VectorND_double operator +(double a, VectorND_double b) => new(new double[b.Dimension].Initialize(a, b, (i, aa, bb) => aa + bb![i]));
 
     public static VectorND_double operator -(VectorND_double a, VectorND_double b)
     {
         if (a.Dimension != b.Dimension) throw new ArgumentException("Размерности векторов не совпадают");
-        return new(new double[a.Dimension].Initialize(a, b, (i, aa, bb) => aa[i] - bb[i]));
+        return new(new double[a.Dimension].Initialize(a, b, (i, aa, bb) => aa![i] - bb![i]));
     }
 
-    public static VectorND_double operator -(VectorND_double a, double b) => new(new double[a.Dimension].Initialize(a, b, (i, aa, bb) => aa[i] - bb));
+    public static VectorND_double operator -(VectorND_double a, double b) => new(new double[a.Dimension].Initialize(a, b, (i, aa, bb) => aa![i] - bb));
 
-    public static VectorND_double operator -(double a, VectorND_double b) => new(new double[b.Dimension].Initialize(a, b, (i, aa, bb) => aa - bb[i]));
+    public static VectorND_double operator -(double a, VectorND_double b) => new(new double[b.Dimension].Initialize(a, b, (i, aa, bb) => aa - bb![i]));
 
     public static double operator *(VectorND_double a, VectorND_double b) => a.GetScalarProduction(b);
 
-    public static VectorND_double operator *(VectorND_double a, double b) => new(new double[a.Dimension].Initialize(a, b, (i, aa, bb) => aa[i] * bb));
+    public static VectorND_double operator *(VectorND_double a, double b) => new(new double[a.Dimension].Initialize(a, b, (i, aa, bb) => aa![i] * bb));
 
-    public static VectorND_double operator *(double a, VectorND_double b) => new(new double[b.Dimension].Initialize(a, b, (i, aa, bb) => aa * bb[i]));
+    public static VectorND_double operator *(double a, VectorND_double b) => new(new double[b.Dimension].Initialize(a, b, (i, aa, bb) => aa * bb![i]));
 
     public static double operator /(VectorND_double a, VectorND_double b) => a * b.GetInversed();
 
-    public static VectorND_double operator /(VectorND_double a, double b) => new(new double[a.Dimension].Initialize(a, b, (i, aa, bb) => aa[i] / bb));
+    public static VectorND_double operator /(VectorND_double a, double b) => new(new double[a.Dimension].Initialize(a, b, (i, aa, bb) => aa![i] / bb));
 
-    public static VectorND_double operator /(double a, VectorND_double b) => new(new double[b.Dimension].Initialize(a, b, (i, aa, bb) => aa / bb[i]));
+    public static VectorND_double operator /(double a, VectorND_double b) => new(new double[b.Dimension].Initialize(a, b, (i, aa, bb) => aa / bb![i]));
 }

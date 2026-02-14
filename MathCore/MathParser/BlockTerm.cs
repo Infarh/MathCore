@@ -36,16 +36,16 @@ internal sealed class BlockTerm : Term
     public BlockTerm(string OpenBracket, string Str, string CloseBracket)
         : base(string.Format("{0}{2}{1}", OpenBracket, CloseBracket, Str))
     {
-        _OpenBracket  = OpenBracket;
+        _OpenBracket = OpenBracket;
         _CloseBracket = CloseBracket;
-        _Terms        = GetTerms(Str) ?? throw new InvalidOperationException();
+        _Terms = GetTerms(Str) ?? throw new InvalidOperationException();
     }
 
     public BlockTerm(string OpenBracket, Term[] terms, string CloseBracket)
         : base($"{OpenBracket}{terms.ToSeparatedStr()}{CloseBracket}")
     {
-        _Terms        = terms;
-        _OpenBracket  = OpenBracket;
+        _Terms = terms;
+        _OpenBracket = OpenBracket;
         _CloseBracket = CloseBracket;
     }
 
@@ -57,10 +57,10 @@ internal sealed class BlockTerm : Term
     {
         var p = pos;
         var l = Str.Length;
-        while(p < l && !char.IsDigit(Str, p)) p++;
-        if(p >= l) return null;
+        while (p < l && !char.IsDigit(Str, p)) p++;
+        if (p >= l) return null;
         var start = p;
-        while(p < l && char.IsDigit(Str, p)) p++;
+        while (p < l && char.IsDigit(Str, p)) p++;
         pos = p;
         return Str.Substring(start, p - start);
     }
@@ -72,16 +72,16 @@ internal sealed class BlockTerm : Term
     private static string GetNameString(string Str, ref int pos)
     {
         var result = string.Empty;
-        var L      = Str.Length;
-        var i      = pos;
-        while(i < L && (char.IsLetter(Str[i]) || Str[i] == '∫'))
+        var L = Str.Length;
+        var i = pos;
+        while (i < L && (char.IsLetter(Str[i]) || Str[i] == '∫'))
             result += Str[i++];
-        if(i == L || !char.IsDigit(Str[i]))
+        if (i == L || !char.IsDigit(Str[i]))
         {
             pos = i;
             return result;
         }
-        while(i < L && char.IsDigit(Str[i]))
+        while (i < L && char.IsDigit(Str[i]))
             result += Str[i++];
         pos += result.Length;
         return result;
@@ -92,24 +92,24 @@ internal sealed class BlockTerm : Term
     /// <returns>Массив элементов математического выражения</returns>
     private static Term[]? GetTerms(string? Str)
     {
-        if(Str is null) return null;
-        if(Str.Length == 0) return [];
-        var pos    = 0;
-        var len    = Str.Length;
+        if (Str is null) return null;
+        if (Str.Length == 0) return [];
+        var pos = 0;
+        var len = Str.Length;
         var result = new List<Term>();
-        while(pos < len)
+        while (pos < len)
         {
             var c = Str[pos];
-            if(char.IsLetter(c) || c == '∫')
+            if (char.IsLetter(c) || c == '∫')
             {
                 Term value = new StringTerm(GetNameString(Str, ref pos));
-                if(pos < len)
-                    switch(Str[pos])
+                if (pos < len)
+                    switch (Str[pos])
                     {
                         case '(':
                             {
                                 var block_str = Str.GetBracketText(ref pos) ?? throw new InvalidOperationException("Получена пустая ссылка на блок выражения");
-                                var block     = new BlockTerm("(", block_str, ")");
+                                var block = new BlockTerm("(", block_str, ")");
                                 value = new FunctionTerm((StringTerm)value, block);
                             }
                             break;
@@ -128,7 +128,7 @@ internal sealed class BlockTerm : Term
                             }
                             break;
                     }
-                if(pos < len && Str[pos] == '{')
+                if (pos < len && Str[pos] == '{')
                     value = new FunctionalTerm
                     (
                         (FunctionTerm)value,
@@ -136,15 +136,15 @@ internal sealed class BlockTerm : Term
                     );
                 result.Add(value);
             }
-            else if(char.IsDigit(c))
+            else if (char.IsDigit(c))
                 result.Add(new NumberTerm(GetNumberString(Str, ref pos) ?? throw new InvalidOperationException("Получена пустая ссылка на строку числового значения")));
             else
-                switch(c)
+                switch (c)
                 {
                     case '(':
                         {
                             var block_str = Str.GetBracketText(ref pos) ?? throw new InvalidOperationException("Получена пустая ссылка на блок выражения");
-                            var block     = new BlockTerm("(", block_str, ")");
+                            var block = new BlockTerm("(", block_str, ")");
                             result.Add(block);
                         }
                         break;
@@ -188,7 +188,7 @@ internal sealed class BlockTerm : Term
            .Select(g => Parser.GetRoot(g, Expression)).ToArray();
 
 
-        if(roots.Length == 1) return roots[0]; // Если найден только один корень, то возвращаем его
+        if (roots.Length == 1) return roots[0]; // Если найден только один корень, то возвращаем его
         // Иначе корней найдено много
         ExpressionTreeNode? argument = null; // объявляем ссылку на аргумент
         // проходим по всем найденным корням
@@ -196,18 +196,18 @@ internal sealed class BlockTerm : Term
         {
             var arg = root switch
             {
-                FunctionArgumentNode                                               => root,
-                FunctionArgumentNameNode name_node                                 => new FunctionArgumentNode(name_node),
-                VariantOperatorNode when root.Left is VariableValueNode value_node => new FunctionArgumentNode(value_node.Name, root.Right),
-                _                                                                  => new FunctionArgumentNode(string.Empty, root)
+                FunctionArgumentNode => root,
+                FunctionArgumentNameNode name_node => new FunctionArgumentNode(name_node),
+                VariantOperatorNode when root.Left is VariableValueNode value_node => new FunctionArgumentNode(value_node.Name, root.Right!),
+                _ => new FunctionArgumentNode(string.Empty, root)
             };
 
-            argument = argument is null 
+            argument = argument is null
                 ? arg                   // Если аргумент не был указан, то сохраняем полученный узел, как аргумент
                 : argument.Right = arg; //  сохраняем полученный узел в правое поддерево аргумента
         }
         // Если аргумент не был выделен, то что-то пошло не так - ошибка формата
-        if(argument is null) throw new FormatException("Не определён аргумент функции");
+        if (argument is null) throw new FormatException("Не определён аргумент функции");
         return argument.Root; // Вернуть корень аргумента
     }
 }

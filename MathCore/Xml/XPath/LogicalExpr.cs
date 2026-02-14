@@ -92,13 +92,13 @@ internal sealed class LogicalExpr : Query
 
         return _Operator switch
         {
-            Operator.Op.Lt when n1 < n2        => true,
-            Operator.Op.Gt when n1 > n2        => true,
-            Operator.Op.Le when n1 <= n2       => true,
-            Operator.Op.Ge when n1 >= n2       => true,
-            Operator.Op.Eq when n1.Equals(n2)  => true,
+            Operator.Op.Lt when n1 < n2 => true,
+            Operator.Op.Gt when n1 > n2 => true,
+            Operator.Op.Le when n1 <= n2 => true,
+            Operator.Op.Ge when n1 >= n2 => true,
+            Operator.Op.Eq when n1.Equals(n2) => true,
             Operator.Op.Ne when !n1.Equals(n2) => true,
-            _                                  => false
+            _ => false
         };
     }
 
@@ -112,7 +112,7 @@ internal sealed class LogicalExpr : Query
         var s2 = opnd_var2.ToString();
 
         if (_Operator > Operator.Op.Ge)
-            return (Operator.Op.Eq == _Operator && s1.Equals(s2)) || (Operator.Op.Ne == _Operator && !s1.Equals(s2));
+            return (Operator.Op.Eq == _Operator && string.Equals(s1, s2)) || (Operator.Op.Ne == _Operator && !string.Equals(s1, s2));
         else
         {
             //need to covert the string to the number and compare the numbers.
@@ -129,11 +129,11 @@ internal sealed class LogicalExpr : Query
 
             return _Operator switch
             {
-                Operator.Op.Lt when n1 < n2  => true,
-                Operator.Op.Gt when n1 > n2  => true,
+                Operator.Op.Lt when n1 < n2 => true,
+                Operator.Op.Gt when n1 > n2 => true,
                 Operator.Op.Le when n1 <= n2 => true,
                 Operator.Op.Ge when n1 >= n2 => true,
-                _                            => false
+                _ => false
             };
         }
     }
@@ -161,11 +161,11 @@ internal sealed class LogicalExpr : Query
 
         return _Operator switch
         {
-            Operator.Op.Lt when n1 < n2  => true,
-            Operator.Op.Gt when n1 > n2  => true,
+            Operator.Op.Lt when n1 < n2 => true,
+            Operator.Op.Gt when n1 > n2 => true,
             Operator.Op.Le when n1 <= n2 => true,
             Operator.Op.Ge when n1 >= n2 => true,
-            _                            => false
+            _ => false
         };
     }
 

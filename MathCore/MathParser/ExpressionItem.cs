@@ -6,7 +6,7 @@ namespace MathCore.MathParser;
 public abstract class ExpressionItem : ViewModel
 {
     /// <summary>Имя</summary>
-    public string Name { get; set => Set(ref field, value); } = null!;
+    public string Name { get; set => Set(ref field!, value); } = null!;
 
     /// <summary>Инициализация нового элемента математического выражения</summary>
     protected ExpressionItem() { }

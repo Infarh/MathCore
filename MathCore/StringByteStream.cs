@@ -15,7 +15,7 @@ public class StringByteStream(string Str, Encoding? encoding = null) : Stream
 
     public override bool CanWrite => false;
 
-    public override long Length { get; } = encoding.GetByteCount(Str);
+    public override long Length { get; } = (encoding ?? Encoding.UTF8).GetByteCount(Str);
 
     public override long Position
     {
@@ -30,7 +30,7 @@ public class StringByteStream(string Str, Encoding? encoding = null) : Stream
         if (_StringOffset >= _StringLength) return 0;
 
         var str_tail_length = _StringLength - _StringOffset;
-        var buffer_chars_count = encoding.GetCharCount(buffer, offset, count);
+        var buffer_chars_count = _Encoding.GetCharCount(buffer, offset, count);
         var char_count = Math.Min(str_tail_length, buffer_chars_count);
 
         var byte_count = _Encoding.GetBytes(Str, _StringOffset, char_count, buffer, offset);

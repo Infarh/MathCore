@@ -1,25 +1,23 @@
 ﻿namespace MathCore.MathParser;
 
 /// <summary>функция в структуре математического выражения</summary>
-public class ExpressionFunction : ExpressionItem, ICloneable<ExpressionFunction>
+/// <remarks>Инициализация новой функции структуры математического выражения по сигнатуре</remarks>
+/// <param name="Name">Имя функции</param>
+/// <param name="Arguments">Список имён аргументов</param>
+public class ExpressionFunction(string Name, IReadOnlyList<string> Arguments) : ExpressionItem(Name), ICloneable<ExpressionFunction>
 {
-    private Delegate? _Delegate;
+    private Delegate _Delegate = null!;
 
     /// <summary>Делегат функции</summary>
-    public Delegate? Delegate { get => _Delegate; set => Set(ref _Delegate, value); }
+    public Delegate Delegate { get => _Delegate; set => Set(ref _Delegate!, value); }
 
     /// <summary>Массив имён аргументов</summary>
-    public IReadOnlyList<string> Arguments { get; }
-
-    /// <summary>Инициализация новой функции структуры математического выражения по сигнатуре</summary>
-    /// <param name="Name">Имя функции</param>
-    /// <param name="Arguments">Список имён аргументов</param>
-    public ExpressionFunction(string Name, IReadOnlyList<string> Arguments) : base(Name) => this.Arguments = Arguments;
+    public IReadOnlyList<string> Arguments { get; } = Arguments;
 
     /// <summary>Метод получения значения функции по массиву значений её аргументов</summary>
     /// <param name="arguments">Массив аргументов функции</param>
     /// <returns>Значение функции</returns>
-    public double GetValue(double[] arguments) => (double)Delegate.DynamicInvoke(arguments.Cast<object>().ToArray())!;
+    public double GetValue(double[] arguments) => (double)Delegate.DynamicInvoke([.. arguments.Cast<object>()])!;
 
     /// <summary>Проверка на эквивалентность сигнатуре</summary>
     /// <param name="sName">Имя функции</param>
@@ -33,16 +31,16 @@ public class ExpressionFunction : ExpressionItem, ICloneable<ExpressionFunction>
     /// <returns>Истина, если сигнатура соответствует функции</returns>
     public bool IsEqualSignature(string SigName, IReadOnlyList<string?> arg)
     {
-        if(!string.Equals(Name, SigName, StringComparison.CurrentCulture)) return false;
+        if (!string.Equals(Name, SigName, StringComparison.CurrentCulture)) return false;
         var args = Arguments;
-        if(args.Count != arg.Count) return false;
-        for(int i = 0, N = args.Count; i < N; i++)
+        if (args.Count != arg.Count) return false;
+        for (int i = 0, N = args.Count; i < N; i++)
         {
             var arg_null = args[i] is null;
             var arg2_null = arg[i] is null;
-            if(arg_null != arg2_null) return false;
-            if(!arg_null && args[i] != arg[i]) return false;
-            if(!arg2_null && arg[i] != args[i]) return false;
+            if (arg_null != arg2_null) return false;
+            if (!arg_null && args[i] != arg[i]) return false;
+            if (!arg2_null && arg[i] != args[i]) return false;
         }
 
         return true;

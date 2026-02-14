@@ -97,14 +97,14 @@ public class XPathQuery
 
         // Index is 0 based , but the count is 1 based
         // plus the null query we added.
-        var lookup_length = ((BaseAxisQuery?)GetXPathQueries[^2]).Depth + 1;
+        var lookup_length = ((BaseAxisQuery)GetXPathQueries[^2]!).Depth + 1;
 
         _DepthLookup = new int[lookup_length];
 
         //exclude the null query
         for (var i = 0; i < GetXPathQueries.Count - 1; ++i)
-            if (_DepthLookup[((BaseAxisQuery?)GetXPathQueries[i]).Depth] == 0)
-                _DepthLookup[((BaseAxisQuery?)GetXPathQueries[i]).Depth] = i;
+            if (_DepthLookup[((BaseAxisQuery)GetXPathQueries[i]!).Depth] == 0)
+                _DepthLookup[((BaseAxisQuery)GetXPathQueries[i]!).Depth] = i;
     }
 
     /// <inheritdoc />
@@ -127,7 +127,7 @@ public class XPathQuery
         if (_MatchIndex < 1) return;
 
         var query_count = GetXPathQueries.Count - 1; // take out the null query;
-        var query_depth = ((BaseAxisQuery?)GetXPathQueries[_MatchIndex - 1]).Depth;
+        var query_depth = ((BaseAxisQuery)GetXPathQueries[_MatchIndex - 1]!).Depth;
 
         if (_MatchCount != query_count || query_depth != reader.Depth) return;
         _MatchState = true;
@@ -184,7 +184,7 @@ public class XPathQuery
         // reset the matching index
         var count = GetXPathQueries.Count;
 
-        if (reader.Depth < ((BaseAxisQuery?)GetXPathQueries[_MatchIndex]).Depth)
+        if (reader.Depth < ((BaseAxisQuery)GetXPathQueries[_MatchIndex]!).Depth)
             _MatchCount = (_MatchIndex = _DepthLookup[reader.Depth]) + 1;
 
         if (_MatchCount != count - 1 || _MatchIndex <= 0) return;
@@ -207,19 +207,19 @@ public class XPathQuery
         {
             //look through the subtree for the node is
             //looking for
-            if (!((Query?)GetXPathQueries[_MatchIndex + 1]).MatchNode(reader)) return;
+            if (!((Query?)GetXPathQueries[_MatchIndex + 1]!).MatchNode(reader)) return;
             //found the node that we were looking for
             _MatchIndex += 2;
             _MatchCount = _MatchIndex;
 
             //set the expected depth for the rest of query
             for (var i = _MatchCount; i < GetXPathQueries.Count - 1; i++)
-                ((BaseAxisQuery?)GetXPathQueries[_MatchIndex]).Depth += reader.Depth - 1;
+                ((BaseAxisQuery)GetXPathQueries[_MatchIndex]!).Depth += reader.Depth - 1;
         }
         else
         {
-            while (reader.Depth == ((BaseAxisQuery?)GetXPathQueries[_MatchIndex]).Depth)
-                if (((Query?)GetXPathQueries[_MatchIndex]).MatchNode(reader))
+            while (reader.Depth == ((BaseAxisQuery)GetXPathQueries[_MatchIndex]!).Depth)
+                if (((Query?)GetXPathQueries[_MatchIndex]!).MatchNode(reader))
                 {
                     _MatchIndex++;
                     _MatchCount = _MatchIndex;

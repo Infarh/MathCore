@@ -348,7 +348,7 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
 
     [DST] public static MatrixComplex operator -(MatrixComplex M, Complex x) => new(Subtract(M._Data, x));
 
-    [DST] public static MatrixComplex operator -(MatrixComplex M) => new(new Complex[M._N, M._M].Initialize(M._Data, (i, j, data) => -data[i, j]));
+    [DST] public static MatrixComplex operator -(MatrixComplex M) => new(new Complex[M._N, M._M].Initialize(M._Data, (i, j, data) => -data![i, j]));
 
     [DST] public static MatrixComplex operator -(Complex x, MatrixComplex M) => new(Subtract(x, M._Data));
 

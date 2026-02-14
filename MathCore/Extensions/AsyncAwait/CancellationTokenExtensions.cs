@@ -48,7 +48,7 @@ public static class CancellationTokenExtensions
         var result = new TaskCompletionSource<bool>();
         Task task = result.Task;
         if (cancel.IsCancellationRequested) result.SetResult(true);
-        else cancel.Register(s => ((TaskCompletionSource<bool>?)s).SetResult(true), result);
+        else cancel.Register(s => ((TaskCompletionSource<bool>)s!).SetResult(true), result);
         return task.GetAwaiter();
     }
 

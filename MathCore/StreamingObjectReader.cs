@@ -12,7 +12,7 @@ namespace System;
 /// <summary>Класс поточного чтения объектов из потока данных</summary>
 /// <typeparam name="T">Тип читаемых объектов</typeparam>
 public abstract class StreamingObjectReader<T> : Processor, IObservable<T>
-    // http://www.rsdn.ru/article/dotnet/ReactiveExtensions.xml
+// http://www.rsdn.ru/article/dotnet/ReactiveExtensions.xml
 {
     /* ------------------------------------------------------------------------------------------ */
 
@@ -61,15 +61,15 @@ public abstract class StreamingObjectReader<T> : Processor, IObservable<T>
         get
         {
             var speed = Speed.Value;
-            if(Math.Abs(speed) < double.Epsilon) return null;
-            var length   = DataStream.Length;
+            if (Math.Abs(speed) < double.Epsilon) return null;
+            var length = DataStream.Length;
             var position = DataStream.Position;
-            if(!Enable) return null;
+            if (!Enable) return null;
 
             var length_left = length - position;
-            var time_sec    = length_left / speed;
-            return double.IsNaN(time_sec) || double.IsInfinity(time_sec) 
-                ? null 
+            var time_sec = length_left / speed;
+            return double.IsNaN(time_sec) || double.IsInfinity(time_sec)
+                ? null
                 : TimeSpan.FromSeconds(time_sec);
         }
     }
@@ -80,7 +80,7 @@ public abstract class StreamingObjectReader<T> : Processor, IObservable<T>
     /// <param name="DataStream">Поток байт из которого требуется читать объекты</param>
     protected StreamingObjectReader(Stream DataStream)
     {
-        _Speed                  = new(_DataStream = DataStream);
+        _Speed = new(_DataStream = DataStream);
         Monitor.ProgressChecker = () => Completed;
     }
 
@@ -93,7 +93,7 @@ public abstract class StreamingObjectReader<T> : Processor, IObservable<T>
         _Speed.Reset();
         base.Initializer();
         Monitor.Status = "Reading...";
-        if(_DataStream is FileStream stream)
+        if (_DataStream is FileStream stream)
             Monitor.Information = $"File:{stream.Name}";
         Monitor.InformationChecker = () =>
         {
@@ -110,13 +110,14 @@ public abstract class StreamingObjectReader<T> : Processor, IObservable<T>
     {
         try
         {
-            if(_DataStream.Position == _DataStream.Length || Read() is not { } obj)
+            if (_DataStream.Position == _DataStream.Length || Read() is not { } obj)
             {
                 _Enabled = false;
                 return;
             }
             OnReaded(obj);
-        } catch(Exception)
+        }
+        catch (Exception)
         {
             _Enabled = false;
             throw;
@@ -144,8 +145,8 @@ public abstract class StreamingObjectReader<T> : Processor, IObservable<T>
     protected override void Dispose(bool disposing)
     {
         base.Dispose(disposing);
-        if(!disposing) return;
-        _ObservableObject.Dispose();
+        if (!disposing) return;
+        _ObservableObject?.Dispose();
     }
 
     /* ------------------------------------------------------------------------------------------ */

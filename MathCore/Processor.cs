@@ -265,8 +265,8 @@ public abstract class Processor : INotifyPropertyChanged, IDisposable
             _Enabled = false;
 
 #if !NET5_0_OR_GREATER
-            if (!_MainWorkThread.Join(_JoinThreadTimeout))
-                _MainWorkThread.Abort(); 
+            if (!_MainWorkThread!.Join(_JoinThreadTimeout))
+                _MainWorkThread!.Abort(); 
 #endif
 
             _MainWorkThread = null;

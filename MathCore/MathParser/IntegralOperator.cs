@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 using MathCore.MathParser.ExpressionTrees.Nodes;
 // ReSharper disable UnusedMember.Global
@@ -7,17 +6,15 @@ using MathCore.MathParser.ExpressionTrees.Nodes;
 namespace MathCore.MathParser;
 
 /// <summary>Комплексный оператор интегрирования</summary>
-public class IntegralOperator : Functional
+/// <remarks>Создание нового комплексного интегратора интегрирования</remarks>
+/// <param name="Name">Имя оператора</param>
+public class IntegralOperator(string Name) : Functional(Name)
 {
-    //Использовать адаптивный метод интегрирования
-    private bool _IsAdaptive;
-
     /// <summary>Создание нового комплексного интегратора интегрирования</summary>
     public IntegralOperator() : this("∫") { }
 
-    /// <summary>Создание нового комплексного интегратора интегрирования</summary>
-    /// <param name="Name">Имя оператора</param>
-    public IntegralOperator(string Name) : base(Name) { }
+    //Использовать адаптивный метод интегрирования
+    private bool _IsAdaptive;
 
     /// <summary>Инициализация оператора</summary>
     /// <param name="Parameters">Блок параметров</param>
@@ -38,7 +35,7 @@ public class IntegralOperator : Functional
            .OfType<VariableValueNode>()
            .Where(n => n.Parent is EqualityOperatorNode)
            .Select(n => n.Variable)
-           .FirstOrDefault() 
+           .FirstOrDefault()
             ?? throw new FormatException();
 
         var iterator_var_name = iterator_var.Name;
@@ -54,18 +51,17 @@ public class IntegralOperator : Functional
         Function.Tree
            .OfType<VariableValueNode>()
            .Where(n => !ReferenceEquals(n.Variable, iterator_var))
-           .Foreach(Function, Expression, (n, func, expr) => func.Variable.Add(n.Variable = expr.Variable[n.Variable.Name]));
+           .Foreach(Function, Expression, (n, func, expr) => func!.Variable.Add(n.Variable = expr!.Variable[n.Variable.Name]));
 
         Parameters.Variable.ClearCollection();
         Parameters.Variable.Add(iterator_var);
         if (!_IsAdaptive)
         {
-            Debug.Assert(iterator_diff_var != null, "iterator_diff_var != null");
-            Parameters.Variable.Add(iterator_diff_var);
-            if (iterator_node.Parent.Parent.IsLeftSubtree)
-                iterator_node.Parent.Parent.Parent.Left = null;
+            Parameters.Variable.Add(iterator_diff_var!);
+            if (iterator_node!.Parent!.Parent!.IsLeftSubtree)
+                iterator_node.Parent.Parent.Parent!.Left = null;
             else
-                iterator_node.Parent.Parent.Parent.Right = null;
+                iterator_node.Parent.Parent.Parent!.Right = null;
             iterator_node.Parent.Parent = null;
             Parameters.Tree.Root = new FunctionArgumentNode("Domain", Parameters.Tree.Root)
             {
@@ -76,7 +72,7 @@ public class IntegralOperator : Functional
         Parameters.Tree
            .OfType<VariableValueNode>()
            .Where(n => !ReferenceEquals(n.Variable, iterator_var) && !ReferenceEquals(n.Variable, iterator_diff_var))
-           .Foreach(Parameters, Expression, (n, pp, expr) => pp.Variable.Add(n.Variable = expr.Variable[n.Variable.Name]));
+           .Foreach(Parameters, Expression, (n, pp, expr) => pp!.Variable.Add(n.Variable = expr!.Variable[n.Variable.Name]));
     }
 
     /// <summary>Метод определения значения</summary>
@@ -88,7 +84,7 @@ public class IntegralOperator : Functional
            .OfType<VariableValueNode>()
            .First(n => ReferenceEquals(x, n.Variable));
 
-        var interval = (IntervalNode?)x_node.Parent.Right ?? throw new InvalidOperationException("Правый узел дерева не определён - невозможно рассчитать интервал значений интегрирования");
+        var interval = (IntervalNode?)x_node.Parent!.Right ?? throw new InvalidOperationException("Правый узел дерева не определён - невозможно рассчитать интервал значений интегрирования");
         var min_node = (ComputedNode?)interval.Left ?? throw new InvalidOperationException("В левом поддереве интервала значений отсутствует элемент - невозможно определить минимальное значение интервала");
         var max_node = (ComputedNode?)interval.Right ?? throw new InvalidOperationException("В правом поддереве интервала значений отсутствует элемент - невозможно определить максимальное значение интервала");
 
@@ -101,14 +97,14 @@ public class IntegralOperator : Functional
             return Function.Compute();
         };
 
-        if(_IsAdaptive)
+        if (_IsAdaptive)
             return f.GetIntegralValue_Adaptive(min, max);
 
         var dx = ParametersExpression.Variable[$"d{x_node.Variable.Name}"];
         var dx_node = ParametersExpression.Tree
            .OfType<VariableValueNode>()
            .First(n => ReferenceEquals(dx, n.Variable));
-        var dx_value_node = (ConstValueNode?)dx_node.Parent.Right ?? throw new InvalidOperationException("Отсутствует правое поддерево у родительского элемента dx - невозможно рассчитать шаг интегрирования");
+        var dx_value_node = (ConstValueNode?)dx_node.Parent!.Right ?? throw new InvalidOperationException("Отсутствует правое поддерево у родительского элемента dx - невозможно рассчитать шаг интегрирования");
         dx.Value = dx_value_node.Value;
         return f.GetIntegralValue(min, max, dx.GetValue());
     }
@@ -181,18 +177,18 @@ public class IntegralOperator : Functional
            .Cast<VariableValueNode>()
            .First(n => ReferenceEquals(iterator, n.Variable));
 
-        var interval       = (IntervalNode?)x_node.Parent.Right ?? throw new InvalidOperationException("Отсутствует правое поддерево у родительского узла");
-        var interval_left  = (ComputedNode?)interval.Left ?? throw new InvalidOperationException("Отсутствует левое поддерево");
+        var interval = (IntervalNode?)x_node.Parent!.Right ?? throw new InvalidOperationException("Отсутствует правое поддерево у родительского узла");
+        var interval_left = (ComputedNode?)interval.Left ?? throw new InvalidOperationException("Отсутствует левое поддерево");
         var interval_right = (ComputedNode?)interval.Right ?? throw new InvalidOperationException("Отсутствует правое поддерево");
-        var min            = interval_left.Compile();
-        var max            = interval_right.Compile();
+        var min = interval_left.Compile();
+        var max = interval_right.Compile();
 
         var iterator_parameter = Expression.Parameter(typeof(double), iterator.Name);
-        var parameters         = new[] { iterator_parameter };
-        var body               = ((ComputedNode)Function.Tree.Root).Compile(parameters);
-        var function           = Expression.Lambda(body, parameters).Compile();
+        var parameters = new[] { iterator_parameter };
+        var body = ((ComputedNode)Function.Tree.Root).Compile(parameters);
+        var function = Expression.Lambda(body, parameters).Compile();
 
-        if(_IsAdaptive)
+        if (_IsAdaptive)
             return Expression.Call(new AdaptiveIntegralDelegate(GetAdaptiveIntegral).Method,
             [
                 function.ToExpression(), min, max,
@@ -232,18 +228,18 @@ public class IntegralOperator : Functional
            .Cast<VariableValueNode>()
            .First(n => ReferenceEquals(iterator, n.Variable));
 
-        var interval       = (IntervalNode?)x_node.Parent.Right ?? throw new InvalidOperationException("Отсутствует правое поддерево у родительского узла");
-        var interval_left  = (ComputedNode?)interval.Left ?? throw new InvalidOperationException("Отсутствует левое поддерево");
+        var interval = (IntervalNode?)x_node.Parent!.Right ?? throw new InvalidOperationException("Отсутствует правое поддерево у родительского узла");
+        var interval_left = (ComputedNode?)interval.Left ?? throw new InvalidOperationException("Отсутствует левое поддерево");
         var interval_right = (ComputedNode?)interval.Right ?? throw new InvalidOperationException("Отсутствует правое поддерево");
-        var min            = interval_left.Compile();
-        var max            = interval_right.Compile();
+        var min = interval_left.Compile();
+        var max = interval_right.Compile();
 
         var iterator_parameter = Expression.Parameter(typeof(double), iterator.Name);
-        var parameters         = new[] { iterator_parameter };
-        var body               = ((ComputedNode)Function.Tree.Root).Compile(parameters);
-        var function           = Expression.Lambda(body, parameters).Compile();
+        var parameters = new[] { iterator_parameter };
+        var body = ((ComputedNode)Function.Tree.Root).Compile(parameters);
+        var function = Expression.Lambda(body, parameters).Compile();
 
-        if(_IsAdaptive)
+        if (_IsAdaptive)
             return Expression.Call(new AdaptiveIntegralDelegate(GetAdaptiveIntegral).Method,
             [
                 function.ToExpression(), min, max,
@@ -260,7 +256,7 @@ public class IntegralOperator : Functional
         return Expression.Call(new IntegralDelegate(GetIntegral).Method,
         [
             function.ToExpression(), min, max,
-            Expression.NewArrayInit(typeof(double), Parameters.Cast<Expression>().ToArray()),
+            Expression.NewArrayInit(typeof(double), [.. Parameters.Cast<Expression>()]),
             dx
         ]);
     }

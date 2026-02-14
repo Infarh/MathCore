@@ -32,7 +32,7 @@ public static class INotifyCollectionChangedExtensions
                 if (IsEmpty) Unsubscribe();
             }
         }
-        
+
         /// <summary>Событие, возникающее при изменении типа действия коллекции</summary>
         private event Action<NotifyCollectionChangedAction>? CollectionChangedHandlers;
         /// <summary>Событие, возникающее при изменении типа действия коллекции</summary>
@@ -74,7 +74,7 @@ public static class INotifyCollectionChangedExtensions
         public virtual bool IsEmpty => OnCollectionChangedEventHandlers is null && CollectionChangedHandlers is null && ValueChangeEventHandlers is null;
 
         /// <summary>Коллекция, на которую осуществляется подписка</summary>
-        public INotifyCollectionChanged Collection => 
+        public INotifyCollectionChanged Collection =>
             _Collection.TryGetTarget(out var collection)
                 ? collection
                 : throw new InvalidOperationException("Попытка доступа к объекту, который был удалён из памяти");
@@ -103,8 +103,8 @@ public static class INotifyCollectionChangedExtensions
         internal virtual void ClearHandlers()
         {
             OnCollectionChangedEventHandlers = null;
-            CollectionChangedHandlers        = null;
-            ValueChangeEventHandlers         = null;
+            CollectionChangedHandlers = null;
+            ValueChangeEventHandlers = null;
         }
     }
 
@@ -143,12 +143,12 @@ public static class INotifyCollectionChangedExtensions
             if (handlers is null) return;
             var collection = E.Action switch
             {
-                NotifyCollectionChangedAction.Add     => E.NewItems.Cast<TItem>().ToArray(),
-                NotifyCollectionChangedAction.Remove  => E.OldItems.Cast<TItem>().ToArray(),
-                NotifyCollectionChangedAction.Replace => (ICollection<TItem>?) Sender,
-                NotifyCollectionChangedAction.Move    => (ICollection<TItem>?) Sender,
-                NotifyCollectionChangedAction.Reset   => (ICollection<TItem>?) Sender,
-                _                                     => throw new ArgumentOutOfRangeException()
+                NotifyCollectionChangedAction.Add => [.. E.NewItems!.Cast<TItem>()],
+                NotifyCollectionChangedAction.Remove => [.. E.OldItems!.Cast<TItem>()],
+                NotifyCollectionChangedAction.Replace => (ICollection<TItem>?)Sender,
+                NotifyCollectionChangedAction.Move => (ICollection<TItem>?)Sender,
+                NotifyCollectionChangedAction.Reset => (ICollection<TItem>?)Sender,
+                _ => throw new InvalidEnumArgumentException(nameof(E.Action), (int)E.Action, typeof(NotifyCollectionChangedAction))
             };
             handlers.Invoke(collection!);
         }
@@ -199,13 +199,13 @@ public static class INotifyCollectionChangedExtensions
         lock (__Subscribers)
         {
             var object_subscribers = __Subscribers.GetValue(obj);
-            var object_subscriber  = object_subscribers?.GetValue(ChangeType);
+            var object_subscriber = object_subscribers?.GetValue(ChangeType);
             if (object_subscriber is null) return;
 
             object_subscriber.OnCollectionChangedEvent -= Handler;
 
-            if (object_subscriber.IsEmpty) object_subscribers.Remove(ChangeType);
-            if (object_subscribers.Count == 0) __Subscribers.Remove(obj);
+            if (object_subscriber.IsEmpty && object_subscribers is not null) object_subscribers.Remove(ChangeType);
+            if (object_subscribers?.Count == 0) __Subscribers.Remove(obj);
         }
     }
 
@@ -264,8 +264,8 @@ public static class INotifyCollectionChangedExtensions
         /// <summary>Конструктор класса CollectionEventDeferer</summary>
         public CollectionEventDeferer(INotifyCollectionChanged collection, NotifyCollectionChangedEventHandler EventHandler)
         {
-            _Collection                   =  collection ?? throw new ArgumentNullException(nameof(collection));
-            _EventHandler                 =  EventHandler ?? throw new ArgumentNullException(nameof(EventHandler));
+            _Collection = collection ?? throw new ArgumentNullException(nameof(collection));
+            _EventHandler = EventHandler ?? throw new ArgumentNullException(nameof(EventHandler));
             _Collection.CollectionChanged -= EventHandler;
             _Collection.CollectionChanged += OnCollectionChanged;
         }
@@ -284,7 +284,7 @@ public static class INotifyCollectionChangedExtensions
     }
 
     /// <summary>Подписчик на изменения свойства элементов коллекции</summary>
-    class CollectionItemPropertyChangedSubscriber<TCollection, TItem> : IDisposable
+    private class CollectionItemPropertyChangedSubscriber<TCollection, TItem> : IDisposable
         where TCollection : INotifyCollectionChanged, IEnumerable<TItem>
         where TItem : INotifyPropertyChanged
     {
@@ -295,9 +295,9 @@ public static class INotifyCollectionChangedExtensions
         /// <summary>Конструктор подписчика на изменения свойства элементов коллекции</summary>
         public CollectionItemPropertyChangedSubscriber(TCollection Collection, string PropertyName, EventHandler OnPropertyChanged)
         {
-            _Collection                  =  Collection;
-            _PropertyName                =  PropertyName;
-            _OnPropertyChanged           =  OnPropertyChanged;
+            _Collection = Collection;
+            _PropertyName = PropertyName;
+            _OnPropertyChanged = OnPropertyChanged;
             Collection.CollectionChanged += OnCollectionChanged;
         }
 
@@ -307,11 +307,11 @@ public static class INotifyCollectionChangedExtensions
             switch (E.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    foreach (INotifyPropertyChanged item in E.NewItems) 
+                    foreach (INotifyPropertyChanged item in E.NewItems!)
                         item.PropertyChanged += OnItemPropertyChanged;
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                    foreach (INotifyPropertyChanged item in E.OldItems) 
+                    foreach (INotifyPropertyChanged item in E.OldItems!)
                         item.PropertyChanged -= OnItemPropertyChanged;
                     break;
             }
@@ -334,10 +334,10 @@ public static class INotifyCollectionChangedExtensions
 
     /// <summary>Подписка на изменения свойства элементов коллекции</summary>
     public static IDisposable SubscribeToItemPropertyChanges<TCollection, TItem>(
-        this TCollection collection, 
+        this TCollection collection,
         string PropertyName,
         EventHandler OnPropertyChanged)
-        where TCollection : INotifyCollectionChanged, IEnumerable<TItem> 
+        where TCollection : INotifyCollectionChanged, IEnumerable<TItem>
         where TItem : INotifyPropertyChanged =>
         new CollectionItemPropertyChangedSubscriber<TCollection, TItem>(collection, PropertyName, OnPropertyChanged);
 

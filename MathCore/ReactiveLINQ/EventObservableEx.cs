@@ -14,9 +14,7 @@ internal sealed class EventObservableEx<TEventArgs> : SimpleObservableEx<TEventA
     {
         _Target = Obj;
         var event_descriptor = _Target.GetType().GetEvent(EventName);
-        _EventDescriptor = event_descriptor;
-        if(_EventDescriptor is null)
-            throw new ArgumentException($"Событие {EventName} не найдено", nameof(EventName));
+        _EventDescriptor = event_descriptor ?? throw new ArgumentException($"Событие {EventName} не найдено", nameof(EventName));
         _EventDescriptor.AddEventHandler(_Target, _EventHandler = (_, e) => OnNext(e));
     }
 

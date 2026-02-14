@@ -20,9 +20,9 @@ public class Swarm1D(int ParticleCount = 100)
 
         private Particle1D(double X, double Value, double BestX, double BestValue)
         {
-            this.X         = X;
-            this.Value     = Value;
-            this.BestX     = BestX;
+            this.X = X;
+            this.Value = Value;
+            this.BestX = BestX;
             this.BestValue = BestValue;
         }
     }
@@ -30,27 +30,27 @@ public class Swarm1D(int ParticleCount = 100)
     private static readonly Random __Random = new();
 
     public void Minimize(
-        Func<double, double> func, 
-        double minX, 
+        Func<double, double> func,
+        double minX,
         double maxX,
         int IterationCount,
-        out double X, 
-        out double Value) => 
+        out double X,
+        out double Value) =>
         Minimize(func, new(minX, maxX), IterationCount, out X, out Value);
 
     /// <exception cref="Exception">A delegate callback throws an exception.</exception>
     public void Minimize(
-        Func<double, double> func, 
-        Interval IntervalX, 
+        Func<double, double> func,
+        Interval IntervalX,
         int IterationCount,
-        out double X, 
+        out double X,
         out double Value)
     {
         var IntervalVx = IntervalX;
 
-        var swarm = new Particle1D[ParticleCount].Initialize(func, IntervalVx, (_, f, vx) => new(f, vx));
+        var swarm = new Particle1D[ParticleCount].Initialize(func, IntervalVx, (_, f, vx) => new(f!, vx));
         var start = swarm.GetMin(p => p.Value);
-        X     = start.X;
+        X = start!.X;
         Value = start.Value;
 
         for (var iteration = 0; iteration < IterationCount; iteration++)
@@ -63,16 +63,16 @@ public class Swarm1D(int ParticleCount = 100)
                 IntervalVx.Normalize(ref newVx);
 
                 var newX = IntervalX.Normalize(p.X + newVx);
-                p.X     = newX;
+                p.X = newX;
                 p.Value = func(newX);
                 if (p.Value < p.BestValue)
                 {
-                    p.BestX     = newX;
+                    p.BestX = newX;
                     p.BestValue = p.Value;
                 }
 
                 if (p.Value >= Value) continue;
-                X     = newX;
+                X = newX;
                 Value = p.Value;
             }
     }
@@ -80,24 +80,24 @@ public class Swarm1D(int ParticleCount = 100)
     public void Maximize(
         Func<double, double> func,
         double minX,
-        double maxX, 
+        double maxX,
         int IterationCount,
         out double X,
         out double Value)
         => Maximize(func, new(minX, maxX), IterationCount, out X, out Value);
 
     public void Maximize(
-        Func<double, double> func, 
-        Interval IntervalX, 
+        Func<double, double> func,
+        Interval IntervalX,
         int IterationCount,
-        out double X, 
+        out double X,
         out double Value)
     {
         var IntervalVx = IntervalX;
 
-        var swarm = new Particle1D[ParticleCount].Initialize(func, IntervalVx, (_, f, vx) => new(f, vx));
+        var swarm = new Particle1D[ParticleCount].Initialize(func, IntervalVx, (_, f, vx) => new(f!, vx));
         var start = swarm.GetMax(p => p.Value);
-        X     = start.X;
+        X = start!.X;
         Value = start.Value;
 
         for (var iteration = 0; iteration < IterationCount; iteration++)
@@ -110,16 +110,16 @@ public class Swarm1D(int ParticleCount = 100)
                 IntervalVx.Normalize(ref newVx);
 
                 var newX = IntervalX.Normalize(p.X + newVx);
-                p.X     = newX;
+                p.X = newX;
                 p.Value = func(newX);
                 if (p.Value > p.BestValue)
                 {
-                    p.BestX     = newX;
+                    p.BestX = newX;
                     p.BestValue = p.Value;
                 }
 
                 if (p.Value <= Value) continue;
-                X     = newX;
+                X = newX;
                 Value = p.Value;
             }
     }

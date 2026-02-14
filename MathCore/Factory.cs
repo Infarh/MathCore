@@ -51,7 +51,7 @@ public class Factory<T> : INotifyPropertyChanged, IFactory<T?>
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>Метод генерации объектов</summary>
-    private Func<T>? _FactoryMethod;
+    private Func<T> _FactoryMethod = null!;
 
     private T _Last = default!;
     private readonly PropertyChangedEventArgs _PropertyLastChangedArgs = new(nameof(Last));
@@ -75,7 +75,7 @@ public class Factory<T> : INotifyPropertyChanged, IFactory<T?>
     }
 
     /// <summary>Метод генерации объектов типа <typeparamref name="T"/></summary>
-    public Func<T>? FactoryMethod
+    public Func<T> FactoryMethod
     {
         [DST]
         get => _FactoryMethod;

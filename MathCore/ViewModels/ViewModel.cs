@@ -61,7 +61,7 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
 
     /// <summary>Присоединить обработчик события <see cref="PropertyChanged"/></summary>
     /// <param name="handler">Присоединяемый обработчик события <see cref="PropertyChanged"/></param>
-    protected virtual void PropertyChanged_AddHandler(in PropertyChangedEventHandler handler) => PropertyChangedEvent += handler;
+    protected virtual void PropertyChanged_AddHandler(PropertyChangedEventHandler? handler) => PropertyChangedEvent += handler;
 
     /// <summary>Словарь обработчиков событий изменений свойств</summary>
     private Dictionary<string, Action>? _PropertyChangedHandlers;
@@ -123,7 +123,7 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
 
     /// <summary>Отсоединить обработчик события <see cref="PropertyChanged"/></summary>
     /// <param name="handler">Отсоединяемый обработчик события <see cref="PropertyChanged"/></param>
-    protected virtual void PropertyChanged_RemoveHandler(in PropertyChangedEventHandler handler) => PropertyChangedEvent -= handler;
+    protected virtual void PropertyChanged_RemoveHandler(PropertyChangedEventHandler? handler) => PropertyChangedEvent -= handler;
 
     /// <summary>Получить перечисление всех объектов, подписанных на событие <see cref="PropertyChanged"/></summary>
     /// <typeparam name="T">Тип интересующих объектов</typeparam>
@@ -154,7 +154,12 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
         ?? [];
 
 
-    private readonly object _PropertiesDependenciesSyncRoot = new();
+#if NET9_0_OR_GREATER
+    private readonly Lock _PropertiesDependenciesSyncRoot = new();
+#else
+    private readonly object _PropertiesDependenciesSyncRoot = new(); 
+#endif
+
     /// <summary>Словарь графа зависимости изменений свойств</summary>
     private Dictionary<string, List<string>>? _PropertiesDependenciesDictionary;
 

@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Linq.Reactive;
 
+using CommandHandler = System.Action<MathCore.CommandProcessor.ProcessorCommand, int, System.Collections.Generic.IReadOnlyList<MathCore.CommandProcessor.ProcessorCommand>>;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable UnusedMember.Global
@@ -9,9 +11,6 @@ using System.Linq.Reactive;
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 
 namespace MathCore.CommandProcessor;
-
-using CommandHandler = Action<ProcessorCommand, int, IReadOnlyList<ProcessorCommand>>;
-
 /// <summary>Командный процессор</summary>
 public class CommandLineProcessor
 {
@@ -30,19 +29,19 @@ public class CommandLineProcessor
         ConsoleWriter ??= Console.Out;
         ConsoleReader ??= Console.In;
 
-        var work      = true;
+        var work = true;
         var processor = new CommandLineProcessor();
         processor["exit"] += () => work = false;
         processor["help"] += () => processor.GetRegisteredCommands().Foreach(ConsoleWriter.WriteLine);
         var set = processor["set"];
-        set["prompt"] += (_, _, _, arg) => Prompt = arg.Value;
-        set["work"]   += (_, _, _, arg) => { if (bool.TryParse(arg.Value, out var can_work)) work = can_work; };
+        set!["prompt"] += (_, _, _, arg) => Prompt = arg.Value;
+        set["work"] += (_, _, _, arg) => { if (bool.TryParse(arg.Value, out var can_work)) work = can_work; };
 
         Initializer?.Invoke(processor);
         while (work)
         {
             Console.Write(Prompt);
-            foreach (var command in processor.Process(ConsoleReader.ReadLine()))
+            foreach (var command in processor.Process(ConsoleReader.ReadLine()!))
                 yield return command;
         }
     }
@@ -56,7 +55,7 @@ public class CommandLineProcessor
     {
         if (IsRegisteredCommand(Arg.Command.Name))
         {
-            this[Arg.Command.Name].Foreach(Arg, (action, _, arg) => action.Invoke(arg.Command, arg.Index, arg.Commands));
+            this[Arg.Command.Name].Foreach(Arg, (action, _, arg) => action.Invoke(arg!.Command, arg.Index, arg.Commands));
             Arg.Handled = true;
         }
 
@@ -126,7 +125,7 @@ public class CommandLineProcessor
     /// <summary>Доступ к списку обработчиков команды по её имени</summary>
     /// <param name="CommandName">Имя команды</param>
     /// <returns>Список обработчиков команды</returns>
-    public CommandHandlersList? this[string CommandName]
+    public CommandHandlersList this[string CommandName]
     {
         get
         {
@@ -157,10 +156,10 @@ public class CommandLineProcessor
         char ArgSplitter = ' ',
         char ValueSplitter = '=')
     {
-        this.CommandSplitter          = CommandSplitter;
+        this.CommandSplitter = CommandSplitter;
         this.CommandParameterSplitter = CommandParameterSplitter;
-        this.ArgSplitter              = ArgSplitter;
-        this.ValueSplitter            = ValueSplitter;
+        this.ArgSplitter = ArgSplitter;
+        this.ValueSplitter = ValueSplitter;
     }
 
     /// <summary>Обработать команду</summary>
@@ -174,7 +173,7 @@ public class CommandLineProcessor
            .ToArray();
 
         // ReSharper disable once IdentifierTypo
-        commands.Foreach(this, commands, (command, i, processor, cmds) => processor.OnCommandProcess(command, i, cmds));
+        commands.Foreach(this, commands, (command, i, processor, cmds) => processor!.OnCommandProcess(command, i, cmds!));
         return commands;
     }
 
@@ -198,7 +197,7 @@ public class CommandLineProcessor
 
     /// <summary>Получить перечисление имён команд с зарегистрированными обработчиками</summary>
     /// <returns>Перечисление имён команд, имеющих свои обработчики</returns>
-    public IEnumerable<string> GetRegisteredCommands() => _CommandHandlers.Keys.ToArray();
+    public IEnumerable<string> GetRegisteredCommands() => [.. _CommandHandlers.Keys];
 
     /// <summary>Проверка - имеет ли команда обработчики</summary>
     /// <param name="CommandName">Проверяемая команда</param>

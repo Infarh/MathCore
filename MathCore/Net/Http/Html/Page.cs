@@ -21,10 +21,10 @@ public class Page
             {
                 var title_elements = title.Elements;
                 title_elements.Clear();
-                title_elements.Add(new Text(value));
+                title_elements.Add(new Text(value ?? string.Empty));
             }
 
-            _Head.Elements.Add(new Title(new Text(value)));
+            _Head.Elements.Add(new Title(new Text(value ?? string.Empty)));
         }
     }
 

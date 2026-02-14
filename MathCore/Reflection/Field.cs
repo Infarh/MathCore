@@ -56,6 +56,6 @@ public class Field<TObject, TValue>
         var is_private = IsPrivate ? BindingFlags.NonPublic : BindingFlags.Public;
         var is_static = o is null ? BindingFlags.Static : BindingFlags.Instance;
 
-        _FieldInfo = type.GetField(FieldName, is_private | is_static);
+        _FieldInfo = type.GetField(FieldName, is_private | is_static).NotNull();
     }
 }

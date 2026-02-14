@@ -44,7 +44,7 @@ public class ObservableHashSet<T>(HashSet<T> Set) : ICollection<T>, INotifyPrope
 
     /// <summary>Инициализация новой хеш-таблицы с уведомлениями об изменениях в содержимом</summary>
     /// <param name="Items">Исходный набор элементов</param>
-    public ObservableHashSet(IEnumerable<T> Items) : this([..Items]) { }
+    public ObservableHashSet(IEnumerable<T> Items) : this([.. Items]) { }
 
     /// <inheritdoc />
     public int Count => _HashSet.Count;
@@ -55,7 +55,7 @@ public class ObservableHashSet<T>(HashSet<T> Set) : ICollection<T>, INotifyPrope
     /// <summary>Добавить элемент в хеш-таблицу</summary>
     /// <param name="item">Добавляемый элемент</param>
     /// <remarks>Если элемент уже существует, то ничего не происходит</remarks>
-    public void Add(T? item)
+    public void Add(T item)
     {
         if (!_HashSet.Add(item)) return;
         OnPropertyChanged(nameof(Count));
@@ -77,7 +77,7 @@ public class ObservableHashSet<T>(HashSet<T> Set) : ICollection<T>, INotifyPrope
     /// <summary>Определение наличия элемента в хеш-таблице</summary>
     /// <param name="item">Искомый элемент</param>
     /// <returns>True, если элемент существует, false - если элемент не существует</returns>
-    public bool Contains(T? item) => _HashSet.Contains(item);
+    public bool Contains(T item) => _HashSet.Contains(item);
 
     /// <summary>Копирование содержимого хеш-таблицы в массив</summary>
     /// <param name="array">Массив, в который происходит копирование</param>
@@ -85,7 +85,7 @@ public class ObservableHashSet<T>(HashSet<T> Set) : ICollection<T>, INotifyPrope
     /// <remarks>Если хеш-таблица пустая, то ничего не происходит.</remarks>
     public void CopyTo(T[] array, int Index) => _HashSet.CopyTo(array, Index);
 
-    public bool Remove(T? item)
+    public bool Remove(T item)
     {
         if (!_HashSet.Remove(item)) return false;
         OnPropertyChanged(nameof(Count));

@@ -4,7 +4,7 @@ namespace System.Linq.Reactive;
 internal sealed class AsyncPatternObservable<T> : SimpleObservableEx<T>
 {
     private readonly IAsyncResult _AsyncResult = null!;
-    private T _Result = default;
+    private T _Result = default!;
 
     public AsyncPatternObservable
     (
@@ -14,7 +14,10 @@ internal sealed class AsyncPatternObservable<T> : SimpleObservableEx<T>
 
     private void CallBack(IAsyncResult result)
     {
-        _Result = ((Func<IAsyncResult, T>?)result.AsyncState)(result);
+        if (result is not { AsyncState: Func<IAsyncResult, T> func })
+            throw new InvalidOperationException();
+
+        _Result = func(result);
         OnNext(_Result);
     }
 

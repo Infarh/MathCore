@@ -354,12 +354,12 @@ internal class XPathParser
             case XPathScanner.LexKind.Dot:
                 //>> '.'
                 NextLex();
-                operand = new Axis(Axis.AxisType.Self, QyInput);
+                operand = new Axis(Axis.AxisType.Self, QyInput!);
                 break;
             case XPathScanner.LexKind.DotDot:
                 //>> '..'
                 NextLex();
-                operand = new Axis(Axis.AxisType.Parent, QyInput);
+                operand = new Axis(Axis.AxisType.Parent, QyInput!);
                 break;
             default:
                 //>> ( AxisName '::' | '@' )? NodeTest Predicate*
@@ -442,7 +442,7 @@ internal class XPathParser
             default:
                 throw new XPathException($"Expression {_Scanner.SourceText} must evaluate to a node-set.");
         }
-        return new Axis(AxisType, QyInput, node_prefix, node_name, NodeType);
+        return new Axis(AxisType, QyInput!, node_prefix, node_name, NodeType);
     }
 
     private static bool IsPrimaryExpr(XPathScanner scanner) =>
@@ -509,7 +509,7 @@ internal class XPathParser
         if (pi.FType == Function.FunctionType.FuncConcat)
             for (var i = 0; i < arg_count; i++)
             {
-                var arg = (AstNode?)arg_list[i];
+                var arg = (AstNode)arg_list[i]!;
                 if (arg.ReturnType != XPathResultType.String)
                     arg = new Function(Function.FunctionType.FuncString, arg);
                 arg_list[i] = arg;
@@ -522,7 +522,7 @@ internal class XPathParser
                 arg_count = pi.ArgTypes.Length; // argument we have the type specified (can be < pi.MinArgs)
             for (var i = 0; i < arg_count; i++)
             {
-                var arg = (AstNode?)arg_list[i];
+                var arg = (AstNode)arg_list[i]!;
                 if (pi.ArgTypes[i] == XPathResultType.Any || pi.ArgTypes[i] == arg.ReturnType) continue;
                 switch (pi.ArgTypes[i])
                 {
@@ -609,7 +609,7 @@ internal class XPathParser
         switch (_Scanner.Name)
         {
             case "id":
-                var pi = (ParamInfo?)__FunctionTable["id"];
+                var pi = (ParamInfo)__FunctionTable["id"]!;
                 NextLex();
                 PassToken(XPathScanner.LexKind.LParens);
                 CheckToken(XPathScanner.LexKind.String);

@@ -62,7 +62,7 @@ public sealed class RoundRobinSchedulerGroup
             }
 
             // If we found an item, run it
-            if (target_task != null) queue_for_target_task.RunQueuedTask(target_task);
+            if (target_task != null) queue_for_target_task!.RunQueuedTask(target_task);
         }, null);
 
     /// <summary>A scheduler that participates in round-robin scheduling.</summary>

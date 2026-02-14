@@ -7,7 +7,7 @@ internal class IntervalConverter : ExpandableObjectConverter
 {
     public override bool CanConvertFrom(ITypeDescriptorContext? context, Type t) => t == typeof(string) || base.CanConvertFrom(context, t);
 
-    public override object? ConvertFrom(ITypeDescriptorContext? Context, CultureInfo? Info, object? Value)
+    public override object? ConvertFrom(ITypeDescriptorContext? Context, CultureInfo? Info, object Value)
     {
         if (Value is not string { Length: > 0 } str)
             return base.ConvertFrom(Context, Info, Value);
@@ -39,6 +39,7 @@ internal class IntervalConverter : ExpandableObjectConverter
 
         var values = str_ptr.Split(';').GetEnumerator();
 
+        Info ??= CultureInfo.CurrentCulture;
         var min = values.ParseNextDoubleOrThrow(Info);
         var max = values.ParseNextDoubleOrThrow(Info);
 

@@ -23,7 +23,7 @@ public static class IQueryableExtensions
     /// <param name="query">Последовательность чисел</param>
     /// <returns>Дисперсия</returns>
     public static double Dispersion(this IQueryable<double> query) => query.Average(x => x * x - query.Average() * query.Average());
-        
+
     /// <summary>Выполняет левое внешнее соединение двух последовательностей</summary>
     /// <param name="OuterItems">Внешняя последовательность</param>
     /// <param name="InnerItems">Внутренняя последовательность</param>
@@ -43,12 +43,12 @@ public static class IQueryableExtensions
         Expression<Func<T1, T2, TResult>> ResultSelector
     )
     {
-        var v  = Expression.Parameter(typeof(Tuple<T1, IEnumerable<T2>>), "v");
+        var v = Expression.Parameter(typeof(Tuple<T1, IEnumerable<T2>>), "v");
         var t2 = ResultSelector.Parameters.Last();
 
         var t1 = Expression.Property(v, nameof(Tuple<T1, IEnumerable<T2>>.Item1));
 
-        var body            = ResultSelector.Body.Replace(ResultSelector.Parameters.First(), t1);
+        var body = ResultSelector.Body.Replace(ResultSelector.Parameters.First(), t1).NotNull();
         var result_selector = body.CreateLambda<Func<Tuple<T1, IEnumerable<T2>>, T2, TResult>>(v, t2);
 
         return OuterItems

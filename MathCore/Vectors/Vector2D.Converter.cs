@@ -7,7 +7,7 @@ namespace MathCore.Vectors;
 internal class Vector2DConverter : TypeConverter
 {
     /// <inheritdoc />
-    public override object? ConvertFrom(ITypeDescriptorContext? Context, CultureInfo? Info, object? value)
+    public override object? ConvertFrom(ITypeDescriptorContext? Context, CultureInfo? Info, object value)
     {
         //Аргумент не является строкой, либо строка пуста
         if (value.NotNull() is not string { Length: > 0 } str)

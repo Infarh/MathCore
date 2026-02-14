@@ -211,7 +211,7 @@ public static class ObjectReflectionFieldsExtensions
             {
                 Data =
                 {
-                    { nameof(obj), obj.GetType() },
+                    { nameof(obj), obj!.GetType() },
                     { nameof(T), typeof(T) },
                     { nameof(TValue), typeof(TValue) },
                     { nameof(FieldName), FieldName },
@@ -235,7 +235,7 @@ public static class ObjectReflectionFieldsExtensions
             {
                 Data =
                 {
-                    { nameof(obj), obj.GetType() },
+                    { nameof(obj), obj!.GetType() },
                     { nameof(T), typeof(T) },
                     { nameof(TValue), typeof(TValue) },
                     { nameof(FieldName), FieldName },

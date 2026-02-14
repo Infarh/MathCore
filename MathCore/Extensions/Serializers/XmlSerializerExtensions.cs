@@ -65,7 +65,7 @@ public static class XmlSerializerExtensions
         where T : IInitializable
     {
         var obj = type.GetXmlSerializer().Deserialize<T>(data);
-        if (Initialize) obj.Initialize();
+        if (Initialize) obj?.Initialize();
         return obj;
     }
 
@@ -96,7 +96,7 @@ public static class XmlSerializerExtensions
         where T : IInitializable
     {
         var obj = type.GetXmlSerializer().Deserialize<T>(reader);
-        if (Initialize) obj.Initialize();
+        if (Initialize) obj?.Initialize();
         return obj;
     }
 
@@ -127,7 +127,7 @@ public static class XmlSerializerExtensions
         where T : IInitializable
     {
         var obj = type.GetXmlSerializer().Deserialize<T>(reader);
-        if (Initialize) obj.Initialize();
+        if (Initialize) obj?.Initialize();
         return obj;
     }
 

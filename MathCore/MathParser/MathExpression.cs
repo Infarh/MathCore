@@ -71,10 +71,10 @@ public class MathExpression : IDisposable, ICloneable<MathExpression>
     /// <param name="Name">Имя функции</param>
     public MathExpression(string Name = "f")
     {
-        _Name        = Name;
-        _Variables   = new(this); // Коллекция переменных
-        _Constants   = [];     // Коллекция констант
-        _Functions   = [];     // Коллекция функций
+        _Name = Name;
+        _Variables = new(this); // Коллекция переменных
+        _Constants = [];     // Коллекция констант
+        _Functions = [];     // Коллекция функций
         _Functionals = [];   // Коллекция функционалов
     }
 
@@ -109,7 +109,7 @@ public class MathExpression : IDisposable, ICloneable<MathExpression>
         : this()
     {
         var terms = new BlockTerm(StrExpression);   // разбить строку на элементы
-        var root  = terms.GetSubTree(Parser, this); // выделить корень дерева из первого элемента
+        var root = terms.GetSubTree(Parser, this); // выделить корень дерева из первого элемента
         _ExpressionTree = new(root); // Создать дерево выражения из корня
     }
 
@@ -217,12 +217,12 @@ public class MathExpression : IDisposable, ICloneable<MathExpression>
             var v = (ExpressionVariable)constant.Value;
             //Если переменная дерева - константа, либо если её имя отсутствует в словаре компилируемых переменных
             if (v.IsConstant || !var_dictionary.ContainsKey(v.Name)) return call; // то пропускаем узел
-            var index   = var_dictionary[v.Name];                                 // Запрашиваем индекс переменной
+            var index = var_dictionary[v.Name];                                 // Запрашиваем индекс переменной
             var indexer = GetIndexedParameter(index);                             // Извлекаем индексатор из пула по указанному индексу
             return indexer;                                                       // заменяем текущий узел индексатором
         };
 
-        compilation = rebuilder.Visit(compilation); // Пересобираем дерево
+        compilation = rebuilder.Visit(compilation).NotNull(); // Пересобираем дерево
         // Собираем лямбда-выражение
         var lambda = Expression.Lambda<Func<double[], double>>(compilation, array_parameter);
         return lambda.Compile(); // Компилируем лямбда-выражение и возвращаем делегат
@@ -244,7 +244,7 @@ public class MathExpression : IDisposable, ICloneable<MathExpression>
     /// <returns>Выражение типа Linq.Expression</returns>
     public Expression GetExpression(out ParameterExpression[] vars, params string[] ArgumentName)
     {
-        vars = ArgumentName.Select(name => Expression.Parameter(typeof(double), name)).ToArray();
+        vars = [.. ArgumentName.Select(name => Expression.Parameter(typeof(double), name))];
         return ((ComputedNode)_ExpressionTree.Root).Compile(vars);
     }
 
@@ -261,8 +261,7 @@ public class MathExpression : IDisposable, ICloneable<MathExpression>
         vars = null;
         if (ArgumentName.Length == 0)
         {
-            var args = t.GetGenericArguments();
-            if (args.Length > 1)
+            if (t.GetGenericArguments() is { Length: > 1 } args)
             {
                 vars = new ParameterExpression[Math.Min(args.Length - 1, Variable.Count)];
                 for (var i = 0; i < vars.Length; i++)
@@ -270,7 +269,7 @@ public class MathExpression : IDisposable, ICloneable<MathExpression>
             }
         }
         else
-            vars = ArgumentName.Select(name => Expression.Parameter(typeof(double), name)).ToArray();
+            vars = [.. ArgumentName.Select(name => Expression.Parameter(typeof(double), name))];
         var compilation = vars is null
             ? ((ComputedNode)_ExpressionTree.Root).Compile()
             : ((ComputedNode)_ExpressionTree.Root).Compile(vars);
@@ -287,8 +286,8 @@ public class MathExpression : IDisposable, ICloneable<MathExpression>
     private static void CheckConstantsCollection(MathExpression Source, MathExpression Result) =>
         Source.Constants
            .Select(constant => Result.Variable[constant.Name])
-           .Where(c => Result.Variable.Remove(c))
-           .Foreach(Result.Constants, (c, constants) => constants.Add(c));
+           .Where(Result.Variable.Remove)
+           .Foreach(Result.Constants, (c, constants) => constants!.Add(c));
 
     /// <summary>Клонирование выражения</summary>
     /// <returns>Копия объектной модели выражения</returns>
@@ -316,7 +315,7 @@ public class MathExpression : IDisposable, ICloneable<MathExpression>
         if (y_tree.Root is OperatorNode y_operator_node_root && y_operator_node_root.Priority < node.Priority)
             y_tree.Root = new ComputedBracketNode(Bracket.NewRound, y_operator_node_root);
 
-        node.Left  = x_tree.Root;
+        node.Left = x_tree.Root;
         node.Right = y_tree.Root;
 
         var z = new MathExpression(new ExpressionTree(node));

@@ -29,7 +29,7 @@ public class TeXEvaluationExpressionVisitor : ExpressionVisitor
         _MemberProperties = member_props.ToDictionary(pi => pi.Name,
             pi => new TypeValuePair
             {
-                Value = pi.GetValue(MemberObject, null),
+                Value = pi.GetValue(MemberObject, null).NotNull(),
                 Type = pi.PropertyType
             });
 

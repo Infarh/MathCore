@@ -552,7 +552,7 @@ public partial class Matrix<T>
 
     /// <summary>Оператор отрицания элементов матрицы</summary>
     /// <returns>Матрица, элементы которой являются отрицательными по отношению к элементам исходной матрицы</returns>
-    [DST] public static Matrix<T> operator -(Matrix<T> M) => new(new T[M._N, M._M].Initialize(M._Data, (i, j, data) => -data[i, j]));
+    [DST] public static Matrix<T> operator -(Matrix<T> M) => new(new T[M._N, M._M].Initialize(M._Data, (i, j, data) => -data![i, j]));
 
     /// <summary>Оператор разности числа и матрицы</summary>
     /// <returns>Матрица, элементы которой равны разности числа и элементов исходной матрицы</returns>

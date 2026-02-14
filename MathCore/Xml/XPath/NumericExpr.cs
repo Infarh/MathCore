@@ -20,10 +20,9 @@ internal sealed class NumericExpr : Query
     {
         Operand1 = operand1.ReturnType() != XPathResultType.Number ? new NumberFunctions(operand1) : operand1;
 
-        if (operand2 != null && (operand2.ReturnType() != XPathResultType.Number))
-            Operand2 = new NumberFunctions(operand2);
-        else
-            Operand2 = operand2;
+        Operand2 = operand2 != null && (operand2.ReturnType() != XPathResultType.Number)
+            ? new NumberFunctions(operand2)
+            : operand2.NotNull();
 
         Op = op;
     }

@@ -51,7 +51,7 @@ public class Constructor<T> : IFactory<T>, IFactory<T, object[]>
     /// <param name="o">Объект, Конструктор которого используется</param>
     /// <param name="Private">Искать приватный конструктор?</param>
     /// <param name="ArgumentTypes">Массив типов параметров конструктора</param>
-    public Constructor(T o, bool Private = false, params Type[] ArgumentTypes) => Initialize(_ObjectType = o.GetType(), ArgumentTypes, _Private = Private);
+    public Constructor(T o, bool Private = false, params Type[] ArgumentTypes) => Initialize(_ObjectType = o!.GetType(), ArgumentTypes, _Private = Private);
 
     /// <summary>Инициализация нового экземпляра <see cref="Constructor{T}"/></summary>
     /// <param name="type">Тип, из которого извлекается конструктор</param>
@@ -69,7 +69,7 @@ public class Constructor<T> : IFactory<T>, IFactory<T, object[]>
                 bindingAttr: BindingFlags.Instance | (IsPrivate ? BindingFlags.NonPublic : BindingFlags.Public),
                 binder: null,
                 types: Types,
-                modifiers: null);
+                modifiers: null).NotNull();
 
 
     /// <inheritdoc />

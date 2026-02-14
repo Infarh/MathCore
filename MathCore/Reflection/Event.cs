@@ -19,7 +19,7 @@ public class Event<TObject, TEventArgs> where TEventArgs : EventArgs
     private readonly EventInfo _EventInfo = null!;
 
     /// <summary>Объект-источник</summary>
-    private readonly TObject _Object = default!;
+    private readonly TObject? _Object = default!;
 
     /// <summary>Событие</summary>
     /// <param name="o">Объект-источник события</param>
@@ -36,6 +36,6 @@ public class Event<TObject, TEventArgs> where TEventArgs : EventArgs
         var is_private = Private ? BindingFlags.NonPublic : BindingFlags.Public;
         var is_static = o is null ? BindingFlags.Static : BindingFlags.Instance;
 
-        _EventInfo = type.GetEvent(Name, is_private | is_static);
+        _EventInfo = type.GetEvent(Name, is_private | is_static).NotNull();
     }
 }

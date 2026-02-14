@@ -212,7 +212,7 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
 
                             // Если нашли — выполняем
                             if (target_task != null)
-                                queue_for_target_task.ExecuteTask(target_task);
+                                queue_for_target_task!.ExecuteTask(target_task);
                         }
                 }
                 catch (ThreadAbortException)
@@ -241,7 +241,7 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
     private int DebugQueueCount => _QueueGroups.Sum(group => group.Value.Count);
 
     /// <summary>Количество запланированных задач (для отладки)</summary>
-    private int DebugTaskCount => (_TargetScheduler is null ? (IEnumerable<Task?>?)_BlockingTaskQueue : _NonThreadSafeTaskQueue).Count(t => t != null);
+    private int DebugTaskCount => (_TargetScheduler is null ? (IEnumerable<Task?>)_BlockingTaskQueue! : _NonThreadSafeTaskQueue!).Count(t => t != null);
 
     /// <summary>Ищет следующую задачу для выполнения с учётом приоритетов и справедливости</summary>
     /// <param name="TargetTask">Найденная задача или <see langword="null"/>, если задач нет</param>

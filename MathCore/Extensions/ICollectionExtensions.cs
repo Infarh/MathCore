@@ -27,7 +27,7 @@ public static class ICollectionExtensions
                             collection.Add(item);
                         break;
                     default:
-                        items.Foreach(collection, (item, c) => c.Add(item));
+                        items.Foreach(collection, (item, c) => c!.Add(item));
                         break;
                 }
                 break;

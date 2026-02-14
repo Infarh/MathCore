@@ -9,12 +9,11 @@ using MathCore.MathParser.ExpressionTrees.Nodes;
 namespace MathCore.MathParser;
 
 /// <summary>Коллекция переменных</summary>
+/// <remarks>Инициализация новой коллекции переменных</remarks>
+/// <param name="expression">Математическое выражение, которому принадлежит коллекция</param>
 [DebuggerDisplay("Variables count = {" + nameof(Count) + "}")]
-public class VariablesCollection : IEnumerable<ExpressionVariable>
+public class VariablesCollection(MathExpression expression) : IEnumerable<ExpressionVariable>
 {
-    /// <summary>Математическое выражение</summary>
-    private readonly MathExpression _Expression;
-
     private readonly List<ExpressionVariable> _Variables = [];
 
     /// <summary>Количество переменных в коллекции</summary>
@@ -40,13 +39,13 @@ public class VariablesCollection : IEnumerable<ExpressionVariable>
             if (value is null) throw new ArgumentNullException(nameof(value));
             if (Name is null) throw new ArgumentNullException(nameof(Name));
             if (string.IsNullOrEmpty(Name)) throw new ArgumentOutOfRangeException(nameof(Name));
-            var old_var = _Variables.Find(v => v.Name == Name);
+            var old_var = _Variables.Find(v => v.Name == Name).NotNull();
 
             if (value is LambdaExpressionVariable or EventExpressionVariable)
             {
                 value.Name = Name;
                 //Обойти все узлы дерева являющиеся узлами переменных у которых имя соответствует заданному
-                foreach (var node in _Expression.VariableNodes.Where(n => n.Variable.Name == Name))
+                foreach (var node in expression.VariableNodes.Where(n => n.Variable.Name == Name))
                     node.Variable = value; // и для каждого узла заменить переменную на указанную
 
                 //_Expression.Tree 
@@ -73,10 +72,6 @@ public class VariablesCollection : IEnumerable<ExpressionVariable>
     /// <summary>Перечисление всех имён переменных коллекции</summary>
     public IEnumerable<string> Names => _Variables.Select(v => v.Name);
 
-    /// <summary>Инициализация новой коллекции переменных</summary>
-    /// <param name="expression">Математическое выражение, которому принадлежит коллекция</param>
-    public VariablesCollection(MathExpression expression) => _Expression = expression;
-
     /// <summary>Добавить переменную в коллекцию</summary>
     /// <param name="Variable">Переменная</param>
     /// <returns>Истина, если переменная была добавлена</returns>
@@ -92,14 +87,14 @@ public class VariablesCollection : IEnumerable<ExpressionVariable>
     public bool Replace(string Name, ExpressionVariable variable)
     {
         var replaced = false;
-        var old_var  = _Variables.Find(v => v.Name == Name);
+        var old_var = _Variables.Find(v => v.Name == Name);
         if (old_var is null) return false;
 
         //Обойти все узлы дерева являющиеся узлами переменных у которых имя соответствует заданному
-        foreach (var node in _Expression.VariableNodes.Where(n => n.Variable.Name == Name))
+        foreach (var node in expression.VariableNodes.Where(n => n.Variable.Name == Name))
         {
             node.Variable = variable; // и для каждого узла заменить переменную на указанную
-            replaced      = true;
+            replaced = true;
         }
 
         //_Expression.Tree                                //Обойти все узлы дерева
@@ -128,13 +123,13 @@ public class VariablesCollection : IEnumerable<ExpressionVariable>
     /// <returns>Истина, если переменная была перемещена из коллекции переменных в коллекцию констант</returns>
     public bool MoveToConstCollection(ExpressionVariable Variable) =>
         Exist(v => ReferenceEquals(v, Variable))
-        && _Variables.Remove(Variable) && _Expression.Constants.Add(Variable);
+        && _Variables.Remove(Variable) && expression.Constants.Add(Variable);
 
     /// <summary>Удаление переменной из коллекции</summary>
     /// <param name="Variable">Удаляемая переменная</param>
     /// <returns>Истина, если удаление прошло успешно</returns>
     public bool Remove(ExpressionVariable Variable) =>
-        !_Expression.VariableNodes.Any(n => ReferenceEquals(n.Variable, Variable))
+        !expression.VariableNodes.Any(n => ReferenceEquals(n.Variable, Variable))
         && _Variables.Remove(Variable);
 
     /// <summary>Удалить переменную из коллекции</summary>
@@ -169,7 +164,7 @@ public class VariablesCollection : IEnumerable<ExpressionVariable>
     /// <param name="exist">Критерий поиска</param>
     /// <returns>Истина, если найден узел по указанному критерию</returns>
     public bool ExistInTree(Func<VariableValueNode, bool> exist) =>
-        _Expression.VariableNodes.Any(exist);
+        expression.VariableNodes.Any(exist);
 
     /// <summary>Получить перечисление узлов переменных с указанным именем</summary>
     /// <param name="VariableName">Искомое имя переменной</param>
@@ -180,13 +175,13 @@ public class VariablesCollection : IEnumerable<ExpressionVariable>
     /// <param name="selector">Метод выборки узлов</param>
     /// <returns>Перечисление узлов переменных</returns>
     public IEnumerable<VariableValueNode> GetTreeNodes(Func<VariableValueNode, bool> selector) =>
-        _Expression.VariableNodes.Where(selector);
+        expression.VariableNodes.Where(selector);
 
     /// <summary>Получить перечисление узлов дерева выражения, содержащих указанный тип переменных</summary>
     /// <typeparam name="TVariable">Тип переменной</typeparam>
     /// <returns>Перечисление узлов дерева с указанным типом переменных</returns>
-    public IEnumerable<VariableValueNode> GetTreeNodesOf<TVariable>() where TVariable : ExpressionVariable => 
-        _Expression.VariableNodes.Where(n => n.Variable is TVariable);
+    public IEnumerable<VariableValueNode> GetTreeNodesOf<TVariable>() where TVariable : ExpressionVariable =>
+        expression.VariableNodes.Where(n => n.Variable is TVariable);
 
     /// <summary>Получить перечисление узлов дерева выражения, содержащих указанный тип переменных</summary>
     /// <typeparam name="TVariable">Тип переменной</typeparam>
@@ -194,7 +189,7 @@ public class VariablesCollection : IEnumerable<ExpressionVariable>
     /// <returns>Перечисление узлов дерева с указанным типом переменных</returns>
     public IEnumerable<VariableValueNode> GetTreeNodesVOf<TVariable>(Func<TVariable, bool> selector)
         where TVariable : ExpressionVariable =>
-        _Expression.VariableNodes.Where(n => n.Variable is TVariable variable && selector(variable));
+        expression.VariableNodes.Where(n => n.Variable is TVariable variable && selector(variable));
 
     /// <summary>Получить перечисление узлов дерева выражения, содержащих указанный тип переменных</summary>
     /// <typeparam name="TVariable">Тип переменной</typeparam>
@@ -202,7 +197,7 @@ public class VariablesCollection : IEnumerable<ExpressionVariable>
     /// <returns>Перечисление узлов дерева с указанным типом переменных</returns>
     public IEnumerable<VariableValueNode> GetTreeNodesOf<TVariable>(Func<VariableValueNode, bool> selector)
         where TVariable : ExpressionVariable =>
-        _Expression.VariableNodes.Where(n => n.Variable is TVariable && selector(n));
+        expression.VariableNodes.Where(n => n.Variable is TVariable && selector(n));
 
     /// <summary>Возвращает перечислитель, выполняющий перебор элементов в коллекции</summary>
     /// <returns>

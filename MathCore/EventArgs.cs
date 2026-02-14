@@ -31,7 +31,7 @@ public class EventArgs<TArgument> : EventArgs
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>Строковое представление аргумента события</summary>
-    public override string? ToString() => Argument.ToString();
+    public override string? ToString() => Argument?.ToString();
 
     /* ------------------------------------------------------------------------------------------ */
 

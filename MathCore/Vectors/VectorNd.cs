@@ -9,7 +9,7 @@ public class VectorND<T>
 {
     private readonly VectorND<T>[]? _Dimensions;
 
-    public ref readonly VectorND<T> this[int i] => ref _Dimensions[i];
+    public ref readonly VectorND<T> this[int i] => ref _Dimensions![i];
 
     public T[] Values { get; } = null!;
 

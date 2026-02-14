@@ -10,7 +10,7 @@ public class FunctionArgumentNode : OperatorNode
     /// <summary>Перечисление аргументов начиная с указанного</summary>
     /// <param name="Node">Первый узел аргумента</param>
     /// <returns>Перечисление пар имени-корня дерева аргумента</returns>
-    public static IEnumerable<KeyValuePair<string, ExpressionTreeNode>> EnumArguments(FunctionArgumentNode Node)
+    public static IEnumerable<KeyValuePair<string?, ExpressionTreeNode?>> EnumArguments(FunctionArgumentNode Node)
     {
         for (var node = Node; node is not null; node = node.Right as FunctionArgumentNode)
             yield return new(node.ArgumentName, node.ArgumentSubtree);
@@ -37,18 +37,18 @@ public class FunctionArgumentNode : OperatorNode
 
     /// <summary>Вычисление значения узла</summary>
     /// <returns>Значение узла</returns>
-    public override double Compute() => ((ComputedNode?)ArgumentSubtree).Compute();
+    public override double Compute() => ((ComputedNode)ArgumentSubtree!).Compute();
 
     /// <summary>Компиляция узла аргумента</summary>
     /// <returns>Скомпилированное выражение корня поддерева аргумента</returns>
-    public override Expression Compile() => ((ComputedNode?)ArgumentSubtree).Compile();
+    public override Expression Compile() => ((ComputedNode)ArgumentSubtree!).Compile();
 
     /// <summary>Компиляция узла аргумента</summary>
     /// <param name="Args">Список параметров выражения</param>
     /// <returns>Скомпилированное выражение корня поддерева аргумента</returns>
-    public override Expression Compile(ParameterExpression[] Args) => ((ComputedNode?)ArgumentSubtree).Compile(Args);
+    public override Expression Compile(ParameterExpression[] Args) => ((ComputedNode)ArgumentSubtree!).Compile(Args);
 
     /// <summary>Клонирование узла</summary>
     /// <returns>Клонирование узла</returns>
-    public override ExpressionTreeNode Clone() => new FunctionArgumentNode { Left = Left.Clone(), Right = Right?.Clone() };
+    public override ExpressionTreeNode Clone() => new FunctionArgumentNode { Left = Left.NotNull().Clone(), Right = Right?.Clone() };
 }

@@ -13,9 +13,9 @@ public class ExpressionRebuilder : ExpressionVisitorEx
     /// <param name="Base">Базовый метод обработки узла</param>
     /// <returns>Узел, которым надо заместить посещённый узел дерева</returns>
     private Expression? InvokeEvent<TExpressionNode>(
-        EventHandlerReturn<EventArgs<TExpressionNode>, Expression> Handlers,
+        EventHandlerReturn<EventArgs<TExpressionNode>, Expression>? Handlers,
         TExpressionNode? Node,
-        Func<TExpressionNode, Expression?> Base)
+        Func<TExpressionNode?, Expression?> Base)
         where TExpressionNode : Expression
     {
         // Если обработчиков события нет, то вызываем базовый метод и возвращаем результат
@@ -33,7 +33,7 @@ public class ExpressionRebuilder : ExpressionVisitorEx
     /// <param name="Base">Базовый метод обработки узла</param>
     /// <returns>Узел, которым надо заместить посещённый узел дерева</returns>
     private TOut InvokeEvent<TElement, TOut>(
-        EventHandlerReturn<EventArgs<TOut>, TOut> Handlers,
+        EventHandlerReturn<EventArgs<TOut>, TOut>? Handlers,
         TElement Node,
         Func<TElement, TOut> Base)
     {
@@ -52,7 +52,7 @@ public class ExpressionRebuilder : ExpressionVisitorEx
 
     /// <summary>Событие возникает при посещении узла дерева бинарного выражения</summary>
     public event EventHandlerReturn<EventArgs<BinaryExpression>, Expression>? BinaryVisited;
-    protected override Expression VisitBinary(BinaryExpression b) => InvokeEvent(BinaryVisited, b, base.VisitBinary)!;
+    protected override Expression VisitBinary(BinaryExpression b) => InvokeEvent(BinaryVisited, b, base.VisitBinary!)!;
 
     /// <summary>Событие возникает при посещении узла привязки</summary>
     public event EventHandlerReturn<EventArgs<MemberBinding>, MemberBinding>? BindingVisited;
@@ -64,11 +64,11 @@ public class ExpressionRebuilder : ExpressionVisitorEx
 
     /// <summary>Событие возникает при посещении узла условного оператора</summary>
     public event EventHandlerReturn<EventArgs<ConditionalExpression>, Expression>? ConditionalVisited;
-    protected override Expression VisitConditional(ConditionalExpression c) => InvokeEvent(ConditionalVisited, c, base.VisitConditional)!;
+    protected override Expression VisitConditional(ConditionalExpression c) => InvokeEvent(ConditionalVisited, c, base.VisitConditional!)!;
 
     /// <summary>Событие возникает при посещении узла константы</summary>
     public event EventHandlerReturn<EventArgs<ConstantExpression>, Expression>? ConsonantVisited;
-    protected override Expression VisitConstant(ConstantExpression c) => InvokeEvent(ConsonantVisited, c, base.VisitConstant)!;
+    protected override Expression VisitConstant(ConstantExpression c) => InvokeEvent(ConsonantVisited, c, base.VisitConstant!)!;
 
     /// <summary>Событие возникает при посещении узла инициализатора объекта</summary>
     public event EventHandlerReturn<EventArgs<ElementInit>, ElementInit>? ElementInitializerVisited;
@@ -84,19 +84,19 @@ public class ExpressionRebuilder : ExpressionVisitorEx
 
     /// <summary>Событие возникает при посещении лямбда-выражения</summary>
     public event EventHandlerReturn<EventArgs<LambdaExpression>, Expression>? LambdaVisited;
-    protected override Expression VisitLambda(LambdaExpression lambda) => InvokeEvent(LambdaVisited, lambda, base.VisitLambda)!;
+    protected override Expression VisitLambda(LambdaExpression lambda) => InvokeEvent(LambdaVisited, lambda, base.VisitLambda!)!;
 
     /// <summary>Событие возникает при посещении узла инициализатора коллекции</summary>
     public event EventHandlerReturn<EventArgs<ListInitExpression>, Expression>? ListInitVisited;
-    protected override Expression VisitListInit(ListInitExpression init) => InvokeEvent(ListInitVisited, init, base.VisitListInit)!;
+    protected override Expression VisitListInit(ListInitExpression init) => InvokeEvent(ListInitVisited, init, base.VisitListInit!)!;
 
     /// <summary>Событие возникает при посещении узла вызова функции</summary>
     public event EventHandlerReturn<EventArgs<InvocationExpression>, Expression>? InvocationVisited;
-    protected override Expression VisitInvocation(InvocationExpression iv) => InvokeEvent(InvocationVisited, iv, base.VisitInvocation)!;
+    protected override Expression VisitInvocation(InvocationExpression iv) => InvokeEvent(InvocationVisited, iv, base.VisitInvocation!)!;
 
     /// <summary>Событие возникает при посещении узла доступа к члену объекта</summary>
     public event EventHandlerReturn<EventArgs<MemberExpression>, Expression>? MemberAccessVisited;
-    protected override Expression VisitMemberAccess(MemberExpression m) => InvokeEvent(MemberAccessVisited, m, base.VisitMemberAccess)!;
+    protected override Expression VisitMemberAccess(MemberExpression m) => InvokeEvent(MemberAccessVisited, m, base.VisitMemberAccess!)!;
 
     /// <summary>Событие возникает при посещении узла присвоения члену объекта значения</summary>
     public event EventHandlerReturn<EventArgs<MemberAssignment>, MemberAssignment>? MemberAssignmentVisited;
@@ -104,7 +104,7 @@ public class ExpressionRebuilder : ExpressionVisitorEx
 
     /// <summary>Событие возникает при посещении узла инициализатора свойства объекта</summary>
     public event EventHandlerReturn<EventArgs<MemberInitExpression>, Expression>? MemberInitVisited;
-    protected override Expression VisitMemberInit(MemberInitExpression init) => InvokeEvent(MemberInitVisited, init, base.VisitMemberInit)!;
+    protected override Expression VisitMemberInit(MemberInitExpression init) => InvokeEvent(MemberInitVisited, init, base.VisitMemberInit!)!;
 
     /// <summary>Событие возникает при посещении узла инициализатора коллекции объектов</summary>
     public event EventHandlerReturn<EventArgs<MemberListBinding>, MemberListBinding>? MemberListBindingVisited;
@@ -116,7 +116,7 @@ public class ExpressionRebuilder : ExpressionVisitorEx
 
     /// <summary>Событие возникает при посещении узла вызова метода</summary>
     public event EventHandlerReturn<EventArgs<MethodCallExpression>, Expression>? MethodCallVisited;
-    protected override Expression VisitMethodCall(MethodCallExpression m) => InvokeEvent(MethodCallVisited, m, base.VisitMethodCall)!;
+    protected override Expression VisitMethodCall(MethodCallExpression m) => InvokeEvent(MethodCallVisited, m, base.VisitMethodCall!)!;
 
     /// <summary>Событие возникает при посещении узла конструктора</summary>
     public event EventHandlerReturn<EventArgs<NewExpression>, NewExpression>? NewVisited;
@@ -124,17 +124,17 @@ public class ExpressionRebuilder : ExpressionVisitorEx
 
     /// <summary>Событие возникает при посещении узла конструктора массива</summary>
     public event EventHandlerReturn<EventArgs<NewArrayExpression>, Expression>? NewArrayVisited;
-    protected override Expression VisitNewArray(NewArrayExpression na) => InvokeEvent(NewArrayVisited, na, base.VisitNewArray)!;
+    protected override Expression VisitNewArray(NewArrayExpression na) => InvokeEvent(NewArrayVisited, na, base.VisitNewArray!)!;
 
     /// <summary>Событие возникает при посещении узла параметра выражения</summary>
     public event EventHandlerReturn<EventArgs<ParameterExpression>, Expression>? ParameterVisited;
-    protected override Expression VisitParameter(ParameterExpression p) => InvokeEvent(ParameterVisited, p, base.VisitParameter)!;
+    protected override Expression VisitParameter(ParameterExpression p) => InvokeEvent(ParameterVisited, p, base.VisitParameter!)!;
 
     /// <summary>Событие возникает при посещении узла определения типа выражения</summary>
     public event EventHandlerReturn<EventArgs<TypeBinaryExpression>, Expression>? TypeIsVisited;
-    protected override Expression VisitTypeIs(TypeBinaryExpression b) => InvokeEvent(TypeIsVisited, b, base.VisitTypeIs)!;
+    protected override Expression VisitTypeIs(TypeBinaryExpression b) => InvokeEvent(TypeIsVisited, b, base.VisitTypeIs!)!;
 
     /// <summary>Событие возникает при посещении узла унарного выражения</summary>
     public event EventHandlerReturn<EventArgs<UnaryExpression>, Expression>? UnaryVisited;
-    protected override Expression VisitUnary(UnaryExpression u) => InvokeEvent(UnaryVisited, u, base.VisitUnary)!;
+    protected override Expression VisitUnary(UnaryExpression u) => InvokeEvent(UnaryVisited, u, base.VisitUnary!)!;
 }

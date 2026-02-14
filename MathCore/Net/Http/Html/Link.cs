@@ -11,9 +11,9 @@ public class Link : TypedElement
         set
         {
             if (Attributes.FirstOrDefault(a => a.AttributeName.Equals("rel", StringComparison.InvariantCultureIgnoreCase)) is { } attribute)
-                attribute.Value = value;
+                attribute.Value = value ?? string.Empty;
             else
-                Attributes.Add(new("rel", value));
+                Attributes.Add(new("rel", value ?? string.Empty));
         }
     }
 
@@ -23,9 +23,9 @@ public class Link : TypedElement
         set
         {
             if (Attributes.FirstOrDefault(a => a.AttributeName.Equals("href", StringComparison.InvariantCultureIgnoreCase)) is { } attribute)
-                attribute.Value = value;
+                attribute.Value = value ?? string.Empty;
             else
-                Attributes.Add(new("href", value));
+                Attributes.Add(new("href", value ?? string.Empty));
         }
     }
 

@@ -5,7 +5,7 @@
 
 namespace MathCore;
 
-public class LambdaFormatter<T>(Func<string, object, IFormatProvider, string> Formatter) : IFormatProvider, ICustomFormatter
+public class LambdaFormatter<T>(Func<string?, object?, IFormatProvider?, string> Formatter) : IFormatProvider, ICustomFormatter
 {
     /// <inheritdoc />
     public object? GetFormat(Type? FormatType) => FormatType == typeof(ICustomFormatter) ? this : null;

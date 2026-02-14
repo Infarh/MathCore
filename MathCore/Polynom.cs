@@ -125,12 +125,12 @@ public partial class Polynom(params double[] a) : ICloneable<Polynom>, IEquatabl
             if (a == 0) continue;
 
             if (result.Length > 0 && a > 0)
-                result.Append("+");
+                result.Append('+');
 
             if (a != 1)
                 result.Append(a == -1 ? "-" : a.ToString(CultureInfo.CurrentCulture));
 
-            result.Append("x");
+            result.Append('x');
             if (n > 1)
                 result.AppendFormat("^{0}", n.ToString());
         }

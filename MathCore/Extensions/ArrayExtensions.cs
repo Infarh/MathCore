@@ -23,7 +23,7 @@ public static class ArrayExtensions
     /// <returns>Заполненный массив</returns>
     public static T[] Fill<T>(this T[] array, T value)
     {
-        for(var i = 0; i < array.Length; i++)
+        for (var i = 0; i < array.Length; i++)
             array[i] = value;
 
         return array;
@@ -38,7 +38,7 @@ public static class ArrayExtensions
     /// <returns>Заполненный массив</returns>
     public static T[] Fill<T>(this T[] array, T value, int index, int count)
     {
-        for(var i = index; i < array.Length && i - index < count; i++)
+        for (var i = index; i < array.Length && i - index < count; i++)
             array[i] = value;
 
         return array;
@@ -179,7 +179,7 @@ public static class ArrayExtensions
     public static IEnumerable<T> TakeLastElements<T>(this IEnumerable<T> Items, int Count)
     {
         var buffer = new T[Count];
-        var index  = 0;
+        var index = 0;
         foreach (var item in Items)
         {
             buffer[index % Count] = item;
@@ -244,7 +244,7 @@ public static class ArrayExtensions
     [DST]
     public static T[][] Split<T>(this T[] array, Func<T, bool> Splitter)
     {
-        var result     = new List<T[]>(array.Length);
+        var result = new List<T[]>(array.Length);
         var aggregator = new List<T>(array.Length);
 
         for (var i = 0; i < array.Length; i++)
@@ -488,7 +488,7 @@ public static class ArrayExtensions
         Func<TArray, TOut?, TOut?> Selector)
     {
         var result = default(TOut);
-        var len    = A.Length;
+        var len = A.Length;
         for (var i = 0; i < len; i++)
             result = Selector(A[i], result);
         return result;
@@ -568,7 +568,7 @@ public static class ArrayExtensions
     ///<returns>Массив значений функции</returns>
     [DST]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static TOut[] Function<TIn, TOut>(this TIn[] array, Func<TIn, TOut> f) => array.Select(f).ToArray();
+    public static TOut[] Function<TIn, TOut>(this TIn[] array, Func<TIn, TOut> f) => [.. array.Select(f)];
 
     /// <summary>Получить массив, индексы элементов которого имеют обратный порядок</summary>
     /// <typeparam name="TArray">Тип элементов массива</typeparam>
@@ -578,7 +578,7 @@ public static class ArrayExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TArray[] GetReversed<TArray>(this TArray[] array)
     {
-        var len    = array.Length;
+        var len = array.Length;
         var result = new TArray[len];
         for (var i = 0; i < len; i++)
             result[len - i - 1] = array[i];
@@ -1007,7 +1007,7 @@ public static class ArrayExtensions
     /// <typeparam name="TArray">Тип элементов массива</typeparam>
     /// <exception cref="ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
     [DST]
-    public static void Inverse<TArray>(this TArray[] array) 
+    public static void Inverse<TArray>(this TArray[] array)
         => Array.Reverse(array ?? throw new ArgumentNullException(nameof(array)));
 
     /// <summary>Установить значения ячеек массива</summary>
@@ -1035,10 +1035,10 @@ public static class ArrayExtensions
     {
         if (array is null) throw new ArgumentNullException(nameof(array));
 
-        var lengths    = array.Select(a => a.Length).ToArray();
+        var lengths = array.Select(a => a.Length).ToArray();
         var rows_count = array.Length;
         var cols_count = lengths.Max();
-        var result     = new TArray[rows_count, cols_count];
+        var result = new TArray[rows_count, cols_count];
         for (var i = 0; i < rows_count; i++)
             for (int j = 0, row_length = lengths[i]; j < row_length; j++)
                 result[i, j] = array[i][j];
@@ -1058,10 +1058,10 @@ public static class ArrayExtensions
     {
         if (array is null) throw new ArgumentNullException(nameof(array));
 
-        var lengths    = array.Select(a => a.Length).ToArray();
+        var lengths = array.Select(a => a.Length).ToArray();
         var cols_count = array.Length;
         var rows_count = lengths.Max();
-        var result     = new TArray[rows_count, cols_count];
+        var result = new TArray[rows_count, cols_count];
         for (var j = 0; j < cols_count; j++)
             for (int i = 0, col_length = lengths[j]; i < col_length; i++)
                 result[i, j] = array[i][j];
@@ -1081,7 +1081,7 @@ public static class ArrayExtensions
 
         var rows_count = array.GetLength(0);
         var cols_count = array.GetLength(1);
-        var result     = new TArray[rows_count][];
+        var result = new TArray[rows_count][];
         for (var i = 0; i < rows_count; i++)
         {
             var row = new TArray[cols_count];
@@ -1105,7 +1105,7 @@ public static class ArrayExtensions
 
         var rows_count = array.GetLength(0);
         var cols_count = array.GetLength(1);
-        var result     = new TArray[cols_count][];
+        var result = new TArray[cols_count][];
         for (var j = 0; j < cols_count; j++)
         {
             var col = new TArray[cols_count];
@@ -1359,14 +1359,14 @@ public static class ArrayExtensions
     public static int GetMinIndex<T>(this T[] array, Comparison<T> compare)
     {
         var i_min = 0;
-        var min   = array[i_min];
+        var min = array[i_min];
         for (var i = 1; i < array.Length; i++)
         {
             var v = array[i];
             if (compare(min, v) >= 0) continue;
 
             i_min = i;
-            min   = v;
+            min = v;
         }
 
         return i_min;
@@ -1380,14 +1380,14 @@ public static class ArrayExtensions
     public static ref T GetMinRef<T>(this T[] array, Comparison<T> compare)
     {
         var i_min = 0;
-        var min   = array[i_min];
+        var min = array[i_min];
         for (var i = 1; i < array.Length; i++)
         {
             var v = array[i];
             if (compare(min, v) >= 0) continue;
 
             i_min = i;
-            min   = v;
+            min = v;
         }
 
         return ref array[i_min];
@@ -1409,7 +1409,7 @@ public static class ArrayExtensions
             if (compare(min, v) >= 0) continue;
 
             MinIndex = i;
-            min      = v;
+            min = v;
         }
 
         return ref array[MinIndex];
@@ -1423,14 +1423,14 @@ public static class ArrayExtensions
     public static int GetMinIndex<T>(this T[] array, IComparer<T> Comparer)
     {
         var i_min = 0;
-        var min   = array[i_min];
+        var min = array[i_min];
         for (var i = 1; i < array.Length; i++)
         {
             var v = array[i];
             if (Comparer.Compare(min, v) >= 0) continue;
 
             i_min = i;
-            min   = v;
+            min = v;
         }
 
         return i_min;
@@ -1444,14 +1444,14 @@ public static class ArrayExtensions
     public static ref T GetMinRef<T>(this T[] array, IComparer<T> Comparer)
     {
         var i_min = 0;
-        var min   = array[i_min];
+        var min = array[i_min];
         for (var i = 1; i < array.Length; i++)
         {
             var v = array[i];
             if (Comparer.Compare(min, v) >= 0) continue;
 
             i_min = i;
-            min   = v;
+            min = v;
         }
 
         return ref array[i_min];
@@ -1473,7 +1473,7 @@ public static class ArrayExtensions
             if (Comparer.Compare(min, v) >= 0) continue;
 
             MinIndex = i;
-            min      = v;
+            min = v;
         }
 
         return ref array[MinIndex];
@@ -1487,7 +1487,7 @@ public static class ArrayExtensions
     public static int GetMinIndex<T>(this T[] array, Func<T, double> converter)
     {
         var i_max = 0;
-        var min   = converter(array[i_max]);
+        var min = converter(array[i_max]);
         for (var i = 1; i < array.Length; i++)
         {
             var v = array[i];
@@ -1495,7 +1495,7 @@ public static class ArrayExtensions
             if (y >= min) continue;
 
             i_max = i;
-            min   = y;
+            min = y;
         }
 
         return i_max;
@@ -1509,7 +1509,7 @@ public static class ArrayExtensions
     public static ref T GetMinRef<T>(this T[] array, Func<T, double> converter)
     {
         var i_max = 0;
-        var min   = converter(array[i_max]);
+        var min = converter(array[i_max]);
         for (var i = 1; i < array.Length; i++)
         {
             var v = array[i];
@@ -1517,7 +1517,7 @@ public static class ArrayExtensions
             if (y >= min) continue;
 
             i_max = i;
-            min   = y;
+            min = y;
         }
 
         return ref array[i_max];
@@ -1540,7 +1540,7 @@ public static class ArrayExtensions
             if (y >= min) continue;
 
             MinIndex = i;
-            min      = y;
+            min = y;
         }
 
         return ref array[MinIndex];
@@ -1553,14 +1553,14 @@ public static class ArrayExtensions
     public static int GetMinIndex<T>(this T[] array) where T : IComparable<T>
     {
         var i_min = 0;
-        var min   = array[i_min];
+        var min = array[i_min];
         for (var i = 1; i < array.Length; i++)
         {
             var v = array[i];
             if (Equals(min, default(T)) || min.CompareTo(v) >= 0) continue;
 
             i_min = i;
-            min   = v;
+            min = v;
         }
 
         return i_min;
@@ -1573,14 +1573,14 @@ public static class ArrayExtensions
     public static ref T GetMinRef<T>(this T[] array) where T : IComparable<T>
     {
         var i_min = 0;
-        var min   = array[i_min];
+        var min = array[i_min];
         for (var i = 1; i < array.Length; i++)
         {
             var v = array[i];
             if (Equals(min, default(T)) || min.CompareTo(v) >= 0) continue;
 
             i_min = i;
-            min   = v;
+            min = v;
         }
 
         return ref array[i_min];
@@ -1601,7 +1601,7 @@ public static class ArrayExtensions
             if (Equals(min, default(T)) || min.CompareTo(v) >= 0) continue;
 
             MinIndex = i;
-            min      = v;
+            min = v;
         }
 
         return ref array[MinIndex];
@@ -1615,14 +1615,14 @@ public static class ArrayExtensions
     public static int GetMaxIndex<T>(this T[] array, Comparison<T> compare)
     {
         var i_max = 0;
-        var max   = array[i_max];
+        var max = array[i_max];
         for (var i = 1; i < array.Length; i++)
         {
             var v = array[i];
             if (compare(max, v) <= 0) continue;
 
             i_max = i;
-            max   = v;
+            max = v;
         }
 
         return i_max;
@@ -1636,14 +1636,14 @@ public static class ArrayExtensions
     public static ref T GetMaxRef<T>(this T[] array, Comparison<T> compare)
     {
         var i_max = 0;
-        var max   = array[i_max];
+        var max = array[i_max];
         for (var i = 1; i < array.Length; i++)
         {
             var v = array[i];
             if (compare(max, v) <= 0) continue;
 
             i_max = i;
-            max   = v;
+            max = v;
         }
 
         return ref array[i_max];
@@ -1665,7 +1665,7 @@ public static class ArrayExtensions
             if (compare(max, v) <= 0) continue;
 
             MaxIndex = i;
-            max      = v;
+            max = v;
         }
 
         return ref array[MaxIndex];
@@ -1679,14 +1679,14 @@ public static class ArrayExtensions
     public static int GetMaxIndex<T>(this T[] array, IComparer<T> Comparer)
     {
         var i_max = 0;
-        var max   = array[i_max];
+        var max = array[i_max];
         for (var i = 1; i < array.Length; i++)
         {
             var v = array[i];
             if (Comparer.Compare(max, v) <= 0) continue;
 
             i_max = i;
-            max   = v;
+            max = v;
         }
 
         return i_max;
@@ -1700,14 +1700,14 @@ public static class ArrayExtensions
     public static ref T GetMaxRef<T>(this T[] array, IComparer<T> Comparer)
     {
         var i_max = 0;
-        var max   = array[i_max];
+        var max = array[i_max];
         for (var i = 1; i < array.Length; i++)
         {
             var v = array[i];
             if (Comparer.Compare(max, v) <= 0) continue;
 
             i_max = i;
-            max   = v;
+            max = v;
         }
 
         return ref array[i_max];
@@ -1729,7 +1729,7 @@ public static class ArrayExtensions
             if (Comparer.Compare(max, v) <= 0) continue;
 
             MaxIndex = i;
-            max      = v;
+            max = v;
         }
 
         return ref array[MaxIndex];
@@ -1743,7 +1743,7 @@ public static class ArrayExtensions
     public static int GetMaxIndex<T>(this T[] array, Func<T, double> converter)
     {
         var i_max = 0;
-        var max   = converter(array[i_max]);
+        var max = converter(array[i_max]);
         for (var i = 1; i < array.Length; i++)
         {
             var v = array[i];
@@ -1751,7 +1751,7 @@ public static class ArrayExtensions
             if (y <= max) continue;
 
             i_max = i;
-            max   = y;
+            max = y;
         }
 
         return i_max;
@@ -1765,7 +1765,7 @@ public static class ArrayExtensions
     public static ref T GetMaxRef<T>(this T[] array, Func<T, double> converter)
     {
         var i_max = 0;
-        var max   = converter(array[i_max]);
+        var max = converter(array[i_max]);
         for (var i = 1; i < array.Length; i++)
         {
             var v = array[i];
@@ -1773,7 +1773,7 @@ public static class ArrayExtensions
             if (y <= max) continue;
 
             i_max = i;
-            max   = y;
+            max = y;
         }
 
         return ref array[i_max];
@@ -1796,7 +1796,7 @@ public static class ArrayExtensions
             if (y <= max) continue;
 
             MaxIndex = i;
-            max      = y;
+            max = y;
         }
 
         return ref array[MaxIndex];
@@ -1809,14 +1809,14 @@ public static class ArrayExtensions
     public static int GetMaxIndex<T>(this T[] array) where T : IComparable<T>
     {
         var i_max = 0;
-        var max   = array[i_max];
+        var max = array[i_max];
         for (var i = 1; i < array.Length; i++)
         {
             var v = array[i];
             if (max is null || max.CompareTo(v) <= 0) continue;
 
             i_max = i;
-            max   = v;
+            max = v;
         }
 
         return i_max;
@@ -1829,14 +1829,14 @@ public static class ArrayExtensions
     public static ref T GetMaxRef<T>(this T[] array) where T : IComparable<T>
     {
         var i_max = 0;
-        var max   = array[i_max];
+        var max = array[i_max];
         for (var i = 1; i < array.Length; i++)
         {
             var v = array[i];
             if (max is null || max.CompareTo(v) <= 0) continue;
 
             i_max = i;
-            max   = v;
+            max = v;
         }
 
         return ref array[i_max];
@@ -1857,7 +1857,7 @@ public static class ArrayExtensions
             if (max is null || max.CompareTo(v) <= 0) continue;
 
             MaxIndex = i;
-            max      = v;
+            max = v;
         }
 
         return ref array[MaxIndex];
@@ -1872,20 +1872,20 @@ public static class ArrayExtensions
     {
         var i_min = 0;
         var i_max = 0;
-        var min   = array[i_min];
-        var max   = array[i_max];
+        var min = array[i_min];
+        var max = array[i_max];
         for (var i = 1; i < array.Length; i++)
         {
             var v = array[i];
             if (compare(min, v) < 0)
             {
                 i_min = i;
-                min   = v;
+                min = v;
             }
             else if (compare(max, v) > 0)
             {
                 i_max = i;
-                max   = v;
+                max = v;
             }
         }
 
@@ -1901,20 +1901,20 @@ public static class ArrayExtensions
     {
         var i_min = 0;
         var i_max = 0;
-        var min   = array[i_min];
-        var max   = array[i_max];
+        var min = array[i_min];
+        var max = array[i_max];
         for (var i = 1; i < array.Length; i++)
         {
             var v = array[i];
             if (Comparer.Compare(min, v) < 0)
             {
                 i_min = i;
-                min   = v;
+                min = v;
             }
             else if (Comparer.Compare(max, v) > 0)
             {
                 i_max = i;
-                max   = v;
+                max = v;
             }
         }
 
@@ -1930,8 +1930,8 @@ public static class ArrayExtensions
     {
         var i_min = 0;
         var i_max = 0;
-        var min   = converter(array[i_min]);
-        var max   = min;
+        var min = converter(array[i_min]);
+        var max = min;
         for (var i = 1; i < array.Length; i++)
         {
             var v = array[i];
@@ -1939,12 +1939,12 @@ public static class ArrayExtensions
             if (y < min)
             {
                 i_min = i;
-                min   = y;
+                min = y;
             }
             else if (y > max)
             {
                 i_max = i;
-                max   = y;
+                max = y;
             }
         }
 
@@ -1955,27 +1955,27 @@ public static class ArrayExtensions
     /// <param name="array">Массив элементов</param>
     /// <typeparam name="T">Тип элементов массива, поддерживающий возможность сравнения</typeparam>
     /// <returns>Индекс минимального и максимального элементов массива</returns>
-    public static (int MinIndex, int MaxIndex) GetMinMaxIndex<T>(this T?[] array) where T : IComparable<T>
+    public static (int MinIndex, int MaxIndex) GetMinMaxIndex<T>(this T?[] array) where T : IComparable<T?>
     {
         var i_min = 0;
         var i_max = 0;
-        var min   = array[i_min];
-        var max   = array[i_max];
+        var min = array[i_min];
+        var max = array[i_max];
         for (var i = 1; i < array.Length; i++)
         {
-            var v           = array[i];
+            var v = array[i];
             var min_changed = false;
             if (min is null || min.CompareTo(v) < 0)
             {
-                i_min       = i;
-                min         = v;
+                i_min = i;
+                min = v;
                 min_changed = true;
             }
 
-            if (max is null || !min_changed && max.CompareTo(v) > 0)
+            if (max is null || (!min_changed && max.CompareTo(v) > 0))
             {
                 i_max = i;
-                max   = v;
+                max = v;
             }
         }
 
@@ -2020,7 +2020,7 @@ public static class ArrayExtensions
     {
         var length = array.Length;
         rnd ??= new();
-        var temp  = array[0];
+        var temp = array[0];
         var index = 0;
         for (var i = 1; i <= length; i++)
             array[index] = array[index = rnd.Next(length)];
@@ -2037,9 +2037,9 @@ public static class ArrayExtensions
     public static T[] MixRef<T>(this T[] array)
     {
         var length = array.Length - 1;
-        var rnd    = new Random();
-        var temp   = array[0];
-        var index  = 0;
+        var rnd = new Random();
+        var temp = array[0];
+        var index = 0;
         for (var i = 1; i <= length; i++)
             array[index] = array[index = rnd.Next(length)];
         array[index] = temp;
@@ -2182,7 +2182,7 @@ public static class ArrayExtensions
         if (N == 0 || M == 0) return string.Empty;
 
         var result = new StringBuilder();
-        var line   = new StringBuilder();
+        var line = new StringBuilder();
 
         for (var i = 0; i < N; i++)
         {
@@ -2222,7 +2222,7 @@ public static class ArrayExtensions
         if (N == 0 || M == 0) return string.Empty;
 
         var result = new StringBuilder();
-        var line   = new StringBuilder();
+        var line = new StringBuilder();
 
         for (var i = 0; i < N; i++)
         {
@@ -2254,7 +2254,7 @@ public static class ArrayExtensions
     [DST]
     public static string? ToStringFormatView<T>(
         this T[,]? array,
-        string Format = "r",
+        string? Format = "r",
         string? Splitter = "\t",
         IFormatProvider? provider = null
     ) where T : IFormattable
@@ -2267,7 +2267,7 @@ public static class ArrayExtensions
 
         provider ??= CultureInfo.InvariantCulture;
         var result = new StringBuilder();
-        var line   = new StringBuilder();
+        var line = new StringBuilder();
 
         for (var i = 0; i < N; i++)
         {
@@ -2315,7 +2315,7 @@ public static class ArrayExtensions
 
         provider ??= CultureInfo.InvariantCulture;
         var result = new StringBuilder();
-        var line   = new StringBuilder();
+        var line = new StringBuilder();
 
         for (var i = 0; i < N; i++)
         {
@@ -2370,7 +2370,7 @@ public static class ArrayExtensions
 
         for (var n = 0; n < NewLength; n++)
         {
-            var s  = 0d;
+            var s = 0d;
             var nk = (n + k0) / k;
 
             for (var i = 0; i < old_length; i++)
@@ -2427,7 +2427,7 @@ public static class ArrayExtensions
         {
             var s_re = 0d;
             var s_im = 0d;
-            var nk   = (n + k0) / k;
+            var nk = (n + k0) / k;
 
             for (var i = 0; i < old_length; i++)
             {
@@ -2473,7 +2473,7 @@ public static class ArrayExtensions
         }
 
         var polynom = Interpolator.Newton(0, 1, array);
-        var di      = (double)NewLength / old_length; // во сколько раз изменился размер
+        var di = (double)NewLength / old_length; // во сколько раз изменился размер
 
         for (var i = 0; i < NewLength; i++)
         {
@@ -2525,7 +2525,7 @@ public static class ArrayExtensions
 
         var polynom_re = Interpolator.Newton(0, 1, array_re);
         var polynom_im = Interpolator.Newton(0, 1, array_im);
-        var di         = (double)NewLength / old_length; // во сколько раз изменился размер
+        var di = (double)NewLength / old_length; // во сколько раз изменился размер
 
         for (var i = 0; i < NewLength; i++)
         {
@@ -2566,7 +2566,7 @@ public static class ArrayExtensions
         }
 
         var polynom = Interpolator.Lagrange(0, 1, array);
-        var di      = (double)NewLength / old_length; // во сколько раз изменился размер
+        var di = (double)NewLength / old_length; // во сколько раз изменился размер
 
         for (var i = 0; i < NewLength; i++)
         {
@@ -2618,7 +2618,7 @@ public static class ArrayExtensions
 
         var polynom_re = Interpolator.Lagrange(0, 1, array_re);
         var polynom_im = Interpolator.Lagrange(0, 1, array_im);
-        var di         = (double)NewLength / old_length; // во сколько раз изменился размер
+        var di = (double)NewLength / old_length; // во сколько раз изменился размер
 
         for (var i = 0; i < NewLength; i++)
         {
@@ -2697,7 +2697,7 @@ public static class ArrayExtensions
 
         for (var n = 0; n < NewLength; n++)
         {
-            var s  = 0d;
+            var s = 0d;
             var nk = (n + k0) / k;
 
             for (var i = 0; i < old_length; i++)
@@ -2743,7 +2743,7 @@ public static class ArrayExtensions
 
         for (var n = 0; n < NewLength; n++)
         {
-            var s  = 0d;
+            var s = 0d;
             var nk = (n + k0) / k;
 
             for (var i = 0; i < old_length; i++)
@@ -2767,7 +2767,7 @@ public static class ArrayExtensions
     public static void SwapArrayParts<T>(this T[] array, int Index)
     {
         if (Index == 0 || array.Length - Index == 0) return;
-        
+
         for (var i = Index - 1; i >= 0; i--)
         {
             var tmp = array[i];

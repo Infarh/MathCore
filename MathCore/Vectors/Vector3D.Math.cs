@@ -92,8 +92,8 @@ public partial struct Vector3D
     /// <returns>Вектор, компоненты которого являются произведениями компоненты векторов</returns>
     public Vector3D Product_Component(Vector3D Vector) => new
     (
-        _X * Vector._X, 
-        _Y * Vector._Y, 
+        _X * Vector._X,
+        _Y * Vector._Y,
         _Z * Vector._Z
     );
 
@@ -102,8 +102,8 @@ public partial struct Vector3D
     /// <returns>Вектор, компоненты которого являются произведениями компоненты векторов</returns>
     public Vector3D Product_Component((double X, double Y, double Z) Vector) => new
     (
-        _X * Vector.X, 
-        _Y * Vector.Y, 
+        _X * Vector.X,
+        _Y * Vector.Y,
         _Z * Vector.Z
     );
 
@@ -153,12 +153,12 @@ public partial struct Vector3D
     public Expression GetProjectorV_Expression(Expression v)
     {
         if (v is null) throw new ArgumentNullException(nameof(v));
-        if(v.Type != typeof(Vector3D)) 
+        if (v.Type != typeof(Vector3D))
             throw new ArgumentException($"Тип выражения {v.Type} не является {typeof(Vector3D)}");
 
-        var vector          = this.ToExpression();
+        var vector = this.ToExpression();
         var scalar_multiply = vector.Multiply(v);
-        var length          = v.GetProperty(nameof(R));
+        var length = v.GetProperty(nameof(R));
         return scalar_multiply.Divide(length);
     }
 
@@ -209,7 +209,7 @@ public partial struct Vector3D
     public Expression GetProjectorA_Expression(Expression d)
     {
         if (d is null) throw new ArgumentNullException(nameof(d));
-        if(d.Type != typeof(SpaceAngle)) 
+        if (d.Type != typeof(SpaceAngle))
             throw new ArgumentException($"Тип выражения должен быть {typeof(SpaceAngle)}, а получен {d.Type}");
 
         // (X * cos(Phi) + Y * sin(Phi)) * sin(Theta) + Z * cos(Theta)
@@ -219,19 +219,19 @@ public partial struct Vector3D
         var z = _Z.ToExpression();
 
         var theta = d.GetProperty(nameof(SpaceAngle.ThetaRad));
-        var phi   = d.GetProperty(nameof(SpaceAngle.PhiRad));
+        var phi = d.GetProperty(nameof(SpaceAngle.PhiRad));
 
         var sin_theta = MathExpression.Sin(theta);
         var cos_theta = MathExpression.Cos(theta);
-        var sin_phi   = MathExpression.Sin(phi);
-        var cos_phi   = MathExpression.Cos(phi);
+        var sin_phi = MathExpression.Sin(phi);
+        var cos_phi = MathExpression.Cos(phi);
 
-        var x_cos_phi   = x.Multiply(cos_phi);   // X * cos(Phi)
-        var y_sin_phi   = y.Multiply(sin_phi);   // Y * sin(Phi)
-        var z_cos_theta = z.Multiply(cos_theta); // Z * cos(Theta)
+        var x_cos_phi = x.Mult(cos_phi);   // X * cos(Phi)
+        var y_sin_phi = y.Mult(sin_phi);   // Y * sin(Phi)
+        var z_cos_theta = z.Mult(cos_theta); // Z * cos(Theta)
 
         var x_cos_phi_add_y_sin_phi = x_cos_phi.Add(y_sin_phi);                    // X * cos(Phi) + Y * sin(Phi)
-        var xoy                     = x_cos_phi_add_y_sin_phi.Multiply(sin_theta); // (X * cos(Phi) + Y * sin(Phi)) * sin(Theta)
+        var xoy = x_cos_phi_add_y_sin_phi.Mult(sin_theta); // (X * cos(Phi) + Y * sin(Phi)) * sin(Theta)
 
         return xoy.Add(z_cos_theta);
 

@@ -308,7 +308,7 @@ public sealed class Histogram : IEnumerable<HistogramValue>
     {
         var result = new StringBuilder();
         foreach (var interval in GetEnumerable())
-            result.Append(interval.ToString(Format)).Append(" ");
+            result.Append(interval.ToString(Format)).Append(' ');
 
         if (result.Length > 0)
             result.Length--;
@@ -322,7 +322,7 @@ public sealed class Histogram : IEnumerable<HistogramValue>
             result
                .Append(interval.ToString(IntervalFormat))
                .Append(value.ToString(ValueFormat))
-               .Append(" ");
+               .Append(' ');
 
         if (result.Length > 0)
             result.Length--;

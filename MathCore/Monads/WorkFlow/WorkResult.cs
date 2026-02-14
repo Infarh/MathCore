@@ -7,7 +7,7 @@
 public readonly struct WorkResult(Exception? PrevError = null, Exception? CurrentError = null) : IWorkResult, IEquatable<WorkResult>
 {
     /// <inheritdoc />
-    public Exception Error { get; } = PrevError is null
+    public Exception? Error { get; } = PrevError is null
             ? CurrentError
             : CurrentError is null
                 ? PrevError
@@ -38,7 +38,7 @@ public readonly struct WorkResult(Exception? PrevError = null, Exception? Curren
 public readonly struct WorkResult<T> : IWorkResult<T>, IEquatable<WorkResult<T>>
 {
     /// <inheritdoc />
-    public Exception Error { get; } = null!;
+    public Exception? Error { get; }
 
     /// <inheritdoc />
     public bool Success => Error is null;
@@ -63,7 +63,7 @@ public readonly struct WorkResult<T> : IWorkResult<T>, IEquatable<WorkResult<T>>
     /// <param name="CurrentError">Ошибка текущего процесса выполнения работы</param>
     public WorkResult(Exception? PrevError = null, Exception? CurrentError = null)
     {
-        Result = default;
+        Result = default!;
         Error = PrevError is null
             ? CurrentError
             : CurrentError is null
@@ -93,7 +93,7 @@ public readonly struct WorkResult<T> : IWorkResult<T>, IEquatable<WorkResult<T>>
 public readonly struct WorkResult<TParameter, T> : IWorkResult<TParameter, T>, IEquatable<WorkResult<TParameter, T>>
 {
     /// <inheritdoc />
-    public Exception Error { get; } = null!;
+    public Exception? Error { get; }
 
     /// <inheritdoc />
     public bool Success => Error is null;
@@ -112,8 +112,8 @@ public readonly struct WorkResult<TParameter, T> : IWorkResult<TParameter, T>, I
     public WorkResult(Exception PrevError)
     {
         Error = PrevError;
-        Parameter = default;
-        Result = default;
+        Parameter = default!;
+        Result = default!;
     }
 
     /// <summary>Инициализация нового результата выполнения работы</summary>
@@ -134,7 +134,7 @@ public readonly struct WorkResult<TParameter, T> : IWorkResult<TParameter, T>, I
     public WorkResult(TParameter Parameter, Exception? PrevError = null, Exception? CurrentError = null)
     {
         this.Parameter = Parameter;
-        Result = default;
+        Result = default!;
         Error = PrevError is null
             ? CurrentError
             : CurrentError is null

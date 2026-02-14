@@ -249,7 +249,7 @@ public static class ObservableExtensions
         this IObservable<T> Observable,
         Action<T> Action,
         Func<T, bool> Where) =>
-        Observable.InitializeObject(Where, Action, (o, w, a) => _ = new LambdaObserver<T>(o, t => { if (w(t)) a(t); }))!;
+        Observable.InitializeObject(Where, Action, (o, w, a) => _ = new LambdaObserver<T>(o!, t => { if (w!(t)) a!(t); }))!;
 
     /// <summary>Метод обработки события <see cref="IObserverEx{T}.Next"/></summary>
     /// <typeparam name="T">Тип объектов наблюдения</typeparam>
@@ -259,7 +259,7 @@ public static class ObservableExtensions
     public static IObservable<T> ForeachAction<T>(this IObservable<T> Observable, Action<T, int> Action)
     {
         var i = 0;
-        return Observable.InitializeObject(o => _ = new LambdaObserver<T>(o, t => Action(t, i++)))!;
+        return Observable.InitializeObject(o => _ = new LambdaObserver<T>(o!, t => Action(t, i++)))!;
     }
 
     /// <summary>Метод обработки события <see cref="IObserverEx{T}.Next"/></summary>
@@ -271,7 +271,7 @@ public static class ObservableExtensions
     public static IObservable<T> ForeachAction<T>(this IObservable<T> Observable, Action<T, int> Action, Func<T, int, bool> Where)
     {
         var i = 0;
-        return Observable.InitializeObject(o => _ = new LambdaObserver<T>(o, t => { if (Where(t, i)) Action(t, i++); }))!;
+        return Observable.InitializeObject(o => _ = new LambdaObserver<T>(o!, t => { if (Where(t, i)) Action(t, i++); }))!;
     }
 
     /// <summary>Метод обработки события <see cref="Exception"/></summary>
@@ -362,7 +362,7 @@ public static class ObservableExtensions
 
         var result = new SimpleObservableEx<TResult>();
         var i = 0;
-        Observable.ForeachAction(t => CollectionSelector(t, i++).Foreach(ResultSelector, result, t, (r, selector, rr, tt) => rr.OnNext(selector(tt, r))));
+        Observable.ForeachAction(t => CollectionSelector(t, i++).Foreach(ResultSelector, result, t, (r, selector, rr, tt) => rr!.OnNext(selector!(tt!, r))));
         Observable.OnCompleted(result.OnCompleted);
         (Observable as IObservableEx<IEnumerable<TSource>>)?.OnReset(result.OnReset);
         Observable.OnError(result.OnError);
@@ -379,7 +379,7 @@ public static class ObservableExtensions
         if (ResultSelector is null) throw new ArgumentNullException(nameof(ResultSelector));
 
         var result = new SimpleObservableEx<TResult>();
-        Observable.ForeachAction(t => CollectionSelector(t).Foreach(ResultSelector, result, t, (r, selector, rr, tt) => rr.OnNext(selector(tt, r))));
+        Observable.ForeachAction(t => CollectionSelector(t).Foreach(ResultSelector, result, t, (r, selector, rr, tt) => rr!.OnNext(selector!(tt!, r))));
         Observable.OnCompleted(result.OnCompleted);
         (Observable as IObservableEx<IEnumerable<TSource>>)?.OnReset(result.OnReset);
         Observable.OnError(result.OnError);

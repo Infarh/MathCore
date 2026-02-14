@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Reflection;
+﻿using System.Reflection;
 // ReSharper disable UnusedMember.Local
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -45,8 +44,7 @@ public class Field<T> : ItemBase
         var value_type = typeof(T);
         _FieldInfo = _ObjectType.GetField(Name, BindingFlags.Static | (IsPublicOnly
             ? BindingFlags.Public
-            : BindingFlags.Public | BindingFlags.NonPublic));
-        Debug.Assert(_FieldInfo != null, "_FieldInfo != null");
+            : BindingFlags.Public | BindingFlags.NonPublic)).NotNull();
         var field = Expression.Field(null, _FieldInfo);
         var ReaderExpr = Expression.Lambda<Func<T>>(field);
         _Reader = ReaderExpr.Compile();
@@ -66,8 +64,7 @@ public class Field<T> : ItemBase
     public Field(object Obj, FieldInfo info)
         : base(Obj, info.Name)
     {
-        _FieldInfo = info;
-        Debug.Assert(_FieldInfo != null, "_FieldInfo != null");
+        _FieldInfo = info.NotNull();
         var value_type = info.FieldType;
         var ObjConstant = Expression.Constant(Obj);
         var field = Expression.Field(ObjConstant, Name);
@@ -121,8 +118,7 @@ public class Field : ItemBase
     {
         _FieldInfo = _ObjectType.GetField(Name, BindingFlags.Static | (IsPublicOnly
             ? BindingFlags.Public
-            : BindingFlags.Public | BindingFlags.NonPublic));
-        Debug.Assert(_FieldInfo != null, "_FieldInfo != null");
+            : BindingFlags.Public | BindingFlags.NonPublic)).NotNull();
 
         var value_type = _FieldInfo.FieldType;
 
@@ -145,8 +141,7 @@ public class Field : ItemBase
     public Field(object Obj, FieldInfo info)
         : base(Obj, info.Name)
     {
-        _FieldInfo = info;
-        Debug.Assert(_FieldInfo != null, "_FieldInfo != null");
+        _FieldInfo = info.NotNull();
 
         var value_type = info.FieldType;
 

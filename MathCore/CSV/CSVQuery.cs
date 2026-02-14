@@ -32,7 +32,7 @@ public readonly struct CSVQuery : IEnumerable<CSVQueryRow>, IEquatable<CSVQuery>
     /// <summary>Формат конца строки для расчёта положения в потоке</summary>
     public string EoL { get; init; }
 
-    public CultureInfo Culture { get; init; }
+    public CultureInfo? Culture { get; init; }
 
     /// <summary>Информация о заголовке файла - имена колонок : номера колонок</summary>
     private IDictionary<string, int> Headers { get; init; }
@@ -108,13 +108,13 @@ public readonly struct CSVQuery : IEnumerable<CSVQueryRow>, IEquatable<CSVQuery>
     /// <summary>Установить заголовок</summary>
     /// <param name="Header">Новый заголовок данных - словарь соответствия имени колонки и её индекса</param>
     /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
-    public CSVQuery Header(IDictionary<string, int> Header) => new(this) { Headers = { } };
+    public CSVQuery Header(IDictionary<string, int> Header) => new(this) { Headers = Header };
 
     /// <summary>Объединить словари заголовков</summary>
     /// <param name="Source">Исходный словарь значений</param>
     /// <param name="Values">Добавляемые данные</param>
     /// <returns>Новый словарь значений, содержащий в себе исходные значения и добавленные к ним новые</returns>
-    private static IDictionary<string, int> Merge(IDictionary<string, int>? Source, IDictionary<string, int>? Values = null)
+    private static SortedList<string, int> Merge(IDictionary<string, int>? Source, IDictionary<string, int>? Values = null)
     {
         SortedList<string, int> result = Source is { Count: > 0 } ? new(Source) : [];
 

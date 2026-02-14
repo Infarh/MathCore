@@ -87,7 +87,7 @@ public class LimitedConcurrencyLevelTaskScheduler : TaskScheduler
                             }
 
                             // Извлечение очередной задачи из очереди
-                            task = _Tasks.First.Value;
+                            task = _Tasks.First!.Value;
                             _Tasks.RemoveFirst();
                         }
 

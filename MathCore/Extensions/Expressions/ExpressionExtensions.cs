@@ -1439,7 +1439,7 @@ public static partial class ExpressionExtensions
     /// <param name="Value">Значение для умножения</param>
     /// <returns>Выражение с умножением</returns>
     public static Expression<Func<T, TValue>> Multiply<T, TValue>(this Expression<Func<T, TValue>> Expr, TValue Value) =>
-        Lambda<Func<T, TValue>>(Expr.Body.Multiply(Value), Expr.Parameters);
+        Lambda<Func<T, TValue>>(Expr.Body.Mult(Value), Expr.Parameters);
 
     /// <summary>Создаёт выражение деления результата выражения на значение</summary>
     /// <typeparam name="T">Тип параметра</typeparam>

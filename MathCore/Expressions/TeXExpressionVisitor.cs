@@ -1,7 +1,5 @@
 ﻿using System.Text;
 
-using MathCore.Annotations;
-
 // ReSharper disable UnusedType.Global
 // ReSharper disable VirtualMemberCallInConstructor
 
@@ -29,7 +27,7 @@ public class TeXExpressionVisitor : ExpressionVisitor
 
     // Лямбда-выражение анализируется несколько по-иному, поскольку нам нужно только тело
     // выражения, без первого параметра
-    public TeXExpressionVisitor([NotNull] LambdaExpression expression) => Visit(expression.Body);
+    public TeXExpressionVisitor(LambdaExpression expression) => Visit(expression.Body);
 
 
     //----------------------------------------------------------------------------------------//
@@ -50,7 +48,7 @@ public class TeXExpressionVisitor : ExpressionVisitor
     protected override Expression VisitUnary(UnaryExpression node)
     {
         if (node.NodeType == ExpressionType.Negate)
-            _Result.Append("-");
+            _Result.Append('-');
         return base.VisitUnary(node);
     }
 
@@ -73,7 +71,7 @@ public class TeXExpressionVisitor : ExpressionVisitor
 
     protected override Expression VisitParameter(ParameterExpression node)
     {
-        var strings = node.Name.Split('.');
+        var strings = node.Name!.Split('.');
         _Result.Append(strings[^1]);
         return node;
     }
@@ -112,11 +110,10 @@ public class TeXExpressionVisitor : ExpressionVisitor
 
     // Большинство операторов требуют аргументы в следующем порядке:
     // {arg1} op {arg2}
-    [NotNull]
-    private Expression VisitInfixBinary([NotNull] BinaryExpression node)
+    private BinaryExpression VisitInfixBinary(BinaryExpression node)
     {
         var requires_precedence = RequiresPrecedence(node.NodeType);
-        if (requires_precedence) _Result.Append("(");
+        if (requires_precedence) _Result.Append('(');
 
         Visit(node.Left);
 
@@ -130,7 +127,7 @@ public class TeXExpressionVisitor : ExpressionVisitor
 
         Visit(node.Right);
 
-        if (requires_precedence) _Result.Append(")");
+        if (requires_precedence) _Result.Append(')');
         return node;
     }
 
@@ -142,8 +139,7 @@ public class TeXExpressionVisitor : ExpressionVisitor
     /// </summary>
     /// <param name="node"></param>
     /// <returns></returns>
-    [NotNull]
-    private Expression VisitPrefixBinary([NotNull] BinaryExpression node)
+    private BinaryExpression VisitPrefixBinary(BinaryExpression node)
     {
         // Для деления (x + 2) на 3, мы должны получить следующее выражение
         // \frac{x + 2}{3}
@@ -156,19 +152,18 @@ public class TeXExpressionVisitor : ExpressionVisitor
                 throw new InvalidOperationException($"Unknown prefix BinaryExpression {node.Type}");
         }
 
-        _Result.Append("{");
+        _Result.Append('{');
         Visit(node.Left);
-        _Result.Append("}");
+        _Result.Append('}');
 
-        _Result.Append("{");
+        _Result.Append('{');
         Visit(node.Right);
-        _Result.Append("}");
+        _Result.Append('}');
         return node;
     }
 
     // Метод, реализующий получение строкового представления полученного выражения
-    [NotNull]
-    private string GenerateTeXExpressionImpl([CanBeNull] string ExpressionName, MultiplicationSign MultiplicationSign)
+    private string GenerateTeXExpressionImpl(string? ExpressionName, MultiplicationSign MultiplicationSign)
     {
         switch (MultiplicationSign)
         {

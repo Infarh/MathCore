@@ -630,7 +630,7 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
 
     /// <summary>Оператор отрицания элементов матрицы</summary>
     /// <returns>Матрица, элементы которой являются отрицательными по отношению к элементам исходной матрицы</returns>
-    [DST] public static Matrix operator -(Matrix M) => new(new double[M._N, M._M].Initialize(M._Data, (i, j, data) => -data[i, j]));
+    [DST] public static Matrix operator -(Matrix M) => new(new double[M._N, M._M].Initialize(M._Data, (i, j, data) => -data![i, j]));
 
     /// <summary>Оператор разности числа и матрицы</summary>
     /// <returns>Матрица, элементы которой равны разности числа и элементов исходной матрицы</returns>

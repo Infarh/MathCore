@@ -14,7 +14,7 @@ public abstract class OperatorNode : ComputedNode
         {
             var is_left_null = Left is null;
             var is_right_null = Right is null;
-            return !(is_left_null && is_right_null) && !is_left_null && Left.IsPrecomputable && !is_right_null && Right.IsPrecomputable;
+            return !(is_left_null && is_right_null) && !is_left_null && Left!.IsPrecomputable && !is_right_null && Right!.IsPrecomputable;
         }
     }
 

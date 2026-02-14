@@ -57,7 +57,11 @@ public sealed class ConcurrentExclusiveInterleave
     }
 
     /// <summary>Синхронизирует всю активность в этом типе и созданных им планировщиках</summary>
+#if NET9_0_OR_GREATER
+    private readonly Lock _InternalLock;
+#else
     private readonly object _InternalLock;
+#endif
 
     /// <summary>Параметры параллельного выполнения для фоновой задачи обработки и циклов</summary>
     private readonly ParallelOptions _ParallelOptions;
@@ -142,7 +146,7 @@ public sealed class ConcurrentExclusiveInterleave
                     // Важно: дочерние задачи не должны планироваться в этот же интерлив, иначе будет deadlock
                     if (!_ExclusiveProcessingIncludesChildren || task.IsCompleted) continue;
                     cleanup_on_exit = false;
-                    task.ContinueWith(_ => ConcurrentExclusiveInterleaveProcessor(), _ParallelOptions.TaskScheduler);
+                    task.ContinueWith(_ => ConcurrentExclusiveInterleaveProcessor(), _ParallelOptions.TaskScheduler.NotNull("Не задан планировщик задач"));
                     return;
                 }
 

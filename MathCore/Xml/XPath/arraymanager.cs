@@ -43,7 +43,7 @@ internal class ArrayManager
     #region Fields
 
     private Queue _BufferQueue = null!;
-    private Buffer _CurrentBuffer = null!;
+    private Buffer? _CurrentBuffer;
 
     #endregion
 
@@ -93,6 +93,8 @@ internal class ArrayManager
                     return ch;
             }
 
+            if (_CurrentBuffer is null) throw new InvalidOperationException("Не был получен текущий буфер");
+
             if (!(_CurrentBuffer._offset + index - Offset < _CurrentBuffer.Size))
             {
                 Offset = index;
@@ -100,7 +102,8 @@ internal class ArrayManager
             }
 
             if (_CurrentBuffer != null)
-                ch = _CurrentBuffer.CharBuffer[_CurrentBuffer._offset + (index - Offset)];
+                return _CurrentBuffer.CharBuffer[_CurrentBuffer._offset + (index - Offset)];
+
             return ch;
         }
     }

@@ -75,7 +75,7 @@ public class LambdaDictionary<TKey, TValue>(
     public bool ContainsKey(TKey key) => _ElementsGetter().Contains(v => Equals(v.Key, key));
 
     /// <inheritdoc />
-    public bool TryGetValue(TKey key, out TValue value)
+    public bool TryGetValue(TKey key, out TValue? value)
     {
         foreach (var v in _ElementsGetter().Where(v => Equals(v.Key, key)))
         {

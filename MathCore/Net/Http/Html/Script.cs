@@ -10,9 +10,9 @@ public class Script : TypedElement
         set
         {
             if (Attributes.FirstOrDefault(a => a.AttributeName.Equals("src", StringComparison.InvariantCultureIgnoreCase)) is { } attribute)
-                attribute.Value = value;
+                attribute.Value = value ?? string.Empty;
             else
-                Attributes.Add(new("src", value));
+                Attributes.Add(new("src", value ?? string.Empty));
         }
     }
 
