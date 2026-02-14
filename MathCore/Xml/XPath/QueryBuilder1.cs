@@ -16,8 +16,6 @@
 using System.Collections;
 using System.Diagnostics;
 
-using MathCore.Annotations;
-
 using FT = System.Xml.XPath.Function.FunctionType;
 
 // ReSharper disable UnusedMember.Local
@@ -230,7 +228,7 @@ internal class QueryBuilder
             _ => throw new XPathReaderException("xpath is not supported!")
         };
 
-    private Query? ProcessNode([CanBeNull] AstNode root, Query QyInput)
+    private Query? ProcessNode(AstNode? root, Query QyInput)
     {
         Query? result = null;
 

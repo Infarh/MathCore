@@ -17,7 +17,7 @@ public class FunctionArgumentNameNode : OperatorNode
     /// <summary>Инициализация узла дерева информации об аргументе функции</summary>
     /// <param name="Name">Имя</param>
     /// <param name="Expression">Узел выражения аргумента</param>
-    public FunctionArgumentNameNode(string Name, ExpressionTreeNode? Expression = null) : this(new StringNode(Name), Expression) { }
+    public FunctionArgumentNameNode(string? Name, ExpressionTreeNode? Expression = null) : this(new StringNode(Name), Expression) { }
 
     /// <summary>Инициализация узла дерева информации об аргументе функции</summary>
     /// <param name="Name">Имя</param>

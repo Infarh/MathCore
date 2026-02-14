@@ -17,7 +17,7 @@ public class StringNode : ParsedNode
 
     /// <summary>Инициализация нового строкового узла</summary>
     /// <param name="value">Значение узла</param>
-    public StringNode(string value) => Value = value;
+    public StringNode(string? value) => Value = value ?? string.Empty;
 
     /// <summary>Клонирование узла</summary>
     /// <returns>Клон узла</returns>
