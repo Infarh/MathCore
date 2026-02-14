@@ -28,7 +28,7 @@ public class FunctionArgumentNode : OperatorNode
     /// <summary>Инициализация узла-аргумента</summary>
     /// <param name="Name">Имя аргумента</param>
     /// <param name="Node">Узел поддерева аргумента</param>
-    public FunctionArgumentNode(string Name, ExpressionTreeNode Node) : this(new(Name, Node)) { }
+    public FunctionArgumentNode(string? Name, ExpressionTreeNode Node) : this(new(Name, Node)) { }
 
     /// <summary>Инициализация узла-аргумента</summary>
     /// <param name="Node">Узел поддерева аргумента</param>

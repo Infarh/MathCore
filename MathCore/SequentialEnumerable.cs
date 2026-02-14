@@ -6,15 +6,16 @@ namespace MathCore;
 /// <typeparam name="T">Тип элементов коллекций</typeparam>
 public class SequentialEnumerable<T>(IComparer<T> comparer, params IEnumerable<T>[] Enumerables) : IEnumerable<T>
 {
-    public SequentialEnumerable(IEnumerable<IEnumerable<T>> Enumerables) : this(Enumerables.ToArray()) { }
+    public SequentialEnumerable(IEnumerable<IEnumerable<T>> Enumerables) : this([.. Enumerables]) { }
+
     public SequentialEnumerable(params IEnumerable<T>[] Enumerables) : this(Comparer<T>.Default, Enumerables) { }
 
-    public SequentialEnumerable(IComparer<T> Comparer, IEnumerable<IEnumerable<T>> Enumerables) : this(Comparer, Enumerables.ToArray()) { }
+    public SequentialEnumerable(IComparer<T> Comparer, IEnumerable<IEnumerable<T>> Enumerables) : this(Comparer, [.. Enumerables]) { }
 
     public IEnumerator<T> GetEnumerator()
     {
         using var enumerators = Enumerables.Select(e => e.GetEnumerator()).AsDisposableGroup();
-        var       count       = enumerators.Count;
+        var count = enumerators.Count;
         if (count == 0) yield break;
 
         var process_enumerators = enumerators.Items.ToArray();
@@ -25,7 +26,7 @@ public class SequentialEnumerable<T>(IComparer<T> comparer, params IEnumerable<T
         {
             for (var i = 0; i < count; i++)
                 if (compare_results[i] == 0 && !process_enumerators[i]?.MoveNext() is true)
-                    process_enumerators[i] = null;
+                    process_enumerators[i] = null!;
 
             for (var i = 0; i < count; i++) compare_results[i] = 1;
 
@@ -40,12 +41,12 @@ public class SequentialEnumerable<T>(IComparer<T> comparer, params IEnumerable<T
             {
                 if (process_enumerators[i] is null) continue;
 
-                var current_value  = process_enumerators[i]!.Current;
+                var current_value = process_enumerators[i]!.Current;
                 var compare_result = comparer.Compare(value, current_value);
                 if (compare_result > 0)
                 {
                     compare_results[i] = 0;
-                    index              = i;
+                    index = i;
                     for (var j = i - 1; j >= 0; j--)
                         compare_results[j] = 1;
                     value = current_value;

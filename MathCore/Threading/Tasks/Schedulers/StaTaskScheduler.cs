@@ -3,87 +3,112 @@
 
 namespace MathCore.Threading.Tasks.Schedulers;
 
-/// <summary>Provides a scheduler that uses STA threads.</summary>
+/// <summary>Предоставляет планировщик, использующий STA-потоки</summary>
+/// <remarks>Экземпляр управляет пулом STA-потоков и выполняет задачи через очередь</remarks>
+/// <example>
+/// <code>
+/// using var scheduler = new StaTaskScheduler(2);
+/// var task_factory = new TaskFactory(scheduler);
+/// var result_task = task_factory.StartNew(() => 42);
+/// var result = result_task.Result;
+/// </code>
+/// </example>
 public sealed class StaTaskScheduler : TaskScheduler, IDisposable
 {
-    /// <summary>Stores the queued tasks to be executed by our pool of STA threads.</summary>
+    /// <summary>Хранит очередь задач, выполняемых пулом STA-потоков</summary>
     private BlockingCollection<Task> _Tasks;
-    /// <summary>The STA threads used by the scheduler.</summary>
+    /// <summary>STA-потоки, используемые планировщиком</summary>
     private readonly List<Thread> _Threads;
 
-    /// <summary>Initializes a new instance of the StaTaskScheduler class with the specified concurrency level.</summary>
-    /// <param name="NumberOfThreads">The number of threads that should be created and used by this scheduler.</param>
+    /// <summary>Инициализирует экземпляр планировщика с заданным уровнем параллелизма</summary>
+    /// <param name="NumberOfThreads">Количество потоков, создаваемых планировщиком</param>
+    /// <exception cref="ArgumentOutOfRangeException">Количество потоков меньше единицы</exception>
+    /// <example>
+    /// <code>
+    /// using var scheduler = new StaTaskScheduler(1);
+    /// var task_factory = new TaskFactory(scheduler);
+    /// var task = task_factory.StartNew(() => "ok");
+    /// var result = task.Result;
+    /// </code>
+    /// </example>
     public StaTaskScheduler(int NumberOfThreads)
     {
-        // Validate arguments
+        // Проверка аргументов
         if (NumberOfThreads < 1) throw new ArgumentOutOfRangeException(nameof(NumberOfThreads));
 
-        // Initialize the tasks collection
+        // Инициализация коллекции задач
         _Tasks = [];
 
-        // Create the threads to be used by this scheduler
+        // Создание потоков для планировщика
         _Threads = Enumerable.Range(0, NumberOfThreads).Select(_ =>
         {
             var thread = new Thread(
                 () =>
                 {
-                    // Continually get the next task and try to execute it.
-                    // This will continue until the scheduler is disposed and no more tasks remain.
+                    // Постоянно получает следующую задачу и пытается её выполнить
+                    // Это продолжается, пока планировщик не будет освобождён и задачи не закончатся
                     foreach (var t in _Tasks.GetConsumingEnumerable())
                     {
                         TryExecuteTask(t);
                     }
-                }) {IsBackground = true};
+                })
+            { IsBackground = true };
 #pragma warning disable CA1416
             thread.SetApartmentState(ApartmentState.STA);
 #pragma warning restore CA1416
             return thread;
         }).ToList();
 
-        // Start all of the threads
+        // Запуск всех потоков
         _Threads.ForEach(t => t.Start());
     }
 
-    /// <summary>Queues a Task to be executed by this scheduler.</summary>
-    /// <param name="task">The task to be executed.</param>
+    /// <summary>Ставит задачу в очередь на выполнение этим планировщиком</summary>
+    /// <param name="task">Задача для выполнения</param>
     protected override void QueueTask(Task task) =>
-        // Push it into the blocking collection of tasks
+        // Помещает задачу в блокирующую коллекцию
         _Tasks.Add(task);
 
-    /// <summary>Provides a list of the scheduled tasks for the debugger to consume.</summary>
-    /// <returns>An enumerable of all tasks currently scheduled.</returns>
+    /// <summary>Возвращает список запланированных задач для отладчика</summary>
+    /// <returns>Перечисление всех запланированных задач</returns>
     protected override IEnumerable<Task> GetScheduledTasks() =>
-        // Serialize the contents of the blocking collection of tasks for the debugger
-        _Tasks.ToArray();
+        // Сериализует содержимое блокирующей коллекции для отладчика
+        [.. _Tasks];
 
-    /// <summary>Determines whether a Task may be inlined.</summary>
-    /// <param name="task">The task to be executed.</param>
-    /// <param name="TaskWasPreviouslyQueued">Whether the task was previously queued.</param>
-    /// <returns>true if the task was successfully inlined; otherwise, false.</returns>
+    /// <summary>Определяет, может ли задача быть выполнена встроенно</summary>
+    /// <param name="task">Задача для выполнения</param>
+    /// <param name="TaskWasPreviouslyQueued">Признак того, что задача уже была в очереди</param>
+    /// <returns>true, если задача успешно выполнена встроенно; иначе false</returns>
     protected override bool TryExecuteTaskInline(Task task, bool TaskWasPreviouslyQueued) =>
-        // Try to inline if the current thread is STA
+        // Встраивает выполнение, если текущий поток STA
         Thread.CurrentThread.GetApartmentState() == ApartmentState.STA &&
         TryExecuteTask(task);
 
-    /// <summary>Gets the maximum concurrency level supported by this scheduler.</summary>
+    /// <summary>Возвращает максимальный уровень параллелизма, поддерживаемый планировщиком</summary>
     public override int MaximumConcurrencyLevel => _Threads.Count;
 
-    /// <summary>
-    /// Cleans up the scheduler by indicating that no more tasks will be queued.
-    /// This method blocks until all threads successfully shutdown.
-    /// </summary>
+    /// <summary>Освобождает ресурсы планировщика и завершает обработку задач</summary>
+    /// <remarks>Блокирует поток вызывающего кода до завершения всех рабочих потоков</remarks>
+    /// <example>
+    /// <code>
+    /// using var scheduler = new StaTaskScheduler(2);
+    /// var task_factory = new TaskFactory(scheduler);
+    /// var task = task_factory.StartNew(() => 1);
+    /// task.Wait();
+    /// </code>
+    /// </example>
     public void Dispose()
     {
         if (_Tasks is null) return;
-        // Indicate that no new tasks will be coming in
+        // Сигнализирует, что новых задач больше не будет
         _Tasks.CompleteAdding();
 
-        // Wait for all threads to finish processing tasks
-        foreach (var thread in _Threads) 
+        // Ожидает завершения всех потоков
+        foreach (var thread in _Threads)
             thread.Join();
 
-        // Cleanup
+        // Очистка ресурсов
         _Tasks.Dispose();
-        _Tasks = null;
+        _Tasks = null!;
     }
 }

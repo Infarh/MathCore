@@ -35,7 +35,7 @@ public readonly struct CSVQuery : IEnumerable<CSVQueryRow>, IEquatable<CSVQuery>
     public CultureInfo? Culture { get; init; }
 
     /// <summary>Информация о заголовке файла - имена колонок : номера колонок</summary>
-    private IDictionary<string, int> Headers { get; init; }
+    private IDictionary<string, int>? Headers { get; init; }
 
     /// <summary>Инициализация нового экземпляра <see cref="CSVQuery"/></summary>
     /// <param name="ReaderFactory">Метод-фабрика объектов чтения данных</param>
@@ -51,9 +51,9 @@ public readonly struct CSVQuery : IEnumerable<CSVQueryRow>, IEquatable<CSVQuery>
         int SkipRowsAfterHeader,
         char ValuesSeparator,
         int TakeRows,
-        IDictionary<string, int> Headers,
-        string EoL,
-        CultureInfo Culture
+        IDictionary<string, int>? Headers,
+        string? EoL,
+        CultureInfo? Culture
     )
     {
         _ReaderFactory = ReaderFactory.NotNull();
@@ -63,7 +63,7 @@ public readonly struct CSVQuery : IEnumerable<CSVQueryRow>, IEquatable<CSVQuery>
         Separator = ValuesSeparator;
         TakeRowsCount = TakeRows;
         this.Headers = Headers;
-        this.EoL = EoL;
+        this.EoL = EoL ?? Environment.NewLine;
         this.Culture = Culture;
     }
 

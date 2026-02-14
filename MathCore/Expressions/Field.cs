@@ -16,7 +16,7 @@ public class Field<T> : ItemBase
 
     private readonly Action<T> _Writer = null!;
     private readonly Func<T> _Reader;
-    private AttributesExtractor _Attributes = null;
+    private AttributesExtractor _Attributes = null!;
 
     public bool IsReadOnly => (_FieldInfo.Attributes & FieldAttributes.InitOnly) == FieldAttributes.InitOnly;
 

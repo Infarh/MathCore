@@ -26,7 +26,7 @@ public class CubicSpline : Interpolator, IInterpolator
     /* -------------------------------------------------------------------------------------------- */
 
     /// <summary>Сплайн</summary>
-    private SplineState[] _SplineStates = null;
+    private SplineState[] _SplineStates = null!;
 
     /* -------------------------------------------------------------------------------------------- */
 

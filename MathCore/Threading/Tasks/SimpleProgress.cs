@@ -1,6 +1,6 @@
 ﻿namespace MathCore.Threading.Tasks;
 
-public class SimpleProgress<T>(Action<T> ProgressReporter) : IProgress<T>
+public class SimpleProgress<T>(Action<T>? ProgressReporter) : IProgress<T>
 {
     public SimpleProgress() : this(null) { }
 
@@ -24,7 +24,7 @@ public class SimpleProgress<T>(Action<T> ProgressReporter) : IProgress<T>
 
     protected virtual void OnProgressChanged(T NewProgress)
     {
-        if(_Arg is not { } arg) return;
+        if (_Arg is not { } arg) return;
         arg.Argument = NewProgress;
         ProgressChangedInternal?.Invoke(this, arg);
     }

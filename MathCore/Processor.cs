@@ -126,7 +126,7 @@ public abstract class Processor : INotifyPropertyChanged, IDisposable
 
     // ReSharper disable NotAccessedField.Global
     /// <summary>Метод извлечения времени выполнения одного цикла основного метода процессора</summary>
-    protected Func<TimeSpan> _GetLastDeltaTime = null!;
+    protected Func<TimeSpan>? _GetLastDeltaTime = null;
     // ReSharper restore NotAccessedField.Global
 
     /// <summary>Объект синхронизации потоков по запуску процессора</summary>

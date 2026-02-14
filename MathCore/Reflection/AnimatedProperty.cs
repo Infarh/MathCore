@@ -36,7 +36,7 @@ public class AnimatedProperty<TObject, TValue>(
     private bool _Enabled;
 
     /// <summary>поток в котором будет происходить изменение значений свойства</summary>
-    private Thread _Thread = null!;
+    private Thread? _Thread;
 
     /// <summary>Приоритет потока анимации</summary>
     private ThreadPriority _Priority = ThreadPriority.Normal;
@@ -52,7 +52,7 @@ public class AnimatedProperty<TObject, TValue>(
         set
         {
             _Priority = value;
-            if (_Enabled) _Thread.Priority = value;
+            if (_Enabled) _Thread?.Priority = value;
         }
     }
 
@@ -83,7 +83,7 @@ public class AnimatedProperty<TObject, TValue>(
         {
             if (!_Enabled) return;
             _Enabled = false;
-            if (!_Thread.Join(2 * _Timeout) && _Thread.IsAlive)
+            if (!(_Thread?.Join(2 * _Timeout) ?? true) && _Thread.IsAlive)
                 _Thread.Interrupt();
             _Thread = null;
         }

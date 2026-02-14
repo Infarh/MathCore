@@ -78,7 +78,7 @@ public sealed class GCWatcher
 #endif
 
     /// <summary>Поток наблюдения с сборщиком мусора</summary>
-    private static Thread __WatcherThread = null!;
+    private static Thread? __WatcherThread;
 
     /// <summary>Признак активности наблюдателя</summary>
     private static bool __Enabled;

@@ -864,9 +864,9 @@ public partial class Matrix<T>
         /// <exception cref="ArgumentOutOfRangeException">В случае если размерность матрицы <paramref name="matrix"/> меньше 1</exception>
         public static bool GetLUPDecomposition(
             T[,] matrix,
-            out T[,] l,
-            out T[,] u,
-            out T[,] p,
+             [NotNullWhen(true)] out T[,]? l,
+             [NotNullWhen(true)] out T[,]? u,
+             [NotNullWhen(true)] out T[,]? p,
             out T d
         )
         {
@@ -936,7 +936,7 @@ public partial class Matrix<T>
         /// <returns>Истина, если процедура декомпозиции прошла успешно. Ложь, если матрица вырождена</returns>
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
         /// <exception cref="ArgumentOutOfRangeException">В случае если размерность матрицы N меньше 1</exception>
-        public static bool GetLUDecomposition(T[,] matrix, out T[,] l, out T[,] u, out T d)
+        public static bool GetLUDecomposition(T[,] matrix, [NotNullWhen(true)] out T[,]? l, [NotNullWhen(true)] out T[,]? u, out T d)
         {
             GetRowsCount(matrix, out var N);
 
@@ -983,8 +983,8 @@ public partial class Matrix<T>
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
         public static bool GetLUPDecomposition(
             T[,] matrix,
-            out T[,] c,
-            out T[,] p,
+            [NotNullWhen(true)] out T[,]? c,
+            [NotNullWhen(true)] out T[,]? p,
             out T d)
         {
             GetRowsCount(matrix, out var N);
@@ -1046,7 +1046,7 @@ public partial class Matrix<T>
         /// <returns>Истина, если процедура выполнена успешно</returns>
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
         /// <exception cref="ArgumentException">Матрица не квадратная</exception>
-        public static bool GetLUPDecomposition(T[,] matrix, out T[,] c, out T d)
+        public static bool GetLUPDecomposition(T[,] matrix, [NotNullWhen(true)] out T[,]? c, out T d)
         {
             GetRowsCount(matrix, out var N);
             if (N != matrix.GetLength(1))
@@ -1100,7 +1100,7 @@ public partial class Matrix<T>
         /// <returns>Истина, если разложение выполнено успешно</returns>
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
         /// <exception cref="ArgumentException">Матрица не квадратная</exception>
-        public static bool GetLUDecomposition(T[,] matrix, out T[,] c)
+        public static bool GetLUDecomposition(T[,] matrix, [NotNullWhen(true)] out T[,]? c)
         {
             GetRowsCount(matrix, out var N);
             if (N != matrix.GetLength(1))

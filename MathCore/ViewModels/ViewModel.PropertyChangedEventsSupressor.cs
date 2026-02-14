@@ -25,7 +25,7 @@ public partial class ViewModel
         public void Dispose()
         {
             if (ReferenceEquals(_Model._PropertyChangedEventsSuppressor, this))
-                _Model._PropertyChangedEventsSuppressor = null;
+                _Model._PropertyChangedEventsSuppressor = null!;
 
             if (Timeout == default)
                 foreach (var property_name in _RegistredEvents.Keys)

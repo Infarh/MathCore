@@ -22,7 +22,7 @@ public class XPathQuery
     private int _MatchIndex;
     private bool _MatchState;
     private int _TreeDepth = -1;
-    private string _Value = null!;
+    private string? _Value;
 
     #endregion
 
@@ -37,7 +37,7 @@ public class XPathQuery
 
     public bool MatchState => _MatchState;
 
-    public string Value
+    public string? Value
     {
         get => _Value;
         private set
