@@ -7,7 +7,7 @@ internal class IntervalConverter : ExpandableObjectConverter
 {
     public override bool CanConvertFrom(ITypeDescriptorContext? context, Type t) => t == typeof(string) || base.CanConvertFrom(context, t);
 
-    public override object ConvertFrom(ITypeDescriptorContext? Context, CultureInfo? Info, object? Value)
+    public override object? ConvertFrom(ITypeDescriptorContext? Context, CultureInfo? Info, object? Value)
     {
         if (Value is not string { Length: > 0 } str)
             return base.ConvertFrom(Context, Info, Value);
@@ -45,7 +45,7 @@ internal class IntervalConverter : ExpandableObjectConverter
         return new Interval(min, min_include, max, max_include);
     }
 
-    public override object ConvertTo(
+    public override object? ConvertTo(
         ITypeDescriptorContext? Context,
         CultureInfo? Culture,
         object? Value,

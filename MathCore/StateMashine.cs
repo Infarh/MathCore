@@ -25,6 +25,7 @@ public class LambdaStateMachine<TState, TValue>(TState state = default)
     {
         var e = new NewValueEventArgs(state, Value);
         OnNewValue(e);
+        if (e.State is null) throw new InvalidOperationException("Состояние не может быть null");
         return e.State;
     }
 
@@ -37,7 +38,7 @@ public class LambdaStateMachine<TState, TValue>(TState state = default)
         get => state;
         set
         {
-            if(Equals(state, value)) return;
+            if (Equals(state, value)) return;
             OnNewState(state, state = value);
         }
     }
@@ -45,7 +46,7 @@ public class LambdaStateMachine<TState, TValue>(TState state = default)
     public void Add(TValue Value)
     {
         var new_state = OnNewValue(Value);
-        if(Equals(new_state, state)) return;
+        if (Equals(new_state, state)) return;
         OnNewState(state, state = new_state, Value);
     }
 }

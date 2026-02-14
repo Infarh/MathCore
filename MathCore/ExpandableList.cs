@@ -38,7 +38,7 @@ public class ExpandableList<T>(List<T> BaseList) : IList<T>, IReadOnlyList<T>
         get
         {
             var list = BaseList;
-            return index < list.Count ? list[index] : default;
+            return index < list.Count ? list[index] : default!;
         }
         set
         {

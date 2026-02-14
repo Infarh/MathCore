@@ -97,12 +97,12 @@ public class XPathReader : XmlReader
     /// <summary>Получает значение атрибута с указанным <see cref='XPathReader.Name' /></summary>
     /// <param name="name">Имя атрибута</param>
     /// <exception cref="InvalidOperationException">Метод <see cref="T:System.Xml.XmlReader" /> был вызван до завершения предыдущей асинхронной операции. В этом случае выбрасывается <see cref="T:System.InvalidOperationException" /> с сообщением "An asynchronous operation is already in progress."</exception>
-    public override string this[string name] => BaseReader[name];
+    public override string? this[string name] => BaseReader[name];
 
     /// <summary>Получает значение атрибута с указанным <see cref='XPathReader.LocalName' /> и <see cref='XPathReader.NamespaceURI' /></summary>
     /// <param name="name">Локальное имя атрибута</param>
     /// <param name="NamespaceUri">URI пространства имён</param>
-    public override string this[string name, string? NamespaceUri] => BaseReader[name, NamespaceUri];
+    public override string? this[string name, string? NamespaceUri] => BaseReader[name, NamespaceUri];
 
     /// <summary>Получает значение, указывающее, может ли читатель разрешать сущности</summary>
     public override bool CanResolveEntity => BaseReader.CanResolveEntity;
@@ -200,7 +200,7 @@ public class XPathReader : XmlReader
     /// <summary>Проверяет, соответствует ли текущий узел указанному XPath-запросу</summary>
     /// <param name="XPathQuery">XPath-запрос для проверки</param>
     /// <returns>true, если текущий узел соответствует запросу; иначе false</returns>
-    public bool Match(string XPathQuery) => true;
+    public bool Match(string _) => true;
 
     /// <summary>Проверяет, соответствует ли текущий узел указанному объекту XPath-запроса</summary>
     /// <param name="XPathExpr">Объект XPath-запроса</param>
@@ -320,13 +320,13 @@ public class XPathReader : XmlReader
     /// <summary>Получает значение атрибута с указанным именем</summary>
     /// <param name="AttributeName">Имя атрибута</param>
     /// <returns>Значение указанного атрибута</returns>
-    public override string GetAttribute(string AttributeName) => BaseReader.GetAttribute(AttributeName);
+    public override string? GetAttribute(string AttributeName) => BaseReader.GetAttribute(AttributeName);
 
     /// <summary>Получает значение атрибута с указанным локальным именем и URI пространства имён</summary>
     /// <param name="AttributeName">Локальное имя атрибута</param>
     /// <param name="NamespaceUri">URI пространства имён</param>
     /// <returns>Значение указанного атрибута</returns>
-    public override string GetAttribute(string AttributeName, string? NamespaceUri)
+    public override string? GetAttribute(string AttributeName, string? NamespaceUri)
         => BaseReader.GetAttribute(AttributeName, NamespaceUri);
 
     /// <summary>Получает значение атрибута с указанным индексом</summary>
@@ -344,7 +344,7 @@ public class XPathReader : XmlReader
     /// <summary>Разрешает префикс пространства имён в области текущего элемента</summary>
     /// <param name="Prefix">Префикс пространства имён для разрешения</param>
     /// <returns>URI пространства имён, на которое указывает префикс</returns>
-    public override string LookupNamespace(string Prefix) => BaseReader.LookupNamespace(Prefix);
+    public override string? LookupNamespace(string Prefix) => BaseReader.LookupNamespace(Prefix);
 
     /// <summary>Разрешает ссылку на сущность для узлов типа EntityReference</summary>
     public override void ResolveEntity() => BaseReader.ResolveEntity();

@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-
-using MathCore.Annotations;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global
 
@@ -21,7 +19,7 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
             var last = _Prev;
             if (last != null)
             {
-                if (ReferenceEquals(last.Next, this)) last._Next        = null;
+                if (ReferenceEquals(last.Next, this)) last._Next = null;
                 else if (ReferenceEquals(last.Child, this)) last._Child = null;
             }
             _Prev = value;
@@ -33,9 +31,9 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
         get => _Next;
         set
         {
-            var last                    = _Next;
-            if (last != null) last.Prev = null;
-            _Next      = value;
+            var last = _Next;
+            last?.Prev = null;
+            _Next = value;
             value.Prev = this;
         }
     }
@@ -45,9 +43,9 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
         get => _Child;
         set
         {
-            var last                    = _Child;
-            if (last != null) last.Prev = null;
-            _Child     = value;
+            var last = _Child;
+            last?.Prev = null;
+            _Child = value;
             value.Prev = this;
         }
     }
@@ -56,16 +54,12 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
 
     public int Length => this[n => n.Next].Count();
 
-    /// <summary>
-    /// Определяет индекс заданного элемента коллекции <see cref="T:System.Collections.Generic.IList`1"/>.
-    /// </summary>
-    /// <returns>
-    /// Индекс <paramref name="item"/> если он найден в списке; в противном случае его значение равно -1.
-    /// </returns>
+    /// <summary>Определяет индекс заданного элемента коллекции <see cref="T:System.Collections.Generic.IList`1"/></summary>
+    /// <returns>Индекс <paramref name="item"/> если он найден в списке; в противном случае его значение равно -1</returns>
     /// <param name="item">Объект, который требуется найти в <see cref="T:System.Collections.Generic.IList`1"/>.</param>
     public int IndexOf(TreeListNode<TValue> item)
     {
-        var  index = 0;
+        var index = 0;
         bool find;
         for (var node = this; !(find = ReferenceEquals(node, item)) && node != null; node = node.Next)
             index++;
@@ -78,7 +72,7 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
     public int IndexOf(TValue item)
     {
         var index = 0;
-        var find  = false;
+        var find = false;
         if (item != null)
             for (var node = this; node != null && !(find = Equals(item, node.Value)); node = node.Next)
                 index++;
@@ -116,22 +110,19 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
 
     void IList<TreeListNode<TValue>>.RemoveAt(int index) => RemoveAt(index);
 
-    [NotNull]
     public TreeListNode<TValue> this[int i]
     {
         get
         {
-            var node = this[n => n.Next].FirstOrDefault(_ => i-- == 0);
-            if (node is null) throw new IndexOutOfRangeException();
+            var node = this[n => n.Next].FirstOrDefault(_ => i-- == 0) ?? throw new IndexOutOfRangeException();
             return node;
         }
         set
         {
             i--;
-            var node = this[n => n.Next].FirstOrDefault(_ => i-- == 0);
-            if (node is null) throw new IndexOutOfRangeException();
+            var node = this[n => n.Next].FirstOrDefault(_ => i-- == 0) ?? throw new IndexOutOfRangeException();
             var next = node.Next;
-            node.Next  = value;
+            node.Next = value;
             value.Next = next;
         }
     }
@@ -145,12 +136,11 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
         set => this[index].Value = value;
     }
 
-    [CanBeNull]
-    public TreeListNode<TValue> this[[CanBeNull] params IReadOnlyList<int>? index]
+    public TreeListNode<TValue>? this[params IReadOnlyList<int>? index]
     {
         get
         {
-            if (index is null || index.Count == 1 && index[0] == 0) return this;
+            if (index is null || (index.Count == 1 && index[0] == 0)) return this;
             var result = this;
             for (var i = 0; result != null && i < index.Count; i++)
             {
@@ -173,7 +163,6 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
 
     public delegate TreeListNode<TValue> NodeSelector(TreeListNode<TValue> Prev, TreeListNode<TValue> Next, TreeListNode<TValue> Child);
 
-    [ItemNotNull]
     public IEnumerable<TreeListNode<TValue>> this[NodeSelector Selector]
     {
         get
@@ -183,7 +172,6 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
         }
     }
 
-    [ItemNotNull]
     public IEnumerable<TreeListNode<TValue>> this[Func<TreeListNode<TValue>, TreeListNode<TValue>> Selector]
     {
         get
@@ -197,10 +185,10 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
 
     public TreeListNode(TValue Value) => this.Value = Value;
 
-    public TreeListNode([NotNull] IEnumerable<TValue> Collection)
+    public TreeListNode(IEnumerable<TValue> Collection)
     {
         var first = true;
-        var node  = this;
+        var node = this;
         foreach (var item in Collection)
             if (first)
             {
@@ -211,7 +199,6 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
                 node = node.Add(item);
     }
 
-    [NotNull]
     public TreeListNode<TValue> Add(TValue Value)
     {
         var node = new TreeListNode<TValue>(Value);
@@ -322,10 +309,10 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
     /// <returns>Значение true, если интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> доступен только для чтения, в противном случае — значение false.</returns>
     public bool IsReadOnly => false;
 
-    public void Add([NotNull] IEnumerable<TValue> collection) => collection.Aggregate(this, (current, value) => current.Add(value));
+    public void Add(IEnumerable<TValue> collection) => _ = collection.Aggregate(this, (current, value) => current.Add(value));
 
     public void AddChild(TreeListNode<TValue> Node) { if (Child is null) Child = Node; else Child.Add(Node); }
-    [NotNull]
+
     public TreeListNode<TValue> AddChild(TValue value)
     {
         var node = new TreeListNode<TValue>(value);
@@ -333,7 +320,7 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
         return node;
     }
 
-    public void AddChild([NotNull] IEnumerable<TValue> collection) => collection.Aggregate<TValue, TreeListNode<TValue>>(null, (current, item) => current is null ? AddChild(item) : current.Add(item));
+    public void AddChild(IEnumerable<TValue> collection) => _ = collection.Aggregate<TValue, TreeListNode<TValue>>(null, (current, item) => current is null ? AddChild(item) : current.Add(item));
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -349,7 +336,7 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
 
     public override string ToString() => $"{Value}{(_Child is null ? string.Empty : $"{{{_Child}}}")}{(_Next is null ? string.Empty : $",{_Next}")}";
 
-    public static implicit operator TValue([NotNull] TreeListNode<TValue> Node) => Node.Value;
-    [NotNull]
+    public static implicit operator TValue(TreeListNode<TValue> Node) => Node.Value;
+
     public static implicit operator TreeListNode<TValue>(TValue Value) => new(Value);
 }

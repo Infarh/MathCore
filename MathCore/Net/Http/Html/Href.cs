@@ -2,7 +2,7 @@
 
 public class Href : TypedElement
 {
-    public string Link
+    public string? Link
     {
         get => Attributes.FirstOrDefault(a => a.AttributeName == "href")?.Value;
         set

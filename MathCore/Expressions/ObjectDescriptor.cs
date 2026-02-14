@@ -40,7 +40,7 @@ public class ObjectDescriptor<T>([DisallowNull] T obj)
     {
         get
         {
-            if(_Properties != null) return _Properties;
+            if (_Properties != null) return _Properties;
             var properties = _ObjectType.GetProperties(__BindingFlags)
                .Where(_PropertiesFilter ?? (_ => true))
                .Select(p => new Property(obj, p)).ToArray();
@@ -49,24 +49,24 @@ public class ObjectDescriptor<T>([DisallowNull] T obj)
         }
     }
 
-    public Func<PropertyInfo, bool> PropertiesFilter
+    public Func<PropertyInfo, bool>? PropertiesFilter
     {
         get => _PropertiesFilter;
         set
         {
-            if(ReferenceEquals(_PropertiesFilter, value)) return;
+            if (ReferenceEquals(_PropertiesFilter, value)) return;
             _PropertiesFilter = value;
-            _Properties       = null;
+            _Properties = null;
         }
     }
-    public Func<FieldInfo, bool> FieldsFilter
+    public Func<FieldInfo, bool>? FieldsFilter
     {
         get => _FieldsFilter;
         set
         {
-            if(ReferenceEquals(_FieldsFilter, value)) return;
+            if (ReferenceEquals(_FieldsFilter, value)) return;
             _FieldsFilter = value;
-            _Fields       = null;
+            _Fields = null;
         }
     }
 
@@ -74,7 +74,7 @@ public class ObjectDescriptor<T>([DisallowNull] T obj)
     {
         get
         {
-            if(_Fields != null) return _Fields;
+            if (_Fields != null) return _Fields;
             var fields = _ObjectType.GetFields(__BindingFlags)
                .Where(_FieldsFilter ?? (_ => true))
                .Select(p => new Field(obj, p)).ToArray();

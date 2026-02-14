@@ -31,7 +31,7 @@ public class NamedValueEvaluation<T> : ValueEvaluation<T>
         : base.GetExpression();
 
     /// <inheritdoc />
-    public override string ToString() => IsParameter
+    public override string? ToString() => IsParameter
         ? Name.IsNullOrWhiteSpace()
             ? $"({typeof(T)})p"
             : Name

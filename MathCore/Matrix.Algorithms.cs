@@ -6,6 +6,8 @@
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMethodReturnValue.Global
 
+using MathCore.Annotations;
+
 namespace MathCore;
 
 public partial class Matrix
@@ -57,7 +59,7 @@ public partial class Matrix
     /// <param name="Up">Верхняя диагональ</param>
     /// <param name="RightPart">Правая часть системы уравнений</param>
     /// <param name="Result">Вектор результата</param>
-    public static void TridiagonalAlgorithm(double[] Down, double[] Middle, double[] Up, double[] RightPart, ref double[]? Result)
+    public static void TridiagonalAlgorithm(double[] Down, double[] Middle, double[] Up, double[] RightPart, [NotNull] ref double[]? Result)
     {
         Result ??= new double[Middle.Length];
         TridiagonalAlgorithm(Down, Middle, Up, RightPart, Result);
@@ -72,7 +74,7 @@ public partial class Matrix
     {
         double[]? result = null;
         TridiagonalAlgorithm(Down, Middle, Up, RightPart, ref result);
-        return result;
+        return result!;
     }
 
     /// <summary>Метод прогонки</summary>

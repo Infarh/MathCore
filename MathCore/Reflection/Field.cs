@@ -35,7 +35,7 @@ public class Field<TObject, TValue>
     public bool Private { get => _Private; set => Initialize(_Object, _Name, _Private = value); }
 
     /// <summary>Значение поля</summary>
-    public TValue Value { get => (TValue?)_FieldInfo.GetValue(_Object); set => _FieldInfo.SetValue(_Object, value); }
+    public TValue? Value { get => (TValue?)_FieldInfo.GetValue(_Object); set => _FieldInfo.SetValue(_Object, value); }
 
     /// <summary>Инициализация нового экземпляра <see cref="Field{TObject,TValue}"/></summary>
     /// <param name="o">Объект, в котором определено поле</param>

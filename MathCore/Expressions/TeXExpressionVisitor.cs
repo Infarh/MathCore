@@ -64,7 +64,7 @@ public class TeXExpressionVisitor : ExpressionVisitor
         return node;
     }
 
-    public override Expression Visit(Expression? node)
+    public override Expression? Visit(Expression? node)
     {
         if (node is not ConstantExpression constant) return base.Visit(node);
         _Result.Append(constant.Value);

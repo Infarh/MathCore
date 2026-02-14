@@ -91,7 +91,7 @@ public sealed partial class ServiceManager
 
         lock (_SyncRoot)
         {
-            var instance = (ServiceRegistration?)Activator.CreateInstance(type, this, ServiceType);
+            var instance = ((ServiceRegistration?)Activator.CreateInstance(type, this, ServiceType)).NotNull();
             _Services[ServiceType] = instance;
             return instance;
         }
@@ -113,7 +113,7 @@ public sealed partial class ServiceManager
         lock (_SyncRoot)
         {
             var registration = _Services.Values.FirstOrDefault(r => r.ServiceType == ServiceType)
-                ?? (ServiceRegistration?)Activator.CreateInstance(type, this, ServiceType);
+                ?? ((ServiceRegistration?)Activator.CreateInstance(type, this, ServiceType)).NotNull();
             _Services[InterfaceType] = registration;
             return registration;
         }

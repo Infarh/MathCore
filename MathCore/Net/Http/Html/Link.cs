@@ -5,7 +5,7 @@ public class Link : TypedElement
     /// <inheritdoc />
     public override bool OnlyOpen { get => true; set => throw new NotSupportedException(); }
 
-    public string Relation
+    public string? Relation
     {
         get => Attributes.FirstOrDefault(a => a.AttributeName.Equals("rel", StringComparison.InvariantCultureIgnoreCase))?.Value;
         set
@@ -17,7 +17,7 @@ public class Link : TypedElement
         }
     }
 
-    public string Reference
+    public string? Reference
     {
         get => Attributes.FirstOrDefault(a => a.AttributeName.Equals("href", StringComparison.InvariantCultureIgnoreCase))?.Value;
         set

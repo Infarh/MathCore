@@ -93,10 +93,10 @@ public class ObservableLinkedList<T> :
     public int Count => _List.Count;
 
     /// <summary>Первый элемент списка</summary>
-    public LinkedListNode<T> First => _List.First;
+    public LinkedListNode<T>? First => _List.First;
 
     /// <summary>Последний элемент списка</summary>
-    public LinkedListNode<T> Last => _List.Last;
+    public LinkedListNode<T>? Last => _List.Last;
 
     bool ICollection<T>.IsReadOnly => false;
 
@@ -389,7 +389,7 @@ public class ObservableLinkedList<T> :
 
         var item = _List.First.Value;
         _List.RemoveLast();
-        
+
         OnCollectionItemRemoved(item, count);
         OnPropertyChanged(nameof(Last));
     }

@@ -49,7 +49,7 @@ internal class AstNode
 
     #region Methods
 
-    internal static AstNode NewAstNode(string ParseString)
+    internal static AstNode? NewAstNode(string ParseString)
     {
         try
         {

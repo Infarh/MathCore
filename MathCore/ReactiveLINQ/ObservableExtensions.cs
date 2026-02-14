@@ -183,7 +183,7 @@ public static class ObservableExtensions
         bool InitialState = true)
     {
         var t = Observable as TriggeredObservable<TSource> ?? new TriggeredObservable<TSource>(Observable, InitialState);
-        Open.ForeachAction(_ => t.State  = true);
+        Open.ForeachAction(_ => t.State = true);
         Close.ForeachAction(_ => t.State = false);
         return t;
     }
@@ -228,7 +228,7 @@ public static class ObservableExtensions
     /// <param name="Action">Метод обработки события <see cref="IObserverEx{T}.Next"/></param>
     /// <returns>Исходный объект-наблюдатель</returns>
     public static IObservable<T> ForeachAction<T>(this IObservable<T> Observable, Action<T> Action) =>
-        Observable.InitializeObject(Action, (o, a) => new LambdaObserver<T>(o, a))
+        Observable.InitializeObject(Action, (o, a) => _ = new LambdaObserver<T>(o, a))
         ?? throw new InvalidOperationException("Возвращена пустая ссылка");
 
     /// <summary>Подписаться на уведомления наблюдаемого объекта <see cref="IObservable{T}"/></summary>
@@ -249,7 +249,7 @@ public static class ObservableExtensions
         this IObservable<T> Observable,
         Action<T> Action,
         Func<T, bool> Where) =>
-        Observable.InitializeObject(Where, Action, (o, w, a) => new LambdaObserver<T>(o, t => { if (w(t)) a(t); }));
+        Observable.InitializeObject(Where, Action, (o, w, a) => _ = new LambdaObserver<T>(o, t => { if (w(t)) a(t); }))!;
 
     /// <summary>Метод обработки события <see cref="IObserverEx{T}.Next"/></summary>
     /// <typeparam name="T">Тип объектов наблюдения</typeparam>
@@ -259,7 +259,7 @@ public static class ObservableExtensions
     public static IObservable<T> ForeachAction<T>(this IObservable<T> Observable, Action<T, int> Action)
     {
         var i = 0;
-        return Observable.InitializeObject(o => new LambdaObserver<T>(o, t => Action(t, i++)));
+        return Observable.InitializeObject(o => _ = new LambdaObserver<T>(o, t => Action(t, i++)))!;
     }
 
     /// <summary>Метод обработки события <see cref="IObserverEx{T}.Next"/></summary>
@@ -271,7 +271,7 @@ public static class ObservableExtensions
     public static IObservable<T> ForeachAction<T>(this IObservable<T> Observable, Action<T, int> Action, Func<T, int, bool> Where)
     {
         var i = 0;
-        return Observable.InitializeObject(o => new LambdaObserver<T>(o, t => { if (Where(t, i)) Action(t, i++); }));
+        return Observable.InitializeObject(o => _ = new LambdaObserver<T>(o, t => { if (Where(t, i)) Action(t, i++); }))!;
     }
 
     /// <summary>Метод обработки события <see cref="Exception"/></summary>
@@ -280,7 +280,7 @@ public static class ObservableExtensions
     /// <param name="OnError">Метод обработки события <see cref="Exception"/></param>
     /// <returns>Исходный объект-наблюдатель</returns>
     public static IObservable<T> OnError<T>(this IObservable<T> Observable, Action<Exception> OnError) =>
-        Observable.InitializeObject(OnError, (o, e) => new LambdaObserver<T>(o, OnError: e));
+        Observable.InitializeObject(OnError, (o, e) => _ = new LambdaObserver<T>(o, OnError: e))!;
 
     /// <summary>Метод обработки события <see cref="IObserverEx{T}.Completed"/></summary>
     /// <typeparam name="T">Тип объектов наблюдения</typeparam>
@@ -288,7 +288,7 @@ public static class ObservableExtensions
     /// <param name="OnCompleted">Метод обработки события <see cref="IObserverEx{T}.Completed"/></param>
     /// <returns>Исходный объект-наблюдатель</returns>
     public static IObservable<T> OnCompleted<T>(this IObservable<T> Observable, Action OnCompleted) =>
-        Observable.InitializeObject(OnCompleted, (o, c) => new LambdaObserver<T>(o, OnCompleted: c));
+        Observable.InitializeObject(OnCompleted, (o, c) => _ = new LambdaObserver<T>(o, OnCompleted: c))!;
 
     /// <summary>Метод обработки события <see cref="IObserverEx{T}.Reset"/></summary>
     /// <typeparam name="T">Тип объектов наблюдения</typeparam>
@@ -296,7 +296,7 @@ public static class ObservableExtensions
     /// <param name="OnReset">Метод обработки события <see cref="IObserverEx{T}.Reset"/></param>
     /// <returns>Исходный объект-наблюдатель</returns>
     public static IObservable<T> OnReset<T>(this IObservable<T> Observable, Action OnReset) =>
-        Observable.InitializeObject(OnReset, (o, r) => new LambdaObserver<T>(o, OnReset: r));
+        Observable.InitializeObject(OnReset, (o, r) => _ = new LambdaObserver<T>(o, OnReset: r))!;
 
     /// <summary>Создать метод генерации наблюдаемого объекта из шаблона асинхронной операции</summary>
     /// <typeparam name="T">Тип результата</typeparam>
@@ -343,7 +343,7 @@ public static class ObservableExtensions
         if (Selector is null) throw new ArgumentNullException(nameof(Selector));
 
         var result = new SimpleObservableEx<TResult>();
-        var i      = 0;
+        var i = 0;
         Observable.ForeachAction(t => Selector(t, i++).Foreach(result.OnNext));
         Observable.OnCompleted(result.OnCompleted);
         (Observable as IObservableEx<IEnumerable<TSource>>)?.OnReset(result.OnReset);
@@ -361,7 +361,7 @@ public static class ObservableExtensions
         if (ResultSelector is null) throw new ArgumentNullException(nameof(ResultSelector));
 
         var result = new SimpleObservableEx<TResult>();
-        var i      = 0;
+        var i = 0;
         Observable.ForeachAction(t => CollectionSelector(t, i++).Foreach(ResultSelector, result, t, (r, selector, rr, tt) => rr.OnNext(selector(tt, r))));
         Observable.OnCompleted(result.OnCompleted);
         (Observable as IObservableEx<IEnumerable<TSource>>)?.OnReset(result.OnReset);
@@ -390,9 +390,9 @@ public static class ObservableExtensions
     /// <typeparam name="T">Тип значений объекта</typeparam>
     /// <param name="Observable">Наблюдаемый объект</param>
     /// <returns>Первое значение наблюдаемого объекта</returns>
-    public static T Single<T>(this IObservable<T> Observable)
+    public static T? Single<T>(this IObservable<T> Observable)
     {
-        var w     = new AutoResetEvent(false);
+        var w = new AutoResetEvent(false);
         var value = default(T);
         Observable.Subscribe(t => { value = t; w.Set(); });
         w.WaitOne();

@@ -44,7 +44,7 @@ public static class ExpressionEx
         }
     }
 
-    public static ExF GetDifferential(this ExF f, Func<MethodCallExpression, Expression>? FunctionDifferentiator = null)
+    public static ExF? GetDifferential(this ExF f, Func<MethodCallExpression, Expression>? FunctionDifferentiator = null)
     {
         var visitor = new DifferentialVisitor();
         if (FunctionDifferentiator != null)

@@ -425,7 +425,7 @@ public static class StreamExtensions
         try
         {
             var ptr = gch.AddrOfPinnedObject();
-            return Marshal.PtrToStructure<T>(ptr);
+            return Marshal.PtrToStructure<T>(ptr)!;
         }
         finally
         {

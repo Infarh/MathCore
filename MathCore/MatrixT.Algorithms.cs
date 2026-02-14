@@ -59,7 +59,7 @@ public partial class Matrix<T>
     {
         T[]? result = null;
         TridiagonalAlgorithm(Down, Middle, Up, RightPart, ref result);
-        return result;
+        return result!;
     }
 
     /// <summary>Метод прогонки</summary>

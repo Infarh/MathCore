@@ -36,7 +36,7 @@ public static class XmlSerializerExtensions
     /// <param name="str">Строка, содержащая XML-данные</param>
     /// <returns>Десериализованный объект типа T</returns>
     [DST]
-    public static T Deserialize<T>(this XmlSerializer serializer, string str) => (T?)serializer.Deserialize(XmlReader.Create(str));
+    public static T? Deserialize<T>(this XmlSerializer serializer, string str) => (T?)serializer.Deserialize(XmlReader.Create(str));
 
     /// <summary>Десериализовать объект из потока</summary>
     /// <typeparam name="T">Тип десериализуемого объекта</typeparam>
@@ -44,7 +44,7 @@ public static class XmlSerializerExtensions
     /// <param name="data">Поток с XML-данными</param>
     /// <returns>Десериализованный объект типа T</returns>
     [DST]
-    public static T Deserialize<T>(this XmlSerializer serializer, Stream data) => (T?)serializer.Deserialize(data);
+    public static T? Deserialize<T>(this XmlSerializer serializer, Stream data) => (T?)serializer.Deserialize(data);
 
     /// <summary>Десериализовать объект из потока по типу</summary>
     /// <typeparam name="T">Тип десериализуемого объекта</typeparam>
@@ -52,7 +52,7 @@ public static class XmlSerializerExtensions
     /// <param name="data">Поток с XML-данными</param>
     /// <returns>Десериализованный объект типа T</returns>
     [DST]
-    public static T Deserialize<T>(this Type type, Stream data) => type.GetXmlSerializer().Deserialize<T>(data);
+    public static T? Deserialize<T>(this Type type, Stream data) => type.GetXmlSerializer().Deserialize<T>(data);
 
     /// <summary>Десериализовать и инициализировать объект из потока</summary>
     /// <typeparam name="T">Тип десериализуемого объекта</typeparam>
@@ -61,7 +61,7 @@ public static class XmlSerializerExtensions
     /// <param name="Initialize">Флаг необходимости инициализации объекта</param>
     /// <returns>Десериализованный и инициализированный объект типа T</returns>
     [DST]
-    public static T Deserialize<T>(this Type type, Stream data, bool Initialize)
+    public static T? Deserialize<T>(this Type type, Stream data, bool Initialize)
         where T : IInitializable
     {
         var obj = type.GetXmlSerializer().Deserialize<T>(data);
@@ -75,7 +75,7 @@ public static class XmlSerializerExtensions
     /// <param name="reader">XmlReader с XML-данными</param>
     /// <returns>Десериализованный объект типа T</returns>
     [DST]
-    public static T Deserialize<T>(this XmlSerializer serializer, XmlReader reader) => (T?)serializer.Deserialize(reader);
+    public static T? Deserialize<T>(this XmlSerializer serializer, XmlReader reader) => (T?)serializer.Deserialize(reader);
 
     /// <summary>Десериализовать объект из XmlReader по типу</summary>
     /// <typeparam name="T">Тип десериализуемого объекта</typeparam>
@@ -83,7 +83,7 @@ public static class XmlSerializerExtensions
     /// <param name="reader">XmlReader с XML-данными</param>
     /// <returns>Десериализованный объект типа T</returns>
     [DST]
-    public static T Deserialize<T>(this Type type, XmlReader reader) => type.GetXmlSerializer().Deserialize<T>(reader);
+    public static T? Deserialize<T>(this Type type, XmlReader reader) => type.GetXmlSerializer().Deserialize<T>(reader);
 
     /// <summary>Десериализовать и инициализировать объект из XmlReader</summary>
     /// <typeparam name="T">Тип десериализуемого объекта</typeparam>
@@ -92,7 +92,7 @@ public static class XmlSerializerExtensions
     /// <param name="Initialize">Флаг необходимости инициализации объекта</param>
     /// <returns>Десериализованный и инициализированный объект типа T</returns>
     [DST]
-    public static T Deserialize<T>(this Type type, XmlReader reader, bool Initialize)
+    public static T? Deserialize<T>(this Type type, XmlReader reader, bool Initialize)
         where T : IInitializable
     {
         var obj = type.GetXmlSerializer().Deserialize<T>(reader);
@@ -106,7 +106,7 @@ public static class XmlSerializerExtensions
     /// <param name="reader">TextReader с XML-данными</param>
     /// <returns>Десериализованный объект типа T</returns>
     [DST]
-    public static T Deserialize<T>(this XmlSerializer serializer, TextReader reader) => (T?)serializer.Deserialize(reader);
+    public static T? Deserialize<T>(this XmlSerializer serializer, TextReader reader) => (T?)serializer.Deserialize(reader);
 
     /// <summary>Десериализовать объект из TextReader по типу</summary>
     /// <typeparam name="T">Тип десериализуемого объекта</typeparam>
@@ -114,7 +114,7 @@ public static class XmlSerializerExtensions
     /// <param name="reader">TextReader с XML-данными</param>
     /// <returns>Десериализованный объект типа T</returns>
     [DST]
-    public static T Deserialize<T>(this Type type, TextReader reader) => type.GetXmlSerializer().Deserialize<T>(reader);
+    public static T? Deserialize<T>(this Type type, TextReader reader) => type.GetXmlSerializer().Deserialize<T>(reader);
 
     /// <summary>Десериализовать и инициализировать объект из TextReader</summary>
     /// <typeparam name="T">Тип десериализуемого объекта</typeparam>
@@ -123,7 +123,7 @@ public static class XmlSerializerExtensions
     /// <param name="Initialize">Флаг необходимости инициализации объекта</param>
     /// <returns>Десериализованный и инициализированный объект типа T</returns>
     [DST]
-    public static T Deserialize<T>(this Type type, TextReader reader, bool Initialize)
+    public static T? Deserialize<T>(this Type type, TextReader reader, bool Initialize)
         where T : IInitializable
     {
         var obj = type.GetXmlSerializer().Deserialize<T>(reader);
@@ -137,7 +137,7 @@ public static class XmlSerializerExtensions
     /// <param name="file">Файл с XML-данными</param>
     /// <returns>Десериализованный объект типа T</returns>
     [DST]
-    public static T Deserialize<T>(this Type type, FileInfo file) =>
+    public static T? Deserialize<T>(this Type type, FileInfo file) =>
         file.OpenText().DisposeAfter(type, (reader, t) => t.Deserialize<T>(reader));
 
     /// <summary>Десериализовать и инициализировать объект из файла</summary>
@@ -147,7 +147,7 @@ public static class XmlSerializerExtensions
     /// <param name="Initialize">Флаг необходимости инициализации объекта</param>
     /// <returns>Десериализованный и инициализированный объект типа T</returns>
     [DST]
-    public static T Deserialize<T>(this Type type, FileInfo file, bool Initialize)
+    public static T? Deserialize<T>(this Type type, FileInfo file, bool Initialize)
         where T : IInitializable =>
         file.OpenRead().DisposeAfter(Initialize, type, (reader, init, t) => t.Deserialize<T>(reader, init));
 
@@ -157,7 +157,7 @@ public static class XmlSerializerExtensions
     /// <param name="file">Имя файла с XML-данными</param>
     /// <returns>Десериализованный объект типа T</returns>
     [DST]
-    public static T Deserialize<T>(this Type type, string file) => type.Deserialize<T>(new FileInfo(file));
+    public static T? Deserialize<T>(this Type type, string file) => type.Deserialize<T>(new FileInfo(file));
 
     /// <summary>Десериализовать и инициализировать объект из файла по имени</summary>
     /// <typeparam name="T">Тип десериализуемого объекта</typeparam>
@@ -166,18 +166,18 @@ public static class XmlSerializerExtensions
     /// <param name="Initialize">Флаг необходимости инициализации объекта</param>
     /// <returns>Десериализованный и инициализированный объект типа T</returns>
     [DST]
-    public static T Deserialize<T>(this Type type, string file, bool Initialize) where T : IInitializable => type.Deserialize<T>(new FileInfo(file), Initialize);
+    public static T? Deserialize<T>(this Type type, string file, bool Initialize) where T : IInitializable => type.Deserialize<T>(new FileInfo(file), Initialize);
 
     /// <summary>Десериализовать объект из потока</summary>
     /// <typeparam name="T">Тип десериализуемого объекта</typeparam>
     /// <param name="stream">Поток с XML-данными</param>
     /// <returns>Десериализованный объект типа T</returns>
     [DST]
-    public static T Deserialize<T>(this Stream stream) => (T?)GetXmlSerializer<T>().Deserialize(stream);
+    public static T? Deserialize<T>(this Stream stream) => (T?)GetXmlSerializer<T>().Deserialize(stream);
 
     /// <summary>Десериализовать объект из файла</summary>
     /// <typeparam name="T">Тип десериализуемого объекта</typeparam>
     /// <param name="file">Файл с XML-данными</param>
     /// <returns>Десериализованный объект типа T</returns>
-    public static T Deserialize<T>(this FileInfo file) => file.OpenRead().DisposeAfter(reader => reader.Deserialize<T>());
+    public static T? Deserialize<T>(this FileInfo file) => file.OpenRead().DisposeAfter(reader => reader.Deserialize<T>());
 }

@@ -33,24 +33,24 @@ public class LambdaXmlSerializer<T>(string? ElementName = null) : LambdaXmlSeria
     private readonly List<Func<T, object>> _Attributes = [];
 
     /// <summary>Список методов формирования дочерних элементов</summary>
-    private readonly List<Func<T, object>> _Elements = [];
+    private readonly List<Func<T, object?>> _Elements = [];
 
     /// <summary>Выполнение процесса сериализации</summary>
     /// <param name="value">Сериализуемый объект</param>
     /// <returns>xml-представление сериализуемого объекта</returns>
-    public XElement Serialize(T value) => new(ElementName ?? __EmptyName, Content(value).ToArray());
+    public XElement Serialize(T value) => new(ElementName ?? __EmptyName, [.. Content(value)]);
 
     /// <summary>Выполнение процесса сериализации</summary>
     /// <param name="Name">Название корневого элемента</param>
     /// <param name="value">Сериализуемый объект</param>
     /// <returns>xml-представление сериализуемого объекта</returns>
-    public XElement Serialize(string? Name, T value) => new(Name ?? ElementName ?? __EmptyName, Content(value).ToArray());
+    public XElement Serialize(string? Name, T value) => new(Name ?? ElementName ?? __EmptyName, [.. Content(value)]);
 
     /// <summary>Формирование содержимого элемента</summary>
     /// <remarks>Выполнение списков методов вычисления значений атрибутов, затем - дочерних элементов</remarks>
     /// <param name="value">Сериализуемый объект</param>
     /// <returns>Перечисление атрибутов и дочерних элементов, вкладываемых в корневой элемент</returns>
-    private IEnumerable<object> Content(T value) => _Attributes.Select(a => a(value)).Concat(_Elements.Select(e => e(value)));
+    private IEnumerable<object?> Content(T value) => _Attributes.Select(a => a(value)).Concat(_Elements.Select(e => e(value)));
 
     /// <summary>Добавление конфигурации атрибута</summary>
     /// <typeparam name="TValue">ТИп значения атрибута</typeparam>

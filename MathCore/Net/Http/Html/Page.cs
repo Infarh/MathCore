@@ -12,7 +12,7 @@ public class Page
 
     public Body Body { get => _Body; set => _Body = value ?? []; }
 
-    public string Title
+    public string? Title
     {
         get => _Head.Elements.OfType<HElement>().FirstOrDefault(e => e.Name == "title")?.InnerText();
         set

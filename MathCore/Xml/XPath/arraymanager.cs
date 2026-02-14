@@ -57,7 +57,7 @@ internal class ArrayManager
 
     private int Offset { get; set; }
 
-    internal char[] CurrentBuffer => _CurrentBuffer?.CharBuffer;
+    internal char[] CurrentBuffer => _CurrentBuffer?.CharBuffer!;
 
     internal int CurrentBufferOffset => _CurrentBuffer?._offset ?? 0;
 

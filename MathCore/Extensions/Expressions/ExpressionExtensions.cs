@@ -79,7 +79,7 @@ public static partial class ExpressionExtensions
     /// <param name="ParameterName">Имя параметра для подстановки</param>
     /// <param name="SubstExpression">Выражение для подстановки</param>
     /// <returns>Новое лямбда-выражение с выполненной подстановкой</returns>
-    public static lEx Substitute<TDelegate>
+    public static lEx? Substitute<TDelegate>
     (
         this lEx MainEx,
         string ParameterName,

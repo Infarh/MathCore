@@ -59,7 +59,7 @@ internal sealed class AttributeQuery : BaseAxisQuery
 
         // Вернуться к родительскому элементу
         base_reader.MoveToElement();
-        return ret;
+        return ret!;
     }
 
     #endregion

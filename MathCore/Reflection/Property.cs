@@ -16,7 +16,7 @@ namespace System.Reflection;
 ///<summary>"Свойство" позднего связывания</summary>
 ///<typeparam name="TObject">Тип объекта, для которого определяется свойство</typeparam>
 ///<typeparam name="TValue">Тип значения свойства</typeparam>
-public class Property<TObject, TValue> : IValue<TValue>
+public class Property<TObject, TValue> : IValue<TValue?>
 {
     /* ------------------------------------------------------------------------------------------ */
 
@@ -65,7 +65,7 @@ public class Property<TObject, TValue> : IValue<TValue>
     public bool IsExist => _PropertyInfo != null;
 
     ///<summary>Значение свойства</summary>
-    public TValue Value { get => _GetMethod(); set => _SetMethod(value); }
+    public TValue? Value { get => _GetMethod(); set => _SetMethod(value); }
 
     ///<summary>Признак возможности читать значение</summary>
     public bool CanRead => _PropertyInfo != null && _PropertyInfo.CanRead;
@@ -80,7 +80,7 @@ public class Property<TObject, TValue> : IValue<TValue>
     public PropertyAttributes Attributes => _PropertyInfo.Attributes;
 
     /// <summary>Дескриптор свойства объекта</summary>
-    public PropertyDescriptor Descriptor => _Descriptor;
+    public PropertyDescriptor? Descriptor => _Descriptor;
 
     /// <summary>Значение <see cref="DisplayNameAttribute.DisplayName"/></summary>
     public string? DisplayName { get; private set; }

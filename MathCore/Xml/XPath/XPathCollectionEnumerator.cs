@@ -13,7 +13,7 @@ internal sealed class XPathCollectionEnumerator(Hashtable XPatches) : IEnumerato
 
     #region Properties
 
-    public object Current => ((DictionaryEntry) _HashEnum.Current).Value;
+    public object? Current => ((DictionaryEntry)_HashEnum.Current).Value;
 
     #endregion
 
