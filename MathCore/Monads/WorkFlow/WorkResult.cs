@@ -7,7 +7,7 @@
 public readonly struct WorkResult(Exception? PrevError = null, Exception? CurrentError = null) : IWorkResult, IEquatable<WorkResult>
 {
     /// <inheritdoc />
-    public Exception? Error { get; } = PrevError is null
+    public Exception Error { get; } = PrevError is null
             ? CurrentError
             : CurrentError is null
                 ? PrevError
@@ -54,7 +54,7 @@ public readonly struct WorkResult<T> : IWorkResult<T>, IEquatable<WorkResult<T>>
     /// <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
     public WorkResult(T Result, Exception? PrevError = null)
     {
-        Error       = PrevError;
+        Error = PrevError;
         this.Result = Result;
     }
 
@@ -111,9 +111,9 @@ public readonly struct WorkResult<TParameter, T> : IWorkResult<TParameter, T>, I
     /// <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
     public WorkResult(Exception PrevError)
     {
-        Error     = PrevError;
+        Error = PrevError;
         Parameter = default;
-        Result    = default;
+        Result = default;
     }
 
     /// <summary>Инициализация нового результата выполнения работы</summary>
@@ -122,9 +122,9 @@ public readonly struct WorkResult<TParameter, T> : IWorkResult<TParameter, T>, I
     /// <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
     public WorkResult(TParameter Parameter, T Result, Exception? PrevError = null)
     {
-        Error          = PrevError;
+        Error = PrevError;
         this.Parameter = Parameter;
-        this.Result    = Result;
+        this.Result = Result;
     }
 
     /// <summary>Инициализация нового результата выполнения работы</summary>
@@ -134,7 +134,7 @@ public readonly struct WorkResult<TParameter, T> : IWorkResult<TParameter, T>, I
     public WorkResult(TParameter Parameter, Exception? PrevError = null, Exception? CurrentError = null)
     {
         this.Parameter = Parameter;
-        Result         = default;
+        Result = default;
         Error = PrevError is null
             ? CurrentError
             : CurrentError is null

@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 
 namespace MathCore;
 
@@ -10,7 +9,7 @@ namespace MathCore;
 public class ExpandableList<T>(List<T> BaseList) : IList<T>, IReadOnlyList<T>
 {
     /// <summary>Инициализация нового расширяемого списка</summary>
-    public ExpandableList() : this((List<T>)[]) { }
+    public ExpandableList() : this([]) { }
 
     /// <summary>Инициализация нового расширяемого списка</summary>
     /// <param name="Capacity">Ёмкость</param>
@@ -18,7 +17,7 @@ public class ExpandableList<T>(List<T> BaseList) : IList<T>, IReadOnlyList<T>
 
     /// <summary>Инициализация нового расширяемого списка</summary>
     /// <param name="items">Исходный набор элементов</param>
-    public ExpandableList(IEnumerable<T> items) : this((List<T>)items.ToList()) { }
+    public ExpandableList(IEnumerable<T> items) : this([.. items]) { }
 
     /// <summary>Базовый список, обеспечивающий хранение данных</summary>
     public List<T> BaseList { get; } = BaseList;
@@ -27,14 +26,14 @@ public class ExpandableList<T>(List<T> BaseList) : IList<T>, IReadOnlyList<T>
 
     /// <inheritdoc />
     public int IndexOf(T? item) => BaseList.IndexOf(item);
-    
+
     /// <inheritdoc />
     public void Insert(int index, T? item) => BaseList.Insert(index, item);
-    
+
     /// <inheritdoc />
     public void RemoveAt(int index) => BaseList.RemoveAt(index);
 
-    public T? this[int index]
+    public T this[int index]
     {
         get
         {
@@ -45,7 +44,7 @@ public class ExpandableList<T>(List<T> BaseList) : IList<T>, IReadOnlyList<T>
         {
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index), value, "Индекс должен быть больше, либо равно 0");
 
-            var list  = BaseList;
+            var list = BaseList;
             var count = list.Count;
             if (index < count)
             {
@@ -56,9 +55,9 @@ public class ExpandableList<T>(List<T> BaseList) : IList<T>, IReadOnlyList<T>
             if (list.Capacity < index + 1)
                 list.Capacity = index + 1;
 
-            for(var i = count; i < index; i++)
+            for (var i = count; i < index; i++)
                 list.Add(default);
-            
+
             list.Add(value);
         }
     }
@@ -89,16 +88,16 @@ public class ExpandableList<T>(List<T> BaseList) : IList<T>, IReadOnlyList<T>
 
     /// <inheritdoc />
     public void Add(T? item) => BaseList.Add(item);
-    
+
     /// <inheritdoc />
     public void Clear() => BaseList.Clear();
-    
+
     /// <inheritdoc />
     public bool Contains(T? item) => BaseList.Contains(item);
-    
+
     /// <inheritdoc />
     public void CopyTo(T[] array, int index) => BaseList.CopyTo(array, index);
-    
+
     /// <inheritdoc />
     public bool Remove(T? item) => BaseList.Remove(item);
 
@@ -125,7 +124,7 @@ public class ExpandableList<T>(List<T> BaseList) : IList<T>, IReadOnlyList<T>
                     if (list.Capacity - list.Count < delta)
                         list.Capacity = list.Count + delta;
 
-                    for(var i = 0; i < delta; i++)
+                    for (var i = 0; i < delta; i++)
                         list.Add(default);
 
                     break;
@@ -155,7 +154,7 @@ public class ExpandableList<T>(List<T> BaseList) : IList<T>, IReadOnlyList<T>
                 return;
             }
 
-            var list          = BaseList;
+            var list = BaseList;
             var list_capacity = BaseList.Capacity;
             switch (value - list_capacity)
             {

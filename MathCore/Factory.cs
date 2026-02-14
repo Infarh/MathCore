@@ -38,8 +38,10 @@ public class Factory<T> : INotifyPropertyChanged, IFactory<T>
     /// <summary>Событие возникает при генерации новой строки</summary>
     event PropertyChangedEventHandler? INotifyPropertyChanged.PropertyChanged
     {
-        [DST] add => PropertyChangedHandlers += value;
-        [DST] remove => PropertyChangedHandlers -= value;
+        [DST]
+        add => PropertyChangedHandlers += value;
+        [DST]
+        remove => PropertyChangedHandlers -= value;
     }
 
     /// <summary>Генерация события уведомления об изменении значения свойства</summary>
@@ -67,7 +69,7 @@ public class Factory<T> : INotifyPropertyChanged, IFactory<T>
         private set
         {
             _Last = value;
-            if(_RaiseLastChangedEvents)
+            if (_RaiseLastChangedEvents)
                 OnPropertyChanged(_PropertyLastChangedArgs);
         }
     }
@@ -75,8 +77,10 @@ public class Factory<T> : INotifyPropertyChanged, IFactory<T>
     /// <summary>Метод генерации объектов типа <typeparamref name="T"/></summary>
     public Func<T> FactoryMethod
     {
-        [DST] get => _FactoryMethod;
-        [DST] set => _FactoryMethod = value;
+        [DST]
+        get => _FactoryMethod;
+        [DST]
+        set => _FactoryMethod = value;
     }
 
     /* ------------------------------------------------------------------------------------------ */
@@ -94,7 +98,7 @@ public class Factory<T> : INotifyPropertyChanged, IFactory<T>
     /// <summary>Создать новый объект</summary>
     /// <returns>Новый объект типа <typeparamref name="T"/></returns>
     [DST]
-    public virtual T? Create() => _FactoryMethod is null ? default : Last = _FactoryMethod();
+    public virtual T Create() => _FactoryMethod is null ? default : Last = _FactoryMethod();
 
     /* ------------------------------------------------------------------------------------------ */
 

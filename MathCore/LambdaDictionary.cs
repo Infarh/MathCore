@@ -31,7 +31,7 @@ public class LambdaDictionary<TKey, TValue>(
     public ICollection<TValue> Values => new Collection<TValue>(_ElementsGetter().Select(v => v.Value).ToList());
 
     /// <inheritdoc />
-    public TValue? this[TKey key]
+    public TValue this[TKey key]
     {
         get => _ElementsGetter().Where(v => Equals(v.Key, key)).Select(v => v.Value).FirstOrDefault();
         set => Add(key, value);
@@ -42,7 +42,7 @@ public class LambdaDictionary<TKey, TValue>(
     // ReSharper disable once AnnotateNotNullParameter
     private static void CheckSupported(Delegate action, string message)
     {
-        if(action is null)
+        if (action is null)
             throw new NotSupportedException(message);
     }
 
