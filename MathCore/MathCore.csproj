@@ -44,13 +44,8 @@
 
   <PropertyGroup>
     <NoWarn>
-      0168;
-      1572;1574;
-      1701;1702;1710;1734;
-      1591;1573;
-
-      
-    </NoWarn>
+     
+    </NoWarn> 
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
