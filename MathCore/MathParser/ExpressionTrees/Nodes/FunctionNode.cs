@@ -9,7 +9,7 @@ public class FunctionNode : ComputedNode
     public string Name { get; } = null!;
 
     /// <summary>Массив имён аргументов функции</summary>
-    public string[] ArgumentsNames => [.. Arguments.Select(a => a.Key).Where(s => s is { Length: > 0 })!];
+    public string[] ArgumentsNames => [.. Arguments.Select(a => a.Key ?? string.Empty)];
 
     /// <summary>Перечисление аргументов функции</summary>
     public IEnumerable<KeyValuePair<string?, ExpressionTreeNode?>> Arguments => GetFunctionArgumentNodes(this);
