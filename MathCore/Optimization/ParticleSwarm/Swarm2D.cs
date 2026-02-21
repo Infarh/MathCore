@@ -101,11 +101,8 @@ public class Swarm2D(int ParticleCount = 100)
     {
         var dx_local = _LocalWeight * __Random.NextDouble() * (CurrentBestX - X);
         var dx_global = _GlobalWeight * __Random.NextDouble() * (GlobalBestX - X);
-
-        var dx = dx_local + dx_global;
-
-        var new_position = X * (1 + _Inertia) + dx;
-        return Interval.Normalize(new_position);
+        var v = _Inertia * X + dx_local + dx_global;
+        return Interval.Normalize(X + v);
     }
 
     /// <summary>Находит минимум функции двух переменных методом роя частиц</summary>
@@ -358,7 +355,7 @@ public class Swarm2D(int ParticleCount = 100)
             swarm[i] = new(x, y, F(x, y));
         }
 
-        (X, Y, Value) = swarm.GetMin(p => p.Value)!;
+        (X, Y, Value) = swarm.GetMax(p => p.Value)!;
 
         for (var i = 0; i < IterationCount; i++)
             foreach (var p in swarm)

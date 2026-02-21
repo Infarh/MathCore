@@ -87,8 +87,11 @@ public class Swarm1D(int ParticleCount = 100)
 
     private static readonly Random __Random = new();
 
-    private double Get(in Interval interval, double px, double best, double x) =>
-        interval.Normalize(px + (_Inertia * px + _LocalWeight * __Random.NextDouble() * (best - px) + _GlobalWeight * __Random.NextDouble() * (x - px)));
+    private double Get(in Interval interval, double px, double best, double x)
+    {
+        var v = _Inertia * px + _LocalWeight * __Random.NextDouble() * (best - px) + _GlobalWeight * __Random.NextDouble() * (x - px);
+        return interval.Normalize(px + v);
+    }
 
     /// <summary>Находит минимум функции одной переменной методом роя частиц</summary>
     /// <param name="F">Целевая функция для минимизации</param>

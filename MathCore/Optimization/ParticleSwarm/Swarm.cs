@@ -184,8 +184,8 @@ public class Swarm(int ParticleCount = 100)
                     var r1 = __Random.NextDouble();
                     var r2 = __Random.NextDouble();
 
-                    x += _Inertia * x + _LocalWeight * r1 * (p.BestX[j] - x) + _GlobalWeight * r2 * (X[j] - x);
-                    p.X[j] = IntervalX[j].Normalize(x);
+                    var v = _Inertia * x + _LocalWeight * r1 * (p.BestX[j] - x) + _GlobalWeight * r2 * (X[j] - x);
+                    p.X[j] = IntervalX[j].Normalize(x + v);
                 }
                 p.SetMin(F);
 
@@ -262,22 +262,21 @@ public class Swarm(int ParticleCount = 100)
         }
         X = new double[dimensions];
 
-        var start = swarm.GetMin(p => p.Value);
+        var start = swarm.GetMax(p => p.Value);
         start!.X.CopyTo(X, 0);
         Value = start.Value;
 
         for (var i = 0; i < IterationCount; i++)
             foreach (var p in swarm)
             {
-                var xx = p.X;
                 for (var j = 0; j < dimensions; j++)
                 {
-                    var x = xx[j];
+                    var x = p.X[j];
                     var r1 = __Random.NextDouble();
                     var r2 = __Random.NextDouble();
 
-                    x += _Inertia * x + _LocalWeight * r1 * (p.BestX[j] - x) + _GlobalWeight * r2 * (X[j] - x);
-                    p.X[j] = IntervalX[j].Normalize(x);
+                    var v = _Inertia * x + _LocalWeight * r1 * (p.BestX[j] - x) + _GlobalWeight * r2 * (X[j] - x);
+                    p.X[j] = IntervalX[j].Normalize(x + v);
                 }
                 p.SetMax(F);
 
