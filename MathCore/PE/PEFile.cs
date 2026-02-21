@@ -1,154 +1,181 @@
-﻿using System.Text;
-
-using MathCore.PE.Headers;
+﻿using MathCore.PE.Headers;
+using MathCore.PE.Tables;
 
 namespace MathCore.PE;
 
+/// <summary>Парсер PE-файлов (Portable Executable)</summary>
 public class PEFile(FileInfo File)
 {
     // #define MakePtr(Type, Base, Offset) ((Type)(DWORD(Base) + (DWORD)(Offset)))
     internal static uint MakePtr(uint Base, uint Offset) => Base + Offset;
 
     private readonly FileInfo _File = File;
+    private Header? _Header;
+
+    /// <summary>Информация о файле</summary>
+    public FileInfo FileInfo => _File;
 
     public bool Exists => _File.Exists;
 
+    /// <summary>Проверяет, является ли файл корректным PE-файлом</summary>
     public bool IsPE
     {
         get
         {
             if (!Exists) throw new FileNotFoundException("Файл не найден", _File.FullName);
 
-
             if (_File.Length < 128) return false;
 
-            using var file = _File.OpenRead();
-            var reader = new BinaryReader(file);
-
-            if (file.ReadByte() != 'M') return false;
-            if (file.ReadByte() != 'Z') return false;
-
-            file.Seek(0, SeekOrigin.Begin);
-
-            var magic = reader.ReadUInt16();
-
-            if (file.Seek(0x3c, SeekOrigin.Begin) != 0x3c) return false;
-            var pe_offset = reader.ReadUInt32();
-
-            if (file.Seek(pe_offset, SeekOrigin.Begin) != pe_offset) return false;
-
-            if (file.ReadByte() != 'P') return false;
-            if (file.ReadByte() != 'E') return false;
-            if (file.ReadByte() != '\0') return false;
-            if (file.ReadByte() != '\0') return false;
-
-            return true;
+            try
+            {
+                using var file = _File.OpenRead();
+                _ = Header.Load(file);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 
+    /// <summary>Создаёт экземпляр парсера PE-файла из пути к файлу</summary>
     public PEFile(string FilePath) : this(new FileInfo(FilePath)) { }
 
+    /// <summary>Загружает и кэширует заголовок PE-файла</summary>
     public Header GetHeader()
     {
+        if (_Header is { } header)
+            return header;
+
         using var file = _File.OpenRead();
-        var header = Header.Load(file);
-        return header;
+        _Header = Header.Load(file);
+        return _Header.Value;
     }
 
-    public void ReadData()
+    /// <summary>Преобразует RVA (Relative Virtual Address) в смещение в файле</summary>
+    /// <param name="RVA">Относительный виртуальный адрес</param>
+    /// <returns>Смещение в файле, или -1 если RVA находится вне разделов</returns>
+    public long RvaToFileOffset(uint RVA)
     {
-        using var data = _File.OpenRead();
-        var reader = new BinaryReader(data);
+        var header = GetHeader();
 
-        var dos_magic_bytes = new byte[2];
-        _ = data.Read(dos_magic_bytes, 0, 2);
-        var pe_magic = Encoding.UTF8.GetString(dos_magic_bytes);
-
-        data.Seek(0x3c, SeekOrigin.Begin);
-        var pe_header_offset = reader.ReadUInt16();
-
-        data.Seek(pe_header_offset, SeekOrigin.Begin);
-
-        var address0 = "0x" + (data.Position - pe_header_offset).ToString("X4");
-        var pe_signature_bytes = new byte[4];
-        _ = data.Read(pe_signature_bytes, 0, 4);
-        var pe_signature = Encoding.UTF8.GetString(pe_signature_bytes);
-
-        var machine = reader.ReadUInt16();
-        var number_of_sections = reader.ReadUInt16();
-
-        var address1 = "0x" + (data.Position - pe_header_offset).ToString("X4");
-        var time_data_stamp = reader.ReadUInt32();
-        var pointer_to_symbol_table = reader.ReadUInt32();
-
-        var address2 = "0x" + (data.Position - pe_header_offset).ToString("X4");
-        var number_of_symbol_table = reader.ReadUInt32();
-        var size_of_optional_header = reader.ReadUInt16();
-        var characteristic = reader.ReadUInt16();
-
-        var address3 = "0x" + (data.Position - pe_header_offset).ToString("X4");
-        var magic = reader.ReadUInt16();
-        var major_linker_version = reader.ReadByte();
-        var minor_linker_version = reader.ReadByte();
-        var size_of_code = reader.ReadUInt32();
-
-        var address4 = "0x" + (data.Position - pe_header_offset).ToString("X4");
-        var size_of_initial_data = reader.ReadUInt32();
-        var size_of_uninitialized_data = reader.ReadUInt32();
-
-        var address5 = "0x" + (data.Position - pe_header_offset).ToString("X4");
-        var address_of_entry_point = reader.ReadUInt32();
-        var base_code = reader.ReadUInt32();
-
-        var address6 = "0x" + (data.Position - pe_header_offset).ToString("X4");
-        var base_data = reader.ReadUInt32();
-
-        var image_base = reader.ReadUInt32();
-
-        var address7 = "0x" + (data.Position - pe_header_offset).ToString("X4");
-        var section_alignment = reader.ReadUInt32();
-        var file_alignment = reader.ReadUInt32();
-
-        var address8 = "0x" + (data.Position - pe_header_offset).ToString("X4");
-        var major_operating_system_version = reader.ReadUInt16();
-        var minor_operating_system_version = reader.ReadUInt16();
-        var major_image_version = reader.ReadUInt16();
-        var minor_image_version = reader.ReadUInt16();
-
-        var address9 = "0x" + (data.Position - pe_header_offset).ToString("X4");
-        var major_subsystem_version = reader.ReadUInt16();
-        var minor_subsystem_version = reader.ReadUInt16();
-        var win32_version_value = reader.ReadUInt32();
-
-        var address10 = "0x" + (data.Position - pe_header_offset).ToString("X4");
-        var size_of_image = reader.ReadUInt32();
-        var size_of_headers = reader.ReadUInt32();
-
-        var address11 = "0x" + (data.Position - pe_header_offset).ToString("X4");
-        var checksum = reader.ReadUInt32();
-        var subsystem = reader.ReadUInt16();
-        var dll_characteristics = reader.ReadUInt16();
-
-        var address12 = "0x" + (data.Position - pe_header_offset).ToString("X4");
-        var size_of_stack_reserve = reader.ReadUInt64();
-        var size_of_stack_commit = reader.ReadUInt64();
-
-        var address13 = "0x" + (data.Position - pe_header_offset).ToString("X4");
-        var size_of_heap_reserve = reader.ReadUInt64();
-        var size_of_heap_commit = reader.ReadUInt64();
-
-        var address14 = "0x" + (data.Position - pe_header_offset).ToString("X4");
-        var loader_flags = reader.ReadUInt32();
-        var loader_number_of_rva_and_sizes = reader.ReadUInt32();
-
-        var address15 = "0x" + (data.Position - pe_header_offset).ToString("X4");
-        var data_directories = new (int Index, uint Address, uint Size)[16];
-        for (var i = 0; i < data_directories.Length; i++)
+        foreach (var section in header.Sections)
         {
-            var address = reader.ReadUInt32();
-            var size = reader.ReadUInt32();
-            data_directories[i] = (i, address, size);
+            if (RVA >= section.VirtualAddress && RVA < section.VirtualAddress + section.VirtualSize)
+            {
+                var offset = RVA - section.VirtualAddress + section.PointerToRawData;
+                return offset;
+            }
         }
-        var address16 = "0x" + (data.Position - pe_header_offset).ToString("X4");
+
+        return -1;
+    }
+
+    /// <summary>Преобразует смещение в файле в RVA (Relative Virtual Address)</summary>
+    /// <param name="FileOffset">Смещение в файле</param>
+    /// <returns>RVA, или 0 если смещение находится вне разделов</returns>
+    public uint FileOffsetToRva(long FileOffset)
+    {
+        var header = GetHeader();
+
+        foreach (var section in header.Sections)
+        {
+            if (FileOffset >= section.PointerToRawData &&
+                FileOffset < section.PointerToRawData + section.SizeOfRawData)
+            {
+                var rva = (uint)(FileOffset - section.PointerToRawData) + section.VirtualAddress;
+                return rva;
+            }
+        }
+
+        return 0;
+    }
+
+    /// <summary>Читает данные из файла по RVA</summary>
+    /// <param name="RVA">Относительный виртуальный адрес</param>
+    /// <param name="Size">Количество байт для чтения</param>
+    /// <returns>Прочитанные данные</returns>
+    public byte[] ReadDataFromRVA(uint RVA, int Size)
+    {
+        var offset = RvaToFileOffset(RVA);
+        if (offset < 0)
+            throw new InvalidOperationException($"RVA 0x{RVA:X8} находится вне разделов файла");
+
+        using var file = _File.OpenRead();
+        file.Seek(offset, SeekOrigin.Begin);
+
+        var data = new byte[Size];
+        var read = file.Read(data, 0, Size);
+
+        if (read != Size)
+            throw new InvalidOperationException($"Не удалось прочитать полный объём данных из RVA 0x{RVA:X8}");
+
+        return data;
+    }
+
+    /// <summary>Получает информацию об экспортируемых функциях</summary>
+    public ExportedFunctions? GetExports()
+    {
+        try
+        {
+            var header = GetHeader();
+            var exportDir = header.NT.OptionalHeader.DataDirectory.Export;
+
+            if (exportDir.VirtualAddress == 0 || exportDir.Size == 0)
+                return null;
+
+            using var file = _File.OpenRead();
+            var offset = RvaToFileOffset(exportDir.VirtualAddress);
+            if (offset < 0)
+                return null;
+
+            file.Seek(offset, SeekOrigin.Begin);
+            var exportsData = file.ReadStructure<IMAGE_EXPORT_DIRECTORY>();
+
+            return new ExportedFunctions(this, exportsData);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>Получает информацию о ресурсах в файле</summary>
+    public PEResources? GetResources()
+    {
+        try
+        {
+            var header = GetHeader();
+            var resourceDir = header.NT.OptionalHeader.DataDirectory.Resource;
+
+            if (resourceDir.VirtualAddress == 0 || resourceDir.Size == 0)
+                return null;
+
+            return new PEResources(this, resourceDir);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>Получает информацию об импортируемых функциях</summary>
+    public ImportedFunctions? GetImports()
+    {
+        try
+        {
+            var header = GetHeader();
+            var importDir = header.NT.OptionalHeader.DataDirectory.Import;
+
+            if (importDir.VirtualAddress == 0 || importDir.Size == 0)
+                return null;
+
+            return new ImportedFunctions(this, importDir);
+        }
+        catch
+        {
+            return null;
+        }
     }
 }
