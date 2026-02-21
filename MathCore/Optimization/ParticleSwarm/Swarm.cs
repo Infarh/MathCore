@@ -118,7 +118,7 @@ public class Swarm(int ParticleCount = 100)
         out double Value) =>
         Minimize(F, MinX.Zip(MaxX, (min, max) => new Interval(min, max)).ToArray(), IterationCount, out X, out Value);
 
-    /// <summary>Находит минимум функции MANY переменных методом роя частиц с использованием интервалов</summary>
+    /// <summary>Находит минимум функции многих переменных методом роя частиц с использованием интервалов</summary>
     /// <param name="F">Целевая функция для минимизации</param>
     /// <param name="IntervalX">Интервалы поиска для каждой переменной</param>
     /// <param name="IterationCount">Количество итераций алгоритма</param>
@@ -239,7 +239,7 @@ public class Swarm(int ParticleCount = 100)
         out double Value) =>
         Maximize(F, MinX.Zip(MaxX, (min, max) => new Interval(min, max)).ToArray(), IterationCount, out X, out Value);
 
-    /// <summary>Находит максимум функции MANY переменных методом роя частиц с использованием интервалов</summary>
+    /// <summary>Находит максимум функции многих переменных методом роя частиц с использованием интервалов</summary>
     /// <param name="F">Целевая функция для максимизации</param>
     /// <param name="IntervalX">Интервалы поиска для каждой переменной</param>
     /// <param name="IterationCount">Количество итераций алгоритма</param>

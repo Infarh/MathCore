@@ -50,15 +50,17 @@ public static class CSVParser
         const char quote = '"';
         for (int start = 0, end; start < Line.Length; start = end + 1)
         {
-            end = Line.IndexOf(Separator, start + 1);
+            end = Line.IndexOf(Separator, start);
             if (end < 0)
                 end = Line.Length;
 
-            if (Line.IndexOf(quote, start, end - start) is > 0 and var start_quote_index)
+            if (Line.IndexOf(quote, start, end - start) is >= 0 and var start_quote_index)
             {
                 var close_quote_index = Line.IndexOf(quote, start_quote_index + 1);
                 if (close_quote_index < 0) yield break;
                 end = Line.IndexOf(Separator, close_quote_index + 1);
+                if (end < 0)
+                    end = Line.Length;
             }
 
             var result = Line[start..end];
@@ -97,14 +99,15 @@ public static class CSVParser
         var result = new StringBuilder();
         foreach (var value in Values)
         {
-            if (value.IndexOf(Separator) < 0)
-                result.Append(value);
-            else
+            var needs_quoting = value.IndexOf(Separator) >= 0 || value.IndexOf('"') >= 0;
+            if (needs_quoting)
             {
                 result.Append('"');
-                result.Append(value);
+                result.Append(value.Replace("\"", "\"\""));
                 result.Append('"');
             }
+            else
+                result.Append(value);
             result.Append(Separator);
         }
 
