@@ -8,8 +8,24 @@ using MathCore.Extensions.Expressions;
 
 namespace MathCore.CSV;
 
-/// <summary>Объект для записи данных в формате CSV</summary>
-/// <typeparam name="T">ТИп записываемых элементов данных</typeparam>
+/// <summary>
+/// Построитель для записи данных в формате CSV
+/// </summary>
+/// <typeparam name="T">Тип элементов для записи</typeparam>
+/// <remarks>
+/// Структура предоставляет fluent API для конфигурации записи данных в CSV-формат.
+/// Поддерживает:
+/// - Автоматическое создание колонок на основе свойств типа T
+/// - Добавление/удаление колонок с пользовательскими селекторами
+/// - Запись в файл, поток или TextWriter
+/// - Асинхронную запись с поддержкой отмены операции
+/// 
+/// Примеры использования:
+/// var people = new[] { new Person { Id = 1, Name = "Alice" }, ... };
+/// var csv = people.AsCSV()
+///     .AddDefaultHeaders()
+///     .WriteTo("people.csv");
+/// </remarks>
 public readonly struct CSVWriter<T>
 {
     /// <summary>Перечисление записываемых элементов данных</summary>
@@ -21,23 +37,36 @@ public readonly struct CSVWriter<T>
     /// <summary>Словарь соответствия имени колонки методу извлечения значения и индексу колонки</summary>
     private readonly IDictionary<string, (Func<T, object> Selector, int Index)>? _Selectors;
 
-    /// <summary>Требуется ли записывать заголовок?</summary>
+    /// <summary>Требуется ли записывать заголовок в начало файла?</summary>
     private readonly bool _WriteHeaders;
 
-    /// <summary>Получить упорядоченное перечисление колонок</summary>
-    /// <param name="Columns">Колонки</param>
-    /// <returns>Упорядоченное по индексу, затем по имени перечисление колонок</returns>
+    /// <summary>
+    /// Получить упорядоченное перечисление колонок по индексу, затем по имени
+    /// </summary>
+    /// <param name="Columns">Колонки для сортировки</param>
+    /// <returns>Отсортированное перечисление</returns>
     private static IEnumerable<KeyValuePair<string, (Func<T, object> Selector, int Index)>> GetOrdered(
         IEnumerable<KeyValuePair<string, (Func<T, object> Selector, int Index)>>? Columns) =>
         Columns?.OrderBy(s => s.Value.Index).ThenBy(s => s.Key)
         ?? Enumerable.Empty<KeyValuePair<string, (Func<T, object> Selector, int Index)>>();
 
-    /// <summary>Колонки данных</summary>
+    /// <summary>
+    /// Получить перечисление имён колонок в порядке записи
+    /// </summary>
+    /// <value>Упорядоченное перечисление имён колонок</value>
     public IEnumerable<string> Headers => GetOrdered(_Selectors).Select(s => s.Key);
 
-    /// <summary>Инициализация нового экземпляра <see cref="CSVWriter{T}"/></summary>
-    /// <param name="items">Перечисление элементов, значения которых надо записать в формате CSV</param>
-    /// <param name="Separator">Символ-разделитель значений в строках</param>
+    /// <summary>
+    /// Инициализация нового построителя CSV с указанными элементами и разделителем
+    /// </summary>
+    /// <param name="items">Перечисление элементов для записи</param>
+    /// <param name="Separator">Символ-разделитель (по умолчанию ',')</param>
+    /// <example>
+    /// <![CDATA[
+    /// var items = new[] { new Product { Id = 1, Name = "Item" } };
+    /// var writer = new CSVWriter<Product>(items, ',');
+    /// ]]>
+    /// </example>
     public CSVWriter(IEnumerable<T> items, char Separator)
         : this(
             items,
@@ -46,7 +75,7 @@ public readonly struct CSVWriter<T>
             Selectors: null)
     { }
 
-    /// <summary>Инициализация нового экземпляра <see cref="CSVWriter{T}"/></summary>
+    /// <summary>Инициализация внутреннего построителя с полным набором параметров</summary>
     private CSVWriter(
         IEnumerable<T> items,
         char Separator,
@@ -60,8 +89,10 @@ public readonly struct CSVWriter<T>
         _Selectors = Selectors;
     }
 
-    /// <summary>Создать заголовок</summary>
-    /// <returns>Словарь колонок данных файла</returns>
+    /// <summary>
+    /// Автоматически создать селекторы колонок на основе публичных свойств типа T
+    /// </summary>
+    /// <returns>Словарь селекторов</returns>
     private static IDictionary<string, (Func<T, object> Selector, int Index)> CreateHeaders()
     {
         var type = typeof(T);
@@ -81,9 +112,17 @@ public readonly struct CSVWriter<T>
         return selectors;
     }
 
-    /// <summary>Изменить символ-разделитель значений в строках</summary>
+    /// <summary>
+    /// Изменить символ-разделитель значений в строках
+    /// </summary>
     /// <param name="separator">Новый символ-разделитель</param>
-    /// <returns>Модифицированный <see cref="CSVWriter{T}"/></returns>
+    /// <returns>Модифицированный построитель</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var writer = new CSVWriter<T>(items, ',')
+    ///     .Separator(';');  // использовать точку с запятой в качестве разделителя
+    /// ]]>
+    /// </example>
     public CSVWriter<T> Separator(char separator) =>
         new(
             _Items,
@@ -92,9 +131,11 @@ public readonly struct CSVWriter<T>
             _Selectors
         );
 
-    /// <summary>Записывать ли заголовок в начало файла?</summary>
-    /// <param name="write">Истина, если заголовок требуется записать</param>
-    /// <returns>Модифицированный <see cref="CSVWriter{T}"/></returns>
+    /// <summary>
+    /// Указать, требуется ли записывать заголовок в начало файла
+    /// </summary>
+    /// <param name="write">true = записать заголовок; false = только данные</param>
+    /// <returns>Модифицированный построитель</returns>
     public CSVWriter<T> WriteHeader(bool write = true) =>
         new(
             _Items,
@@ -103,8 +144,21 @@ public readonly struct CSVWriter<T>
             _Selectors
         );
 
-    /// <summary>Добавить колонки по умолчанию - на основе имён свойств <typeparamref name="T"/></summary>
-    /// <returns>Модифицированный <see cref="CSVWriter{T}"/></returns>
+    /// <summary>
+    /// Добавить колонки по умолчанию на основе свойств типа T
+    /// </summary>
+    /// <returns>Модифицированный построитель с добавленными колонками</returns>
+    /// <remarks>
+    /// Метод рефлексирует все публичные читаемые свойства типа T
+    /// и создаёт селекторы для каждого свойства.
+    /// </remarks>
+    /// <example>
+    /// <![CDATA[
+    /// var writer = new CSVWriter<Person>(people)
+    ///     .AddDefaultHeaders()  // добавит столбцы для каждого свойства
+    ///     .WriteTo("output.csv");
+    /// ]]>
+    /// </example>
     public CSVWriter<T> AddDefaultHeaders() =>
         new(
             _Items,
@@ -113,10 +167,12 @@ public readonly struct CSVWriter<T>
             MergeSelectors(_Selectors, CreateHeaders())
         );
 
-    /// <summary>Объединить колонки</summary>
-    /// <param name="SourceColumns">Исходное описание столбцов</param>
-    /// <param name="NewColumns">Добавляемое описание столбцов</param>
-    /// <returns>Новый словарь колонок</returns>
+    /// <summary>
+    /// Объединить два набора селекторов колонок
+    /// </summary>
+    /// <param name="SourceColumns">Исходные колонки</param>
+    /// <param name="NewColumns">Добавляемые колонки</param>
+    /// <returns>Новый словарь, объединяющий оба набора</returns>
     private static IDictionary<string, (Func<T, object> Selector, int Index)>? MergeSelectors(
         IDictionary<string, (Func<T, object> Selector, int Index)>? SourceColumns,
         IDictionary<string, (Func<T, object> Selector, int Index)>? NewColumns = null)
@@ -133,11 +189,13 @@ public readonly struct CSVWriter<T>
         return result;
     }
 
-    /// <summary>Добавить новую колонку</summary>
-    /// <param name="SourceColumns">Исходный набор колонок</param>
-    /// <param name="NewColumnName">Имя добавляемой колонки</param>
-    /// <param name="NewColumnValueSelector">Метод извлечения значения для новой колонки</param>
-    /// <returns>Новый словарь колонок</returns>
+    /// <summary>
+    /// Объединить селекторы при добавлении одной новой колонки
+    /// </summary>
+    /// <param name="SourceColumns">Исходные селекторы</param>
+    /// <param name="NewColumnName">Имя новой колонки</param>
+    /// <param name="NewColumnValueSelector">Функция-селектор для извлечения значения</param>
+    /// <returns>Новый словарь с добавленной колонкой</returns>
     private static IDictionary<string, (Func<T, object> Selector, int Index)> MergeSelectors(
         IDictionary<string, (Func<T, object> Selector, int Index)>? SourceColumns,
         string NewColumnName, Func<T, object> NewColumnValueSelector)
@@ -152,10 +210,19 @@ public readonly struct CSVWriter<T>
         return result;
     }
 
-    /// <summary>Добавить новую колонку</summary>
-    /// <param name="NewColumnName">Имя добавляемой колонки</param>
-    /// <param name="NewColumnValueSelector">Метод извлечения значения для новой колонки</param>
-    /// <returns>Модифицированный <see cref="CSVWriter{T}"/></returns>
+    /// <summary>
+    /// Добавить новую колонку с пользовательским селектором
+    /// </summary>
+    /// <param name="NewColumnName">Имя новой колонки в заголовке</param>
+    /// <param name="NewColumnValueSelector">Функция для извлечения значения из элемента T</param>
+    /// <returns>Модифицированный построитель</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var writer = new CSVWriter<Person>(people)
+    ///     .AddColumn("FullName", p => $"{p.FirstName} {p.LastName}")
+    ///     .AddColumn("Age", p => p.DateOfBirth.Year);
+    /// ]]>
+    /// </example>
     public CSVWriter<T> AddColumn(string NewColumnName, Func<T, object> NewColumnValueSelector) =>
         new(
             _Items,
@@ -164,9 +231,11 @@ public readonly struct CSVWriter<T>
             MergeSelectors(_Selectors, NewColumnName, NewColumnValueSelector)
         );
 
-    /// <summary>Удалить колонку</summary>
+    /// <summary>
+    /// Удалить колонку по имени
+    /// </summary>
     /// <param name="Name">Имя удаляемой колонки</param>
-    /// <returns>Модифицированный <see cref="CSVWriter{T}"/></returns>
+    /// <returns>Модифицированный построитель без указанной колонки</returns>
     public CSVWriter<T> RemoveColumn(string Name)
     {
         var columns = _Selectors;
@@ -178,9 +247,11 @@ public readonly struct CSVWriter<T>
         return new(_Items, _Separator, _WriteHeaders, columns);
     }
 
-    /// <summary>Удалить колонку</summary>
-    /// <param name="index">Индекс удаляемой колонки</param>
-    /// <returns>Модифицированный <see cref="CSVWriter{T}"/></returns>
+    /// <summary>
+    /// Удалить колонку по индексу
+    /// </summary>
+    /// <param name="index">Индекс удаляемой колонки (0-based)</param>
+    /// <returns>Модифицированный построитель без указанной колонки</returns>
     public CSVWriter<T> RemoveColumn(int index)
     {
         if (_Selectors is not { } columns)
@@ -200,60 +271,86 @@ public readonly struct CSVWriter<T>
 
     #region Write
 
-    /// <summary>Записать данные в файл по указанному пути</summary>
-    /// <param name="FileName">Путь к файлу данных</param>
-    /// <param name="encoding">Кодировка (если не указана, то используется <see cref="Encoding.UTF8"/>)</param>
+    /// <summary>
+    /// Записать данные в файл по указанному пути
+    /// </summary>
+    /// <param name="FileName">Путь к файлу для записи</param>
+    /// <param name="encoding">Кодировка текста (по умолчанию UTF-8)</param>
+    /// <remarks>
+    /// Файл будет создан или перезаписан. Если папка не существует, возбуждается исключение.
+    /// </remarks>
     public void WriteTo(string FileName, Encoding? encoding = null)
     {
         using var file_stream = new FileStream(FileName, FileMode.Create, FileAccess.Write);
         WriteTo(file_stream, encoding);
     }
 
-    /// <summary>Выполнить асинхронную запись в файл по указанному пути</summary>
-    /// <param name="FileName">Путь к файлу данных</param>
-    /// <param name="encoding">Кодировка (если не указана, то используется <see cref="Encoding.UTF8"/>)</param>
-    /// <param name="Cancel">Признак отмены асинхронной операции</param>
-    /// <returns>Задача асинхронной записи данных</returns>
+    /// <summary>
+    /// Асинхронно записать данные в файл по указанному пути
+    /// </summary>
+    /// <param name="FileName">Путь к файлу для записи</param>
+    /// <param name="encoding">Кодировка текста (по умолчанию UTF-8)</param>
+    /// <param name="Cancel">Токен отмены асинхронной операции</param>
+    /// <returns>Задача асинхронной записи</returns>
     public async Task WriteToAsync(string FileName, Encoding? encoding = null, CancellationToken Cancel = default)
     {
         using var file_stream = new FileStream(FileName, FileMode.Create, FileAccess.Write);
         await WriteToAsync(file_stream, encoding, Cancel).ConfigureAwait(false);
     }
 
-    /// <summary>Записать данные в указанный файл</summary>
-    /// <param name="File">Файл, в который требуется выполнить запись данных</param>
+    /// <summary>
+    /// Записать данные в указанный файл
+    /// </summary>
+    /// <param name="File">Объект FileInfo для записи</param>
     public void WriteTo(FileInfo File)
     {
         using var writer = File.CreateText();
         WriteTo(writer);
     }
 
-    /// <summary>Выполнить асинхронную запись в указанный файл</summary>
-    /// <param name="File">Файл, в который требуется выполнить запись данных</param>
-    /// <param name="Cancel">Признак отмены асинхронной операции</param>
-    /// <returns>Задача асинхронной записи данных</returns>
+    /// <summary>
+    /// Асинхронно записать данные в указанный файл
+    /// </summary>
+    /// <param name="File">Объект FileInfo для записи</param>
+    /// <param name="Cancel">Токен отмены асинхронной операции</param>
+    /// <returns>Задача асинхронной записи</returns>
     public async Task WriteToAsync(FileInfo File, CancellationToken Cancel = default)
     {
         using var writer = File.CreateText();
         await WriteToAsync(writer, Cancel).ConfigureAwait(false);
     }
 
-    /// <summary>Записать данные в поток</summary>
-    /// <param name="stream">Поток данных, в который осуществляется запись</param>
-    /// <param name="encoding">Кодировка (если не указана, то используется <see cref="Encoding.UTF8"/>)</param>
+    /// <summary>
+    /// Записать данные в поток с указанной кодировкой
+    /// </summary>
+    /// <param name="stream">Поток для записи</param>
+    /// <param name="encoding">Кодировка (по умолчанию UTF-8)</param>
     public void WriteTo(Stream stream, Encoding? encoding = null) =>
         WriteTo(new StreamWriter(stream, encoding ?? Encoding.UTF8, 1024, true));
 
-    /// <summary>Выполнить асинхронную запись данных в поток</summary>
-    /// <param name="stream">Поток данных, в который осуществляется запись</param>
-    /// <param name="encoding">Кодировка (если не указана, то используется <see cref="Encoding.UTF8"/>)</param>
-    /// <param name="Cancel">Признак отмены асинхронной операции</param>
-    /// <returns>Задача асинхронной записи данных</returns>
+    /// <summary>
+    /// Асинхронно записать данные в поток
+    /// </summary>
+    /// <param name="stream">Поток для записи</param>
+    /// <param name="encoding">Кодировка (по умолчанию UTF-8)</param>
+    /// <param name="Cancel">Токен отмены асинхронной операции</param>
+    /// <returns>Задача асинхронной записи</returns>
     public async Task WriteToAsync(Stream stream, Encoding? encoding = null, CancellationToken Cancel = default) =>
         await WriteToAsync(new StreamWriter(stream, encoding ?? Encoding.UTF8, 1024, true), Cancel).ConfigureAwait(false);
 
-    /// <summary>Записать данные в объект записи текстовых данных</summary>
-    /// <param name="writer">Объект записи текстовых данных</param>
+    /// <summary>
+    /// Записать данные в объект TextWriter (синхронно)
+    /// </summary>
+    /// <param name="writer">Объект для записи текста</param>
+    /// <remarks>
+    /// Сначала записывается заголовок (если включен), затем все строки данных.
+    /// </remarks>
+    /// <example>
+    /// <![CDATA[
+    /// using var writer = new StreamWriter("output.csv");
+    /// csvWriter.WriteTo(writer);
+    /// ]]>
+    /// </example>
     public void WriteTo(TextWriter writer)
     {
         var selectors_key = GetOrdered(_Selectors ?? CreateHeaders()).ToArray();
@@ -272,10 +369,15 @@ public readonly struct CSVWriter<T>
         }
     }
 
-    /// <summary>Асинхронно записать данные в объект записи текстовых данных</summary>
-    /// <param name="writer">Объект записи текстовых данных</param>
-    /// <param name="Cancel">Признак отмены асинхронной операции</param>
-    /// <returns>Задача асинхронной записи данных</returns>
+    /// <summary>
+    /// Асинхронно записать данные в объект TextWriter
+    /// </summary>
+    /// <param name="writer">Объект для записи текста</param>
+    /// <param name="Cancel">Токен отмены асинхронной операции</param>
+    /// <returns>Задача асинхронной записи</returns>
+    /// <remarks>
+    /// Поддерживает отмену операции через CancellationToken.
+    /// </remarks>
     public async Task WriteToAsync(TextWriter writer, CancellationToken Cancel = default)
     {
         Cancel.ThrowIfCancellationRequested();
