@@ -9,7 +9,7 @@ namespace MathCore.IoC.ServiceRegistrations;
 /// <example>
 /// <code>
 /// var service_manager = new ServiceManager();
-/// service_manager.RegisterSingleTask&lt;MyService&gt;();
+/// service_manager.RegisterSingleTask<MyService>();
 /// var service_instance = service_manager.Get(typeof(MyService));
 /// </code>
 /// </example>
@@ -62,7 +62,7 @@ public class SingleTaskServiceRegistration<TService> : ServiceRegistration<TServ
     /// <example>
     /// <code>
     /// var service_manager = new ServiceManager();
-    /// service_manager.RegisterSingleTask&lt;MyService&gt;();
+    /// service_manager.RegisterSingleTask<MyService>();
     /// var service_instance = service_manager.Get(typeof(MyService));
     /// </code>
     /// </example>
