@@ -149,22 +149,21 @@ public static class Levenshtein
     /// </example>
     public static int DistanceFast(string source, string target)
     {
-        var cost_matrix = new int[source.Length + 1][];
-        for (var i = 0; i < cost_matrix.Length; i++)
-            cost_matrix[i] = new int[target.Length + 1];
-        //var cost_matrix = Enumerable
-        //   .Range(0, source.Length + 1)
-        //   .Select(_ => new int[target.Length + 1])
-        //   .ToArray();
+        if (source is not { Length: var source_length }) throw new ArgumentNullException(nameof(source));
+        if (target is not { Length: var target_length }) throw new ArgumentNullException(nameof(target));
 
-        for (var i = 1; i <= source.Length; ++i) 
+        var cost_matrix = new int[source_length + 1][];
+        for (var i = 0; i < cost_matrix.Length; i++)
+            cost_matrix[i] = new int[target_length + 1];
+
+        for (var i = 1; i <= source_length; ++i) 
             cost_matrix[i][0] = i;
 
-        for (var i = 1; i <= target.Length; ++i) 
+        for (var i = 1; i <= target_length; ++i) 
             cost_matrix[0][i] = i;
 
-        for (var i = 1; i <= source.Length; ++i)
-            for (var j = 1; j <= target.Length; ++j)
+        for (var i = 1; i <= source_length; ++i)
+            for (var j = 1; j <= target_length; ++j)
             {
                 var insert = cost_matrix[i][j - 1] + 1;
                 var delete = cost_matrix[i - 1][j] + 1;
@@ -173,6 +172,6 @@ public static class Levenshtein
                 cost_matrix[i][j] = Math.Min(Math.Min(insert, delete), edit);
             }
 
-        return cost_matrix[source.Length][target.Length];
+        return cost_matrix[source_length][target_length];
     }
 }
