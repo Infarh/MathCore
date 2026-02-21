@@ -7,30 +7,38 @@ namespace MathCore;
 public partial class BigInt
 {
     //***********************************************************************
-    // Returns max(this, Value)
+    // Возвращает max(this, Value)
     //***********************************************************************
-
+    /// <summary>Максимум из двух чисел</summary>
+    /// <param name="x">Сравниваемое значение</param>
+    /// <returns>Максимальное значение</returns>
     public BigInt Max(BigInt x) => this > x ? new(this) : new BigInt(x);
 
 
     //***********************************************************************
-    // Returns min(this, Value)
+    // Возвращает min(this, Value)
     //***********************************************************************
-
+    /// <summary>Минимум из двух чисел</summary>
+    /// <param name="x">Сравниваемое значение</param>
+    /// <returns>Минимальное значение</returns>
     public BigInt Min(BigInt x) => this < x ? new(this) : new BigInt(x);
 
 
     //***********************************************************************
-    // Returns the absolute value
+    // Возвращает абсолютное значение
     //***********************************************************************
-
+    /// <summary>Абсолютное значение числа</summary>
+    /// <returns>Модуль числа</returns>
     public BigInt Abs() => (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : new(this);
 
 
     //***********************************************************************
-    // Modulo Exponentiation
+    // Возведение в степень по модулю
     //***********************************************************************
-
+    /// <summary>Возведение в степень по модулю</summary>
+    /// <param name="exp">Показатель степени</param>
+    /// <param name="n">Модуль</param>
+    /// <returns>Результат возведения в степень по модулю</returns>
     public BigInt ModPow(BigInt exp, BigInt n)
     {
         if ((exp._Data[MaxLength - 1] & 0x80000000) != 0)
@@ -40,18 +48,18 @@ public partial class BigInt
         BigInt temp_num;
         var this_negative = false;
 
-        if ((_Data[MaxLength - 1] & 0x80000000) != 0) // negative this
+        if ((_Data[MaxLength - 1] & 0x80000000) != 0) // this отрицательное
         {
             temp_num = -this % n;
             this_negative = true;
         }
         else
-            temp_num = this % n; // ensures (tempNum * tempNum) < b^(2k)
+            temp_num = this % n; // гарантирует (tempNum * tempNum) < b^(2k)
 
-        if ((n._Data[MaxLength - 1] & 0x80000000) != 0) // negative n
+        if ((n._Data[MaxLength - 1] & 0x80000000) != 0) // n отрицательное
             n = -n;
 
-        // calculate constant = b^(2k) / m
+        // Вычисление constant = b^(2k) / m
         var constant = new BigInt();
 
         var i = n._DataLength << 1;
@@ -62,7 +70,7 @@ public partial class BigInt
         var total_bits = exp.BitCount;
         var count = 0;
 
-        // perform squaring and multiply exponentiation
+        // Выполнение возведения в степень методом «квадрат и умножение»
         for (var pos = 0; pos < exp._DataLength; pos++)
         {
             uint mask = 0x01;
@@ -123,7 +131,7 @@ public partial class BigInt
 
 
         // r1 = x mod b^(k+1)
-        // i.e. keep the lowest (k+1) words
+        // т.е. сохраняем младшие (k+1) слов
         var r1 = new BigInt();
         var length_to_copy = x._DataLength > k_plus_one ? k_plus_one : x._DataLength;
         for (var i = 0; i < length_to_copy; i++)
@@ -132,7 +140,7 @@ public partial class BigInt
 
 
         // r2 = (q3 * n) mod b^(k+1)
-        // partial multiplication of q3 and n
+        // частичное умножение q3 и n
 
         var r2 = new BigInt();
         for (var i = 0; i < q3._DataLength; i++)
@@ -158,7 +166,7 @@ public partial class BigInt
             r2._DataLength--;
 
         r1 -= r2;
-        if ((r1._Data[MaxLength - 1] & 0x80000000) != 0) // negative
+        if ((r1._Data[MaxLength - 1] & 0x80000000) != 0) // отрицательное
         {
             var val = new BigInt
             {

@@ -7,9 +7,13 @@ namespace MathCore;
 public partial class BigInt
 {
     //***********************************************************************
-    // Overloading of addition operator
+    // Перегрузка оператора сложения
     //***********************************************************************
 
+    /// <summary>Сложение двух больших чисел</summary>
+    /// <param name="x">Первое слагаемое</param>
+    /// <param name="y">Второе слагаемое</param>
+    /// <returns>Сумма чисел</returns>
     public static BigInt operator +(BigInt x, BigInt y)
     {
         var result = new BigInt
@@ -37,7 +41,7 @@ public partial class BigInt
             result._DataLength--;
 
 
-        // overflow check
+        // Проверка переполнения
         const int last_pos = MaxLength - 1;
         if ((x._Data[last_pos] & 0x80000000) == (y._Data[last_pos] & 0x80000000) &&
             (result._Data[last_pos] & 0x80000000) != (x._Data[last_pos] & 0x80000000))
@@ -48,9 +52,12 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Overloading of the unary ++ operator
+    // Перегрузка унарного оператора ++
     //***********************************************************************
 
+    /// <summary>Инкремент значения большого числа</summary>
+    /// <param name="x">Исходное значение</param>
+    /// <returns>Результат инкремента</returns>
     public static BigInt operator ++(BigInt x)
     {
         var result = new BigInt(x);
@@ -73,11 +80,10 @@ public partial class BigInt
         else while (result._DataLength > 1 && result._Data[result._DataLength - 1] == 0)
             result._DataLength--;
 
-        // overflow check
+        // Проверка переполнения
         const int last_pos = MaxLength - 1;
 
-        // overflow if initial value was +ve but ++ caused a sign
-        // change to negative.
+        // Переполнение, если исходное значение было положительным, а ++ сменил знак на отрицательный
 
         if ((x._Data[last_pos] & 0x80000000) == 0 &&
             (result._Data[last_pos] & 0x80000000) != (x._Data[last_pos] & 0x80000000))
@@ -87,9 +93,12 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Overloading of subtraction operator
+    // Перегрузка оператора вычитания
     //***********************************************************************
-
+    /// <summary>Вычитание двух больших чисел</summary>
+    /// <param name="x">Уменьшаемое</param>
+    /// <param name="y">Вычитаемое</param>
+    /// <returns>Разность чисел</returns>
     public static BigInt operator -(BigInt x, BigInt y)
     {
         var result = new BigInt
@@ -108,7 +117,7 @@ public partial class BigInt
             carry_in = diff < 0 ? 1 : 0;
         }
 
-        // roll over to negative
+        // Перенос в отрицательную область
         if (carry_in != 0)
         {
             for (var i = result._DataLength; i < MaxLength; i++)
@@ -116,11 +125,11 @@ public partial class BigInt
             result._DataLength = MaxLength;
         }
 
-        // fixed in v1.03 to give correct data length for a - (-b)
+        // Исправление v1.03 для корректной длины данных при a - (-b)
         while (result._DataLength > 1 && result._Data[result._DataLength - 1] == 0)
             result._DataLength--;
 
-        // overflow check
+        // Проверка переполнения
 
         const int last_pos = MaxLength - 1;
         if ((x._Data[last_pos] & 0x80000000) != (y._Data[last_pos] & 0x80000000) &&
@@ -132,9 +141,12 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Overloading of the unary -- operator
+    // Перегрузка унарного оператора --
     //***********************************************************************
 
+    /// <summary>Декремент значения большого числа</summary>
+    /// <param name="x">Исходное значение</param>
+    /// <returns>Результат декремента</returns>
     public static BigInt operator --(BigInt x)
     {
         var result = new BigInt(x);
@@ -159,11 +171,10 @@ public partial class BigInt
         while (result._DataLength > 1 && result._Data[result._DataLength - 1] == 0)
             result._DataLength--;
 
-        // overflow check
+        // Проверка переполнения
         const int last_pos = MaxLength - 1;
 
-        // overflow if initial value was -ve but -- caused a sign
-        // change to positive.
+        // Переполнение, если исходное значение было отрицательным, а -- сменил знак на положительный
 
         if ((x._Data[last_pos] & 0x80000000) != 0 &&
             (result._Data[last_pos] & 0x80000000) != (x._Data[last_pos] & 0x80000000))
@@ -172,23 +183,26 @@ public partial class BigInt
         return result;
     }
 
-    /// <summary>Overloading of multiplication operator</summary>
-    /// <exception cref="ArithmeticException">Multiplication overflow</exception>
+    /// <summary>Перегрузка оператора умножения</summary>
+    /// <param name="x">Первый множитель</param>
+    /// <param name="y">Второй множитель</param>
+    /// <returns>Произведение чисел</returns>
+    /// <exception cref="ArithmeticException">При переполнении умножения</exception>
     public static BigInt operator *(BigInt x, BigInt y)
     {
         const int last_pos = MaxLength - 1;
         var x_neg = false;
         var y_neg = false;
 
-        // take the absolute value of the inputs
+        // Получаем абсолютные значения входных чисел
         try
         {
-            if ((x._Data[last_pos] & 0x80000000) != 0) // x negative
+            if ((x._Data[last_pos] & 0x80000000) != 0) // x отрицательное
             {
                 x_neg = true;
                 x = -x;
             }
-            if ((y._Data[last_pos] & 0x80000000) != 0) // y negative
+            if ((y._Data[last_pos] & 0x80000000) != 0) // y отрицательное
             {
                 y_neg = true;
                 y = -y;
@@ -197,13 +211,13 @@ public partial class BigInt
 #pragma warning disable CA1031 // Do not catch general exception types
         catch
         {
-            // ignored
+            // игнорируется
         }
 #pragma warning restore CA1031 // Do not catch general exception types
 
         var result = new BigInt();
 
-        // multiply the absolute values
+        // Умножение абсолютных значений
         try
         {
             for (var i = 0; i < x._DataLength; i++)
@@ -235,15 +249,14 @@ public partial class BigInt
         while (result._DataLength > 1 && result._Data[result._DataLength - 1] == 0)
             result._DataLength--;
 
-        // overflow check (result is -ve)
+        // Проверка переполнения (результат отрицательный)
         if ((result._Data[last_pos] & 0x80000000) == 0)
-            // if input has different signs, then result is -ve
+            // Если входные числа разного знака, то результат отрицательный
             return x_neg != y_neg ? -result : result;
 
         if (x_neg == y_neg || result._Data[last_pos] != 0x80000000)
             throw new ArithmeticException("Multiplication overflow.");
-        // handle the special case where multiplication produces
-        // a max negative number in 2's complement.
+        // Обработка особого случая, когда умножение даёт максимальное отрицательное число в дополнительном коде
 
         if (result._DataLength == 1) return result;
         var is_max_neg = true;
@@ -259,9 +272,13 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Overloading of unary << operators
+    // Перегрузка унарного оператора <<
     //***********************************************************************
 
+    /// <summary>Сдвиг числа влево</summary>
+    /// <param name="x">Исходное значение</param>
+    /// <param name="ShiftVal">Количество бит сдвига</param>
+    /// <returns>Результат сдвига</returns>
     public static BigInt operator <<(BigInt x, int ShiftVal)
     {
         var result = new BigInt(x);
@@ -270,7 +287,7 @@ public partial class BigInt
     }
 
 
-    // least significant bits at lower part of buffer
+    // Младшие биты расположены в младшей части буфера
 
     private static int ShiftLeft(uint[] buffer, int ShiftVal)
     {
@@ -301,9 +318,13 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Overloading of unary >> operators
+    // Перегрузка унарного оператора >>
     //***********************************************************************
 
+    /// <summary>Сдвиг числа вправо</summary>
+    /// <param name="x">Исходное значение</param>
+    /// <param name="ShiftVal">Количество бит сдвига</param>
+    /// <returns>Результат сдвига</returns>
     public static BigInt operator >>(BigInt x, int ShiftVal)
     {
         var result = new BigInt(x);
@@ -363,9 +384,12 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Overloading of the NOT operator (1's complement)
+    // Перегрузка оператора НЕ (дополнение до 1)
     //***********************************************************************
 
+    /// <summary>Побитовое отрицание</summary>
+    /// <param name="x">Исходное значение</param>
+    /// <returns>Результат операции</returns>
     public static BigInt operator ~(BigInt x)
     {
         var result = new BigInt(x);
@@ -383,24 +407,26 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Overloading of the NEGATE operator (2's complement)
+    // Перегрузка унарного оператора отрицания (дополнение до 2)
     //***********************************************************************
 
+    /// <summary>Унарное отрицание большого числа</summary>
+    /// <param name="x">Исходное значение</param>
+    /// <returns>Результат отрицания</returns>
     public static BigInt operator -(BigInt x)
     {
-        // handle neg of zero separately since it'll cause an overflow
-        // if we proceed.
+        // Обработка отрицания нуля отдельно, чтобы избежать переполнения
 
         if (x._DataLength == 1 && x._Data[0] == 0)
             return new();
 
         var result = new BigInt(x);
 
-        // 1's complement
+        // Дополнение до 1
         for (var i = 0; i < MaxLength; i++)
             result._Data[i] = ~x._Data[i];
 
-        // add one to result of 1's complement
+        // Добавление единицы к результату дополнения до 1
         long carry = 1;
         var index = 0;
 
@@ -427,18 +453,31 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Overloading of equality operator
+    // Перегрузка оператора равенства
     //***********************************************************************
 
+    /// <summary>Проверка равенства двух чисел</summary>
+    /// <param name="x">Первое значение</param>
+    /// <param name="y">Второе значение</param>
+    /// <returns>True, если значения равны</returns>
     public static bool operator ==(BigInt? x, BigInt? y) => (Equals(x, null) && Equals(y, null)) || (!Equals(x, null) && x.Equals(y));
 
 
+    /// <summary>Проверка неравенства двух чисел</summary>
+    /// <param name="x">Первое значение</param>
+    /// <param name="y">Второе значение</param>
+    /// <returns>True, если значения не равны</returns>
     public static bool operator !=(BigInt? x, BigInt? y) => !(x == y);
 
 
-    /// <inheritdoc />
+    /// <summary>Проверка равенства с другим объектом</summary>
+    /// <param name="o">Сравниваемый объект</param>
+    /// <returns>True, если значения равны</returns>
     public override bool Equals(object? o) => Equals(o as BigInt);
 
+    /// <summary>Проверка равенства с другим <see cref="BigInt"/></summary>
+    /// <param name="x">Сравниваемое значение</param>
+    /// <returns>True, если значения равны</returns>
     public bool Equals(BigInt? x)
     {
         if (_DataLength != x?._DataLength) return false;
@@ -450,26 +489,31 @@ public partial class BigInt
     }
 
 
-    /// <inheritdoc />
+    /// <summary>Получение хэш-кода</summary>
+    /// <returns>Хэш-код экземпляра</returns>
     public override int GetHashCode() => _Data.GetComplexHashCode(); //        return ToString().GetHashCode();
 
 
     //***********************************************************************
-    // Overloading of inequality operator
+    // Перегрузка оператора сравнения
     //***********************************************************************
+    /// <summary>Проверка, что первое число больше второго</summary>
+    /// <param name="x">Первое значение</param>
+    /// <param name="y">Второе значение</param>
+    /// <returns>True, если первое число больше второго</returns>
     public static bool operator >(BigInt x, BigInt y)
     {
         var pos = MaxLength - 1;
 
-        // x is negative, y is positive
+        // x отрицательное, y положительное
         if ((x._Data[pos] & 0x80000000) != 0 && (y._Data[pos] & 0x80000000) == 0)
             return false;
 
-        // x is positive, y is negative
+        // x положительное, y отрицательное
         if ((x._Data[pos] & 0x80000000) == 0 && (y._Data[pos] & 0x80000000) != 0)
             return true;
 
-        // same sign
+        // одинаковый знак
         var len = x._DataLength > y._DataLength ? x._DataLength : y._DataLength;
         for (pos = len - 1; pos >= 0 && x._Data[pos] == y._Data[pos]; pos--) { }
 
@@ -477,19 +521,23 @@ public partial class BigInt
     }
 
 
+    /// <summary>Проверка, что первое число меньше второго</summary>
+    /// <param name="x">Первое значение</param>
+    /// <param name="y">Второе значение</param>
+    /// <returns>True, если первое число меньше второго</returns>
     public static bool operator <(BigInt x, BigInt y)
     {
         var pos = MaxLength - 1;
 
-        // x is negative, y is positive
+        // x отрицательное, y положительное
         if ((x._Data[pos] & 0x80000000) != 0 && (y._Data[pos] & 0x80000000) == 0)
             return true;
 
-        // x is positive, y is negative
+        // x положительное, y отрицательное
         if ((x._Data[pos] & 0x80000000) == 0 && (y._Data[pos] & 0x80000000) != 0)
             return false;
 
-        // same sign
+        // одинаковый знак
         var len = x._DataLength > y._DataLength ? x._DataLength : y._DataLength;
         for (pos = len - 1; pos >= 0 && x._Data[pos] == y._Data[pos]; pos--) { }
 
@@ -497,17 +545,24 @@ public partial class BigInt
     }
 
 
+    /// <summary>Проверка, что первое число больше либо равно второму</summary>
+    /// <param name="x">Первое значение</param>
+    /// <param name="y">Второе значение</param>
+    /// <returns>True, если первое число больше либо равно второму</returns>
     public static bool operator >=(BigInt x, BigInt y) => x == y || x > y;
 
 
+    /// <summary>Проверка, что первое число меньше либо равно второму</summary>
+    /// <param name="x">Первое значение</param>
+    /// <param name="y">Второе значение</param>
+    /// <returns>True, если первое число меньше либо равно второму</returns>
     public static bool operator <=(BigInt x, BigInt y) => x == y || x < y;
 
 
     //***********************************************************************
-    // Private function that supports the division of two numbers with
-    // a divisor that has more than 1 digit.
+    // Закрытая функция, поддерживающая деление двух чисел, когда делитель имеет более 1 разряда
     //
-    // Algorithm taken from [1]
+    // Алгоритм взят из [1]
     //***********************************************************************
 
     private static void MultiByteDivide(
@@ -606,8 +661,7 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Private function that supports the division of two numbers with
-    // a divisor that has only 1 digit.
+    // Закрытая функция, поддерживающая деление двух чисел, когда делитель имеет 1 разряд
     //***********************************************************************
 
     private static void SingleByteDivide(
@@ -619,7 +673,7 @@ public partial class BigInt
         var result = new uint[MaxLength];
         var result_pos = 0;
 
-        // copy dividend to reminder
+        // Копирование делимого в остаток
         for (var i = 0; i < MaxLength; i++)
             OutRemainder._Data[i] = x._Data[i];
         OutRemainder._DataLength = x._DataLength;
@@ -667,9 +721,13 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Overloading of division operator
+    // Перегрузка оператора деления
     //***********************************************************************
 
+    /// <summary>Деление двух больших чисел</summary>
+    /// <param name="x">Делимое</param>
+    /// <param name="y">Делитель</param>
+    /// <returns>Частное от деления</returns>
     public static BigInt operator /(BigInt x, BigInt y)
     {
         var quotient = new BigInt();
@@ -678,12 +736,12 @@ public partial class BigInt
         const int last_pos = MaxLength - 1;
         bool divisor_neg = false, dividend_neg = false;
 
-        if ((x._Data[last_pos] & 0x80000000) != 0) // x negative
+        if ((x._Data[last_pos] & 0x80000000) != 0) // x отрицательное
         {
             x = -x;
             dividend_neg = true;
         }
-        if ((y._Data[last_pos] & 0x80000000) != 0) // y negative
+        if ((y._Data[last_pos] & 0x80000000) != 0) // y отрицательное
         {
             y = -y;
             divisor_neg = true;
@@ -700,9 +758,13 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Overloading of modulus operator
+    // Перегрузка оператора остатка от деления
     //***********************************************************************
 
+    /// <summary>Вычисление остатка от деления</summary>
+    /// <param name="x">Делимое</param>
+    /// <param name="y">Делитель</param>
+    /// <returns>Остаток от деления</returns>
     public static BigInt operator %(BigInt x, BigInt y)
     {
         var quotient = new BigInt();
@@ -711,12 +773,12 @@ public partial class BigInt
         const int last_pos = MaxLength - 1;
         var dividend_neg = false;
 
-        if ((x._Data[last_pos] & 0x80000000) != 0) // x negative
+        if ((x._Data[last_pos] & 0x80000000) != 0) // x отрицательное
         {
             x = -x;
             dividend_neg = true;
         }
-        if ((y._Data[last_pos] & 0x80000000) != 0) // y negative
+        if ((y._Data[last_pos] & 0x80000000) != 0) // y отрицательное
             y = -y;
 
         if (x < y) return remainder;
@@ -730,9 +792,12 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Overloading of bitwise AND operator
+    // Перегрузка побитового оператора И
     //***********************************************************************
-
+    /// <summary>Побитовое И двух чисел</summary>
+    /// <param name="x">Первое значение</param>
+    /// <param name="y">Второе значение</param>
+    /// <returns>Результат операции</returns>
     public static BigInt operator &(BigInt x, BigInt y)
     {
         var result = new BigInt();
@@ -752,9 +817,12 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Overloading of bitwise OR operator
+    // Перегрузка побитового оператора ИЛИ
     //***********************************************************************
-
+    /// <summary>Побитовое ИЛИ двух чисел</summary>
+    /// <param name="x">Первое значение</param>
+    /// <param name="y">Второе значение</param>
+    /// <returns>Результат операции</returns>
     public static BigInt operator |(BigInt x, BigInt y)
     {
         var result = new BigInt();
@@ -774,9 +842,12 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Overloading of bitwise XOR operator
+    // Перегрузка побитового оператора исключающего ИЛИ
     //***********************************************************************
-
+    /// <summary>Побитовое исключающее ИЛИ двух чисел</summary>
+    /// <param name="x">Первое значение</param>
+    /// <param name="y">Второе значение</param>
+    /// <returns>Результат операции</returns>
     public static BigInt operator ^(BigInt x, BigInt y)
     {
         var result = new BigInt();

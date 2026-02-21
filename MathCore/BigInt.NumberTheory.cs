@@ -7,10 +7,12 @@ namespace MathCore;
 public partial class BigInt
 {
     //***********************************************************************
-    // Returns gcd(this, Value)
+    // Возвращает gcd(this, Value)
     //***********************************************************************
 
     /// <summary>Наибольший общий делитель</summary>
+    /// <param name="X">Второе значение</param>
+    /// <returns>Наибольший общий делитель</returns>
     public BigInt Gcd(BigInt X)
     {
         var x = (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : this;
@@ -31,13 +33,18 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Computes the Jacobi Symbol for a and b.
-    // Algorithm adapted from [3] and [4] with some optimizations
+    // Вычисляет символ Якоби для a и b
+    // Алгоритм адаптирован из [3] и [4] с некоторыми оптимизациями
     //***********************************************************************
 
+    /// <summary>Вычисление символа Якоби</summary>
+    /// <param name="a">Первый аргумент</param>
+    /// <param name="b">Второй аргумент</param>
+    /// <returns>Значение символа Якоби</returns>
+    /// <exception cref="ArgumentException">Если <paramref name="b"/> чётное</exception>
     public static int Jacobi(BigInt a, BigInt b)
     {
-        // Jacobi defined only for odd integers
+        // Символ Якоби определён только для нечётных чисел
         if ((b._Data[0] & 0x1) == 0)
             throw new ArgumentException("Jacobi defined only for odd integers.");
 
@@ -61,7 +68,7 @@ public partial class BigInt
             for (var i = 0; i < 32; i++, mask <<= 1, e++)
                 if ((a._Data[index] & mask) != 0)
                 {
-                    index = a._DataLength; // to break the outer loop
+                    index = a._DataLength; // выход из внешнего цикла
                     break;
                 }
         }
@@ -80,9 +87,14 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Generates a positive BigInteger that is probably prime.
+    // Генерирует положительное число, которое вероятно простое
     //***********************************************************************
 
+    /// <summary>Генерация псевдопростого числа</summary>
+    /// <param name="bits">Количество бит</param>
+    /// <param name="confidence">Уровень уверенности</param>
+    /// <param name="rand">Генератор случайных чисел</param>
+    /// <returns>Псевдопростое число</returns>
     public static BigInt GetPseudoPrime(int bits, int confidence, Random rand)
     {
         var result = new BigInt();
@@ -91,9 +103,9 @@ public partial class BigInt
         while (!done)
         {
             result.GenRandomBits(bits, rand);
-            result._Data[0] |= 0x01; // make it odd
+            result._Data[0] |= 0x01; // делаем число нечётным
 
-            // prime test
+            // проверка простоты
             done = result.IsProbablePrime(confidence);
         }
         return result;
@@ -101,80 +113,6 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Generates a random number with the specified number of bits such
-    // that gcd(number, this) = 1
+    // Генерирует случайное число заданной длины бит так,
+    // что gcd(number, this) = 1
     //***********************************************************************
-
-    public BigInt GenCoPrime(int bits, Random rand)
-    {
-        var done = false;
-        var result = new BigInt();
-
-        while (!done)
-        {
-            result.GenRandomBits(bits, rand);
-
-            // gcd test
-            var g = result.Gcd(this);
-            if (g._DataLength == 1 && g._Data[0] == 1)
-                done = true;
-        }
-
-        return result;
-    }
-
-
-    //***********************************************************************
-    // Returns the modulo inverse of this.  Throws ArithmeticException if
-    // the inverse does not exist.  (i.e. gcd(this, modulus) != 1)
-    //***********************************************************************
-
-    public BigInt ModInverse(BigInt modulus)
-    {
-        BigInt[] p = [0, 1];
-        var q = new BigInt[2]; // quotients
-        BigInt[] r = [0, 0];      // remainders
-
-        var step = 0;
-
-        var a = modulus;
-        var b = this;
-
-        while (b._DataLength > 1 || (b._DataLength == 1 && b._Data[0] != 0))
-        {
-            var quotient = new BigInt();
-            var remainder = new BigInt();
-
-            if (step > 1)
-            {
-                var p_val = (p[0] - p[1] * q[0]) % modulus;
-                p[0] = p[1];
-                p[1] = p_val;
-            }
-
-            if (b._DataLength == 1)
-                SingleByteDivide(a, b, quotient, remainder);
-            else
-                MultiByteDivide(a, b, quotient, remainder);
-
-            q[0] = q[1];
-            r[0] = r[1];
-            q[1] = quotient; r[1] = remainder;
-
-            a = b;
-            b = remainder;
-
-            step++;
-        }
-
-        if (r[0]._DataLength > 1 || (r[0]._DataLength == 1 && r[0]._Data[0] != 1))
-            throw new ArithmeticException("No inverse!");
-
-        var result = (p[0] - p[1] * q[0]) % modulus;
-
-        if ((result._Data[MaxLength - 1] & 0x80000000) != 0)
-            result += modulus; // get the least positive modulus
-
-        return result;
-    }
-}

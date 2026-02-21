@@ -7,24 +7,29 @@ namespace MathCore;
 public partial class BigInt
 {
     //***********************************************************************
-    // Returns a string representing the BigInteger in base 10.
+    // Возвращает строковое представление BigInteger в системе счисления 10
     //***********************************************************************
 
-    /// <inheritdoc />
+    /// <summary>Преобразование числа в строку в десятичной системе счисления</summary>
+    /// <returns>Строковое представление числа</returns>
     public override string ToString() => ToString(10);
 
 
     //***********************************************************************
-    // Returns a string representing the BigInteger in sign-and-magnitude
-    // format in the specified radix.
+    // Возвращает строковое представление BigInteger в знако-модульном формате
+    // в заданной системе счисления
     //
-    // Example
+    // Пример
     // -------
-    // If the value of BigInteger is -255 in base 10, then
-    // ToString(16) returns "-FF"
+    // Если значение BigInteger равно -255 в системе счисления 10, то
+    // ToString(16) возвращает "-FF"
     //
     //***********************************************************************
 
+    /// <summary>Преобразование числа в строку в указанной системе счисления</summary>
+    /// <param name="radix">Основание системы счисления</param>
+    /// <returns>Строковое представление числа</returns>
+    /// <exception cref="ArgumentException">Если основание вне диапазона от 2 до 36</exception>
     public string ToString(int radix)
     {
         if (radix is < 2 or > 36)
@@ -44,7 +49,7 @@ public partial class BigInt
 #pragma warning disable CA1031 // Do not catch general exception types
             catch
             {
-                // ignored
+                // игнорируется
             }
 #pragma warning restore CA1031 // Do not catch general exception types
         }
@@ -76,16 +81,16 @@ public partial class BigInt
 
     // ReSharper disable CommentTypo
     //***********************************************************************
-    // Returns a hex string showing the contains of the BigInteger
+    // Возвращает шестнадцатеричную строку, содержащую данные BigInteger
     //
-    // Examples
+    // Примеры
     // -------
-    // 1) If the value of BigInteger is 255 in base 10, then
-    //    ToHexString() returns "FF"
+    // 1) Если значение BigInteger равно 255 в системе счисления 10, то
+    //    ToHexString() возвращает "FF"
     //
-    // 2) If the value of BigInteger is -255 in base 10, then
-    //    ToHexString() returns ".....FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF01",
-    //    which is the 2's complement representation of -255.
+    // 2) Если значение BigInteger равно -255 в системе счисления 10, то
+    //    ToHexString() возвращает ".....FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF01",
+    //    что является представлением -255 в дополнительном коде
     //
     //***********************************************************************
     // ReSharper restore CommentTypo

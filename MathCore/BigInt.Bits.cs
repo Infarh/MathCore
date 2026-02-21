@@ -9,7 +9,7 @@ public partial class BigInt
     /// <summary>Случайный набор бит указанной длины <paramref name="bits"/></summary>
     /// <param name="bits">Требуемое число бит</param>
     /// <param name="rand">Генератор случайных чисел</param>
-    /// <exception cref="ArithmeticException">Число бит &gt; <see cref="MaxLength"/> = (70)x(8x8) = 4'480 </exception>
+    /// <exception cref="ArithmeticException">Число бит &gt; <see cref="MaxLength"/> = (70)x(8x8) = 4'480</exception>
     public void GenRandomBits(int bits, Random rand)
     {
         var d_words = bits >> 5;
@@ -46,15 +46,14 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Returns the position of the most significant bit in the BigInteger.
+    // Возвращает позицию самого старшего установленного бита в BigInteger
     //
-    // Eg.  The result is 0, if the value of BigInteger is 0...0000 0000
-    //      The result is 1, if the value of BigInteger is 0...0000 0001
-    //      The result is 2, if the value of BigInteger is 0...0000 0010
-    //      The result is 2, if the value of BigInteger is 0...0000 0011
+    // Пример: результат равен 0, если значение равно 0...0000 0000
+    //         результат равен 1, если значение равно 0...0000 0001
+    //         результат равен 2, если значение равно 0...0000 0010
+    //         результат равен 2, если значение равно 0...0000 0011
     //
     //***********************************************************************
-
     /// <summary>Число бит (номер последнего значащего бита)</summary>
     public int BitCount
     {
@@ -87,16 +86,17 @@ public partial class BigInt
 
 
     /// <summary>Последние 8 байт значения числа <see cref="BigInt"/></summary>
+    /// <returns>Числовое значение</returns>
     public long LongValue()
     {
         long val = _Data[0];
         try
-        { // exception if maxLength = 1
+        { // исключение, если maxLength = 1
             val |= (long)_Data[1] << 32;
         }
         catch (ArithmeticException) //todo: избавиться от исключения
         {
-            if ((_Data[0] & 0x80000000) != 0) // negative
+            if ((_Data[0] & 0x80000000) != 0) // отрицательное
                 val = (int)_Data[0];
         }
 
@@ -105,10 +105,11 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Returns the value of the BigInteger as a byte array.  The lowest
-    // index contains the MSB.
+    // Возвращает значение BigInteger в виде массива байтов. Младший индекс
+    // содержит старший байт
     //***********************************************************************
-
+    /// <summary>Получение массива байтов числа</summary>
+    /// <returns>Массив байтов</returns>
     public byte[] GetBytes()
     {
         var num_bits = BitCount;
@@ -149,14 +150,15 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Sets the value of the specified bit to 1
-    // The Least Significant Bit position is 0.
+    // Устанавливает значение указанного бита в 1
+    // Позиция младшего бита равна 0
     //***********************************************************************
-
+    /// <summary>Установка указанного бита в 1</summary>
+    /// <param name="BitNum">Номер бита</param>
     public void SetBit(uint BitNum)
     {
-        var byte_pos = BitNum >> 5;           // divide by 32
-        var bit_pos = (byte)(BitNum & 0x1F); // get the lowest 5 bits
+        var byte_pos = BitNum >> 5;           // деление на 32
+        var bit_pos = (byte)(BitNum & 0x1F); // младшие 5 бит
 
         var mask = (uint)1 << bit_pos;
         _Data[byte_pos] |= mask;
@@ -167,10 +169,11 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Sets the value of the specified bit to 0
-    // The Least Significant Bit position is 0.
+    // Устанавливает значение указанного бита в 0
+    // Позиция младшего бита равна 0
     //***********************************************************************
-
+    /// <summary>Сброс указанного бита в 0</summary>
+    /// <param name="BitNum">Номер бита</param>
     public void UnsetBit(uint BitNum)
     {
         var byte_pos = BitNum >> 5;
@@ -189,19 +192,19 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Returns a value that is equivalent to the integer square root
-    // of the BigInteger.
+    // Возвращает целочисленный квадратный корень
     //
-    // The integer square root of "this" is defined as the largest integer n
-    // such that (n * n) <= this
+    // Целочисленный квадратный корень "this" определяется как наибольшее n,
+    // такое что (n * n) <= this
     //
     //***********************************************************************
-
+    /// <summary>Целочисленный квадратный корень</summary>
+    /// <returns>Результат извлечения квадратного корня</returns>
     public BigInt Sqrt()
     {
         var num_bits = (uint)BitCount;
 
-        if ((num_bits & 0x1) != 0) // odd number of bits
+        if ((num_bits & 0x1) != 0) // нечётное число бит
             num_bits = (num_bits >> 1) + 1;
         else
             num_bits >>= 1;
@@ -225,10 +228,10 @@ public partial class BigInt
         {
             while (mask != 0)
             {
-                // guess
+                // Предположение
                 result._Data[i] ^= mask;
 
-                // undo the guess if its square is larger than this
+                // Отмена предположения, если квадрат больше исходного значения
                 if (result * result > this)
                     result._Data[i] ^= mask;
 

@@ -1,60 +1,60 @@
 ﻿// ReSharper disable CommentTypo
 //************************************************************************************
-// BigInteger Class Version 1.03
+// Класс BigInteger версии 1.03
 //
-// Copyright (c) 2002 Chew Keong TAN
-// All rights reserved.
+// Авторские права (c) 2002 Chew Keong TAN
+// Все права защищены
 //
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, and/or sell copies of the Software, and to permit persons
-// to whom the Software is furnished to do so, provided that the above
-// copyright notice(s) and this permission notice appear in all copies of
-// the Software and that both the above copyright notice(s) and this
-// permission notice appear in supporting documentation.
+// Настоящим предоставляется бесплатное разрешение любому лицу, получившему копию
+// данного программного обеспечения и связанных с ним файлов документации
+// (далее «Программное обеспечение»), использовать Программное обеспечение
+// без ограничений, включая без ограничения права на использование, копирование,
+// изменение, слияние, публикацию, распространение и/или продажу копий
+// Программного обеспечения, а также на предоставление таких прав лицам,
+// которым предоставляется Программное обеспечение, при соблюдении следующих условий:
+// приведённое выше уведомление об авторских правах и данное разрешение должны
+// присутствовать во всех копиях Программного обеспечения и в сопроводительной документации
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
-// OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
-// HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
-// INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
-// FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
-// NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
-// WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-//
-//
-// Disclaimer
-// ----------
-// Although reasonable care has been taken to ensure the correctness of this
-// implementation, this code should never be used in any application without
-// proper verification and testing.  I disclaim all liability and responsibility
-// to any person or entity with respect to any loss or damage caused, or alleged
-// to be caused, directly or indirectly, by the use of this BigInteger class.
-//
-// Comments, bugs and suggestions to
-// (http://www.codeproject.com/csharp/biginteger.asp)
+// ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ ПРЕДОСТАВЛЯЕТСЯ «КАК ЕСТЬ», БЕЗ ГАРАНТИЙ ЛЮБОГО РОДА,
+// ЯВНЫХ ИЛИ ПОДРАЗУМЕВАЕМЫХ, ВКЛЮЧАЯ, НО НЕ ОГРАНИЧИВАЯСЬ, ГАРАНТИЯМИ
+// ТОВАРНОЙ ПРИГОДНОСТИ, ПРИГОДНОСТИ ДЛЯ ОПРЕДЕЛЁННОЙ ЦЕЛИ И ОТСУТСТВИЯ
+// НАРУШЕНИЯ ПРАВ ТРЕТЬИХ ЛИЦ. НИ В КОЕМ СЛУЧАЕ ВЛАДЕЛЕЦ АВТОРСКИХ ПРАВ ИЛИ
+// ЛИЦА, УКАЗАННЫЕ В ЭТОМ УВЕДОМЛЕНИИ, НЕ НЕСУТ ОТВЕТСТВЕННОСТИ ЗА КАКИЕ-ЛИБО ИСКИ,
+// ОСОБЫЕ, КОСВЕННЫЕ ИЛИ ПОСЛЕДСТВУЮЩИЕ УБЫТКИ, ИЛИ ЛЮБЫЕ УБЫТКИ,
+// ВОЗНИКАЮЩИЕ ИЗ-ЗА ПОТЕРИ ДАННЫХ ИЛИ ПРИБЫЛИ, НЕЗАВИСИМО ОТ ТОГО,
+// ОСНОВАНЫ ЛИ ОНИ НА ДОГОВОРЕ, НАРУШЕНИИ ОБЯЗАТЕЛЬСТВ ИЛИ ИНОМ ОСНОВАНИИ,
+// ВОЗНИКШЕМ ИЗ ИСПОЛЬЗОВАНИЯ ИЛИ НЕВОЗМОЖНОСТИ ИСПОЛЬЗОВАНИЯ ПРОГРАММНОГО ОБЕСПЕЧЕНИЯ
 //
 //
-// Overloaded Operators +, -, *, /, %, >>, <<, ==, !=, >, <, >=, <=, &, |, ^, ++, --, ~
+// Отказ от ответственности
+// ------------------------
+// Хотя были предприняты разумные меры для обеспечения корректности данной реализации,
+// этот код не должен использоваться в любых приложениях без надлежащей проверки и тестирования
+// Я снимаю с себя всю ответственность перед любым лицом или организацией
+// за любой ущерб или потери, возникшие, либо якобы возникшие прямо или косвенно
+// в результате использования данного класса BigInteger
 //
-// Features
-// --------
-// 1) Arithmetic operations involving large signed integers (2's complement).
-// 2) Primality test using Fermat little theorem, Rabin Miller's method,
-//    Solovay Strassen's method and Lucas strong pseudoprime.
-// 3) Modulo exponential with Barrett's reduction.
-// 4) Inverse modulo.
-// 5) Pseudo prime generation.
-// 6) Co-prime generation.
+// Комментарии, ошибки и предложения:
+// http://www.codeproject.com/csharp/biginteger.asp
 //
 //
-// Known Problem
-// -------------
-// This pseudoprime passes my implementation of
-// primality test but failed in SDK IsProbablePrime test.
+// Перегруженные операторы +, -, *, /, %, >>, <<, ==, !=, >, <, >=, <=, &, |, ^, ++, --, ~
+//
+// Возможности
+// -----------
+// 1) Арифметические операции с большими знаковыми целыми числами (дополнительный код)
+// 2) Проверка простоты с использованием теоремы Ферма, метода Рабина — Миллера,
+//    метода Соловея — Штрассена и сильного псевдопростого теста Лукаса
+// 3) Возведение в степень по модулю с редукцией Барретта
+// 4) Обратный элемент по модулю
+// 5) Генерация псевдопростых чисел
+// 6) Генерация взаимно простых чисел
+//
+//
+// Известная проблема
+// ------------------
+// Это псевдопростое число проходит мою реализацию проверки простоты,
+// но не проходит тест SDK IsProbablePrime
 //
 //       byte[] pseudoPrime1 = { (byte)0x00,
 //             (byte)0x85, (byte)0x84, (byte)0x64, (byte)0xFD, (byte)0x70, (byte)0x6A,
@@ -71,64 +71,54 @@
 //       };
 //
 //
-// Change Log
-// ----------
-// 1) September 23, 2002 (Version 1.03)
-//    - Fixed operator- to give correct data length.
-//    - Added Lucas sequence generation.
-//    - Added Strong Lucas Primality test.
-//    - Added integer square root method.
-//    - Added setBit/unsetBit methods.
-//    - New IsProbablePrime() method which do not require the
-//      confident parameter.
+// Журнал изменений
+// ----------------
+// 1) 23 сентября 2002 (версия 1.03)
+//    - Исправлен оператор - для корректной длины данных
+//    - Добавлена генерация последовательности Лукаса
+//    - Добавлен сильный тест простоты Лукаса
+//    - Добавлен метод целочисленного квадратного корня
+//    - Добавлены методы setBit/unsetBit
+//    - Новый метод IsProbablePrime() без параметра confident
 //
-// 2) August 29, 2002 (Version 1.02)
-//    - Fixed bug in the exponentiation of negative numbers.
-//    - Faster modular exponentiation using Barrett reduction.
-//    - Added getBytes() method.
-//    - Fixed bug in ToHexString method.
-//    - Added overloading of ^ operator.
-//    - Faster computation of Jacobi symbol.
+// 2) 29 августа 2002 (версия 1.02)
+//    - Исправлена ошибка в возведении в степень для отрицательных чисел
+//    - Ускорено модульное возведение в степень с редукцией Барретта
+//    - Добавлен метод getBytes()
+//    - Исправлена ошибка в методе ToHexString
+//    - Добавлена перегрузка оператора ^
+//    - Ускорено вычисление символа Якоби
 //
-// 3) August 19, 2002 (Version 1.01)
-//    - Big integer is stored and manipulated as unsigned integers (4 bytes) instead of
-//      individual bytes this gives significant performance improvement.
-//    - Updated Fermat's Little Theorem test to use a^(p-1) mod p = 1
-//    - Added IsProbablePrime method.
-//    - Updated documentation.
+// 3) 19 августа 2002 (версия 1.01)
+//    - Большое число хранится и обрабатывается как беззнаковые целые (4 байта) вместо
+//      отдельных байтов, что заметно повышает производительность
+//    - Обновлён тест теоремы Ферма до a^(p-1) mod p = 1
+//    - Добавлен метод IsProbablePrime
+//    - Обновлена документация
 //
-// 4) August 9, 2002 (Version 1.0)
-//    - Initial Release.
+// 4) 9 августа 2002 (версия 1.0)
+//    - Первый выпуск
 //
 //
-// References
+// Ссылки
 // [1] D. E. Knuth, "Seminumerical Algorithms", The Art of Computer Programming Vol. 2,
-//     3rd Edition, Addison-Wesley, 1998.
-//
+//     3rd Edition, Addison-Wesley, 1998
 // [2] K. H. Rosen, "Elementary Number Theory and Its Applications", 3rd Ed,
-//     Addison-Wesley, 1993.
-//
-// [3] B. Schneier, "Applied Cryptography", 2nd Ed, John Wiley & Sons, 1996.
-//
+//     Addison-Wesley, 1993
+// [3] B. Schneier, "Applied Cryptography", 2nd Ed, John Wiley & Sons, 1996
 // [4] A. Menezes, P. van Oorschot, and S. Vanstone, "Handbook of Applied Cryptography",
 //     CRC Press, 1996, www.cacr.math.uwaterloo.ca/hac
-//
 // [5] A. Bosselaers, R. Govaerts, and J. Vandewalle, "Comparison of Three Modular
-//     Reduction Functions," Proc. CRYPTO'93, pp.175-186.
-//
+//     Reduction Functions," Proc. CRYPTO'93, pp.175-186
 // [6] R. Baillie and S. S. Wagstaff Jr, "Lucas Pseudoprimes", Mathematics of Computation,
-//     Vol. 35, No. 152, Oct 1980, pp. 1391-1417.
-//
-// [7] H. C. Williams, "�douard Lucas and Primality Testing", Canadian Mathematical
+//     Vol. 35, No. 152, Oct 1980, pp. 1391-1417
+// [7] H. C. Williams, "Édouard Lucas and Primality Testing", Canadian Mathematical
 //     Society Series of Monographs and Advance Texts, vol. 22, John Wiley & Sons, New York,
-//     NY, 1998.
-//
+//     NY, 1998
 // [8] P. Ribenboim, "The new book of prime number records", 3rd edition, Springer-Verlag,
-//     New York, NY, 1995.
-//
+//     New York, NY, 1995
 // [9] M. Joye and J.-J. Quisquater, "Efficient computation of full Lucas sequences",
-//     Electronics Letters, 32(6), 1996, pp 537-538.
-//
+//     Electronics Letters, 32(6), 1996, pp 537-538
 //************************************************************************************
 // ReSharper restore CommentTypo
 
@@ -138,11 +128,17 @@
 
 namespace MathCore;
 
-/// <summary> Целочисленная арифметика с большими числами  </summary>
+/// <summary>Целочисленная арифметика больших чисел</summary>
+/// <example><![CDATA[
+/// var a = new BigInt(123);
+/// var b = new BigInt("456");
+/// var sum = a + b;
+/// var is_prime = sum.IsProbablePrime();
+/// ]]></example>
 public partial class BigInt
 {
-    // maximum length of the BigInteger in uint (4 bytes)
-    // change this to suit the required level of precision.
+    // Максимальная длина большого числа в uint (4 байта)
+    // Настройте под требуемую точность
     /// <summary>Максимальная длина числа в байтах х8</summary>
     public const int MaxLength = 70;
 

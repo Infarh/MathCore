@@ -15,8 +15,7 @@ public partial class BigInt
     {
         (_Data, var temp_val) = (new uint[MaxLength], Value);
 
-        // copy bytes from long to BigInteger without any assumption of
-        // the length of the long datatype
+        // Копирование байтов из long без предположений о размере типа
 
         var length = 0;
         while (Value != 0 && length < MaxLength)
@@ -26,12 +25,12 @@ public partial class BigInt
             length++;
         }
 
-        if (temp_val > 0) // overflow check for +ve value
+        if (temp_val > 0) // Проверка переполнения для положительного значения
         {
             if (Value != 0 || (_Data[MaxLength - 1] & 0x80000000) != 0)
                 throw new ArithmeticException("Positive overflow in constructor.");
         }
-        else if (temp_val < 0) // underflow check for -ve value
+        else if (temp_val < 0) // Проверка переполнения для отрицательного значения
             if (Value != -1 || (_Data[length - 1] & 0x80000000) == 0)
                 throw new ArithmeticException("Negative underflow in constructor.");
 
@@ -44,8 +43,7 @@ public partial class BigInt
     {
         _Data = new uint[MaxLength];
 
-        // copy bytes from ulong to BigInteger without any assumption of
-        // the length of the ulong datatype
+        // Копирование байтов из ulong без предположений о размере типа
 
         var length = 0;
         while (Value != 0 && length < MaxLength)
@@ -66,28 +64,25 @@ public partial class BigInt
     public BigInt(BigInt Value) => (_Data, _DataLength) = ((uint[])Value._Data.Clone(), Value._DataLength);
 
     //***********************************************************************
-    // Constructor (Default value provided by a string of digits of the
-    //              specified base)
+    // Конструктор (значение задаётся строкой цифр в указанной системе счисления)
     //
-    // Example (base 10)
-    // -----------------
-    // To initialize "a" with the default value of 1234 in base 10
+    // Пример (основание 10)
+    // ---------------------
+    // Для инициализации "a" значением 1234 в системе счисления 10
     //      BigInteger a = new BigInteger("1234", 10)
     //
-    // To initialize "a" with the default value of -1234
+    // Для инициализации "a" значением -1234
     //      BigInteger a = new BigInteger("-1234", 10)
     //
-    // Example (base 16)
-    // -----------------
-    // To initialize "a" with the default value of 0x1D4F in base 16
+    // Пример (основание 16)
+    // ---------------------
+    // Для инициализации "a" значением 0x1D4F в системе счисления 16
     //      BigInteger a = new BigInteger("1D4F", 16)
     //
-    // To initialize "a" with the default value of -0x1D4F
+    // Для инициализации "a" значением -0x1D4F
     //      BigInteger a = new BigInteger("-1D4F", 16)
     //
-    // Note that string values are specified in the <sign><magnitude>
-    // format.
-    //
+    // Строковые значения задаются в формате <знак><модуль>
     //***********************************************************************
 
     /// <summary>Инициализация нового пустого <see cref="BigInt"/> = 0</summary>
@@ -113,7 +108,7 @@ public partial class BigInt
             else
                 pos_val = pos_val is >= 'A' and <= 'Z'
                     ? pos_val - 'A' + 10
-                    : 9999999; // arbitrary large
+                    : 9999999; // Произвольно большое значение
 
 
             if (pos_val >= Base)
@@ -125,12 +120,12 @@ public partial class BigInt
             if (i - 1 >= limit) multiplier *= Base;
         }
 
-        if (StringValue[0] == '-') // negative values
+        if (StringValue[0] == '-') // Отрицательные значения
         {
             if ((result._Data[MaxLength - 1] & 0x80000000) == 0)
                 throw new OverflowException("Negative underflow in constructor.");
         }
-        else // positive values
+        else // Положительные значения
         {
             if ((result._Data[MaxLength - 1] & 0x80000000) != 0)
                 throw new OverflowException("Positive overflow in constructor.");
@@ -145,20 +140,17 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Constructor (Default value provided by an array of bytes)
+    // Конструктор (значение задаётся массивом байтов)
     //
-    // The lowest index of the input byte array (i.e [0]) should contain the
-    // most significant byte of the number, and the highest index should
-    // contain the least significant byte.
+    // Младший индекс входного массива (т.е. [0]) содержит старший байт числа,
+    // а старший индекс содержит младший байт
     //
-    // E.g.
-    // To initialize "a" with the default value of 0x1D4F in base 16
+    // Пример
+    // Для инициализации "a" значением 0x1D4F в системе счисления 16
     //      byte[] temp = { 0x1D, 0x4F };
     //      BigInteger a = new BigInteger(temp)
     //
-    // Note that this method of initialization does not allow the
-    // sign to be specified.
-    //
+    // Этот способ инициализации не позволяет указать знак числа
     //***********************************************************************
 
     /// <summary>Инициализация нового пустого <see cref="BigInt"/> = 0</summary>
@@ -169,7 +161,7 @@ public partial class BigInt
         _DataLength = Data.Length >> 2;
 
         var left_over = Data.Length & 0x3;
-        if (left_over != 0) // length not multiples of 4
+        if (left_over != 0) // Длина не кратна 4
             _DataLength++;
 
         if (_DataLength > MaxLength)
@@ -194,16 +186,18 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Constructor (Default value provided by an array of bytes of the
-    // specified length.)
+    // Конструктор (значение задаётся массивом байтов указанной длины)
     //***********************************************************************
-
+    /// <summary>Инициализация нового <see cref="BigInt"/> из массива байтов указанной длины</summary>
+    /// <param name="Data">Байтовые данные числа</param>
+    /// <param name="Length">Длина данных в байтах</param>
+    /// <exception cref="OverflowException">При переполнении разрядной сетки</exception>
     public BigInt(byte[] Data, int Length)
     {
         _DataLength = Length >> 2;
 
         var left_over = Length & 0x3;
-        if (left_over != 0) _DataLength++; // length not multiples of 4
+        if (left_over != 0) _DataLength++; // Длина не кратна 4
 
         if (_DataLength > MaxLength || Length > Data.Length)
             throw new OverflowException("Byte overflow in constructor.");
@@ -231,9 +225,12 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Constructor (Default value provided by an array of unsigned integers)
+    // Конструктор (значение задаётся массивом беззнаковых целых)
     //*********************************************************************
 
+    /// <summary>Инициализация нового <see cref="BigInt"/> из массива 32-битных слов</summary>
+    /// <param name="UintWords">Слова беззнаковых значений</param>
+    /// <exception cref="OverflowException">При переполнении разрядной сетки</exception>
     public BigInt(uint[] UintWords)
     {
         _DataLength = UintWords.Length;
@@ -254,15 +251,27 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Overloading of the typecast operator.
-    // For BigInteger Value = 10;
+    // Перегрузка оператора приведения типов
+    // Для BigInteger Value = 10
     //***********************************************************************
 
+    /// <summary>Неявное преобразование из <see cref="long"/></summary>
+    /// <param name="value">Исходное значение</param>
+    /// <returns>Экземпляр <see cref="BigInt"/></returns>
     public static implicit operator BigInt(long value) => new(value);
 
+    /// <summary>Неявное преобразование из <see cref="ulong"/></summary>
+    /// <param name="value">Исходное значение</param>
+    /// <returns>Экземпляр <see cref="BigInt"/></returns>
     public static implicit operator BigInt(ulong value) => new(value);
 
+    /// <summary>Неявное преобразование из <see cref="int"/></summary>
+    /// <param name="value">Исходное значение</param>
+    /// <returns>Экземпляр <see cref="BigInt"/></returns>
     public static implicit operator BigInt(int value) => new(value);
 
+    /// <summary>Неявное преобразование из <see cref="uint"/></summary>
+    /// <param name="value">Исходное значение</param>
+    /// <returns>Экземпляр <see cref="BigInt"/></returns>
     public static implicit operator BigInt(uint value) => new((ulong)value);
 }
