@@ -10,6 +10,7 @@ on:
     - '**.docx'
     - '**.bat'
     - '**.vssettings'
+  workflow_dispatch: # ручной запуск сценария
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
