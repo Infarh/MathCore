@@ -282,21 +282,25 @@ public readonly ref partial struct StringPtr
 
         if (exp != 0)
         {
-            if (value > 1)
-                while (exp > 0 && value > 10)
+            // Оптимизация: для малых степеней (до 15) используем простое умножение/деление
+            // для больших - используем Math.Pow для избежания накопления погрешности
+            if (exp <= 15)
+            {
+                if (exp_sign > 0)
                 {
-                    exp--;
-                    value /= 10;
+                    while (exp-- > 0)
+                        value *= 10;
                 }
+                else
+                {
+                    while (exp-- > 0)
+                        value /= 10;
+                }
+            }
             else
-                while (exp > 0 && value < 1)
-                {
-                    exp--;
-                    value *= 10;
-                }
-
-            if (exp != 0)
+            {
                 value *= Math.Pow(10, exp_sign * exp);
+            }
         }
 
         if (sign < 0)
@@ -469,11 +473,30 @@ public readonly ref partial struct StringPtr
 
         var value = sign * (whole + fraction / (double)fraction_base);
 
-        if (exp == 0)
-            return value;
+        if (exp != 0)
+        {
+            // Оптимизация: для малых степеней (до 15) используем простое умножение/деление
+            // для больших - используем Math.Pow для избежания накопления погрешности
+            if (exp <= 15)
+            {
+                if (exp_sign > 0)
+                {
+                    while (exp-- > 0)
+                        value *= 10;
+                }
+                else
+                {
+                    while (exp-- > 0)
+                        value /= 10;
+                }
+            }
+            else
+            {
+                value *= Math.Pow(10, exp_sign * exp);
+            }
+        }
 
-
-        return value * Math.Pow(10, exp_sign * exp);
+        return value;
 #endif
     }
 }

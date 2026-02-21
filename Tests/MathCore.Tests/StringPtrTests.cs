@@ -320,4 +320,145 @@ public class StringPtrTests
             var last = ss.GetValueInt32(':');
         }
     }
+
+    // Дополнительные тесты для экспоненциальной формы
+    [TestMethod]
+    public void TryParseDouble_Exponential_PositiveExp_Simple()
+    {
+        const string str = "15e2";
+        const double expected_value = 1500.0;
+
+        var s = str.AsStringPtr();
+        var is_parsed = s.TryParseDouble(__Culture, out var actual_value);
+
+        is_parsed.AssertTrue();
+        actual_value.AssertEquals(expected_value);
+    }
+
+    [TestMethod]
+    public void TryParseDouble_Exponential_PositiveExp_WithPlus()
+    {
+        const string str = "15e+2";
+        const double expected_value = 1500.0;
+
+        var s = str.AsStringPtr();
+        var is_parsed = s.TryParseDouble(__Culture, out var actual_value);
+
+        is_parsed.AssertTrue();
+        actual_value.AssertEquals(expected_value);
+    }
+
+    [TestMethod]
+    public void TryParseDouble_Exponential_NegativeExp()
+    {
+        const string str = "15e-2";
+        const double expected_value = 0.15;
+
+        var s = str.AsStringPtr();
+        var is_parsed = s.TryParseDouble(__Culture, out var actual_value);
+
+        is_parsed.AssertTrue();
+        actual_value.AssertEquals(expected_value);
+    }
+
+    [TestMethod]
+    public void TryParseDouble_Exponential_FractionalWithPositiveExp()
+    {
+        const string str = "1.5e3";
+        const double expected_value = 1500.0;
+
+        var s = str.AsStringPtr();
+        var is_parsed = s.TryParseDouble(__Culture, out var actual_value);
+
+        is_parsed.AssertTrue();
+        actual_value.AssertEquals(expected_value);
+    }
+
+    [TestMethod]
+    public void TryParseDouble_Exponential_LargePositiveExp()
+    {
+        const string str = "123e3";
+        const double expected_value = 123000.0;
+
+        var s = str.AsStringPtr();
+        var is_parsed = s.TryParseDouble(__Culture, out var actual_value);
+
+        is_parsed.AssertTrue();
+        actual_value.AssertEquals(expected_value);
+    }
+
+    [TestMethod]
+    public void TryParseDouble_Exponential_WithNegativeSign()
+    {
+        const string str = "-123.456E-051";
+        var expected_value = double.Parse(str, __Culture);
+
+        var s = str.AsStringPtr();
+        var is_parsed = s.TryParseDouble(__Culture, out var actual_value);
+
+        is_parsed.AssertTrue();
+        actual_value.AssertEquals(expected_value);
+    }
+
+    [TestMethod]
+    public void TryParseDouble_Exponential_UpperCaseE()
+    {
+        const string str = "2.5E10";
+        var expected_value = double.Parse(str, __Culture);
+
+        var s = str.AsStringPtr();
+        var is_parsed = s.TryParseDouble(__Culture, out var actual_value);
+
+        is_parsed.AssertTrue();
+        actual_value.AssertEquals(expected_value);
+    }
+
+    [TestMethod]
+    public void TryParseDouble_Exponential_LowerCaseE()
+    {
+        const string str = "2.5e10";
+        var expected_value = double.Parse(str, __Culture);
+
+        var s = str.AsStringPtr();
+        var is_parsed = s.TryParseDouble(__Culture, out var actual_value);
+
+        is_parsed.AssertTrue();
+        actual_value.AssertEquals(expected_value);
+    }
+
+    [TestMethod]
+    public void ParseDouble_Exponential_Simple()
+    {
+        const string str = "15e2";
+        const double expected_value = 1500.0;
+
+        var s = str.AsStringPtr();
+        var actual_value = s.ParseDouble(__Culture);
+
+        actual_value.AssertEquals(expected_value);
+    }
+
+    [TestMethod]
+    public void ParseDouble_Exponential_Negative()
+    {
+        const string str = "-123.456E-051";
+        var expected_value = double.Parse(str, __Culture);
+
+        var s = str.AsStringPtr();
+        var actual_value = s.ParseDouble(__Culture);
+
+        actual_value.AssertEquals(expected_value);
+    }
+
+    [TestMethod]
+    public void ParseDouble_Exponential_LargeExp()
+    {
+        const string str = "1.23e100";
+        var expected_value = double.Parse(str, __Culture);
+
+        var s = str.AsStringPtr();
+        var actual_value = s.ParseDouble(__Culture);
+
+        actual_value.AssertEquals(expected_value);
+    }
 }
