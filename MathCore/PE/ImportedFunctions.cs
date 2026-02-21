@@ -86,9 +86,14 @@ public class ImportedFunctions
             var lookupTableRVA = descriptor.OriginalFirstThunk;
             
             uint index = 0;
-            while (true)
+            const uint max_imports = 10000; // Защита от бесконечного цикла
+            while (index < max_imports)
             {
-                var lookupData = pefFile.ReadDataFromRVA(lookupTableRVA + index * sizeof(uint), sizeof(uint));
+                // Безопасное вычисление RVA с проверкой переполнения
+                var offset_bytes = checked((uint)(index * sizeof(uint)));
+                var entry_rva = checked(lookupTableRVA + offset_bytes);
+                
+                var lookupData = pefFile.ReadDataFromRVA(entry_rva, sizeof(uint));
                 var lookupValue = BitConverter.ToUInt32(lookupData, 0);
 
                 if (lookupValue == 0)

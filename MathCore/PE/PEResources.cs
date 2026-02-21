@@ -128,11 +128,13 @@ public class PEResources
         {
             // Первые NumberOfNamedEntries - это именованные записи, потом идут записи с ID
             var entrySize = Marshal.SizeOf<IMAGE_RESOURCE_DIRECTORY_ENTRY>();
-            var offset = BaseRVA + (uint)Marshal.SizeOf<IMAGE_RESOURCE_DIRECTORY>();
+            var directory_size = Marshal.SizeOf<IMAGE_RESOURCE_DIRECTORY>();
 
             for (int i = 0; i < totalEntries; i++)
             {
-                var data = _PEFile.ReadDataFromRVA(offset + (uint)(i * entrySize), entrySize);
+                // Вычисляем RVA каждой записи (BaseRVA + размер директории + смещение записи)
+                var entry_rva = BaseRVA + (uint)directory_size + (uint)(i * entrySize);
+                var data = _PEFile.ReadDataFromRVA(entry_rva, entrySize);
                 var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
                 try
                 {

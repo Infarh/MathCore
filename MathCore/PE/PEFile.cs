@@ -22,9 +22,10 @@ public class PEFile(FileInfo File)
     {
         get
         {
-            if (!Exists) throw new FileNotFoundException("Файл не найден", _File.FullName);
+            if (!Exists) return false;
 
-            if (_File.Length < 128) return false;
+            // DOS заголовок минимум 64 байта, NT заголовок требует еще данных
+            if (_File.Length < 512) return false;
 
             try
             {
@@ -62,10 +63,18 @@ public class PEFile(FileInfo File)
 
         foreach (var section in header.Sections)
         {
+            // RVA находится в диапазоне виртуального адреса раздела
             if (RVA >= section.VirtualAddress && RVA < section.VirtualAddress + section.VirtualSize)
             {
-                var offset = RVA - section.VirtualAddress + section.PointerToRawData;
-                return offset;
+                // Но смещение файла должно быть в пределах реального размера раздела в файле
+                var offset_in_section = RVA - section.VirtualAddress;
+                if (offset_in_section < section.SizeOfRawData)
+                {
+                    var offset = offset_in_section + section.PointerToRawData;
+                    return offset;
+                }
+                // RVA в диапазоне виртуального размера, но вне реального файла
+                return -1;
             }
         }
 
@@ -98,6 +107,9 @@ public class PEFile(FileInfo File)
     /// <returns>Прочитанные данные</returns>
     public byte[] ReadDataFromRVA(uint RVA, int Size)
     {
+        if (Size <= 0)
+            throw new ArgumentException("Размер должен быть положительным", nameof(Size));
+
         var offset = RvaToFileOffset(RVA);
         if (offset < 0)
             throw new InvalidOperationException($"RVA 0x{RVA:X8} находится вне разделов файла");
@@ -109,7 +121,7 @@ public class PEFile(FileInfo File)
         var read = file.Read(data, 0, Size);
 
         if (read != Size)
-            throw new InvalidOperationException($"Не удалось прочитать полный объём данных из RVA 0x{RVA:X8}");
+            throw new InvalidOperationException($"Не удалось прочитать полный объём данных из RVA 0x{RVA:X8}: прочитано {read} байт вместо {Size}");
 
         return data;
     }
