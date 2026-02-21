@@ -1,8 +1,4 @@
-﻿// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable ConvertToAutoPropertyWithPrivateSetter
-// ReSharper disable UnusedMember.Global
-
-namespace MathCore;
+﻿namespace MathCore;
 
 public partial class BigInt
 {

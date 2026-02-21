@@ -1,8 +1,4 @@
-﻿// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable ConvertToAutoPropertyWithPrivateSetter
-// ReSharper disable UnusedMember.Global
-
-namespace MathCore;
+﻿namespace MathCore;
 
 public partial class BigInt
 {
@@ -29,40 +25,41 @@ public partial class BigInt
     ];
 
     //***********************************************************************
-    // Probabilistic prime test based on Fermat's little theorem
+    // Вероятностный тест простоты на основе малой теоремы Ферма
     //
-    // for any a < p (p does not divide a) if
-    //      a^(p-1) mod p != 1 then p is not prime.
+    // для любого a < p (p не делит a) если
+    //      a^(p-1) mod p != 1, то p не простое
     //
-    // Otherwise, p is probably prime (pseudoprime to the chosen base).
+    // Иначе p вероятно простое (псевдопростое по выбранному основанию)
     //
-    // Returns
-    // -------
-    // True if "this" is a pseudoprime to randomly chosen
-    // bases.  The number of chosen bases is given by the "confidence"
-    // parameter.
+    // Возвращает
+    // ---------
+    // True, если "this" является псевдопростым для случайно выбранных оснований
+    // Количество оснований задаётся параметром "confidence"
     //
-    // False if "this" is definitely NOT prime.
+    // False, если "this" точно не простое
     //
-    // Note - this method is fast but fails for Carmichael numbers except
-    // when the randomly chosen base is a factor of the number.
-    //
+    // Примечание: метод быстрый, но ошибается на числах Кармайкла, кроме случаев
+    // когда случайно выбранное основание является делителем числа
     //***********************************************************************
 
+    /// <summary>Вероятностный тест простоты по Ферма</summary>
+    /// <param name="confidence">Уровень уверенности</param>
+    /// <returns>True, если число вероятно простое</returns>
     public bool FermatLittleTest(int confidence)
     {
         var this_val = (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : this;
 
         if (this_val._DataLength == 1)
         {
-            // test small numbers
+            // проверка малых чисел
             if (this_val._Data[0] is 0 or 1)
                 return false;
             if (this_val._Data[0] is 2 or 3)
                 return true;
         }
 
-        if ((this_val._Data[0] & 0x1) == 0) // even numbers
+        if ((this_val._Data[0] & 0x1) == 0) // чётные числа
             return false;
 
         var bits = this_val.BitCount;
@@ -74,11 +71,11 @@ public partial class BigInt
         {
             var done = false;
 
-            while (!done) // generate a < n
+            while (!done) // генерация a < n
             {
                 var test_bits = 0;
 
-                // make sure "a" has at least 2 bits
+                // гарантируем минимум 2 бита
                 while (test_bits < 2)
                     test_bits = (int)(rand.NextDouble() * bits);
 
@@ -86,22 +83,22 @@ public partial class BigInt
 
                 var byte_len = a._DataLength;
 
-                // make sure "a" is not 0
+                // убеждаемся, что "a" не равно 0
                 if (byte_len > 1 || (byte_len == 1 && a._Data[0] != 1))
                     done = true;
             }
 
-            // check whether a factor exists (fix for version 1.03)
+            // проверка наличия делителя (исправление для версии 1.03)
             var gcd_test = a.Gcd(this_val);
             if (gcd_test._DataLength == 1 && gcd_test._Data[0] != 1)
                 return false;
 
-            // calculate a^(p-1) mod p
+            // вычисление a^(p-1) mod p
             var exp_result = a.ModPow(p_sub1, this_val);
 
             var result_len = exp_result._DataLength;
 
-            // is NOT prime is a^(p-1) mod p != 1
+            // число НЕ простое, если a^(p-1) mod p != 1
 
             if (result_len > 1 || (result_len == 1 && exp_result._Data[0] != 1))
                 return false;
@@ -112,26 +109,24 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Probabilistic prime test based on Rabin-Miller's
+    // Вероятностный тест простоты по Рабину — Миллеру
     //
-    // for any p > 0 with p - 1 = 2^s * t
+    // для любого p > 0, где p - 1 = 2^s * t
     //
-    // p is probably prime (strong pseudoprime) if for any a < p,
-    // 1) a^t mod p = 1 or
-    // 2) a^((2^j)*t) mod p = p-1 for some 0 <= j <= s-1
+    // p вероятно простое (сильное псевдопростое), если для любого a < p
+    // 1) a^t mod p = 1 или
+    // 2) a^((2^j)*t) mod p = p-1 для некоторого 0 <= j <= s-1
     //
-    // Otherwise, p is composite.
+    // Иначе p составное
     //
-    // Returns
-    // -------
-    // True if "this" is a strong pseudoprime to randomly chosen
-    // bases.  The number of chosen bases is given by the "confidence"
-    // parameter.
+    // Возвращает
+    // ---------
+    // True, если "this" является сильным псевдопростым для случайных оснований
+    // Количество оснований задаётся параметром "confidence"
     //
-    // False if "this" is definitely NOT prime.
-    //
-    //***********************************************************************
-
+    /// <summary>Вероятностный тест простоты по Рабину — Миллеру</summary>
+    /// <param name="confidence">Уровень уверенности</param>
+    /// <returns>True, если число вероятно простое</returns>
     public bool RabinMillerTest(int confidence)
     {
         var this_val = (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : this;
@@ -139,7 +134,7 @@ public partial class BigInt
         if (this_val._DataLength == 1)
             switch (this_val._Data[0])
             {
-                // test small numbers
+                // проверка малых чисел
                 case 0:
                 case 1:
                     return false;
@@ -148,11 +143,11 @@ public partial class BigInt
                     return true;
             }
 
-        if ((this_val._Data[0] & 0x1) == 0) // even numbers
+        if ((this_val._Data[0] & 0x1) == 0) // чётные числа
             return false;
 
 
-        // calculate values of s and t
+        // вычисление значений s и t
         var p_sub1 = this_val - new BigInt(1);
         var s = 0;
 
@@ -163,7 +158,7 @@ public partial class BigInt
             for (var i = 0; i < 32; i++, mask <<= 1, s++)
                 if ((p_sub1._Data[index] & mask) != 0)
                 {
-                    index = p_sub1._DataLength; // to break the outer loop
+                    index = p_sub1._DataLength; // выход из внешнего цикла
                     break;
                 }
         }
@@ -178,11 +173,11 @@ public partial class BigInt
         {
             var done = false;
 
-            while (!done) // generate a < n
+            while (!done) // генерация a < n
             {
                 var test_bits = 0;
 
-                // make sure "a" has at least 2 bits
+                // гарантируем минимум 2 бита
                 while (test_bits < 2)
                     test_bits = (int)(rand.NextDouble() * bits);
 
@@ -190,12 +185,12 @@ public partial class BigInt
 
                 var byte_len = a._DataLength;
 
-                // make sure "a" is not 0
+                // убеждаемся, что "a" не равно 0
                 if (byte_len > 1 || (byte_len == 1 && a._Data[0] != 1))
                     done = true;
             }
 
-            // check whether a factor exists (fix for version 1.03)
+            // проверка наличия делителя (исправление для версии 1.03)
             var gcd_test = a.Gcd(this_val);
             if (gcd_test._DataLength == 1 && gcd_test._Data[0] != 1)
                 return false;
@@ -205,7 +200,7 @@ public partial class BigInt
             var result = b._DataLength == 1 && b._Data[0] == 1; // a^t mod p = 1
 
             for (var j = 0; !result && j < s; j++, b *= b % this_val)
-                if (b == p_sub1) // a^((2^j)*t) mod p = p-1 for some 0 <= j <= s-1
+                if (b == p_sub1) // a^((2^j)*t) mod p = p-1 для некоторого 0 <= j <= s-1
                 {
                     result = true;
                     break;
@@ -218,25 +213,26 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Probabilistic prime test based on Solovay-Strassen (Euler Criterion)
+    // Вероятностный тест простоты по Соловею — Штрассену (критерий Эйлера)
     //
-    // p is probably prime if for any a < p (a is not multiple of p),
+    // p вероятно простое, если для любого a < p (a не кратно p)
     // a^((p-1)/2) mod p = J(a, p)
     //
-    // where J is the Jacobi symbol.
+    // где J — символ Якоби
     //
-    // Otherwise, p is composite.
+    // Иначе p составное
     //
-    // Returns
-    // -------
-    // True if "this" is a Euler pseudoprime to randomly chosen
-    // bases.  The number of chosen bases is given by the "confidence"
-    // parameter.
+    // Возвращает
+    // ---------
+    // True, если "this" является эйлеровым псевдопростым для случайных оснований
+    // Количество оснований задаётся параметром "confidence"
     //
-    // False if "this" is definitely NOT prime.
-    //
+    // False, если "this" точно не простое
     //***********************************************************************
 
+    /// <summary>Вероятностный тест простоты по Соловею — Штрассену</summary>
+    /// <param name="confidence">Уровень уверенности</param>
+    /// <returns>True, если число вероятно простое</returns>
     public bool SolovayStrassenTest(int confidence)
     {
         var this_val = (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : this;
@@ -244,7 +240,7 @@ public partial class BigInt
         if (this_val._DataLength == 1)
             switch (this_val._Data[0])
             {
-                // test small numbers
+                // проверка малых чисел
                 case 0:
                 case 1:
                     return false;
@@ -253,7 +249,7 @@ public partial class BigInt
                     return true;
             }
 
-        if ((this_val._Data[0] & 0x1) == 0) // even numbers
+        if ((this_val._Data[0] & 0x1) == 0) // чётные числа
             return false;
 
 
@@ -268,11 +264,11 @@ public partial class BigInt
         {
             var done = false;
 
-            while (!done) // generate a < n
+            while (!done) // генерация a < n
             {
                 var test_bits = 0;
 
-                // make sure "a" has at least 2 bits
+                // гарантируем минимум 2 бита
                 while (test_bits < 2)
                     test_bits = (int)(rand.NextDouble() * bits);
 
@@ -280,29 +276,29 @@ public partial class BigInt
 
                 var byte_len = a._DataLength;
 
-                // make sure "a" is not 0
+                // убеждаемся, что "a" не равно 0
                 if (byte_len > 1 || (byte_len == 1 && a._Data[0] != 1))
                     done = true;
             }
 
-            // check whether a factor exists (fix for version 1.03)
+            // проверка наличия делителя (исправление для версии 1.03)
             var gcd_test = a.Gcd(this_val);
             if (gcd_test._DataLength == 1 && gcd_test._Data[0] != 1)
                 return false;
 
-            // calculate a^((p-1)/2) mod p
+            // вычисление a^((p-1)/2) mod p
 
             var exp_result = a.ModPow(p_sub1_shift, this_val);
             if (exp_result == p_sub1)
                 exp_result = -1;
 
-            // calculate Jacobi symbol
+            // вычисление символа Якоби
             BigInt jacob = Jacobi(a, this_val);
 
-            //Console.WriteLine("a = " + a.ToString(10) + " b = " + thisVal.ToString(10));
-            //Console.WriteLine("expResult = " + expResult.ToString(10) + " Jacob = " + jacob.ToString(10));
+            //Console.WriteLine("а = " + a.ToString(10) + " б = " + thisVal.ToString(10));
+            //Console.WriteLine("Результат = " + expResult.ToString(10) + " Якоби = " + jacob.ToString(10));
 
-            // if they are different then it is not prime
+            // если значения различны, то число не простое
             if (exp_result != jacob)
                 return false;
         }
@@ -313,26 +309,28 @@ public partial class BigInt
 
     // ReSharper disable CommentTypo
     //***********************************************************************
-    // Implementation of the Lucas Strong Pseudo Prime test.
+    // Реализация сильного псевдопростого теста Лукаса
     //
-    // Let n be an odd number with gcd(n,D) = 1, and n - J(D, n) = 2^s * d
-    // with d odd and s >= 0.
+    // Пусть n — нечётное число с gcd(n,D) = 1 и n - J(D, n) = 2^s * d
+    // где d нечётно и s >= 0
     //
-    // If Ud mod n = 0 or V2^r*d mod n = 0 for some 0 <= r < s, then n
-    // is a strong Lucas pseudoprime with parameters (P, Q).  We select
-    // P and Q based on Selfridge.
+    // Если Ud mod n = 0 или V2^r*d mod n = 0 для некоторого 0 <= r < s, то n
+    // является сильным псевдопростым по Лукасу с параметрами (P, Q)
+    // Мы выбираем P и Q по Selfridge
     //
-    // Returns True if number is a strong Lucus pseudo prime.
-    // Otherwise, returns False indicating that number is composite.
+    // Возвращает True, если число является сильным псевдопростым Лукаса
+    // Иначе возвращает False, обозначая, что число составное
     //***********************************************************************
     // ReSharper restore CommentTypo
 
+    /// <summary>Тест сильной псевдопростоты Лукаса</summary>
+    /// <returns>True, если число вероятно простое</returns>
     public bool LucasStrongTest()
     {
         var this_val = (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : this;
 
         if (this_val._DataLength == 1)
-            switch (this_val._Data[0]) // test small numbers
+            switch (this_val._Data[0]) // проверка малых чисел
             {
                 case 0:
                 case 1:
@@ -348,10 +346,10 @@ public partial class BigInt
 
     private static bool LucasStrongTestHelper(BigInt ThisVal)
     {
-        // Do the test (selects D based on Self ridge)
-        // Let D be the first element of the sequence
-        // 5, -7, 9, -11, 13, ... for which J(D,n) = -1
-        // Let P = 1, Q = (1-D) / 4
+        // Выполнение теста (выбор D по Selfridge)
+        // Пусть D — первый элемент последовательности
+        // 5, -7, 9, -11, 13, ... для которого J(D,n) = -1
+        // Пусть P = 1, Q = (1-D) / 4
 
         var d = 5;
         var sign = -1;
@@ -366,12 +364,12 @@ public partial class BigInt
                 done = true; // J(D, this) = 1
             else
             {
-                if (j_result == 0 && Math.Abs(d) < ThisVal) // divisor found
+                if (j_result == 0 && Math.Abs(d) < ThisVal) // найден делитель
                     return false;
 
                 if (d_count == 20)
                 {
-                    // check for square
+                    // проверка на квадрат
                     var root = ThisVal.Sqrt();
                     if (root * root == ThisVal)
                         return false;
@@ -397,7 +395,7 @@ public partial class BigInt
             {
                 if ((p_add1._Data[index] & mask) != 0)
                 {
-                    index = p_add1._DataLength; // to break the outer loop
+                    index = p_add1._DataLength; // выход из внешнего цикла
                     break;
                 }
                 mask <<= 1;
@@ -407,8 +405,8 @@ public partial class BigInt
 
         var t = p_add1 >> s;
 
-        // calculate constant = b^(2k) / m
-        // for Barrett Reduction
+        // вычисление constant = b^(2k) / m
+        // для редукции Барретта
         var constant = new BigInt();
 
         var n_len = ThisVal._DataLength << 1;
@@ -425,7 +423,7 @@ public partial class BigInt
         {
             if (!is_prime)
             {
-                // doubling of index
+                // удвоение индекса
                 lucas[1] = BarrettReduction(lucas[1] * lucas[1], ThisVal, constant);
                 lucas[1] = (lucas[1] - (lucas[2] << 1)) % ThisVal;
 
@@ -433,13 +431,13 @@ public partial class BigInt
                     is_prime = true;
             }
 
-            lucas[2] = BarrettReduction(lucas[2] * lucas[2], ThisVal, constant); //Q^k
+            lucas[2] = BarrettReduction(lucas[2] * lucas[2], ThisVal, constant); // Q^k
         }
 
 
         if (!is_prime) return false;
-        // If n is prime and gcd(n, Q) == 1, then
-        // Q^((n+1)/2) = Q * Q^((n-1)/2) is congruent to (Q * J(Q, n)) mod n
+        // Если n простое и gcd(n, Q) == 1, то
+        // Q^((n+1)/2) = Q * Q^((n-1)/2) сравнимо с (Q * J(Q, n)) mod n
 
         var g = ThisVal.Gcd(q);
         if (g._DataLength != 1 || g._Data[0] != 1) return true;
@@ -458,19 +456,21 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Determines whether a number is probably prime, using the Rabin-Miller's
-    // test.  Before applying the test, the number is tested for divisibility
-    // by primes < 2000
+    // Определяет, является ли число вероятно простым, используя тест Рабина — Миллера
+    // Перед применением теста проверяется делимость на простые числа < 2000
     //
-    // Returns true if number is probably prime.
+    // Возвращает true, если число вероятно простое
     //***********************************************************************
 
+    /// <summary>Проверка вероятной простоты с заданной уверенностью</summary>
+    /// <param name="confidence">Уровень уверенности</param>
+    /// <returns>True, если число вероятно простое</returns>
     public bool IsProbablePrime(int confidence)
     {
         var this_val = (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : this;
 
 
-        // test for divisibility by primes < 2000
+        // проверка делимости на простые числа < 2000
         return PrimesBelow2000
                .Select(i => new BigInt(i))
                .TakeWhile(divisor => divisor < this_val)
@@ -480,27 +480,28 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Determines whether this BigInteger is probably prime using a
-    // combination of base 2 strong pseudoprime test and Lucas strong
-    // pseudoprime test.
+    // Определяет, является ли BigInteger вероятно простым, используя сочетание
+    // теста сильной псевдопростоты по основанию 2 и сильного теста Лукаса
     //
-    // The sequence of the primality test is as follows,
+    // Последовательность тестирования следующая
     //
-    // 1) Trial divisions are carried out using prime numbers below 2000.
-    //    if any of the primes divides this BigInteger, then it is not prime.
+    // 1) Пробные деления выполняются простыми числами меньше 2000
+    //    если любое из простых чисел делит BigInteger, то он не прост
     //
-    // 2) Perform base 2 strong pseudoprime test.  If this BigInteger is a
-    //    base 2 strong pseudoprime, proceed on to the next step.
+    // 2) Выполняется сильный тест Рабина — Миллера для основания 2
+    //    если BigInteger является сильным псевдопростым по основанию 2,
+    //    переход к следующему шагу
     //
-    // 3) Perform strong Lucas pseudoprime test.
+    // 3) Выполняется сильный тест Лукаса
     //
-    // Returns True if this BigInteger is both a base 2 strong pseudoprime
-    // and a strong Lucas pseudoprime.
+    // Возвращает True, если BigInteger является как сильным псевдопростым
+    // по основанию 2, так и сильным псевдопростым Лукаса
     //
-    // For a detailed discussion of this primality test, see [6].
-    //
+    // Подробности см. в [6]
     //***********************************************************************
 
+    /// <summary>Проверка вероятной простоты без параметра уверенности</summary>
+    /// <returns>True, если число вероятно простое</returns>
     public bool IsProbablePrime()
     {
         var this_val = (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : this;
@@ -508,7 +509,7 @@ public partial class BigInt
         if (this_val._DataLength == 1)
             switch (this_val._Data[0])
             {
-                // test small numbers
+                // проверка малых чисел
                 case 0:
                 case 1:
                     return false;
@@ -517,11 +518,11 @@ public partial class BigInt
                     return true;
             }
 
-        if ((this_val._Data[0] & 0x1) == 0) // even numbers
+        if ((this_val._Data[0] & 0x1) == 0) // чётные числа
             return false;
 
 
-        // test for divisibility by primes < 2000
+        // проверка делимости на простые числа < 2000
         if (PrimesBelow2000
            .Select(i => new BigInt(i))
            .TakeWhile(divisor => divisor < this_val)
@@ -529,9 +530,9 @@ public partial class BigInt
            .Any(ResultNum => ResultNum.IntValue() == 0))
             return false;
 
-        // Perform BASE 2 Rabin-Miller Test
+        // Выполнение теста Рабина — Миллера по основанию 2
 
-        // calculate values of s and t
+        // вычисление значений s и t
         var p_sub1 = this_val - new BigInt(1);
         var s = 0;
 
@@ -542,7 +543,7 @@ public partial class BigInt
             for (var i = 0; i < 32; i++, mask <<= 1, s++)
                 if ((p_sub1._Data[index] & mask) != 0)
                 {
-                    index = p_sub1._DataLength; // to break the outer loop
+                    index = p_sub1._DataLength; // выход из внешнего цикла
                     break;
                 }
         }
@@ -557,13 +558,13 @@ public partial class BigInt
         var result = b._DataLength == 1 && b._Data[0] == 1; // a^t mod p = 1
 
         for (var j = 0; !result && j < s; j++, b *= b % this_val)
-            if (b == p_sub1) // a^((2^j)*t) mod p = p-1 for some 0 <= j <= s-1
+            if (b == p_sub1) // a^((2^j)*t) mod p = p-1 для некоторого 0 <= j <= s-1
             {
                 result = true;
                 break;
             }
 
-        // if number is strong pseudoprime to base 2, then do a strong lucas test
+        // если число является сильным псевдопростым по основанию 2, выполняем сильный тест Лукаса
         return result && LucasStrongTestHelper(this_val);
     }
 }

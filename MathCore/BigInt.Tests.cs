@@ -1,13 +1,9 @@
-﻿// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable ConvertToAutoPropertyWithPrivateSetter
-// ReSharper disable UnusedMember.Global
-
-namespace MathCore;
+﻿namespace MathCore;
 
 public partial class BigInt
 {
     //***********************************************************************
-    // Tests the correct implementation of the /, %, * and + operators
+    // Проверка корректности реализации операторов /, %, * и +
     //***********************************************************************
 
     ////todo: Перенести в модульные тесты
@@ -19,7 +15,7 @@ public partial class BigInt
 
     //    for (var count = 0; count < rounds; count++)
     //    {
-    //        // generate 2 numbers of random length
+    //        // генерация 2 чисел случайной длины
     //        var t1 = 0;
     //        while (t1 == 0)
     //            t1 = (int)(rand.NextDouble() * 65);
@@ -61,18 +57,17 @@ public partial class BigInt
     //        var bn2 = new BigInteger(val2, t2);
 
 
-    //        // Determine the quotient and remainder by dividing
-    //        // the first number by the second.
+    //        // Определение частного и остатка при делении первого числа на второе
 
     //        var bn3 = bn1 / bn2;
     //        var bn4 = bn1 % bn2;
 
-    //        // Recalculate the number
+    //        // Пересчёт числа
     //        var bn5 = bn3 * bn2 + bn4;
 
-    //        // Make sure they're the same
+    //        // Убедиться, что значения совпадают
     //        if (bn5 == bn1) continue;
-    //        //            Console.WriteLine("Error at " + count);
+    //        //            Console.WriteLine("Ошибка на " + count);
     //        //            Console.WriteLine(bn1 + "\n");
     //        //            Console.WriteLine(bn2 + "\n");
     //        //            Console.WriteLine(bn3 + "\n");
@@ -84,18 +79,17 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Tests the correct implementation of the modulo exponential function
-    // using RSA encryption and decryption (using pre-computed encryption and
-    // decryption keys).
+    // Проверка корректности функции модульного возведения в степень
+    // с использованием RSA-шифрования и расшифрования (используются
+    // заранее вычисленные ключи шифрования и расшифрования)
     //***********************************************************************
-
     ////todo: Перенести в модульные тесты
     //public static void RSATest(int rounds)
     //{
     //    var rand = new Random(1);
     //    var val = new byte[64];
 
-    //    // private and public key
+    //    // Закрытый и открытый ключи
     //// ReSharper disable CommentTypo
     //    var bi_e = new BigInteger("a932b948feed4fb2b692609bd22164fc9edb59fae7880c" +
     //                              "c1eaff7b3c9626b7e5b241c27a974833b2622ebe09beb4" +
@@ -120,7 +114,7 @@ public partial class BigInt
 
     //    for (var count = 0; count < rounds; count++)
     //    {
-    //        // generate data of random length
+    //        // генерация данных случайной длины
     //        var t1 = 0;
     //        while (t1 == 0)
     //            t1 = (int)(rand.NextDouble() * 65);
@@ -138,32 +132,31 @@ public partial class BigInt
     //        while (val[0] == 0)
     //            val[0] = (byte)(rand.NextDouble() * 256);
 
-    //        Console.Write("Round = " + count);
+    //        Console.Write("Раунд = " + count);
 
-    //        // encrypt and decrypt data
+    //        // шифрование и расшифрование данных
     //        var bi_data = new BigInteger(val, t1);
     //        var bi_encrypted = bi_data.ModPow(bi_e, bi_n);
     //        var bi_decrypted = bi_encrypted.ModPow(bi_d, bi_n);
 
-    //        // compare
+    //        // сравнение
     //        if (bi_decrypted != bi_data)
     //        {
-    //            Console.WriteLine("\nError at round " + count);
+    //            Console.WriteLine("\nОшибка на раунде " + count);
     //            Console.WriteLine(bi_data + "\n");
     //            return;
     //        }
-    //        Console.WriteLine(" <PASSED>.");
+    //        Console.WriteLine(" <ПРОЙДЕНО>.");
     //    }
     //}
 
 
     //***********************************************************************
-    // Tests the correct implementation of the modulo exponential and
-    // inverse modulo functions using RSA encryption and decryption.  The two
-    // pseudo primes p and q are fixed, but the two RSA keys are generated
-    // for each round of testing.
+    // Проверка корректности модульного возведения в степень и
+    // функции обратного по модулю с использованием RSA-шифрования
+    // и расшифрования. Два псевдопростых p и q фиксированы, а ключи
+    // RSA генерируются для каждого раунда тестирования
     //***********************************************************************
-
     ////todo: Перенести в модульные тесты
     //public static void RSATest2(int rounds)
     //{
@@ -208,7 +201,7 @@ public partial class BigInt
 
     //    for (var count = 0; count < rounds; count++)
     //    {
-    //        // generate private and public key
+    //        // генерация закрытого и открытого ключей
     //        var bi_e = bi_pq.GenCoPrime(512, rand);
     //        var bi_d = bi_e.ModInverse(bi_pq);
 
@@ -216,7 +209,7 @@ public partial class BigInt
     //        Console.WriteLine("\nd =\n" + bi_d.ToString(10));
     //        Console.WriteLine("\nn =\n" + bi_n.ToString(10) + "\n");
 
-    //        // generate data of random length
+    //        // генерация данных случайной длины
     //        var t1 = 0;
     //        while (t1 == 0)
     //            t1 = (int)(rand.NextDouble() * 65);
@@ -234,28 +227,28 @@ public partial class BigInt
     //        while (val[0] == 0)
     //            val[0] = (byte)(rand.NextDouble() * 256);
 
-    //        Console.Write("Round = " + count);
+    //        Console.Write("Раунд = " + count);
 
-    //        // encrypt and decrypt data
+    //        // шифрование и расшифрование данных
     //        var bi_data = new BigInteger(val, t1);
     //        var bi_encrypted = bi_data.ModPow(bi_e, bi_n);
     //        var bi_decrypted = bi_encrypted.ModPow(bi_d, bi_n);
 
-    //        // compare
+    //        // сравнение
     //        if (bi_decrypted != bi_data)
     //        {
-    //            Console.WriteLine("\nError at round {0}", count);
+    //            Console.WriteLine("\nОшибка на раунде {0}", count);
     //            Console.WriteLine("{0}\n", bi_data);
     //            return;
     //        }
-    //        Console.WriteLine(" <PASSED>.");
+    //        Console.WriteLine(" <ПРОЙДЕНО>.");
     //    }
 
     //}
 
 
     //***********************************************************************
-    // Tests the correct implementation of sqrt() method.
+    // Проверка корректности метода sqrt()
     //***********************************************************************
 
     ////todo: Перенести в модульные тесты
@@ -264,12 +257,12 @@ public partial class BigInt
     //    var rand = new Random();
     //    for (var count = 0; count < rounds; count++)
     //    {
-    //        // generate data of random length
+    //        // генерация данных случайной длины
     //        var t1 = 0;
     //        while (t1 == 0)
     //            t1 = (int)(rand.NextDouble() * 1024);
 
-    //        Console.Write("Round = " + count);
+    //        Console.Write("Раунд = " + count);
 
     //        var a = new BigInteger();
     //        a.GenRandomBits(t1, rand);
@@ -277,23 +270,23 @@ public partial class BigInt
     //        var b = a.Sqrt();
     //        var c = (b + 1) * (b + 1);
 
-    //        // check that b is the largest integer such that b*b <= a
+    //        // проверка, что b — наибольшее целое, для которого b*b <= a
     //        if (c <= a)
     //        {
-    //            Console.WriteLine("\nError at round " + count);
+    //            Console.WriteLine("\nОшибка на раунде " + count);
     //            Console.WriteLine(a + "\n");
     //            return;
     //        }
-    //        Console.WriteLine(" <PASSED>.");
+    //        Console.WriteLine(" <ПРОЙДЕНО>.");
     //    }
     //}
 
     ////todo: Перенести в модульные тесты
     //public static void Main(string[] args)
     //{
-    //    // Known problem -> these two pseudo primes passes my implementation of
+    //    // Известная проблема -> эти два псевдопростых числа проходят мою реализацию
     // ReSharper disable once CommentTypo
-    //    // primality test but failed in JDK's IsProbablePrime test.
+    //    // теста простоты, но не проходят тест IsProbablePrime в JDK
 
     //    byte[] pseudo_prime1 =
     //{
@@ -324,7 +317,7 @@ public partial class BigInt
     //    //                        (byte)0x9B, (byte)0xC2, (byte)0xA5, (byte)0xCB,
     //    //                };
 
-    //    Console.WriteLine("List of primes < 2000\n---------------------");
+    //    Console.WriteLine("Список простых чисел < 2000\n---------------------");
     //    int limit = 100, count = 0;
     //    for (var i = 0; i < 2000; i++)
     //    {
@@ -340,17 +333,17 @@ public partial class BigInt
     //        Console.Write(i + ", ");
     //        count++;
     //    }
-    //    Console.WriteLine("\nCount = " + count);
+    //    Console.WriteLine("\nКоличество = " + count);
 
 
     //    var x = new BigInteger(pseudo_prime1);
-    //    Console.WriteLine("\n\nPrimality testing for\n{0}\n", x);
+    //    Console.WriteLine("\n\nПроверка простоты для\n{0}\n", x);
     //    Console.WriteLine("SolovayStrassenTest(5) = {0}", x.SolovayStrassenTest(5));
     //    Console.WriteLine("RabinMillerTest(5) = {0}", x.RabinMillerTest(5));
     //    Console.WriteLine("FermatLittleTest(5) = {0}", x.FermatLittleTest(5));
     //    Console.WriteLine("IsProbablePrime() = {0}", x.IsProbablePrime());
 
-    //    Console.Write("\nGenerating 512-bits random pseudoprime. . .");
+    //    Console.Write("\nГенерация 512-битного случайного псевдопростого числа. . .");
     //    var rand = new Random();
     //    var prime = GetPseudoPrime(512, 5, rand);
     //    Console.WriteLine("\n" + prime);

@@ -1,5 +1,4 @@
-﻿// ReSharper disable CommentTypo
-//************************************************************************************
+﻿//************************************************************************************
 // Класс BigInteger версии 1.03
 //
 // Авторские права (c) 2002 Chew Keong TAN
@@ -54,7 +53,7 @@
 // Известная проблема
 // ------------------
 // Это псевдопростое число проходит мою реализацию проверки простоты,
-// но не проходит тест SDK IsProbablePrime
+// но не проходит тест SDK функции `IsProbablePrime`
 //
 //       byte[] pseudoPrime1 = { (byte)0x00,
 //             (byte)0x85, (byte)0x84, (byte)0x64, (byte)0xFD, (byte)0x70, (byte)0x6A,
@@ -78,13 +77,13 @@
 //    - Добавлена генерация последовательности Лукаса
 //    - Добавлен сильный тест простоты Лукаса
 //    - Добавлен метод целочисленного квадратного корня
-//    - Добавлены методы setBit/unsetBit
+//    - Добавлены методы установки и сброса бита
 //    - Новый метод IsProbablePrime() без параметра confident
 //
 // 2) 29 августа 2002 (версия 1.02)
 //    - Исправлена ошибка в возведении в степень для отрицательных чисел
 //    - Ускорено модульное возведение в степень с редукцией Барретта
-//    - Добавлен метод getBytes()
+//    - Добавлен метод GetBytes()
 //    - Исправлена ошибка в методе ToHexString
 //    - Добавлена перегрузка оператора ^
 //    - Ускорено вычисление символа Якоби
@@ -101,30 +100,25 @@
 //
 //
 // Ссылки
-// [1] D. E. Knuth, "Seminumerical Algorithms", The Art of Computer Programming Vol. 2,
-//     3rd Edition, Addison-Wesley, 1998
-// [2] K. H. Rosen, "Elementary Number Theory and Its Applications", 3rd Ed,
-//     Addison-Wesley, 1993
-// [3] B. Schneier, "Applied Cryptography", 2nd Ed, John Wiley & Sons, 1996
-// [4] A. Menezes, P. van Oorschot, and S. Vanstone, "Handbook of Applied Cryptography",
-//     CRC Press, 1996, www.cacr.math.uwaterloo.ca/hac
-// [5] A. Bosselaers, R. Govaerts, and J. Vandewalle, "Comparison of Three Modular
-//     Reduction Functions," Proc. CRYPTO'93, pp.175-186
-// [6] R. Baillie and S. S. Wagstaff Jr, "Lucas Pseudoprimes", Mathematics of Computation,
-//     Vol. 35, No. 152, Oct 1980, pp. 1391-1417
-// [7] H. C. Williams, "Édouard Lucas and Primality Testing", Canadian Mathematical
-//     Society Series of Monographs and Advance Texts, vol. 22, John Wiley & Sons, New York,
-//     NY, 1998
-// [8] P. Ribenboim, "The new book of prime number records", 3rd edition, Springer-Verlag,
-//     New York, NY, 1995
-// [9] M. Joye and J.-J. Quisquater, "Efficient computation of full Lucas sequences",
-//     Electronics Letters, 32(6), 1996, pp 537-538
+// [1] Д. Е. Кнут, «Полу численные алгоритмы», Искусство программирования, т. 2,
+//     3-е издание, Эддисон-Уэсли, 1998
+// [2] К. Х. Розен, «Элементарная теория чисел и её приложения», 3-е изд.,
+//     Эддисон-Уэсли, 1993
+// [3] Б. Шнайер, «Прикладная криптография», 2-е изд., Джон Уайли энд Санз, 1996
+// [4] А. Менезес, П. ван Ооршот и С. Ванстоун, «Справочник по прикладной криптографии»,
+//     СиАрСи Пресс, 1996, www.cacr.math.uwaterloo.ca/hac
+// [5] А. Босселаэрс, Р. Говаэртс и Дж. Вандевалле, «Сравнение трёх функций редукции»,
+//     труды Крипто'93, стр. 175-186
+// [6] Р. Бейли и С. С. Вагстафф мл., «Псевдопростые Лукаса», Математика вычислений,
+//     том 35, № 152, октябрь 1980, стр. 1391-1417
+// [7] Х. К. Уильямс, «Эдуар Лукас и тестирование простоты», Серия монографий
+//     Канадского математического общества и продвинутые тексты, т. 22,
+//     Джон Уайли энд Санз, Нью-Йорк, 1998
+// [8] П. Рибенбойм, «Новая книга рекордов простых чисел», 3-е изд., Шпрингер-Ферлаг,
+//     Нью-Йорк, 1995
+// [9] М. Жуа и Ж.-Ж. Кискатер, «Эффективное вычисление полных последовательностей Лукаса»,
+//     Электроникс Леттерс, 32(6), 1996, стр. 537-538
 //************************************************************************************
-// ReSharper restore CommentTypo
-
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable ConvertToAutoPropertyWithPrivateSetter
-// ReSharper disable UnusedMember.Global
 
 namespace MathCore;
 
@@ -145,7 +139,7 @@ public partial class BigInt
     /// <summary>Байты числа</summary>
     private readonly uint[] _Data;
 
-    /// <summary>Число символов числа</summary>
+    /// <summary>Число символов номера</summary>
     private int _DataLength;
 
     /// <summary>Число символов числа</summary>

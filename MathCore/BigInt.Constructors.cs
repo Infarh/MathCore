@@ -1,8 +1,4 @@
-﻿// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable ConvertToAutoPropertyWithPrivateSetter
-// ReSharper disable UnusedMember.Global
-
-namespace MathCore;
+﻿namespace MathCore;
 
 public partial class BigInt
 {
@@ -246,7 +242,7 @@ public partial class BigInt
         while (_DataLength > 1 && _Data[_DataLength - 1] == 0)
             _DataLength--;
 
-        //Console.WriteLine("Len = " + _DataLength);
+        //Console.WriteLine("Длина = " + _DataLength);
     }
 
 

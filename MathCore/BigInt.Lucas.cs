@@ -1,43 +1,44 @@
-﻿// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable ConvertToAutoPropertyWithPrivateSetter
-// ReSharper disable UnusedMember.Global
-
-namespace MathCore;
+﻿namespace MathCore;
 
 public partial class BigInt
 {
     //***********************************************************************
-    // Returns the k_th number in the Lucas Sequence reduced modulo n.
+    // Возвращает k-й элемент последовательности Лукаса по модулю n
     //
-    // Uses index doubling to speed up the process.  For example, to calculate V(k),
-    // we maintain two numbers in the sequence V(n) and V(n+1).
+    // Использует удвоение индекса для ускорения. Например, для вычисления V(k)
+    // поддерживаются два числа последовательности V(n) и V(n+1)
     //
-    // To obtain V(2n), we use the identity
+    // Для получения V(2n) используется тождество
     //      V(2n) = (V(n) * V(n)) - (2 * Q^n)
-    // To obtain V(2n+1), we first write it as
+    // Для получения V(2n+1) сначала записываем
     //      V(2n+1) = V((n+1) + n)
-    // and use the identity
+    // и используем тождество
     //      V(m+n) = V(m) * V(n) - Q * V(m-n)
-    // Hence,
+    // Следовательно,
     //      V((n+1) + n) = V(n+1) * V(n) - Q^n * V((n+1) - n)
     //                   = V(n+1) * V(n) - Q^n * V(1)
     //                   = V(n+1) * V(n) - Q^n * P
     //
-    // We use k in its binary expansion and perform index doubling for each
-    // bit position.  For each bit position that is set, we perform an
-    // index doubling followed by an index addition.  This means that for V(n),
-    // we need to update it to V(2n+1).  For V(n+1), we need to update it to
-    // V((2n+1)+1) = V(2*(n+1))
+    // Используется двоичное представление k и удвоение индекса для каждого бита
+    // Для каждого установленного бита выполняется удвоение индекса и добавление
+    // Это означает, что для V(n) нужно обновить значение до V(2n+1)
+    // Для V(n+1) нужно обновить значение до V((2n+1)+1) = V(2*(n+1))
     //
-    // This function returns
+    // Функция возвращает
     // [0] = U(k)
     // [1] = V(k)
     // [2] = Q^n
     //
-    // Where U(0) = 0 % n, U(1) = 1 % n
+    // Где U(0) = 0 % n, U(1) = 1 % n
     //       V(0) = 2 % n, V(1) = P % n
     //***********************************************************************
 
+    /// <summary>Вычисление элементов последовательности Лукаса по модулю</summary>
+    /// <param name="P">Параметр P</param>
+    /// <param name="Q">Параметр Q</param>
+    /// <param name="k">Номер элемента</param>
+    /// <param name="n">Модуль</param>
+    /// <returns>Массив значений U(k), V(k) и Q^n</returns>
     public static BigInt[] LucasSequence(
         BigInt P,
         BigInt Q,
@@ -52,8 +53,8 @@ public partial class BigInt
             return result;
         }
 
-        // calculate constant = b^(2k) / m
-        // for Barrett Reduction
+        // Вычисление constant = b^(2k) / m
+        // для редукции Барретта
         var constant = new BigInt();
 
         var n_len = n._DataLength << 1;
@@ -62,7 +63,7 @@ public partial class BigInt
 
         constant /= n;
 
-        // calculate values of s and t
+        // Вычисление значений s и t
         var s = 0;
 
         for (var index = 0; index < k._DataLength; index++)
@@ -72,7 +73,7 @@ public partial class BigInt
             for (var i = 0; i < 32; i++, mask <<= 1, s++)
                 if ((k._Data[index] & mask) != 0)
                 {
-                    index = k._DataLength; // to break the outer loop
+                    index = k._DataLength; // выход из внешнего цикла
                     break;
                 }
         }
@@ -82,10 +83,10 @@ public partial class BigInt
 
 
     //***********************************************************************
-    // Performs the calculation of the kth term in the Lucas Sequence.
-    // For details of the algorithm, see reference [9].
+    // Выполняет вычисление k-го элемента последовательности Лукаса
+    // Подробнее об алгоритме см. ссылку [9]
     //
-    // k must be odd.  i.e LSB == 1
+    // k должно быть нечётным, т.е. младший бит равен 1
     //***********************************************************************
 
     private static BigInt[] LucasSequenceHelper(
@@ -110,16 +111,16 @@ public partial class BigInt
         var u1 = q_k;
         var flag = true;
 
-        for (var i = k._DataLength - 1; i >= 0; i--) // iterate on the binary expansion of k
+        for (var i = k._DataLength - 1; i >= 0; i--) // итерация по двоичному представлению k
         {
             while (mask != 0)
             {
-                if (i == 0 && mask == 0x00000001) // last bit
+                if (i == 0 && mask == 0x00000001) // последний бит
                     break;
 
-                if ((k._Data[i] & mask) != 0) // bit is set
+                if ((k._Data[i] & mask) != 0) // бит установлен
                 {
-                    // index doubling with addition
+                    // удвоение индекса с добавлением
 
                     u1 = u1 * v1 % n;
 
@@ -136,7 +137,7 @@ public partial class BigInt
                 }
                 else
                 {
-                    // index doubling
+                    // удвоение индекса
                     u1 = (u1 * v - q_k) % n;
 
                     v1 = (v * v1 - P * q_k) % n;
@@ -157,8 +158,8 @@ public partial class BigInt
             mask = 0x80000000;
         }
 
-        // at this point u1 = u(n+1) and v = v(n)
-        // since the last bit always 1, we need to transform u1 to u(2n+1) and v to v(2n+1)
+        // на этом этапе u1 = u(n+1) и v = v(n)
+        // так как последний бит всегда равен 1, нужно преобразовать u1 в u(2n+1), а v в v(2n+1)
 
         u1 = (u1 * v - q_k) % n;
         v = (v * v1 - P * q_k) % n;
@@ -172,7 +173,7 @@ public partial class BigInt
 
         for (var i = 0; i < s; i++)
         {
-            // index doubling
+            // удвоение индекса
             u1 = u1 * v % n;
             v = (v * v - (q_k << 1)) % n;
 

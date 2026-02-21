@@ -1,8 +1,4 @@
-﻿// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable ConvertToAutoPropertyWithPrivateSetter
-// ReSharper disable UnusedMember.Global
-
-namespace MathCore;
+﻿namespace MathCore;
 
 public partial class BigInt
 {
@@ -116,3 +112,5 @@ public partial class BigInt
     // Генерирует случайное число заданной длины бит так,
     // что gcd(number, this) = 1
     //***********************************************************************
+
+}
