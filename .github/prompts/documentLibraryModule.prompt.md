@@ -3,6 +3,8 @@ name: documentLibraryModule
 ---
 # Document a Complete Library Module
 
+**Обязательное требование: Вся коммуникация ведётся на русском языке. Все комментарии в коде должны быть на русском языке. Все сообщения исключений (Exception messages) должны быть на русском языке.**
+
 Create comprehensive documentation for a collection of related classes in a folder/module. This includes:
 
 1. **Identify the module structure**

@@ -3,6 +3,8 @@ name: auditAlgorithmImplementation
 ---
 # Audit Algorithm Implementation Across Multiple Files
 
+**Обязательное требование: Вся коммуникация ведётся на русском языке. Все комментарии в коде должны быть на русском языке. Все сообщения исключений (Exception messages) должны быть на русском языке.**
+
 Review the implementation of ${ALGORITHM_NAME} across all related files in the `${DIRECTORY_PATH}` directory for correctness and consistency.
 
 ## Your Task
