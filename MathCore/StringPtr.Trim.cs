@@ -8,39 +8,79 @@ public readonly ref partial struct StringPtr
     /// <summary>Удаление технических символов в начале строки</summary>
     /// <param name="Trimmed">Обрезание строки было выполнено</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("  text").TrimStart(out var trimmed);
+    /// ]]>
+    /// </example>
     public StringPtr TrimStart(out bool Trimmed) => TrimStart(out Trimmed, __DefaultTrimChars);
 
     /// <summary>Удаление технических символов в начале строки</summary>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("  text").TrimStart();
+    /// ]]>
+    /// </example>
     public StringPtr TrimStart() => TrimStart(__DefaultTrimChars);
 
     /// <summary>Удаление технических символов в конце строки</summary>
     /// <param name="Trimmed">Обрезание строки было выполнено</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("text  ").TrimEnd(out var trimmed);
+    /// ]]>
+    /// </example>
     public StringPtr TrimEnd(out bool Trimmed) => TrimEnd(out Trimmed, __DefaultTrimChars);
 
     /// <summary>Удаление технических символов в конце строки</summary>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("text  ").TrimEnd();
+    /// ]]>
+    /// </example>
     public StringPtr TrimEnd() => TrimEnd(__DefaultTrimChars);
 
     /// <summary>Удаление технических символов в начале и конце строки</summary>
     /// <param name="Trimmed">Обрезание строки было выполнено</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("  text  ").Trim(out var trimmed);
+    /// ]]>
+    /// </example>
     public StringPtr Trim(out bool Trimmed) => Trim(out Trimmed, __DefaultTrimChars);
 
     /// <summary>Удаление технических символов в начале и конце строки</summary>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("  text  ").Trim();
+    /// ]]>
+    /// </example>
     public StringPtr Trim() => Trim(__DefaultTrimChars);
 
     /// <summary>Удаление символа в начале строки</summary>
     /// <param name="c">Удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("--text").TrimStart('-');
+    /// ]]>
+    /// </example>
     public StringPtr TrimStart(char c) => TrimStart(out _, c);
 
     /// <summary>Удаление символа в начале строки</summary>
     /// <param name="Trimmed">Обрезание строки было выполнено</param>
     /// <param name="c">Удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("--text").TrimStart(out var trimmed, '-');
+    /// ]]>
+    /// </example>
     public StringPtr TrimStart(out bool Trimmed, char c)
     {
         var pos = Pos;
@@ -56,6 +96,11 @@ public readonly ref partial struct StringPtr
     /// <param name="c1">Первый удаляемый символ</param>
     /// <param name="c2">Второй удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("--text").TrimStart('-', '+');
+    /// ]]>
+    /// </example>
     public StringPtr TrimStart(char c1, char c2) => TrimStart(out _, c1, c2);
 
     /// <summary>Удаление символа в начале строки</summary>
@@ -63,6 +108,11 @@ public readonly ref partial struct StringPtr
     /// <param name="c1">Первый удаляемый символ</param>
     /// <param name="c2">Второй удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("--text").TrimStart(out var trimmed, '-', '+');
+    /// ]]>
+    /// </example>
     public StringPtr TrimStart(out bool Trimmed, char c1, char c2)
     {
         var pos = Pos;
@@ -79,6 +129,11 @@ public readonly ref partial struct StringPtr
     /// <param name="c2">Второй удаляемый символ</param>
     /// <param name="c3">Третий удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("--text").TrimStart('-', '+', '*');
+    /// ]]>
+    /// </example>
     public StringPtr TrimStart(char c1, char c2, char c3) => TrimStart(out _, c1, c2, c3);
 
     /// <summary>Удаление символа в начале строки</summary>
@@ -87,6 +142,11 @@ public readonly ref partial struct StringPtr
     /// <param name="c2">Второй удаляемый символ</param>
     /// <param name="c3">Третий удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("--text").TrimStart(out var trimmed, '-', '+', '*');
+    /// ]]>
+    /// </example>
     public StringPtr TrimStart(out bool Trimmed, char c1, char c2, char c3)
     {
         var pos = Pos;
@@ -101,12 +161,22 @@ public readonly ref partial struct StringPtr
     /// <summary>Удаление символов в начале строки</summary>
     /// <param name="c">Удаляемые символы</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("--text").TrimStart('-', '+');
+    /// ]]>
+    /// </example>
     public StringPtr TrimStart(params char[] c) => TrimStart(out _, c);
 
     /// <summary>Удаление символов в начале строки</summary>
     /// <param name="Trimmed">Обрезание строки было выполнено</param>
     /// <param name="c">Удаляемые символы</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("--text").TrimStart(out var trimmed, '-', '+');
+    /// ]]>
+    /// </example>
     public StringPtr TrimStart(out bool Trimmed, params char[] c)
     {
         var pos = Pos;
@@ -114,7 +184,7 @@ public readonly ref partial struct StringPtr
         var end_pos = pos + len - 1;
         var str = Source;
         var can_move = true;
-        while (pos < end_pos && can_move)
+        while (pos < end_pos && can_move) // пропускаем начальные символы
         {
             var s = str[pos];
             can_move = false;
@@ -134,12 +204,22 @@ public readonly ref partial struct StringPtr
     /// <summary>Удаление символа в конце строки</summary>
     /// <param name="c">Удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("text--").TrimEnd('-');
+    /// ]]>
+    /// </example>
     public StringPtr TrimEnd(char c) => TrimEnd(out _, c);
 
     /// <summary>Удаление символа в конце строки</summary>
     /// <param name="Trimmed">Обрезание строки было выполнено</param>
     /// <param name="c">Удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("text--").TrimEnd(out var trimmed, '-');
+    /// ]]>
+    /// </example>
     public StringPtr TrimEnd(out bool Trimmed, char c)
     {
         var pos = Pos;
@@ -156,6 +236,11 @@ public readonly ref partial struct StringPtr
     /// <param name="c1">Первый удаляемый символ</param>
     /// <param name="c2">Второй удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("text--").TrimEnd('-', '+');
+    /// ]]>
+    /// </example>
     public StringPtr TrimEnd(char c1, char c2) => TrimEnd(out _, c1, c2);
 
     /// <summary>Удаление символа в конце строки</summary>
@@ -163,6 +248,11 @@ public readonly ref partial struct StringPtr
     /// <param name="c1">Первый удаляемый символ</param>
     /// <param name="c2">Второй удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("text--").TrimEnd(out var trimmed, '-', '+');
+    /// ]]>
+    /// </example>
     public StringPtr TrimEnd(out bool Trimmed, char c1, char c2)
     {
         var pos = Pos;
@@ -180,6 +270,11 @@ public readonly ref partial struct StringPtr
     /// <param name="c2">Второй удаляемый символ</param>
     /// <param name="c3">Третий удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("text--").TrimEnd('-', '+', '*');
+    /// ]]>
+    /// </example>
     public StringPtr TrimEnd(char c1, char c2, char c3) => TrimEnd(out _, c1, c2, c3);
 
     /// <summary>Удаление символа в конце строки</summary>
@@ -188,6 +283,11 @@ public readonly ref partial struct StringPtr
     /// <param name="c2">Второй удаляемый символ</param>
     /// <param name="c3">Третий удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("text--").TrimEnd(out var trimmed, '-', '+', '*');
+    /// ]]>
+    /// </example>
     public StringPtr TrimEnd(out bool Trimmed, char c1, char c2, char c3)
     {
         var pos = Pos;
@@ -203,12 +303,22 @@ public readonly ref partial struct StringPtr
     /// <summary>Удаление символов в конце строки</summary>
     /// <param name="c">Удаляемые символы</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("text--").TrimEnd('-', '+');
+    /// ]]>
+    /// </example>
     public StringPtr TrimEnd(params char[] c) => TrimEnd(out _, c);
 
     /// <summary>Удаление символов в конце строки</summary>
     /// <param name="Trimmed">Обрезание строки было выполнено</param>
     /// <param name="c">Удаляемые символы</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("text--").TrimEnd(out var trimmed, '-', '+');
+    /// ]]>
+    /// </example>
     public StringPtr TrimEnd(out bool Trimmed, params char[] c)
     {
         var pos = Pos;
@@ -216,7 +326,7 @@ public readonly ref partial struct StringPtr
         var end_pos = pos + len - 1;
         var str = Source;
         var can_move = true;
-        while (end_pos > pos && can_move)
+        while (end_pos > pos && can_move) // пропускаем конечные символы
         {
             var s = str[end_pos];
             can_move = false;
@@ -236,12 +346,22 @@ public readonly ref partial struct StringPtr
     /// <summary>Удаление технических символов в начале и конце строки</summary>
     /// <param name="c">Удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("--text--").Trim('-');
+    /// ]]>
+    /// </example>
     public StringPtr Trim(char c) => Trim(out _, out _, c);
 
     /// <summary>Удаление технических символов в начале и конце строки</summary>
     /// <param name="Trimmed">Обрезание строки было выполнено</param>
     /// <param name="c">Удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("--text--").Trim(out var trimmed, '-');
+    /// ]]>
+    /// </example>
     public StringPtr Trim(out bool Trimmed, char c)
     {
         var result = Trim(out var trimmed_start, out var trimmed_end, c);
@@ -254,6 +374,11 @@ public readonly ref partial struct StringPtr
     /// <param name="TrimmedEnd">Обрезание строки в конце было выполнено</param>
     /// <param name="c">Удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("--text--").Trim(out var trimmed_start, out var trimmed_end, '-');
+    /// ]]>
+    /// </example>
     public StringPtr Trim(out bool TrimmedStart, out bool TrimmedEnd, char c)
     {
         var pos = Pos;
@@ -274,6 +399,11 @@ public readonly ref partial struct StringPtr
     /// <param name="c1">Первый удаляемый символ</param>
     /// <param name="c2">Второй удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("--text--").Trim('-', '+');
+    /// ]]>
+    /// </example>
     public StringPtr Trim(char c1, char c2) => Trim(out _, out _, c1, c2);
 
     /// <summary>Удаление технических символов в начале и конце строки</summary>
@@ -281,6 +411,11 @@ public readonly ref partial struct StringPtr
     /// <param name="c1">Первый удаляемый символ</param>
     /// <param name="c2">Второй удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("--text--").Trim(out var trimmed, '-', '+');
+    /// ]]>
+    /// </example>
     public StringPtr Trim(out bool Trimmed, char c1, char c2)
     {
         var result = Trim(out var trimmed_start, out var trimmed_end, c1, c2);
@@ -294,6 +429,11 @@ public readonly ref partial struct StringPtr
     /// <param name="c1">Первый удаляемый символ</param>
     /// <param name="c2">Второй удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("--text--").Trim(out var trimmed_start, out var trimmed_end, '-', '+');
+    /// ]]>
+    /// </example>
     public StringPtr Trim(out bool TrimmedStart, out bool TrimmedEnd, char c1, char c2)
     {
         var pos = Pos;
@@ -312,6 +452,11 @@ public readonly ref partial struct StringPtr
     /// <param name="c2">Второй удаляемый символ</param>
     /// <param name="c3">Третий удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("--text--").Trim('-', '+', '*');
+    /// ]]>
+    /// </example>
     public StringPtr Trim(char c1, char c2, char c3) => Trim(out _, out _, c1, c2, c3);
 
     /// <summary>Удаление технических символов в начале и конце строки</summary>
@@ -320,6 +465,11 @@ public readonly ref partial struct StringPtr
     /// <param name="c2">Второй удаляемый символ</param>
     /// <param name="c3">Третий удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("--text--").Trim(out var trimmed, '-', '+', '*');
+    /// ]]>
+    /// </example>
     public StringPtr Trim(out bool Trimmed, char c1, char c2, char c3)
     {
         var result = Trim(out var trimmed_start, out var trimmed_end, c1, c2, c3);
@@ -334,6 +484,11 @@ public readonly ref partial struct StringPtr
     /// <param name="c2">Второй удаляемый символ</param>
     /// <param name="c3">Третий удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("--text--").Trim(out var trimmed_start, out var trimmed_end, '-', '+', '*');
+    /// ]]>
+    /// </example>
     public StringPtr Trim(out bool TrimmedStart, out bool TrimmedEnd, char c1, char c2, char c3)
     {
         var pos = Pos;
@@ -353,12 +508,22 @@ public readonly ref partial struct StringPtr
     /// <summary>Удаление технических символов в начале и конце строки</summary>
     /// <param name="c">Удаляемые символы</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("--text--").Trim('-', '+');
+    /// ]]>
+    /// </example>
     public StringPtr Trim(params char[] c) => Trim(out _, out _, c);
 
     /// <summary>Удаление технических символов в начале и конце строки</summary>
     /// <param name="Trimmed">Обрезание строки было выполнено</param>
     /// <param name="c">Удаляемые символы</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("--text--").Trim(out var trimmed, '-', '+');
+    /// ]]>
+    /// </example>
     public StringPtr Trim(out bool Trimmed, params char[] c)
     {
         var result = Trim(out var trimmed_start, out var trimmed_end, c);
@@ -371,6 +536,11 @@ public readonly ref partial struct StringPtr
     /// <param name="TrimmedEnd">Обрезание строки в конце было выполнено</param>
     /// <param name="c">Удаляемые символы</param>
     /// <returns>Обрезанная строка</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = new StringPtr("--text--").Trim(out var trimmed_start, out var trimmed_end, '-', '+');
+    /// ]]>
+    /// </example>
     public StringPtr Trim(out bool TrimmedStart, out bool TrimmedEnd, params char[] c)
     {
         var pos = Pos;
@@ -378,7 +548,7 @@ public readonly ref partial struct StringPtr
         var end_pos = pos + len - 1;
         var str = Source;
         var can_move = true;
-        while (pos < end_pos && can_move)
+        while (pos < end_pos && can_move) // пропускаем начальные символы
         {
             var s = str[pos];
             can_move = false;
@@ -393,7 +563,7 @@ public readonly ref partial struct StringPtr
         TrimmedStart = pos != Pos;
 
         can_move = true;
-        while (pos < end_pos && can_move)
+        while (pos < end_pos && can_move) // пропускаем конечные символы
         {
             var s = str[end_pos];
             can_move = false;

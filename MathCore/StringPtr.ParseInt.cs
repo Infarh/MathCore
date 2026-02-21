@@ -2,11 +2,24 @@
 
 public readonly ref partial struct StringPtr
 {
+    /// <summary>Попытка преобразования подстроки в <see cref="int"/></summary>
+    /// <returns>Преобразованное значение или <c>null</c></returns>
+    /// <example>
+    /// <![CDATA[
+    /// var value = new StringPtr("42").TryParseInt32();
+    /// ]]>
+    /// </example>
     public int? TryParseInt32() => TryParseInt32(out var x) ? x : null;
 
     /// <summary>Попытка преобразования подстроки в <see cref="int"/></summary>
     /// <param name="value">Преобразованное значение</param>
     /// <returns>Истина, если преобразование выполнено успешно</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var ptr = new StringPtr("42");
+    /// var ok = ptr.TryParseInt32(out var value);
+    /// ]]>
+    /// </example>
     public bool TryParseInt32(out int value)
     {
 #if NET8_0_OR_GREATER
@@ -72,7 +85,7 @@ public readonly ref partial struct StringPtr
                 return false;
             }
 
-            if (digits >= 8 || digit > int.MaxValue - result)
+            if (digits >= 8 || digit > int.MaxValue - result) // Контроль переполнения при накоплении
             {
                 value = default;
                 return false;
@@ -93,6 +106,11 @@ public readonly ref partial struct StringPtr
     /// <returns>Преобразованное значение</returns>
     /// <exception cref="FormatException">В случае если строка не является представлением <see cref="int"/></exception>
     /// <exception cref="OverflowException">Если длина строковой записи числа превышает <see cref="int"/>.<see cref="int.MaxValue"/></exception>
+    /// <example>
+    /// <![CDATA[
+    /// var value = new StringPtr("42").ParseInt32();
+    /// ]]>
+    /// </example>
     public int ParseInt32()
     {
 #if NET8_0_OR_GREATER

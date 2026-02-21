@@ -6,15 +6,24 @@ public readonly ref partial struct StringPtr
     {
         /// <summary>Сформировать перечислитель строковых фрагментов</summary>
         /// <returns>Перечислитель строковых фрагментов</returns>
+        /// <example>
+        /// <![CDATA[
+        /// var enumerator = new StringPtr("a,b").Split(',').GetEnumerator();
+        /// ]]>
+        /// </example>
         public TokenEnumerator GetEnumerator() => new(_Buffer, Separators, StartIndex, _Length, _SkipEmpty);
 
         /// <summary>Перечислитель строковых фрагментов</summary>
-        /// <remarks>Инициализация нового перечислителя строковых фрагментов</remarks>
         /// <param name="Buffer">Исходный строковый буфер</param>
         /// <param name="Separators">Символы-разделители</param>
         /// <param name="StartIndex">Начальное положение в строковом буфере</param>
         /// <param name="Length">Длина подстроки для анализа</param>
         /// <param name="SkipEmpty">Пропускать пустые фрагменты</param>
+        /// <example>
+        /// <![CDATA[
+        /// var enumerator = new StringPtr("a,b").Split(',').GetEnumerator();
+        /// ]]>
+        /// </example>
         public ref struct TokenEnumerator(string Buffer, char[] Separators, int StartIndex, int Length, bool SkipEmpty)
         {
             private readonly int _StartIndex = StartIndex;
@@ -27,6 +36,15 @@ public readonly ref partial struct StringPtr
 
             /// <summary>Перемещение к следующему фрагменту</summary>
             /// <returns>Истина, если перемещение выполнено успешно</returns>
+            /// <example>
+            /// <![CDATA[
+            /// var enumerator = new StringPtr("a,b").Split(',').GetEnumerator();
+            /// while (enumerator.MoveNext())
+            /// {
+            ///     Console.WriteLine(enumerator.Current);
+            /// }
+            /// ]]>
+            /// </example>
             public bool MoveNext()
             {
                 switch (Length - (_CurrentPos - _StartIndex))
@@ -46,7 +64,7 @@ public readonly ref partial struct StringPtr
                 StringPtr ptr;
                 do
                 {
-                    ptr = GetNext(str, Separators, pos, end_pos);
+                    ptr = GetNext(str, Separators, pos, end_pos); // Находим следующий фрагмент
                     if (ptr.Pos == end_pos)
                     {
                         Current     = ptr;
@@ -63,17 +81,27 @@ public readonly ref partial struct StringPtr
                 return true;
             }
 
-            /// <summary>Переместиться к следующему фрагменту, либо сгенерировать исключение в случае отсутствия такой возможности</summary>
+            /// <summary>Переместиться к следующему фрагменту, либо сгенерировать исключение</summary>
             /// <returns>Следующий фрагмент строки</returns>
-            /// <exception cref="InvalidOperationException">Возникает в случае отсутствия возможности выделить следующий фрагмент строки</exception>
+            /// <exception cref="InvalidOperationException">Возникает при отсутствии следующего фрагмента</exception>
+            /// <example>
+            /// <![CDATA[
+            /// var part = new StringPtr("a,b").Split(',').GetEnumerator().MoveNextOrThrow();
+            /// ]]>
+            /// </example>
             public StringPtr MoveNextOrThrow() => MoveNext()
                 ? Current
                 : throw new InvalidOperationException(
                     $"Невозможно получить следующий фрагмент строки после разделителя {string.Join(",", Separators.Select(c => $"'{c}'"))}");
 
-            /// <summary>Переместиться к следующему фрагменту, либо сгенерировать исключение в случае отсутствия такой возможности</summary>
-            /// <typeparam name="TException">Генерируемое исключение в случае отсутствия возможности перемещения к следующей подстроке</typeparam>
+            /// <summary>Переместиться к следующему фрагменту, либо сгенерировать исключение</summary>
+            /// <typeparam name="TException">Генерируемое исключение</typeparam>
             /// <returns>Следующий фрагмент строки</returns>
+            /// <example>
+            /// <![CDATA[
+            /// var part = new StringPtr("a,b").Split(',').GetEnumerator().MoveNextOrThrow<InvalidOperationException>();
+            /// ]]>
+            /// </example>
             public StringPtr MoveNextOrThrow<TException>() where TException : Exception, new() => MoveNext()
                 ? Current
                 : throw new TException();
@@ -116,8 +144,14 @@ public readonly ref partial struct StringPtr
             }
 
             /// <summary>Попытаться преобразовать следующую подстроку в вещественное число</summary>
-            /// <param name="value">Результат преобразования, либо <see cref="double.NaN"/>, если подстрока имеет неверный формат, лио отсутствует</param>
-            /// <returns>Истина, если преобразование подстроки в вещественное число выполнено успешно</returns>
+            /// <param name="value">Результат преобразования, либо <see cref="double.NaN"/></param>
+            /// <returns>Истина, если преобразование выполнено успешно</returns>
+            /// <example>
+            /// <![CDATA[
+            /// var enumerator = new StringPtr("1.1,2.2").Split(',').GetEnumerator();
+            /// var ok = enumerator.TryParseNextDouble(out var value);
+            /// ]]>
+            /// </example>
             public bool TryParseNextDouble(out double value)
             {
                 value = double.NaN;
@@ -157,8 +191,14 @@ public readonly ref partial struct StringPtr
 
             /// <summary>Попытаться преобразовать следующую подстроку в вещественное число</summary>
             /// <param name="provider">Формат представления вещественного числа</param>
-            /// <param name="value">Результат преобразования, либо <see cref="double.NaN"/>, если подстрока имеет неверный формат, лио отсутствует</param>
-            /// <returns>Истина, если преобразование подстроки в вещественное число выполнено успешно</returns>
+            /// <param name="value">Результат преобразования, либо <see cref="double.NaN"/></param>
+            /// <returns>Истина, если преобразование выполнено успешно</returns>
+            /// <example>
+            /// <![CDATA[
+            /// var enumerator = new StringPtr("1,1;2,2").Split(';').GetEnumerator();
+            /// var ok = enumerator.TryParseNextDouble(CultureInfo.GetCultureInfo("ru-RU"), out var value);
+            /// ]]>
+            /// </example>
             public bool TryParseNextDouble(IFormatProvider provider, out double value)
             {
                 value = double.NaN;
@@ -197,8 +237,14 @@ public readonly ref partial struct StringPtr
             }
 
             /// <summary>Попытаться преобразовать следующую подстроку в целое число</summary>
-            /// <param name="value">Результат преобразования, либо 0, если подстрока имеет неверный формат, лио отсутствует</param>
-            /// <returns>Истина, если преобразование подстроки в целое число выполнено успешно</returns>
+            /// <param name="value">Результат преобразования, либо 0</param>
+            /// <returns>Истина, если преобразование выполнено успешно</returns>
+            /// <example>
+            /// <![CDATA[
+            /// var enumerator = new StringPtr("1,2").Split(',').GetEnumerator();
+            /// var ok = enumerator.TryParseNextAsInt32(out var value);
+            /// ]]>
+            /// </example>
             public bool TryParseNextAsInt32(out int value)
             {
                 value = 0;
@@ -237,8 +283,14 @@ public readonly ref partial struct StringPtr
             }
 
             /// <summary>Попытаться преобразовать следующую подстроку в <see cref="bool"/> значение</summary>
-            /// <param name="value">Результат преобразования, либо <c>false</c>, если подстрока имеет неверный формат, лио отсутствует</param>
-            /// <returns>Истина, если преобразование подстроки в <see cref="bool"/> значение выполнено успешно</returns>
+            /// <param name="value">Результат преобразования, либо <c>false</c></param>
+            /// <returns>Истина, если преобразование выполнено успешно</returns>
+            /// <example>
+            /// <![CDATA[
+            /// var enumerator = new StringPtr("true,false").Split(',').GetEnumerator();
+            /// var ok = enumerator.TryParseNextAsBool(out var value);
+            /// ]]>
+            /// </example>
             public bool TryParseNextAsBool(out bool value)
             {
                 value = default;
@@ -259,12 +311,28 @@ public readonly ref partial struct StringPtr
                 return false;
             }
 
-            /// <summary>Оператор неявного преобразования перечислителя фрагментов строки в целое число</summary>
+            /// <summary>Оператор неявного преобразования перечислителя в целое число</summary>
             /// <param name="Enumerator">Перечислитель фрагментов строки</param>
+            /// <returns>Преобразованное значение</returns>
+            /// <example>
+            /// <![CDATA[
+            /// var enumerator = new StringPtr("10").Split(',').GetEnumerator();
+            /// enumerator.MoveNext();
+            /// var value = (int)enumerator;
+            /// ]]>
+            /// </example>
             public static implicit operator int(TokenEnumerator Enumerator) => Enumerator.Current.ParseInt32();
 
-            /// <summary>Оператор неявного преобразования перечислителя фрагментов строки в вещественное число</summary>
+            /// <summary>Оператор неявного преобразования перечислителя в вещественное число</summary>
             /// <param name="Enumerator">Перечислитель фрагментов строки</param>
+            /// <returns>Преобразованное значение</returns>
+            /// <example>
+            /// <![CDATA[
+            /// var enumerator = new StringPtr("1.5").Split(',').GetEnumerator();
+            /// enumerator.MoveNext();
+            /// var value = (double)enumerator;
+            /// ]]>
+            /// </example>
             public static implicit operator double(TokenEnumerator Enumerator) => Enumerator.Current.ParseDouble();
         }
     }

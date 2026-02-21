@@ -4,11 +4,25 @@ namespace MathCore;
 
 public readonly ref partial struct StringPtr
 {
+    /// <summary>Попытка преобразования подстроки в <see cref="double"/></summary>
+    /// <returns>Преобразованное значение или <c>null</c></returns>
+    /// <example>
+    /// <![CDATA[
+    /// var ptr = new StringPtr("3.14");
+    /// var value = ptr.TryParseDouble();
+    /// ]]>
+    /// </example>
     public double? TryParseDouble() => TryParseDouble(out var d) ? d : null;
 
     /// <summary>Попытка преобразования подстроки в <see cref="double"/></summary>
     /// <param name="value">Преобразованное значение</param>
     /// <returns>Истина, если преобразование выполнено успешно</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var ptr = new StringPtr("3.14");
+    /// var ok = ptr.TryParseDouble(out var value);
+    /// ]]>
+    /// </example>
     public bool TryParseDouble(out double value)
     {
 #if NET8_0_OR_GREATER
@@ -55,13 +69,13 @@ public readonly ref partial struct StringPtr
             {
                 if (char.IsDigit(str, start + index))
                 {
-                    result = result * 10 + (str[start + index] - '0');
+                    result = result * 10 + (str[start + index] - '0'); // Накапливаем целую часть
                     index++;
                     continue;
                 }
 
                 if (str[start + index] is '.' or ',')
-                    fraction_index = 0.1;
+                    fraction_index = 0.1; // Переходим к дробной части
                 else
                 {
                     while (char.IsWhiteSpace(str, start + index) && index < length)
@@ -110,6 +124,12 @@ public readonly ref partial struct StringPtr
     /// <param name="Provider">Информация о формате</param>
     /// <param name="value">Преобразованное значение</param>
     /// <returns>Истина, если преобразование выполнено успешно</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var ptr = new StringPtr("3,5");
+    /// var ok = ptr.TryParseDouble(CultureInfo.GetCultureInfo("ru-RU"), out var value);
+    /// ]]>
+    /// </example>
     public bool TryParseDouble(IFormatProvider Provider, out double value)
     {
 #if NET8_0_OR_GREATER
@@ -312,11 +332,22 @@ public readonly ref partial struct StringPtr
 
     /// <summary>Попытка преобразования подстроки в <see cref="double"/></summary>
     /// <returns>Преобразованное вещественное число</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var value = new StringPtr("3.14").ParseDouble();
+    /// ]]>
+    /// </example>
     public double ParseDouble() => ParseDouble(CultureInfo.InvariantCulture);
 
-    /// <summary>Попытка преобразования подстроки в <see cref="double"/></summary>
+    /// <summary>Преобразование подстроки в <see cref="double"/></summary>
     /// <param name="Provider">Информация о формате</param>
     /// <returns>Преобразованное вещественное число</returns>
+    /// <exception cref="FormatException">Возникает при неверном формате строки</exception>
+    /// <example>
+    /// <![CDATA[
+    /// var value = new StringPtr("3,14").ParseDouble(CultureInfo.GetCultureInfo("ru-RU"));
+    /// ]]>
+    /// </example>
     public double ParseDouble(IFormatProvider Provider)
     {
 #if NET8_0_OR_GREATER

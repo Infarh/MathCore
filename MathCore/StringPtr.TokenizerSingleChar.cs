@@ -4,30 +4,61 @@ namespace MathCore;
 
 public readonly ref partial struct StringPtr
 {
-    /// <summary>Разделитель строки на фрагменты по указанному символу-разделителю</summary>
-    /// <remarks>Инициализация нового разделителя строки</remarks>
-    /// <param head="Buffer">Исходный строковый буфер</param>
-    /// <param head="Separator">Символ-разделитель фрагментов строки</param>
-    /// <param head="StartIndex">Индекс начала анализируемой подстроки</param>
-    /// <param head="Length">Длина анализируемой подстроки</param>
-    /// <param head="SkipEmptyElements">Пропускать пустые строковые фрагменты</param>
+    /// <summary>Разделитель строки на фрагменты по одному символу-разделителю</summary>
+    /// <param name="Buffer">Исходный строковый буфер</param>
+    /// <param name="Separator">Символ-разделитель фрагментов строки</param>
+    /// <param name="StartIndex">Индекс начала анализируемой подстроки</param>
+    /// <param name="Length">Длина анализируемой подстроки</param>
+    /// <param name="SkipEmptyElements">Пропускать пустые строковые фрагменты</param>
+    /// <remarks>Создаёт разделитель без выделения новых строк</remarks>
+    /// <example>
+    /// <![CDATA[
+    /// var tokenizer = new StringPtr("a,b").Split(',');
+    /// foreach (var part in tokenizer)
+    /// {
+    ///     Console.WriteLine(part);
+    /// }
+    /// ]]>
+    /// </example>
     [DebuggerDisplay("Tokenizer:{ToString()}")]
     public readonly ref partial struct TokenizerSingleChar(string Buffer, char Separator, int StartIndex, int Length, bool SkipEmptyElements = false)
     {
         /// <summary>Инициализация нового разделителя строки</summary>
-        /// <param head="Str">Исходный фрагмент строки</param>
-        /// <param head="Separator">Символ-разделитель фрагментов строки</param>
+        /// <param name="Str">Исходный фрагмент строки</param>
+        /// <param name="Separator">Символ-разделитель фрагментов строки</param>
+        /// <example>
+        /// <![CDATA[
+        /// var tokenizer = new StringPtr("a,b").Split(',');
+        /// ]]>
+        /// </example>
         public TokenizerSingleChar(StringPtr Str, char Separator) : this(Str.Source, Separator, Str.Pos, Str.Length) { }
 
         /// <summary>Инициализация нового разделителя строки</summary>
-        /// <param head="Buffer">Исходный строковый буфер</param>
-        /// <param head="Separator">Символ-разделитель фрагментов строки</param>
+        /// <param name="Buffer">Исходный строковый буфер</param>
+        /// <param name="Separator">Символ-разделитель фрагментов строки</param>
+        /// <example>
+        /// <![CDATA[
+        /// var tokenizer = new StringPtr.TokenizerSingleChar("a,b", ',')
+        /// ]]>
+        /// </example>
         public TokenizerSingleChar(string Buffer, char Separator) : this(Buffer, Separator, 0, Buffer.Length) { }
 
         private readonly bool _SkipEmptyElements = SkipEmptyElements;
 
+        /// <summary>Признак отсутствия фрагментов</summary>
+        /// <example>
+        /// <![CDATA[
+        /// var is_empty = new StringPtr.TokenizerSingleChar("", ',').IsEmpty;
+        /// ]]>
+        /// </example>
         public bool IsEmpty => Length == 0;
 
+        /// <summary>Количество фрагментов</summary>
+        /// <example>
+        /// <![CDATA[
+        /// var count = new StringPtr("a,b").Split(',').Count;
+        /// ]]>
+        /// </example>
         public int Count
         {
             get
@@ -37,7 +68,7 @@ public readonly ref partial struct StringPtr
                 var separator = Separator;
                 var buffer = Buffer;
                 var start_index = StartIndex;
-                var count = buffer[0] == separator ? 0 : 1;
+                var count = buffer[0] == separator ? 0 : 1; // учитываем первый фрагмент без разделителя
 
                 if (_SkipEmptyElements)
                 {
@@ -57,6 +88,14 @@ public readonly ref partial struct StringPtr
             }
         }
 
+        /// <summary>Получить фрагмент по индексу</summary>
+        /// <param name="Index">Индекс фрагмента</param>
+        /// <returns>Фрагмент строки</returns>
+        /// <example>
+        /// <![CDATA[
+        /// var part = new StringPtr("a,b").Split(',')[1];
+        /// ]]>
+        /// </example>
         public StringPtr this[int Index]
         {
             get
@@ -81,7 +120,7 @@ public readonly ref partial struct StringPtr
                     if (index >= 0) continue;
 
                     if (i == 1)
-                        index = start_index + length;
+                        index = start_index + length; // возвращаем последний фрагмент
                     else
                         return new(buffer, start_index, 0);
                 }
@@ -91,10 +130,24 @@ public readonly ref partial struct StringPtr
         }
 
         /// <summary>Пропускать пустые строковые фрагменты</summary>
-        /// <param head="Skip">Пропускать, или нет</param>
-        /// <returns>Перечислитель строковых фрагментов с изменённым режимом пропуска строковых фрагментов</returns>
+        /// <param name="Skip">Пропускать или нет</param>
+        /// <returns>Разделитель строк с режимом пропуска</returns>
+        /// <example>
+        /// <![CDATA[
+        /// var tokenizer = new StringPtr("a,,b").Split(',').SkipEmpty();
+        /// ]]>
+        /// </example>
         public TokenizerSingleChar SkipEmpty(bool Skip = true) => new(Buffer, Separator, StartIndex, Length, Skip);
 
+        /// <summary>Получить срез фрагментов</summary>
+        /// <param name="Index">Начальный индекс фрагмента</param>
+        /// <param name="Length">Количество фрагментов</param>
+        /// <returns>Новый разделитель для указанного диапазона</returns>
+        /// <example>
+        /// <![CDATA[
+        /// var slice = new StringPtr("a,b,c").Split(',').Slice(1, 1);
+        /// ]]>
+        /// </example>
         public TokenizerSingleChar Slice(int Index, int Length)
         {
             var buffer = Buffer;
@@ -115,7 +168,7 @@ public readonly ref partial struct StringPtr
                 if (index < 0)
                     return new(buffer, separator, str_index, length, _SkipEmptyElements);
 
-                length = len0 - (index - start_index) - 1;
+                length = len0 - (index - start_index) - 1; // смещаемся к следующему фрагменту
                 str_index = index + 1;
                 part_index--;
             }
@@ -129,7 +182,7 @@ public readonly ref partial struct StringPtr
                 if (index < 0)
                     return new(buffer, separator, str_index0, length, _SkipEmptyElements);
 
-                length = len0 - (index - start_index) - 1;
+                length = len0 - (index - start_index) - 1; // уменьшаем диапазон среза
                 str_index = index + 1;
                 parts_count--;
             }
@@ -137,10 +190,33 @@ public readonly ref partial struct StringPtr
             return new(buffer, separator, str_index0, length, _SkipEmptyElements);
         }
 
+        /// <summary>Преобразовать диапазон в строку</summary>
+        /// <returns>Строковое представление диапазона</returns>
+        /// <example>
+        /// <![CDATA[
+        /// var text = new StringPtr("a,b").Split(',').ToString();
+        /// ]]>
+        /// </example>
         public override string ToString() => Buffer.Substring(StartIndex, Length);
 
+        /// <summary>Оператор неявного преобразования разделителя в строку</summary>
+        /// <param name="tokenizer">Разделитель строк</param>
+        /// <returns>Строковое представление диапазона</returns>
+        /// <example>
+        /// <![CDATA[
+        /// string text = new StringPtr("a,b").Split(',');
+        /// ]]>
+        /// </example>
         public static implicit operator string(TokenizerSingleChar tokenizer) => tokenizer.ToString();
 
+        /// <summary>Деконструкция на начало и значение</summary>
+        /// <param name="head">Начало строки</param>
+        /// <param name="value">Значение строки</param>
+        /// <example>
+        /// <![CDATA[
+        /// var (head, value) = new StringPtr("a:b").Split(':');
+        /// ]]>
+        /// </example>
         public void Deconstruct(out StringPtr head, out StringPtr value)
         {
             var index = Buffer.IndexOf(Separator, StartIndex, Length);
@@ -159,6 +235,15 @@ public readonly ref partial struct StringPtr
             value = new(Buffer, index + 1, value_length);
         }
 
+        /// <summary>Деконструкция на начало, значение и хвост</summary>
+        /// <param name="head">Начало строки</param>
+        /// <param name="value">Значение строки</param>
+        /// <param name="tail">Хвост строки</param>
+        /// <example>
+        /// <![CDATA[
+        /// var (head, value, tail) = new StringPtr("a:b:c").Split(':');
+        /// ]]>
+        /// </example>
         public void Deconstruct(out StringPtr head, out StringPtr value, out StringPtr tail)
         {
             var index = Buffer.IndexOf(Separator, StartIndex, Length);
@@ -191,8 +276,22 @@ public readonly ref partial struct StringPtr
             tail = new(Buffer, tail_index + 1, tail_length);
         }
 
+        /// <summary>Преобразовать последовательность фрагментов в массив строк</summary>
+        /// <returns>Массив строковых фрагментов</returns>
+        /// <example>
+        /// <![CDATA[
+        /// var array = new StringPtr("a,b").Split(',').ToArray();
+        /// ]]>
+        /// </example>
         public string[] ToArray() => [..ToList()];
 
+        /// <summary>Преобразовать последовательность фрагментов в список строк</summary>
+        /// <returns>Список строковых фрагментов</returns>
+        /// <example>
+        /// <![CDATA[
+        /// var list = new StringPtr("a,b").Split(',').ToList();
+        /// ]]>
+        /// </example>
         public List<string> ToList()
         {
             var result = new List<string>();
