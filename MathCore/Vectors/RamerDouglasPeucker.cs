@@ -8,9 +8,44 @@ using Tuple3Pf = (float x, float y, float z);
 namespace MathCore.Vectors;
 
 // https://ru.wikipedia.org/wiki/Алгоритм_Рамера_—_Дугласа_—_Пекера
-// https://habr.com/ru/articles/448618/
+// https://habr.com/ru/articles/448618/ 
+/// <summary>
+/// Реализация алгоритма Рамера-Дугласа-Пекера для сглаживания и прорежения кривых
+/// </summary>
+/// <remarks>
+/// Алгоритм итеративно находит точку, наиболее удаленную от линии между начальной и конечной точками.
+/// Если расстояние превышает порог eps, кривая разделяется в этой точке и процесс повторяется.
+/// В противном случае промежуточные точки исключаются из результата.
+/// </remarks>
 public static class RamerDouglasPeucker
 {
+    /// <summary>
+    /// Сглаживает последовательность точек типа PointF согласно алгоритму Рамера-Дугласа-Пекера
+    /// </summary>
+    /// <param name="points">
+    /// Исходная последовательность точек для сглаживания
+    /// </param>
+    /// <param name="eps">
+    /// Пороговое расстояние. Точки, находящиеся ближе к линии между соседними ключевыми точками,
+    /// чем на это расстояние, будут исключены из результата
+    /// </param>
+    /// <returns>
+    /// Массив отфильтрованных точек, составляющих упрощенную кривую
+    /// </returns>
+    /// <example>
+    /// <![CDATA[
+    /// var points = new[]
+    /// {
+    ///     new PointF(0, 0),
+    ///     new PointF(1, 0.1f),
+    ///     new PointF(2, 0.05f),
+    ///     new PointF(3, 1),
+    ///     new PointF(4, 0.9f)
+    /// };
+    /// var smoothed = RamerDouglasPeucker.Smooth(points, 0.2);
+    /// // Результат будет содержать меньше точек, но сохранит общую форму кривой
+    /// ]]>
+    /// </example>
     public static PointF[] Smooth(IReadOnlyList<PointF> points, double eps)
     {
         var eps2 = eps * eps;
@@ -65,6 +100,34 @@ public static class RamerDouglasPeucker
         }
     }
 
+    /// <summary>
+    /// Сглаживает последовательность точек типа Vector2D согласно алгоритму Рамера-Дугласа-Пекера
+    /// </summary>
+    /// <param name="points">
+    /// Исходная последовательность двумерных векторов для сглаживания
+    /// </param>
+    /// <param name="eps">
+    /// Пороговое расстояние. Точки, находящиеся ближе к линии между соседними ключевыми точками,
+    /// чем на это расстояние, будут исключены из результата
+    /// </param>
+    /// <returns>
+    /// Массив отфильтрованных двумерных векторов, составляющих упрощенную кривую
+    /// </returns>
+    /// <example>
+    /// <![CDATA[
+    /// var points = new[]
+    /// {
+    ///     new Vector2D(0, 0),
+    ///     new Vector2D(1, 0.1),
+    ///     new Vector2D(2, 0.05),
+    ///     new Vector2D(3, 1),
+    ///     new Vector2D(4, 0.9)
+    /// };
+    /// var smoothed = RamerDouglasPeucker.Smooth(points, 0.2);
+    /// foreach (var point in smoothed)
+    ///     Console.WriteLine($"({point.X}, {point.Y})");
+    /// ]]>
+    /// </example>
     public static Vector2D[] Smooth(IReadOnlyList<Vector2D> points, double eps)
     {
         var eps2 = eps * eps;
@@ -119,6 +182,33 @@ public static class RamerDouglasPeucker
         }
     }
 
+    /// <summary>
+    /// Сглаживает последовательность точек типа (double x, double y) согласно алгоритму Рамера-Дугласа-Пекера
+    /// </summary>
+    /// <param name="points">
+    /// Исходная последовательность кортежей 2D координат с двойной точностью для сглаживания
+    /// </param>
+    /// <param name="eps">
+    /// Пороговое расстояние. Точки, находящиеся ближе к линии между соседними ключевыми точками,
+    /// чем на это расстояние, будут исключены из результата
+    /// </param>
+    /// <returns>
+    /// Массив отфильтрованных кортежей (x, y), составляющих упрощенную кривую
+    /// </returns>
+    /// <example>
+    /// <![CDATA[
+    /// var points = new Tuple2Pd[]
+    /// {
+    ///     (0, 0),
+    ///     (1, 0.1),
+    ///     (2, 0.05),
+    ///     (3, 1),
+    ///     (4, 0.9)
+    /// };
+    /// var smoothed = RamerDouglasPeucker.Smooth(points, 0.2);
+    /// // smoothed содержит упрощенную траекторию
+    /// ]]>
+    /// </example>
     public static Tuple2Pd[] Smooth(IReadOnlyList<Tuple2Pd> points, double eps)
     {
         var eps2 = eps * eps;
@@ -173,6 +263,33 @@ public static class RamerDouglasPeucker
         }
     }
 
+    /// <summary>
+    /// Сглаживает последовательность точек типа (float x, float y) согласно алгоритму Рамера-Дугласа-Пекера
+    /// </summary>
+    /// <param name="points">
+    /// Исходная последовательность кортежей 2D координат с одинарной точностью для сглаживания
+    /// </param>
+    /// <param name="eps">
+    /// Пороговое расстояние. Точки, находящиеся ближе к линии между соседними ключевыми точками,
+    /// чем на это расстояние, будут исключены из результата
+    /// </param>
+    /// <returns>
+    /// Массив отфильтрованных кортежей (x, y), составляющих упрощенную кривую
+    /// </returns>
+    /// <example>
+    /// <![CDATA[
+    /// var points = new Tuple2Pf[]
+    /// {
+    ///     (0f, 0f),
+    ///     (1f, 0.1f),
+    ///     (2f, 0.05f),
+    ///     (3f, 1f),
+    ///     (4f, 0.9f)
+    /// };
+    /// var smoothed = RamerDouglasPeucker.Smooth(points, 0.2);
+    /// // smoothed содержит упрощенную траекторию
+    /// ]]>
+    /// </example>
     public static Tuple2Pf[] Smooth(IReadOnlyList<Tuple2Pf> points, double eps)
     {
         var eps2 = eps * eps;
@@ -227,6 +344,34 @@ public static class RamerDouglasPeucker
         }
     }
 
+    /// <summary>
+    /// Сглаживает последовательность точек типа Vector3D согласно алгоритму Рамера-Дугласа-Пекера
+    /// </summary>
+    /// <param name="points">
+    /// Исходная последовательность трёхмерных векторов для сглаживания
+    /// </param>
+    /// <param name="eps">
+    /// Пороговое расстояние. Точки, находящиеся ближе к линии между соседними ключевыми точками,
+    /// чем на это расстояние, будут исключены из результата
+    /// </param>
+    /// <returns>
+    /// Массив отфильтрованных трёхмерных векторов, составляющих упрощенную кривую
+    /// </returns>
+    /// <example>
+    /// <![CDATA[
+    /// var points = new[]
+    /// {
+    ///     new Vector3D(0, 0, 0),
+    ///     new Vector3D(1, 1, 0.1),
+    ///     new Vector3D(2, 2, 0.05),
+    ///     new Vector3D(3, 3, 1),
+    ///     new Vector3D(4, 4, 0.9)
+    /// };
+    /// var smoothed = RamerDouglasPeucker.Smooth(points, 0.2);
+    /// foreach (var point in smoothed)
+    ///     Console.WriteLine($"({point.X}, {point.Y}, {point.Z})");
+    /// ]]>
+    /// </example>
     public static Vector3D[] Smooth(IReadOnlyList<Vector3D> points, double eps)
     {
         var eps2 = eps * eps;
@@ -292,6 +437,33 @@ public static class RamerDouglasPeucker
         }
     }
 
+    /// <summary>
+    /// Сглаживает последовательность точек типа (double x, double y, double z) согласно алгоритму Рамера-Дугласа-Пекера
+    /// </summary>
+    /// <param name="points">
+    /// Исходная последовательность кортежей 3D координат с двойной точностью для сглаживания
+    /// </param>
+    /// <param name="eps">
+    /// Пороговое расстояние. Точки, находящиеся ближе к линии между соседними ключевыми точками,
+    /// чем на это расстояние, будут исключены из результата
+    /// </param>
+    /// <returns>
+    /// Массив отфильтрованных кортежей (x, y, z), составляющих упрощенную кривую
+    /// </returns>
+    /// <example>
+    /// <![CDATA[
+    /// var points = new Tuple3Pd[]
+    /// {
+    ///     (0, 0, 0),
+    ///     (1, 1, 0.1),
+    ///     (2, 2, 0.05),
+    ///     (3, 3, 1),
+    ///     (4, 4, 0.9)
+    /// };
+    /// var smoothed = RamerDouglasPeucker.Smooth(points, 0.2);
+    /// // smoothed содержит упрощенную 3D траекторию
+    /// ]]>
+    /// </example>
     public static Tuple3Pd[] Smooth(IReadOnlyList<Tuple3Pd> points, double eps)
     {
         var eps2 = eps * eps;
@@ -357,6 +529,33 @@ public static class RamerDouglasPeucker
         }
     }
 
+    /// <summary>
+    /// Сглаживает последовательность точек типа (float x, float y, float z) согласно алгоритму Рамера-Дугласа-Пекера
+    /// </summary>
+    /// <param name="points">
+    /// Исходная последовательность кортежей 3D координат с одинарной точностью для сглаживания
+    /// </param>
+    /// <param name="eps">
+    /// Пороговое расстояние. Точки, находящиеся ближе к линии между соседними ключевыми точками,
+    /// чем на это расстояние, будут исключены из результата
+    /// </param>
+    /// <returns>
+    /// Массив отфильтрованных кортежей (x, y, z), составляющих упрощенную кривую
+    /// </returns>
+    /// <example>
+    /// <![CDATA[
+    /// var points = new Tuple3Pf[]
+    /// {
+    ///     (0f, 0f, 0f),
+    ///     (1f, 1f, 0.1f),
+    ///     (2f, 2f, 0.05f),
+    ///     (3f, 3f, 1f),
+    ///     (4f, 4f, 0.9f)
+    /// };
+    /// var smoothed = RamerDouglasPeucker.Smooth(points, 0.2);
+    /// // smoothed содержит упрощенную 3D траекторию
+    /// ]]>
+    /// </example>
     public static Tuple3Pf[] Smooth(IReadOnlyList<Tuple3Pf> points, double eps)
     {
         var eps2 = eps * eps;
