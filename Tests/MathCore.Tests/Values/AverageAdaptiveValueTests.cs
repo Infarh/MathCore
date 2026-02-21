@@ -6,11 +6,11 @@ namespace MathCore.Tests.Values;
 /// <remarks>
 /// Набор тестов проверяет корректность работы алгоритма адаптивного усреднения:
 /// <list type="bullet">
-/// <item>Базовые тесты конструкторов и свойств</item>
-/// <item>Стационарные процессы с малыми флуктуациями</item>
-/// <item>Обнаружение резких скачков статистики</item>
-/// <item>Реальные сценарии: чтение файлов, индикаторы приборов</item>
-/// <item>Стресс-тестирование с множественными переходами</item>
+///     <item>Базовые тесты конструкторов и свойств</item>
+///     <item>Стационарные процессы с малыми флуктуациями</item>
+///     <item>Обнаружение резких скачков статистики</item>
+///     <item>Реальные сценарии: чтение файлов, индикаторы приборов</item>
+///     <item>Стресс-тестирование с множественными переходами</item>
 /// </list>
 /// </remarks>
 [TestClass]
@@ -59,18 +59,14 @@ public class AverageAdaptiveValueTests
     }
 
     [TestMethod]
-    public void Ctor_InvalidBaseFactor_ThrowsException()
-    {
-        Assert.That.Method(() => new AverageAdaptiveValue(BaseFactor: 1.5))
-           .Throw<ArgumentOutOfRangeException>();
-    }
+    public void Ctor_InvalidBaseFactor_ThrowsException() => Assert.That
+        .Method(() => new AverageAdaptiveValue(BaseFactor: 1.5))
+        .Throw<ArgumentOutOfRangeException>();
 
     [TestMethod]
-    public void Ctor_InvalidFastFactor_ThrowsException()
-    {
-        Assert.That.Method(() => new AverageAdaptiveValue(FastFactor: -0.1))
-           .Throw<ArgumentOutOfRangeException>();
-    }
+    public void Ctor_InvalidFastFactor_ThrowsException() => Assert.That
+        .Method(() => new AverageAdaptiveValue(FastFactor: -0.1))
+        .Throw<ArgumentOutOfRangeException>();
 
     [TestMethod]
     public void AddValue_FirstValue_InitializesCorrectly()
@@ -129,7 +125,7 @@ public class AverageAdaptiveValueTests
             // Генерация случайного шума в диапазоне [-5, +5]
             var noise = (random.NextDouble() - 0.5) * 2 * noise_amplitude;
             var value = mean + noise;
-            
+
             average.AddValue(value);
 
             TestContext.WriteLine(
@@ -138,9 +134,9 @@ public class AverageAdaptiveValueTests
 
         // Проверка, что среднее близко к истинному среднему
         Assert.AreEqual(mean, average.Value, 10.0, "Среднее должно быть близко к 100");
-        
+
         // Проверка, что стандартное отклонение соответствует ожидаемому
-        Assert.IsTrue(average.StandardDeviation > 0, "Стандартное отклонение должно быть положительным");
+        Assert.IsGreaterThan(0, average.StandardDeviation, "Стандартное отклонение должно быть положительным");
     }
 
     /// <summary>Тест обнаружения резкого скачка статистики процесса</summary>
@@ -172,7 +168,7 @@ public class AverageAdaptiveValueTests
         for (var i = 0; i < 30; i++)
         {
             var noise = (random.NextDouble() - 0.5) * 2 * noise_amplitude;
-            
+
             // Резкая смена среднего на 15-й итерации
             var current_mean = i < 15 ? initial_mean : jump_mean;
             var value = current_mean + noise;
@@ -184,8 +180,8 @@ public class AverageAdaptiveValueTests
             average.AddValue(value);
 
             // Вычисляем нормализованное отклонение (Δ/σ) для визуализации обнаружения скачка
-            var deviation_normalized = old_std > 1e-10 
-                ? Math.Abs(value - old_value) / old_std 
+            var deviation_normalized = old_std > 1e-10
+                ? Math.Abs(value - old_value) / old_std
                 : 0;
 
             // Маркер для визуального выделения момента скачка
@@ -196,7 +192,7 @@ public class AverageAdaptiveValueTests
         }
 
         // После скачка среднее должно быстро адаптироваться к новому уровню
-        Assert.IsTrue(average.Value > 180, "После скачка среднее должно приблизиться к 200");
+        Assert.IsGreaterThan(180, average.Value, "После скачка среднее должно приблизиться к 200");
     }
 
     /// <summary>Тест моделирования скорости чтения файла с сетевого диска</summary>
@@ -254,7 +250,7 @@ public class AverageAdaptiveValueTests
             // Добавление небольших флуктуаций, характерных для сетевого I/O
             var noise = (random.NextDouble() - 0.5) * 0.5;
             var speed = base_speed + noise;
-            
+
             speed_average.AddValue(speed);
 
             // Выводим промежуточные результаты каждые 5 итераций и при смене фазы
@@ -272,7 +268,8 @@ public class AverageAdaptiveValueTests
         TestContext.WriteLine($"  σ: {speed_average.StandardDeviation:F2}");
 
         // Проверяем, что финальное среднее близко к последней фазе
-        Assert.IsTrue(speed_average.Value > 7.0 && speed_average.Value < 11.0,
+        Assert.IsTrue(
+            speed_average.Value is > 7.0 and < 11.0,
             "Финальное среднее должно быть близко к скорости восстановления");
     }
 
@@ -330,15 +327,13 @@ public class AverageAdaptiveValueTests
             // Добавление небольших инструментальных флуктуаций
             var noise = (random.NextDouble() - 0.5) * 0.3;
             var vspeed = base_vspeed + noise;
-            
+
             vspeed_indicator.AddValue(vspeed);
 
             // Выводим ключевые точки: каждые 5 итераций и моменты смены режима
             if (i % 5 == 0 || i == 15 || i == 35)
-            {
                 TestContext.WriteLine(
                     $"{i,-10} {vspeed,-12:F2} {vspeed_indicator.Value,-12:F2} {mode,-20}");
-            }
         }
 
         TestContext.WriteLine($"\nИтоговая статистика:");
@@ -347,8 +342,7 @@ public class AverageAdaptiveValueTests
         TestContext.WriteLine($"  Max: {vspeed_indicator.Max:F2} м/с");
 
         // Проверяем, что индикатор показывает снижение
-        Assert.IsTrue(vspeed_indicator.Value < -1.0,
-            "Индикатор должен показывать снижение");
+        Assert.IsLessThan(-1.0, vspeed_indicator.Value, "Индикатор должен показывать снижение");
     }
 
     /// <summary>Тест расчёта Min/Max</summary>
@@ -364,7 +358,7 @@ public class AverageAdaptiveValueTests
 
         Assert.AreEqual(3.0, average.Min);
         Assert.AreEqual(20.0, average.Max);
-        
+
         var interval = average.Interval;
         Assert.AreEqual(3.0, interval.Min);
         Assert.AreEqual(20.0, interval.Max);
@@ -389,9 +383,9 @@ public class AverageAdaptiveValueTests
     public void ImplicitConversion_ToDouble()
     {
         var average = new AverageAdaptiveValue(StartValue: 42.0);
-        
+
         double value = average;
-        
+
         Assert.AreEqual(42.0, value);
     }
 
@@ -399,7 +393,7 @@ public class AverageAdaptiveValueTests
     public void ImplicitConversion_FromDouble()
     {
         AverageAdaptiveValue average = 42.0;
-        
+
         Assert.AreEqual(42.0, average.Value);
     }
 
@@ -437,8 +431,8 @@ public class AverageAdaptiveValueTests
         Assert.AreEqual(2.5, average.JumpThreshold);
         Assert.AreEqual(10, average.MinSamplesForDetection);
         Assert.AreEqual(100.0, average.StartValue);
-        Assert.IsTrue(average.ValuesCount > 1);
-        
+        Assert.IsGreaterThan(1, average.ValuesCount);
+
         // Проверка возможности изменения параметров во время работы
         average.BaseFactor = 0.2;
         Assert.AreEqual(0.2, average.BaseFactor);
@@ -462,7 +456,7 @@ public class AverageAdaptiveValueTests
             MinSamplesForDetection: 10);   // Достаточное окно для стабильной работы
 
         var random = new Random(42);
-        
+
         // Пять различных уровней для множественных скачков
         var jump_points = new[] { 0, 100, 200, 300, 400 };
         var jump_values = new[] { 50.0, 150.0, 75.0, 200.0, 100.0 };
@@ -477,7 +471,7 @@ public class AverageAdaptiveValueTests
             // Определение текущего сегмента (каждые 100 итераций — новый уровень)
             var segment = i / 100;
             var target_mean = jump_values[segment];
-            
+
             // Добавление случайного шума к целевому значению
             var noise = (random.NextDouble() - 0.5) * 5.0;
             var value = target_mean + noise;
@@ -486,9 +480,7 @@ public class AverageAdaptiveValueTests
 
             // Вывод промежуточных результатов каждые 50 итераций
             if (i % 50 == 0)
-            {
                 TestContext.WriteLine($"{i,-10} {target_mean,-12:F2} {average.Value,-12:F2}");
-            }
         }
 
         TestContext.WriteLine($"\nИтоговая статистика:");
@@ -499,9 +491,10 @@ public class AverageAdaptiveValueTests
 
         // Проверка корректности обработки большого количества данных
         Assert.AreEqual(500, average.ValuesCount);
-        
+
         // Проверка, что алгоритм адаптировался к последнему уровню (100.0)
-        Assert.IsTrue(average.Value > 90 && average.Value < 110,
+        Assert.IsTrue(
+            average.Value is > 90 and < 110,
             "Финальное среднее должно быть близко к последнему целевому значению");
     }
 }
