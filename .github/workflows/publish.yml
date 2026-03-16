@@ -1,4 +1,4 @@
-﻿name: Publish NuGet.org
+name: Publish NuGet.org
 
 on:
   push:
@@ -97,6 +97,6 @@ jobs:
     
     steps:
       - name: Delete artefact
-        uses: geekyeggo/delete-artifact@v5
+        uses: geekyeggo/delete-artifact@v6
         with:
             name: Release
