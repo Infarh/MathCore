@@ -7,7 +7,7 @@ namespace MathCore;
 ///     <code>
 ///     Console.Write("Performing some task... ");
 ///     const int max = 2000;
-///     using (var progress = new ProgressBar(50) { PercentSymbol = null, PercentFormat = "p1" })
+///     using (var progress = new ConsoleProgressBar(50) { PercentSymbol = null, PercentFormat = "p1" })
 ///         for (var i = 0; i &lt;= max; i++)
 ///         {
 ///             progress.Report((double) i / max);
@@ -30,10 +30,12 @@ public class ConsoleProgressBar : IDisposable, IProgress<double>
     private double _CurrentProgress;
     private string _CurrentText = string.Empty;
     private bool _Disposed;
+    private bool _Started;
+    private bool _CanRender;
     private int _AnimationIndex;
 
-    private readonly int _CursorTop;
-    private readonly int _CursorLeft;
+    private readonly int _CursorTop = 0;
+    private readonly int _CursorLeft = 0;
 
     public char ProgressChar { get; init; } = '█'; //'#';
 
@@ -60,19 +62,44 @@ public class ConsoleProgressBar : IDisposable, IProgress<double>
     /// </remarks>
     public ConsoleProgressBar(int BlockCount = 20)
     {
-        _CursorLeft = Console.CursorLeft;
-        _CursorTop  = Console.CursorTop;
+        if (BlockCount < 0)
+            throw new ArgumentOutOfRangeException(nameof(BlockCount));
 
         _BlockCount = BlockCount;
         _Timer      = new(TimerHandler);
+        _CanRender  = !Console.IsOutputRedirected;
 
-        // A progress bar is only for temporary display in a console window.
-        // If the console output is redirected to a file, draw nothing.
-        // Otherwise, we'll end up with a lot of garbage in the target file.
-        if (!Console.IsOutputRedirected) ResetTimer();
+        if (!_CanRender) return;
+
+        try
+        {
+            _CursorLeft = Console.CursorLeft;
+            _CursorTop  = Console.CursorTop;
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            _CanRender = false;
+        }
+        catch (IOException)
+        {
+            _CanRender = false;
+        }
     }
 
-    public void Report(double value) => Interlocked.Exchange(ref _CurrentProgress, Math.Max(0, Math.Min(1, value)));
+    public void Report(double value)
+    {
+        Interlocked.Exchange(ref _CurrentProgress, Math.Max(0, Math.Min(1, value)));
+
+        if (!_CanRender) return;
+
+        lock (_Timer)
+        {
+            if (_Disposed || _Started) return;
+
+            _Started = true;
+            ResetTimer();
+        }
+    }
 
     /// <summary>Обработчик события таймера</summary>
     /// <remarks>
@@ -88,28 +115,29 @@ public class ConsoleProgressBar : IDisposable, IProgress<double>
     {
         lock (_Timer)
         {
-            if (_Disposed) return;
+            if (_Disposed || !_CanRender) return;
 
-            var gradient_set = GradientBlockSet;
+            var gradient_set = GradientBlockSet ?? string.Empty;
+            var has_gradient = gradient_set.Length > 0;
+            var current_progress = Interlocked.CompareExchange(ref _CurrentProgress, 0, 0);
 
-            var progress_block_count = (int)(_CurrentProgress * _BlockCount);
+            var progress_block_count = (int)(current_progress * _BlockCount);
             //var percent = (int)(_CurrentProgress * 100);
 
             var filled_part        = new string(ProgressChar, progress_block_count);
-            var empty_blocks_count = _BlockCount - progress_block_count - (gradient_set is { Length: > 0 } ? 2 : 1);
+            var empty_blocks_count = _BlockCount - progress_block_count - (has_gradient ? 2 : 1);
             var empty_part         = new string(EmptyChar, Math.Max(0, empty_blocks_count));
             var animation          = __Animation[_AnimationIndex++ % __Animation.Length];
 
-            var gradient_index = (int)(_CurrentProgress * _BlockCount * gradient_set.Length) % gradient_set.Length;
-            var gradient = gradient_set is { Length: > 0 }
-                ? gradient_set[gradient_index]
+            var gradient = has_gradient
+                ? gradient_set[(int)(current_progress * _BlockCount * gradient_set.Length) % gradient_set.Length]
                 : (char?)null;
 
             var percent_str = PercentFormat is { Length: > 0 } percent_format
-                ? (percent_format[0] is 'p' or 'P' ? _CurrentProgress : _CurrentProgress * 100).ToString(percent_format).PadLeft(Math.Max(0, PercentStrLength))
-                : $"{(int)(_CurrentProgress * 100),3}";
+                ? (percent_format[0] is 'p' or 'P' ? current_progress : current_progress * 100).ToString(percent_format).PadLeft(Math.Max(0, PercentStrLength))
+                : $"{(int)(current_progress * 100),3}";
 
-            var dec_part = empty_blocks_count >= 0 ? (int)(_CurrentProgress * _BlockCount * 10) % 10 : (int?)null;
+            var dec_part = empty_blocks_count >= 0 ? (int)(current_progress * _BlockCount * 10) % 10 : (int?)null;
             var text     = $"[{filled_part}{gradient}{dec_part}{empty_part}] {percent_str}{PercentSymbol} {animation}";
             UpdateText(text);
 
@@ -126,6 +154,12 @@ public class ConsoleProgressBar : IDisposable, IProgress<double>
     /// </remarks>
     private void UpdateText(string text)
     {
+        if (!_CanRender)
+        {
+            _CurrentText = text;
+            return;
+        }
+
         // Get length of common portion
         var prefix_length = 0;
         var length        = Math.Min(_CurrentText.Length, text.Length);
@@ -147,20 +181,36 @@ public class ConsoleProgressBar : IDisposable, IProgress<double>
             output_builder.Append('\b', overlap_count);
         }
 
-        var current_cursor_left = Console.CursorLeft;
-        var current_cursor_top  = Console.CursorTop;
+        var current_cursor_left = 0;
+        var current_cursor_top  = 0;
 
         lock (Console.Out)
         {
-            Console.CursorTop  = _CursorTop;
-            Console.CursorLeft = _CursorLeft + _CurrentText.Length;
+            try
+            {
+                current_cursor_left = Console.CursorLeft;
+                current_cursor_top  = Console.CursorTop;
 
-            Console.Write(output_builder);
+                Console.CursorTop  = _CursorTop;
+                Console.CursorLeft = _CursorLeft + _CurrentText.Length;
 
-            if (_CursorTop != current_cursor_top)
-                Console.CursorTop = current_cursor_top;
-            if (_CursorLeft + _CurrentText.Length != current_cursor_left)
+                Console.Write(output_builder);
+
+                Console.CursorTop  = current_cursor_top;
                 Console.CursorLeft = current_cursor_left;
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                _CanRender = false;
+            }
+            catch (IOException)
+            {
+                _CanRender = false;
+            }
+            catch (ObjectDisposedException)
+            {
+                _CanRender = false;
+            }
         }
 
         _CurrentText = text;
@@ -174,6 +224,7 @@ public class ConsoleProgressBar : IDisposable, IProgress<double>
         {
             _Disposed = true;
             UpdateText(string.Empty);
+            _Timer.Dispose();
         }
     }
 
