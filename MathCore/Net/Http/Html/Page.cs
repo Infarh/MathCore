@@ -8,9 +8,9 @@ public class Page
 
     private Body _Body = new() { AlwaysOpen = true };
 
-    public Head Head { get => _Head; set => _Head = value ?? []; }
+    public Head Head { get => _Head; set => _Head = value ?? new(); }
 
-    public Body Body { get => _Body; set => _Body = value ?? []; }
+    public Body Body { get => _Body; set => _Body = value ?? new(); }
 
     public string? Title
     {
