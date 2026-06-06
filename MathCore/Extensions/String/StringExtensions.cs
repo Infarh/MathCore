@@ -972,4 +972,45 @@ public static partial class StringExtensions
     /// <param name="Comparison">Тип сравнения</param>
     public static string EnsureEndWith(this string str, string s, StringComparison Comparison = StringComparison.Ordinal) => str.EndsWith(s, Comparison) ? str : $"{str}{s}";
 
+    /// <summary>Обрезать середину строки так, чтобы длина результата не превышала заданной</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="MaxLength">Максимально допустимая длина результата</param>
+    /// <param name="Replacement">Шаблон, заменяющий вырезанную часть</param>
+    /// <returns>Строка, в которой сохранены начало и конец, а середина заменена шаблоном</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string TruncateMiddle(this string str, int MaxLength, string Replacement = "...")
+    {
+        if (str == null) throw new ArgumentNullException(nameof(str));
+        if (Replacement == null) throw new ArgumentNullException(nameof(Replacement));
+        if (MaxLength < 0) throw new ArgumentOutOfRangeException(nameof(MaxLength));
+
+        if (str.Length <= MaxLength) return str; // ничего не надо обрезать
+        if (MaxLength == 0) return string.Empty; // результат пустой
+
+        var rep_len = Replacement.Length;
+        // Если replacement длиннее или равен максимальной длине, формируем итог через StringBuilder
+        if (rep_len >= MaxLength)
+        {
+            var sb = new StringBuilder(MaxLength);
+            sb.Append(Replacement, 0, MaxLength);
+            return sb.ToString();
+        }
+
+        var remaining = MaxLength - rep_len; // сколько символов оставить для начала+конца
+        var left = (remaining + 1) / 2; // предпочитаем немного больше для начала
+        var right = remaining - left;
+
+        var result = new StringBuilder(MaxLength);
+        // добавляем начало строки без создания подстроки
+        if (left > 0)
+            result.Append(str, 0, left);
+        // добавляем replacement
+        result.Append(Replacement);
+        // добавляем конец строки без создания подстроки
+        if (right > 0)
+            result.Append(str, str.Length - right, right);
+
+        return result.ToString();
+    }
+
 }
