@@ -12,12 +12,12 @@ namespace System;
 
 /// <summary>Аргумент события с типизированным параметром</summary>
 [DST]
-public class EventArgs<TArgument> : EventArgs
+public class EventArgs<T> : EventArgs
 {
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>Параметр аргумента</summary>
-    public TArgument Argument { get; set; } = default!;
+    public T Argument { get; set; } = default!;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -26,7 +26,7 @@ public class EventArgs<TArgument> : EventArgs
 
     /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgumen}"/></summary>
     /// <param name="Argument">Параметр аргумента</param>
-    public EventArgs(TArgument Argument) => this.Argument = Argument;
+    public EventArgs(T Argument) => this.Argument = Argument;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -38,12 +38,12 @@ public class EventArgs<TArgument> : EventArgs
     /// <summary>Оператор неявного преобразования аргумента события к типу содержащегося в нём значения</summary>
     /// <param name="Args">Аргумент события</param>
     /// <returns>Хранимый объект</returns>
-    public static implicit operator TArgument(EventArgs<TArgument> Args) => Args.Argument;
+    public static implicit operator T(EventArgs<T> Args) => Args.Argument;
 
     /// <summary>Оператор неявного преобразования типа хранимого значения в обёртку из аргумента события, содержащего это значение</summary>
     /// <param name="Argument">Объект аргумента события</param>
     /// <returns>Аргумент события</returns>
-    public static implicit operator EventArgs<TArgument>(TArgument Argument) => new(Argument);
+    public static implicit operator EventArgs<T>(T Argument) => new(Argument);
 
     /* ------------------------------------------------------------------------------------------ */
 }
