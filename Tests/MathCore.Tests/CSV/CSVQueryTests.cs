@@ -6,7 +6,7 @@ using MathCore.CSV;
 namespace MathCore.Tests.CSV;
 
 [TestClass]
-public class CsvQueryTests : CSVTestsBase
+public partial class CsvQueryTests : CSVTestsBase
 {
     private const string __DataFileName = "CSVQueryTests_Students.csv";
     private const int __BeforeLinesCount = 3;
@@ -101,8 +101,9 @@ public class CsvQueryTests : CSVTestsBase
     {
         const string test_data = @"6734,""03OI"",""heliport"",""Cleveland Clinic, Marymount Hospital Heliport"",41.420312,-81.599552,890,""NA"",""US"",""US-OH"",""Garfield Heights"",""no"",""03OI"",,""03OI"",,,";
 
-        var regex = new Regex(@"(?<=(?:,|\n|^))(""(?:(?:"""")*[^""]*)*""|[^"",\n]*|(?:\n|$))");
-
-        var values = regex.Matches(test_data).Select(m => m.Value is { Length: > 2 } v && v[0] == '"' && v[^1] == '"' ? v[1..^1] : m.Value).ToArray();
+        var values = TestRegex.Matches(test_data).Select(m => m.Value is { Length: > 2 } v && v[0] == '"' && v[^1] == '"' ? v[1..^1] : m.Value).ToArray();
     }
+
+    [GeneratedRegex(@"(?<=(?:,|\n|^))(""(?:(?:"""")*[^""]*)*""|[^"",\n]*|(?:\n|$))")]
+    private static partial Regex TestRegex { get;}
 }
