@@ -32,10 +32,10 @@ public class MessengerTests
         void H1(object s, int v) => count += 1;
         void H2(object s, int v) => count += 10;
 
-        messenger.AddHandle<int>(H1);
-        messenger.AddHandle<int>(H2);
+        messenger.AddHandle<int>(H1!);
+        messenger.AddHandle<int>(H2!);
 
-        var removed = messenger.RemoveHandler<int>(H1);
+        var removed = messenger.RemoveHandler<int>(H1!);
 
         messenger.Send(messenger, 1);
 
@@ -51,7 +51,7 @@ public class MessengerTests
 
         void Handler(object s, string m) => tcs.TrySetResult(true);
 
-        messenger.AddHandle<string>(Handler);
+        messenger.AddHandle<string>(Handler!);
 
         await messenger.SendAsync(messenger, "ok");
 

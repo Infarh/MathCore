@@ -169,7 +169,7 @@ public class ParseEquationsTests
         IsNotNull(func);
         AreEqual("sin", func.Name);
         IsNotNull(func.Arguments);
-        AreEqual(1, ((FunctionNode)node).Arguments.Count());
+        HasCount(1, ((FunctionNode)node).Arguments);
         IsNull(node.Left); IsNotNull(node.Right);
         IsInstanceOfType<FunctionArgumentNode>(node.Right);
 

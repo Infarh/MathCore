@@ -324,7 +324,7 @@ public class LevenshteinTests
         var d13 = Levenshtein.Distance(str1, str3);
 
         // Assert
-        Assert.IsTrue(d13 <= d12 + d23, $"Triangle inequality violated: {d13} > {d12} + {d23}");
+        Assert.IsLessThanOrEqualTo(d12 + d23, d13, $"Triangle inequality violated: {d13} > {d12} + {d23}");
     }
 
     #endregion

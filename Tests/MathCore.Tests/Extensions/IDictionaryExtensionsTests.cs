@@ -206,7 +206,7 @@ public class IDictionaryExtensionsTests
         var dictionary = new Dictionary<int, string>()
            .Initialize(10, i => new(i, i.ToString()));
         dictionary.RemoveWhere(kv => kv.Key % 2 != 0);
-        Assert.IsFalse(dictionary.Any(kv => kv.Key % 2 != 0));
+        Assert.DoesNotContain(kv => kv.Key % 2 != 0, dictionary);
     }
 
     [TestMethod]

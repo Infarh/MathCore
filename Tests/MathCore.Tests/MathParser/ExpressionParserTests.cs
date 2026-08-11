@@ -597,24 +597,24 @@ public class ExpressionParserTests
         Assert.IsTrue(var_collection.ExistInTree(v => v.Variable is LambdaExpressionVariable));
         Assert.IsFalse(var_collection.ExistInTree(v => v.Variable is EventExpressionVariable));
 
-        Assert.AreEqual(4, var_collection.GetTreeNodes("x").Count());
-        Assert.AreEqual(2, var_collection.GetTreeNodes("y").Count());
-        Assert.AreEqual(1, var_collection.GetTreeNodes("z").Count());
-        Assert.AreEqual(1, var_collection.GetTreeNodes("q").Count());
-        Assert.AreEqual(0, var_collection.GetTreeNodes("test1").Count());
+        Assert.HasCount(4, var_collection.GetTreeNodes("x"));
+        Assert.HasCount(2, var_collection.GetTreeNodes("y"));
+        Assert.HasCount(1, var_collection.GetTreeNodes("z"));
+        Assert.HasCount(1, var_collection.GetTreeNodes("q"));
+        Assert.IsEmpty(var_collection.GetTreeNodes("test1"));
 
-        Assert.AreEqual(4, var_collection.GetTreeNodes(vn => vn.Variable is LambdaExpressionVariable).Count());
-        Assert.AreEqual(0, var_collection.GetTreeNodes(vn => vn.Variable is EventExpressionVariable).Count());
+        Assert.HasCount(4, var_collection.GetTreeNodes(vn => vn.Variable is LambdaExpressionVariable));
+        Assert.IsEmpty(var_collection.GetTreeNodes(vn => vn.Variable is EventExpressionVariable));
 
-        Assert.AreEqual(8, var_collection.GetTreeNodesOf<ExpressionVariable>().Count());
-        Assert.AreEqual(4, var_collection.GetTreeNodesOf<LambdaExpressionVariable>().Count());
-        Assert.AreEqual(0, var_collection.GetTreeNodesOf<EventExpressionVariable>().Count());
+        Assert.HasCount(8, var_collection.GetTreeNodesOf<ExpressionVariable>());
+        Assert.HasCount(4, var_collection.GetTreeNodesOf<LambdaExpressionVariable>());
+        Assert.IsEmpty(var_collection.GetTreeNodesOf<EventExpressionVariable>());
 
-        Assert.AreEqual(4, var_collection.GetTreeNodesVOf<ExpressionVariable>(v => v.Name == "x").Count());
-        Assert.AreEqual(4, var_collection.GetTreeNodesVOf<LambdaExpressionVariable>(v => v.Name == "x").Count());
-        Assert.AreEqual(2, var_collection.GetTreeNodesVOf<ExpressionVariable>(v => v.Name == "y").Count());
-        Assert.AreEqual(3, var_collection.GetTreeNodesOf<ExpressionVariable>(vn => vn.Parent?.Parent is subtractionOperatorNode).Count());
-        Assert.AreEqual(1, var_collection.GetTreeNodesOf<LambdaExpressionVariable>(vn => vn.Parent?.Parent is subtractionOperatorNode).Count());
+        Assert.HasCount(4, var_collection.GetTreeNodesVOf<ExpressionVariable>(v => v.Name == "x"));
+        Assert.HasCount(4, var_collection.GetTreeNodesVOf<LambdaExpressionVariable>(v => v.Name == "x"));
+        Assert.HasCount(2, var_collection.GetTreeNodesVOf<ExpressionVariable>(v => v.Name == "y"));
+        Assert.HasCount(3, var_collection.GetTreeNodesOf<ExpressionVariable>(vn => vn.Parent?.Parent is subtractionOperatorNode));
+        Assert.HasCount(1, var_collection.GetTreeNodesOf<LambdaExpressionVariable>(vn => vn.Parent?.Parent is subtractionOperatorNode));
     }
 
     /// <summary>Тестирование коллекции констант</summary>
