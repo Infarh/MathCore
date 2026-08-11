@@ -92,6 +92,7 @@ public partial class MatrixLong : ICloneable, IEquatable<MatrixLong>
     /// <summary>Матрица является числом</summary>
     public bool IsDigit => N == 1 && M == 1;
 
+    /// <summary>Транспонированная матрица</summary>
     public MatrixLong T => GetTranspose();
 
     /* -------------------------------------------------------------------------------------------- */
@@ -128,6 +129,8 @@ public partial class MatrixLong : ICloneable, IEquatable<MatrixLong>
     }
 
     //[CLSCompliant(false)]
+    /// <summary>Матрица из двумерного массива данных</summary>
+    /// <param name="Data">Двумерный массив данных</param>
     public MatrixLong(long[,] Data)
         : this(Data.GetLength(0), Data.GetLength(1))
     {
@@ -136,6 +139,8 @@ public partial class MatrixLong : ICloneable, IEquatable<MatrixLong>
                 _Data[i, j] = Data[i, j];
     }
 
+    /// <summary>Матрица-столбец из последовательности значений</summary>
+    /// <param name="DataRow">Последовательность значений</param>
     public MatrixLong(IList<long> DataRow)
         : this(DataRow.Count, 1)
     {
@@ -298,6 +303,10 @@ public partial class MatrixLong : ICloneable, IEquatable<MatrixLong>
         return det;
     }
 
+    /// <summary>LU-разложение матрицы</summary>
+    /// <param name="L">Нижняя треугольная матрица</param>
+    /// <param name="U">Верхняя треугольная матрица</param>
+    /// <param name="P">Матрица перестановок</param>
     public void GetLUDecomposition(out MatrixLong L, out MatrixLong U, out MatrixLong P)
     {
         LUDecomposition(_Data, out var l, out var u, out var p);
@@ -445,10 +454,20 @@ public partial class MatrixLong : ICloneable, IEquatable<MatrixLong>
     /// <inheritdoc />
     public override string ToString() => $"MatrixLong[{N}x{M}]";
 
+    /// <summary>Строковое представление матрицы с заданным форматом чисел</summary>
+    /// <param name="Format">Формат чисел</param>
+    /// <returns>Строковое представление матрицы</returns>
     public string ToStringFormat(string Format) => ToStringFormat('\t', Format);
 
+    /// <summary>Строковое представление матрицы с заданным разделителем</summary>
+    /// <param name="Splitter">Разделитель значений</param>
+    /// <returns>Строковое представление матрицы</returns>
     public string ToStringFormat(char Splitter) => ToStringFormat(Splitter, "r");
 
+    /// <summary>Строковое представление матрицы с заданным разделителем и форматом чисел</summary>
+    /// <param name="Splitter">Разделитель значений</param>
+    /// <param name="Format">Формат чисел</param>
+    /// <returns>Строковое представление матрицы</returns>
     public string ToStringFormat(char Splitter, string Format)
     {
         var result = new StringBuilder();
@@ -480,10 +499,16 @@ public partial class MatrixLong : ICloneable, IEquatable<MatrixLong>
 
     /* -------------------------------------------------------------------------------------------- */
 
+    /// <summary>Оператор равенства двух матриц</summary>
     public static bool operator ==(MatrixLong? A, MatrixLong? B) => A is null && B is null || A is not null && B is not null && A.Equals(B);
 
+    /// <summary>Оператор неравенства двух матриц</summary>
     public static bool operator !=(MatrixLong? A, MatrixLong? B) => !(A == B);
 
+    /// <summary>Прибавление числа к элементам матрицы</summary>
+    /// <param name="M">Матрица</param>
+    /// <param name="x">Прибавляемое число</param>
+    /// <returns>Новая матрица</returns>
     public static MatrixLong operator +(MatrixLong M, long x)
     {
         var result = new MatrixLong(M.N, M.M);
@@ -493,6 +518,10 @@ public partial class MatrixLong : ICloneable, IEquatable<MatrixLong>
         return result;
     }
 
+    /// <summary>Прибавление числа к элементам матрицы (число слева)</summary>
+    /// <param name="x">Прибавляемое число</param>
+    /// <param name="M">Матрица</param>
+    /// <returns>Новая матрица</returns>
     public static MatrixLong operator +(long x, MatrixLong M)
     {
         var result = new MatrixLong(M.N, M.M);
@@ -502,6 +531,10 @@ public partial class MatrixLong : ICloneable, IEquatable<MatrixLong>
         return result;
     }
 
+    /// <summary>Вычитание числа из элементов матрицы</summary>
+    /// <param name="M">Матрица</param>
+    /// <param name="x">Вычитаемое число</param>
+    /// <returns>Новая матрица</returns>
     public static MatrixLong operator -(MatrixLong M, long x)
     {
         var result = new MatrixLong(M.N, M.M);
@@ -511,6 +544,10 @@ public partial class MatrixLong : ICloneable, IEquatable<MatrixLong>
         return result;
     }
 
+    /// <summary>Вычитание элементов матрицы из числа</summary>
+    /// <param name="x">Уменьшаемое число</param>
+    /// <param name="M">Матрица</param>
+    /// <returns>Новая матрица</returns>
     public static MatrixLong operator -(long x, MatrixLong M)
     {
         var result = new MatrixLong(M.N, M.M);
@@ -520,6 +557,10 @@ public partial class MatrixLong : ICloneable, IEquatable<MatrixLong>
         return result;
     }
 
+    /// <summary>Умножение элементов матрицы на число</summary>
+    /// <param name="M">Матрица</param>
+    /// <param name="x">Множитель</param>
+    /// <returns>Новая матрица</returns>
     public static MatrixLong operator *(MatrixLong M, long x)
     {
         var result = new MatrixLong(M.N, M.M);
@@ -529,6 +570,10 @@ public partial class MatrixLong : ICloneable, IEquatable<MatrixLong>
         return result;
     }
 
+    /// <summary>Умножение элементов матрицы на число (число слева)</summary>
+    /// <param name="x">Множитель</param>
+    /// <param name="M">Матрица</param>
+    /// <returns>Новая матрица</returns>
     public static MatrixLong operator *(long x, MatrixLong M)
     {
         var result = new MatrixLong(M.N, M.M);
@@ -538,18 +583,26 @@ public partial class MatrixLong : ICloneable, IEquatable<MatrixLong>
         return result;
     }
 
+    /// <summary>Умножение двумерного массива на матрицу</summary>
     //[CLSCompliant(false)]
     public static MatrixLong operator *(long[,] A, MatrixLong B) => (MatrixLong)A * B;
 
+    /// <summary>Умножение массива на матрицу (матрица-столбец)</summary>
     //[CLSCompliant(false)]
     public static MatrixLong operator *(long[] A, MatrixLong B) => (MatrixLong)A * B;
 
+    /// <summary>Умножение матрицы на массив (матрица-строка)</summary>
     //[CLSCompliant(false)]
     public static MatrixLong operator *(MatrixLong A, long[] B) => A * (MatrixLong)B;
 
+    /// <summary>Умножение матрицы на двумерный массив</summary>
     //[CLSCompliant(false)]
     public static MatrixLong operator *(MatrixLong A, long[,] B) => A * (MatrixLong)B;
 
+    /// <summary>Деление элементов матрицы на число</summary>
+    /// <param name="M">Матрица</param>
+    /// <param name="x">Делитель</param>
+    /// <returns>Новая матрица</returns>
     public static MatrixLong operator /(MatrixLong M, long x)
     {
         var result = new MatrixLong(M.N, M.M);
@@ -559,6 +612,7 @@ public partial class MatrixLong : ICloneable, IEquatable<MatrixLong>
         return result;
     }
 
+    /// <summary>Деление числа на матрицу (через обратную матрицу)</summary>
     public static MatrixLong operator /(long x, MatrixLong M)
     {
         M = M.GetInverse();
@@ -692,17 +746,23 @@ public partial class MatrixLong : ICloneable, IEquatable<MatrixLong>
     /// <returns>Матрица порядка 1х1</returns>
     public static implicit operator MatrixLong(long X) => new(1, 1) { [0, 0] = X };
 
+    /// <summary>Явное приведение матрицы к двумерному массиву</summary>
     public static explicit operator long[,](MatrixLong M) => (long[,])M._Data.Clone();
 
+    /// <summary>Явное приведение двумерного массива к матрице</summary>
     //[CLSCompliant(false)]
     public static explicit operator MatrixLong(long[,] Data) => new(Data);
 
+    /// <summary>Явное приведение массива к матрице-столбцу</summary>
     public static explicit operator MatrixLong(long[] Data) => new(Data);
 
     /* -------------------------------------------------------------------------------------------- */
 
     #region IEquatable<MatrixLong> Members
 
+    /// <summary>Проверка равенства матриц</summary>
+    /// <param name="other">Сравниваемая матрица</param>
+    /// <returns>Истина, если матрицы равны</returns>
     public bool Equals(MatrixLong? other)
     {
         if (other is null) return false;

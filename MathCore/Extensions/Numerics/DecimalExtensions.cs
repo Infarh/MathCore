@@ -51,18 +51,38 @@ public static class DecimalExtensions
     [DST]
     public static bool IsInt(this decimal x, decimal epsilon = 0) => Math.Abs(decimal.Truncate(x) - x) <= epsilon;
 
+    /// <summary>Округление числа</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Округлённое число</returns>
     [DST]
     public static decimal Round(this decimal x) => decimal.Round(x);
+    /// <summary>Округление числа с указанным количеством разрядов</summary>
+    /// <param name="x">Число</param>
+    /// <param name="n">Количество разрядов</param>
+    /// <returns>Округлённое число</returns>
     [DST]
     public static decimal Round(this decimal x, int n) => decimal.Round(x, n);
 
+    /// <summary>Отбрасывание дробной части числа</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Целая часть числа</returns>
     [DST]
     public static decimal Truncate(this decimal x) => decimal.Truncate(x);
+    /// <summary>Округление вниз числа</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Число, округлённое вниз</returns>
     [DST]
     public static decimal Floor(this decimal x) => decimal.Floor(x);
+    /// <summary>Округление вверх числа</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Число, округлённое вверх</returns>
     [DST]
     public static decimal Ceiling(this decimal x) => decimal.Ceiling(x);
 
+    [Copyright("https://github.com/raminrahimzada/CSharp-Helper-Classes/blob/master/Math/DecimalMath/DecimalMath.cs#L207")]
+    /// <summary>Экспонента числа</summary>
+    /// <param name="x">Показатель степени</param>
+    /// <returns>Значение e^x</returns>
     [Copyright("https://github.com/raminrahimzada/CSharp-Helper-Classes/blob/master/Math/DecimalMath/DecimalMath.cs#L207")]
     public static decimal Exp(this decimal x)
     {
@@ -97,6 +117,11 @@ public static class DecimalExtensions
         return result * e.Pow(count);
     }
 
+    [Copyright("https://github.com/raminrahimzada/CSharp-Helper-Classes/blob/master/Math/DecimalMath/DecimalMath.cs#L207")]
+    /// <summary>Натуральный логарифм числа</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Значение ln(x)</returns>
+    /// <exception cref="ArgumentException">Число не больше нуля</exception>
     [Copyright("https://github.com/raminrahimzada/CSharp-Helper-Classes/blob/master/Math/DecimalMath/DecimalMath.cs#L207")]
     public static decimal Log(this decimal x)
     {
@@ -136,6 +161,9 @@ public static class DecimalExtensions
         return count - result;
     }
 
+    /// <summary>Десятичный логарифм числа</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Значение lg(x)</returns>
     public static decimal Log10(this decimal x) => Log(x) * log10_inv;
 
     private static void TruncateToPeriodicInterval(ref decimal x)
@@ -152,8 +180,14 @@ public static class DecimalExtensions
             x += divide * pi2;
         }
     }
+    /// <summary>Синус числа</summary>
+    /// <param name="x">Угол в радианах</param>
+    /// <returns>Значение sin(x)</returns>
     public static decimal Sin(this decimal x) => CalculateSinFromCos(x, Cos(x));
 
+    /// <summary>Косинус числа</summary>
+    /// <param name="x">Угол в радианах</param>
+    /// <returns>Значение cos(x)</returns>
     public static decimal Cos(this decimal x)
     {
         //truncating to  [-2*PI;2*PI]
@@ -208,6 +242,10 @@ public static class DecimalExtensions
         ? +Sqrt(1 - cos * cos) 
         : -Sqrt(1 - cos * cos);
 
+    /// <summary>Тангенс числа</summary>
+    /// <param name="x">Угол в радианах</param>
+    /// <returns>Значение tan(x)</returns>
+    /// <exception cref="ArgumentException">Косинус равен нулю</exception>
     public static decimal Tan(this decimal x)
     {
         var cos = Cos(x);
@@ -218,6 +256,9 @@ public static class DecimalExtensions
         return sin / cos;
     }
 
+    /// <summary>Гиперболический синус числа</summary>
+    /// <param name="x">Аргумент</param>
+    /// <returns>Значение sinh(x)</returns>
     public static decimal Sinh(this decimal x)
     {
         var exp = Exp(x);
@@ -225,6 +266,9 @@ public static class DecimalExtensions
         return (exp - exp_inv) * 0.5m;
     }
 
+    /// <summary>Гиперболический косинус числа</summary>
+    /// <param name="x">Аргумент</param>
+    /// <returns>Значение cosh(x)</returns>
     public static decimal Cosh(this decimal x)
     {
         var exp = Exp(x);
@@ -232,6 +276,9 @@ public static class DecimalExtensions
         return (exp + exp_inv) * 0.5m;
     }
 
+    /// <summary>Гиперболический тангенс числа</summary>
+    /// <param name="x">Аргумент</param>
+    /// <returns>Значение tanh(x)</returns>
     public static decimal Tanh(this decimal x)
     {
         var exp = Exp(x);
@@ -239,6 +286,10 @@ public static class DecimalExtensions
         return (exp - exp_inv) / (exp + exp_inv);
     }
 
+    /// <summary>Арксинус числа</summary>
+    /// <param name="x">Число в диапазоне [-1;1]</param>
+    /// <returns>Значение asin(x)</returns>
+    /// <exception cref="ArgumentException">Число вне диапазона [-1;1]</exception>
     public static decimal Asin(this decimal x)
     {
         if (x is > 1 or < -1) throw new ArgumentException("x must be in [-1,1]");
@@ -283,6 +334,9 @@ public static class DecimalExtensions
         return y;
     }
 
+    /// <summary>Арктангенс числа</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Значение atan(x)</returns>
     public static decimal ATan(this decimal x) => x switch
     {
         0 => 0,
@@ -290,6 +344,9 @@ public static class DecimalExtensions
         _ => Asin(x / Sqrt(1 + x * x))
     };
 
+    /// <summary>Арккосинус числа</summary>
+    /// <param name="x">Число в диапазоне [-1;1]</param>
+    /// <returns>Значение acos(x)</returns>
     public static decimal Acos(this decimal x) => x switch
     {
         0 => pi05,
@@ -298,6 +355,10 @@ public static class DecimalExtensions
         _ => pi05 - Asin(x)
     };
 
+    /// <summary>Арктангенс отношения координат точки</summary>
+    /// <param name="point">Точка (x, y)</param>
+    /// <returns>Значение atan2(y, x)</returns>
+    /// <exception cref="ArgumentException">Недопустимые аргументы</exception>
     public static decimal Atan2(this (decimal x, decimal y) point) => point switch
     {
         (> 0,    _) => ATan(point.y / point.x),
@@ -317,6 +378,9 @@ public static class DecimalExtensions
     //[Diagnostics.DST]
     //public static double GetAbsMod(this decimal x, decimal mod) { return x % mod + (x < 0 ? mod : 0); }
 
+    /// <summary>Модуль числа</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Модуль числа</returns>
     [DST]
     public static decimal GetAbs(this decimal x) => x < 0 ? -x : x;
 
@@ -331,19 +395,32 @@ public static class DecimalExtensions
     //    return result;
     //}
 
+    /// <summary>Возведение числа в степень</summary>
+    /// <param name="x">Основание</param>
+    /// <param name="y">Показатель степени</param>
+    /// <returns>Значение x^y</returns>
     [DST]
     public static decimal Pow(this decimal x, decimal y) => (decimal)Math.Pow((double)x, (double)y);
 
     //[Diagnostics.DST]
     //public static Complex GetPower(this decimal x, Complex z) { return x ^ z; }
 
+    /// <summary>Преобразование в децибелы по амплитуде</summary>
+    /// <param name="x">Амплитудное значение</param>
+    /// <returns>Значение в децибелах</returns>
     [DST]
     public static decimal In_dB(this decimal x) => 20 * (decimal)Math.Log10((double)x);
     //[Diagnostics.DST]
     //public static double In_dB_byPower(this decimal x) { return 10 * Math.Log10(x); }
 
+    /// <summary>Преобразование из децибелов в разы по амплитуде</summary>
+    /// <param name="db">Значение в децибелах</param>
+    /// <returns>Значение в разах</returns>
     [DST]
     public static double From_dB(this decimal db) => Math.Pow(10, (double)(db / 20));
+    /// <summary>Преобразование из децибелов в разы по мощности</summary>
+    /// <param name="db">Значение в децибелах</param>
+    /// <returns>Значение в разах</returns>
     [DST]
     public static double From_dB_byPower(this decimal db) => Math.Pow(10, (double)(db / 10));
 
@@ -381,6 +458,10 @@ public static class DecimalExtensions
     //    }
     //}
 
+    /// <summary>Возведение числа в целочисленную степень</summary>
+    /// <param name="x">Основание</param>
+    /// <param name="p">Показатель степени</param>
+    /// <returns>Значение x^p</returns>
     public static decimal Pow(this decimal x, int p)
     {
         switch (x)
@@ -457,6 +538,10 @@ public static class DecimalExtensions
         return count;
     }
 
+    /// <summary>Адаптивное округление до указанного числа значащих разрядов</summary>
+    /// <param name="x">Округляемое число</param>
+    /// <param name="n">Количество значащих разрядов</param>
+    /// <returns>Число с указанным количеством значащих разрядов</returns>
     public static decimal RoundAdaptive(this decimal x, int n = 1)
     {
         if (x < 0) return -(-x).RoundAdaptive(n);

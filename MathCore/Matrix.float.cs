@@ -93,8 +93,10 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
     /// <summary>Матрица является числом</summary>
     public bool IsDigit => N == 1 && M == 1;
 
+    /// <summary>Транспонированная матрица</summary>
     public MatrixFloat T => GetTranspose();
 
+    /// <summary>Норма матрицы по строкам (максимальная сумма абсолютных значений в строке)</summary>
     public float Norm_m
     {
         get
@@ -107,6 +109,7 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
         }
     }
 
+    /// <summary>Норма матрицы по столбцам (максимальная сумма абсолютных значений в столбце)</summary>
     public float Norm_l
     {
         get
@@ -119,6 +122,7 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
         }
     }
 
+    /// <summary>Евклидова норма (норма Фробениуса) матрицы</summary>
     public float Norm_k
     {
         get
@@ -178,6 +182,8 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
                 _Data[i, j] = Data[i, j];
     }
 
+    /// <summary>Матрица-столбец из последовательности значений</summary>
+    /// <param name="DataRow">Последовательность значений</param>
     [DST]
     public MatrixFloat(IList<float> DataRow)
         : this(DataRow.Count, 1)
@@ -186,6 +192,8 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
             _Data[i, 0] = DataRow[i];
     }
 
+    /// <summary>Матрица из последовательности последовательностей строк</summary>
+    /// <param name="Items">Последовательность строк матрицы</param>
     public MatrixFloat(IEnumerable<IEnumerable<float>> Items) : this(GetElements(Items)) { }
 
     private static float[,] GetElements(IEnumerable<IEnumerable<float>> Items)
@@ -365,6 +373,10 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
         return det;
     }
 
+    /// <summary>LU-разложение матрицы</summary>
+    /// <param name="L">Нижняя треугольная матрица</param>
+    /// <param name="U">Верхняя треугольная матрица</param>
+    /// <param name="P">Матрица перестановок</param>
     public void GetLUDecomposition(out MatrixFloat L, out MatrixFloat U, out MatrixFloat P)
     {
         LUDecomposition(_Data, out var l, out var u, out var p);
@@ -511,10 +523,15 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
     /// <inheritdoc />
     [DST]  public override string ToString() => $"MatrixFloat[{N}x{M}]";
 
+    /// <summary>Строковое представление матрицы с заданным форматом чисел</summary>
+    /// <param name="Format">Формат чисел</param>
+    /// <returns>Строковое представление матрицы</returns>
     [DST]  public string ToStringFormat(string Format) => ToStringFormat('\t', Format);
 
-    //[DST] public string ToStringFormat(char Splitter) { return ToStringFormat(Splitter, "r"); }
-
+    /// <summary>Строковое представление матрицы с заданным разделителем и форматом чисел</summary>
+    /// <param name="Splitter">Разделитель значений</param>
+    /// <param name="Format">Формат чисел</param>
+    /// <returns>Строковое представление матрицы</returns>
     public string ToStringFormat(char Splitter = '\t', string Format = "r")
     {
         var result = new StringBuilder();
@@ -547,11 +564,17 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
 
     /* -------------------------------------------------------------------------------------------- */
 
+    /// <summary>Оператор равенства двух матриц</summary>
     public static bool operator ==(MatrixFloat? A, MatrixFloat? B) => A is null && (B is null)
         || A != null && B != null && A.Equals(B);
 
+    /// <summary>Оператор неравенства двух матриц</summary>
     public static bool operator !=(MatrixFloat? A, MatrixFloat? B) => !(A == B);
 
+    /// <summary>Прибавление числа к элементам матрицы</summary>
+    /// <param name="M">Матрица</param>
+    /// <param name="x">Прибавляемое число</param>
+    /// <returns>Новая матрица</returns>
     [DST]
     public static MatrixFloat operator +(MatrixFloat M, float x)
     {
@@ -562,6 +585,10 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
         return result;
     }
 
+    /// <summary>Прибавление числа к элементам матрицы (число слева)</summary>
+    /// <param name="x">Прибавляемое число</param>
+    /// <param name="M">Матрица</param>
+    /// <returns>Новая матрица</returns>
     [DST]
     public static MatrixFloat operator +(float x, MatrixFloat M)
     {
@@ -572,6 +599,10 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
         return result;
     }
 
+    /// <summary>Вычитание числа из элементов матрицы</summary>
+    /// <param name="M">Матрица</param>
+    /// <param name="x">Вычитаемое число</param>
+    /// <returns>Новая матрица</returns>
     [DST]
     public static MatrixFloat operator -(MatrixFloat M, float x)
     {
@@ -582,6 +613,10 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
         return result;
     }
 
+    /// <summary>Вычитание элементов матрицы из числа</summary>
+    /// <param name="x">Уменьшаемое число</param>
+    /// <param name="M">Матрица</param>
+    /// <returns>Новая матрица</returns>
     [DST]
     public static MatrixFloat operator -(float x, MatrixFloat M)
     {
@@ -592,6 +627,10 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
         return result;
     }
 
+    /// <summary>Умножение элементов матрицы на число</summary>
+    /// <param name="M">Матрица</param>
+    /// <param name="x">Множитель</param>
+    /// <returns>Новая матрица</returns>
     [DST]
     public static MatrixFloat operator *(MatrixFloat M, float x)
     {
@@ -602,6 +641,10 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
         return result;
     }
 
+    /// <summary>Умножение элементов матрицы на число (число слева)</summary>
+    /// <param name="x">Множитель</param>
+    /// <param name="M">Матрица</param>
+    /// <returns>Новая матрица</returns>
     [DST]
     public static MatrixFloat operator *(float x, MatrixFloat M)
     {
@@ -612,14 +655,22 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
         return result;
     }
 
+    /// <summary>Умножение двумерного массива на матрицу</summary>
     [DST]  public static MatrixFloat operator *(float[,] A, MatrixFloat B) => (MatrixFloat)A * B;
 
+    /// <summary>Умножение массива на матрицу (матрица-столбец)</summary>
     [DST]  public static MatrixFloat operator *(float[] A, MatrixFloat B) => (MatrixFloat)A * B;
 
+    /// <summary>Умножение матрицы на массив (матрица-строка)</summary>
     [DST]  public static MatrixFloat operator *(MatrixFloat A, float[] B) => A * (MatrixFloat)B;
 
+    /// <summary>Умножение матрицы на двумерный массив</summary>
     [DST]  public static MatrixFloat operator *(MatrixFloat A, float[,] B) => A * (MatrixFloat)B;
 
+    /// <summary>Деление элементов матрицы на число</summary>
+    /// <param name="M">Матрица</param>
+    /// <param name="x">Делитель</param>
+    /// <returns>Новая матрица</returns>
     [DST]
     public static MatrixFloat operator /(MatrixFloat M, float x)
     {
@@ -630,6 +681,7 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
         return result;
     }
 
+    /// <summary>Деление числа на матрицу (через обратную матрицу)</summary>
     public static MatrixFloat operator /(float x, MatrixFloat M)
     {
         M = M.GetInverse();
@@ -758,17 +810,27 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
 
     /* -------------------------------------------------------------------------------------------- */
 
-    /// <summary>Оператор неявного приведения типа вещественного числа двойной точности к типу Матрица порядка 1х1</summary>
-    /// <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
+    /// <summary>Неявное приведение числа к матрице порядка 1х1</summary>
+    /// <param name="X">Приводимое число</param>
+    /// <returns>Матрица порядка 1х1</returns>
     [DST]
     public static implicit operator MatrixFloat(float X) => new(1, 1) { [0, 0] = X };
 
+    /// <summary>Явное приведение матрицы к двумерному массиву</summary>
+    /// <param name="M">Матрица</param>
+    /// <returns>Двумерный массив данных</returns>
     [DST]
     public static explicit operator float[,](MatrixFloat M) => (float[,])M._Data.Clone();
 
+    /// <summary>Явное приведение двумерного массива к матрице</summary>
+    /// <param name="Data">Двумерный массив</param>
+    /// <returns>Матрица</returns>
     [DST]
     public static explicit operator MatrixFloat(float[,] Data) => new(Data);
 
+    /// <summary>Явное приведение массива к матрице-столбцу</summary>
+    /// <param name="Data">Массив</param>
+    /// <returns>Матрица-столбец</returns>
     [DST]
     public static explicit operator MatrixFloat(float[] Data) => new(Data);
 
@@ -776,6 +838,9 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
 
     #region IEquatable<MatrixFloat> Members
 
+    /// <summary>Проверка равенства матриц</summary>
+    /// <param name="other">Сравниваемая матрица</param>
+    /// <returns>Истина, если матрицы равны</returns>
     public bool Equals(MatrixFloat? other) =>
         other != null
         && (ReferenceEquals(this, other)
@@ -783,6 +848,7 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
             && other._M == _M
             && Equals(other._Data, _Data));
 
+    /// <inheritdoc />
     [DST]
     bool IEquatable<MatrixFloat>.Equals(MatrixFloat? other) => Equals(other);
 
@@ -811,5 +877,7 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
 
     /* -------------------------------------------------------------------------------------------- */
 
+    /// <summary>Получить двумерный массив данных матрицы</summary>
+    /// <returns>Двумерный массив данных</returns>
     public float[,] GetData() => _Data;
 }

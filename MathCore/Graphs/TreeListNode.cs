@@ -4,6 +4,8 @@
 
 namespace MathCore.Graphs;
 
+/// <summary>Узел дерева, обеспечивающий связь с предыдущим, следующим и дочерним узлами</summary>
+/// <typeparam name="TValue">Тип значения узла</typeparam>
 public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
 {
     private TreeListNode<TValue>? _Prev;
@@ -11,6 +13,7 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
 
     private TreeListNode<TValue>? _Child;
 
+    /// <summary>Предыдущий узел дерева</summary>
     public TreeListNode<TValue>? Prev
     {
         get => _Prev;
@@ -26,6 +29,7 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
         }
     }
 
+    /// <summary>Следующий узел дерева</summary>
     public TreeListNode<TValue>? Next
     {
         get => _Next;
@@ -38,6 +42,7 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
         }
     }
 
+    /// <summary>Дочерний узел дерева</summary>
     public TreeListNode<TValue>? Child
     {
         get => _Child;
@@ -50,8 +55,10 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
         }
     }
 
+    /// <summary>Значение узла</summary>
     public TValue Value { get; set; } = default!;
 
+    /// <summary>Длина последовательности узлов от текущего до последнего</summary>
     public int Length => this[n => n?.Next].Count();
 
     /// <summary>Определяет индекс заданного элемента коллекции <see cref="T:System.Collections.Generic.IList`1"/></summary>
@@ -110,6 +117,10 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
 
     void IList<TreeListNode<TValue>>.RemoveAt(int index) => RemoveAt(index);
 
+    /// <summary>Получение или задание узла по индексу в последовательности</summary>
+    /// <param name="i">Индекс узла</param>
+    /// <returns>Узел на указанном индексе</returns>
+    /// <exception cref="IndexOutOfRangeException">Индекс вне диапазона</exception>
     public TreeListNode<TValue> this[int i]
     {
         get
@@ -136,6 +147,9 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
         set => this[index].Value = value;
     }
 
+    /// <summary>Получение узла по многоуровневому индексу</summary>
+    /// <param name="index">Массив индексов по уровням дерева</param>
+    /// <returns>Узел на указанном пути или null</returns>
     public TreeListNode<TValue>? this[params IReadOnlyList<int>? index]
     {
         get
@@ -152,18 +166,33 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
         }
     }
 
+    /// <summary>Является ли узел первым в последовательности</summary>
     public bool IsFirst => _Prev is null || ReferenceEquals(_Prev?.Child, this);
+    /// <summary>Является ли узел последним в последовательности</summary>
     public bool IsLast => _Next is null;
+    /// <summary>Является ли узел корнем</summary>
     public bool IsRoot => _Prev is null;
 
+    /// <summary>Является ли узел дочерним</summary>
     public bool IsChild => !IsRoot && ReferenceEquals(_Prev?.Child, this);
 
+    /// <summary>Корневой узел дерева</summary>
     public TreeListNode<TValue> Root => this[n => n?.Prev].First(n => n.IsRoot);
+    /// <summary>Первый узел в последовательности</summary>
     public TreeListNode<TValue> First => this[n => n?.Prev].First(n => n.IsFirst);
+    /// <summary>Последний узел в последовательности</summary>
     public TreeListNode<TValue> Last => this[n => n?.Next].First(n => n.IsLast);
 
+    /// <summary>Селектор узла по предыдущему, следующему и дочернему узлам</summary>
+    /// <param name="Prev">Предыдущий узел</param>
+    /// <param name="Next">Следующий узел</param>
+    /// <param name="Child">Дочерний узел</param>
+    /// <returns>Выбранный узел</returns>
     public delegate TreeListNode<TValue>? NodeSelector(TreeListNode<TValue>? Prev, TreeListNode<TValue>? Next, TreeListNode<TValue>? Child);
 
+    /// <summary>Перечисление узлов с селектором перехода по трём связям</summary>
+    /// <param name="Selector">Селектор перехода</param>
+    /// <returns>Последовательность узлов</returns>
     public IEnumerable<TreeListNode<TValue>> this[NodeSelector Selector]
     {
         get
@@ -173,6 +202,9 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
         }
     }
 
+    /// <summary>Перечисление узлов с селектором перехода</summary>
+    /// <param name="Selector">Селектор перехода</param>
+    /// <returns>Последовательность узлов</returns>
     public IEnumerable<TreeListNode<TValue>> this[Func<TreeListNode<TValue>, TreeListNode<TValue>?> Selector]
     {
         get
@@ -182,10 +214,15 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
         }
     }
 
+    /// <summary>Инициализация пустого узла</summary>
     public TreeListNode() { }
 
+    /// <summary>Инициализация узла значением</summary>
+    /// <param name="Value">Значение узла</param>
     public TreeListNode(TValue Value) => this.Value = Value;
 
+    /// <summary>Инициализация узла последовательностью значений</summary>
+    /// <param name="Collection">Последовательность значений</param>
     public TreeListNode(IEnumerable<TValue> Collection)
     {
         var first = true;
@@ -200,6 +237,9 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
                 node = node?.Add(item);
     }
 
+    /// <summary>Добавляет узел со значением в конец последовательности</summary>
+    /// <param name="Value">Значение нового узла</param>
+    /// <returns>Добавленный узел</returns>
     public TreeListNode<TValue> Add(TValue Value)
     {
         var node = new TreeListNode<TValue>(Value);
@@ -207,6 +247,8 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
         return node;
     }
 
+    /// <summary>Добавляет узел в конец последовательности</summary>
+    /// <param name="Node">Добавляемый узел</param>
     public void Add(TreeListNode<TValue> Node)
     {
         var node = this;
@@ -225,10 +267,13 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
 
     /// <summary>Удаляет все элементы из интерфейса <see cref="T:System.Collections.Generic.ICollection`1"/>.</summary>
     /// <exception cref="T:System.NotSupportedException">Интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> доступен только для чтения.</exception>
+    /// <summary>Очистка последовательности (удаление следующего узла)</summary>
     public void Clear() => Next = null;
 
+    /// <summary>Очистка дочернего узла</summary>
     public void ClearChild() => Child = null;
 
+    /// <summary>Полная очистка узла (последовательность и дочерний узел)</summary>
     public void ClearFull() { Clear(); ClearChild(); }
 
     /// <summary>Определяет, содержит ли интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> указанное значение.</summary>
@@ -310,10 +355,17 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
     /// <returns>Значение true, если интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> доступен только для чтения, в противном случае — значение false.</returns>
     public bool IsReadOnly => false;
 
+    /// <summary>Добавляет последовательность значений в конец списка</summary>
+    /// <param name="collection">Последовательность значений</param>
     public void Add(IEnumerable<TValue> collection) => _ = collection?.Aggregate(this, (current, value) => current.Add(value));
 
+    /// <summary>Добавляет узел в качестве дочернего</summary>
+    /// <param name="Node">Добавляемый дочерний узел</param>
     public void AddChild(TreeListNode<TValue> Node) { if (Child is null) Child = Node; else Child?.Add(Node); }
 
+    /// <summary>Добавляет дочерний узел со значением</summary>
+    /// <param name="value">Значение дочернего узла</param>
+    /// <returns>Добавленный дочерний узел</returns>
     public TreeListNode<TValue> AddChild(TValue value)
     {
         var node = new TreeListNode<TValue>(value);
@@ -321,10 +373,15 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
         return node;
     }
 
+    /// <summary>Добавляет последовательность значений в качестве дочерних узлов</summary>
+    /// <param name="collection">Последовательность значений</param>
     public void AddChild(IEnumerable<TValue> collection) => _ = collection.Aggregate<TValue, TreeListNode<TValue>?>(null, (current, item) => current is null ? AddChild(item) : current.Add(item));
 
+    /// <inheritdoc />
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+    /// <summary>Перечисляет узлы последовательности</summary>
+    /// <returns>Перечислитель узлов</returns>
     public IEnumerator<TreeListNode<TValue>> GetEnumerator()
     {
         for (var node = this; node != null; node = node?.Next)
@@ -335,9 +392,13 @@ public class TreeListNode<TValue> : IList<TreeListNode<TValue>>, IList<TValue>
     /// <returns>Интерфейс <see cref="T:System.Collections.Generic.IEnumerator`1"/>, который может использоваться для перебора элементов коллекции.</returns>
     IEnumerator<TValue> IEnumerable<TValue>.GetEnumerator() => ((IEnumerable<TreeListNode<TValue>>)this).Select(n => n.Value).GetEnumerator();
 
+    /// <summary>Строковое представление узла и его поддерева</summary>
+    /// <returns>Строковое представление</returns>
     public override string ToString() => $"{Value}{(_Child is null ? string.Empty : $"{{{_Child}}}")}{(_Next is null ? string.Empty : $",{_Next}")}";
 
+    /// <summary>Неявное преобразование узла в его значение</summary>
     public static implicit operator TValue(TreeListNode<TValue> Node) => Node.Value;
 
+    /// <summary>Неявное преобразование значения в узел</summary>
     public static implicit operator TreeListNode<TValue>(TValue Value) => new(Value);
 }

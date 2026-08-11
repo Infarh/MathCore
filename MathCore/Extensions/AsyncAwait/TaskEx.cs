@@ -40,23 +40,56 @@ public static class TaskEx
     /// <summary><c>.ConfigureAwait(false)</c></summary>
     public static ConfiguredTaskAwaitable<T> CAF<T>(this Task<T> task, bool LockContext = false) => task.ConfigureAwait(LockContext);
 
+    /// <summary>Формирует ожидание с конфигурацией выполнения и действием перед началом</summary>
+    /// <param name="task">Задача</param>
+    /// <param name="LockContext">Использовать ли исходный контекст синхронизации</param>
+    /// <param name="BeforeAction">Действие, выполняемое перед задачей</param>
+    /// <returns>Ожидание с действием</returns>
     public static PerformActionAwaitable ConfigureAwait(this Task task, bool LockContext, Action BeforeAction) => new(BeforeAction, task, LockContext);
 
+    /// <summary>Формирует ожидание с конфигурацией выполнения и действием перед началом</summary>
+    /// <param name="task">Задача</param>
+    /// <param name="LockContext">Использовать ли исходный контекст синхронизации</param>
+    /// <param name="BeforeAction">Действие, выполняемое перед задачей</param>
+    /// <returns>Ожидание с действием</returns>
     public static PerformActionAwaitable<T> ConfigureAwait<T>(this Task<T> task, bool LockContext, Action BeforeAction) => new(BeforeAction, task, LockContext);
 
+    /// <summary>Формирует ожидание с продолжением в указанном планировщике потоков</summary>
+    /// <param name="task">Задача</param>
+    /// <param name="ContinuationScheduler">Планировщик продолжения</param>
+    /// <returns>Ожидание</returns>
     public static TaskSchedulerAwaitable ConfigureAwait(this Task task, TaskScheduler ContinuationScheduler) => new(ContinuationScheduler, task);
 
+    /// <summary>Формирует ожидание с продолжением в указанном контексте синхронизации</summary>
+    /// <param name="task">Задача</param>
+    /// <param name="Context">Контекст синхронизации</param>
+    /// <returns>Ожидание</returns>
     public static SynchronizationContextAwaitable ConfigureAwait(this Task task, SynchronizationContext Context) => new(Context, task);
 
+    /// <summary>Формирует ожидание с продолжением в указанном планировщике потоков</summary>
+    /// <param name="task">Задача</param>
+    /// <param name="ContinuationScheduler">Планировщик продолжения</param>
+    /// <returns>Ожидание</returns>
     public static TaskSchedulerAwaitable<T> ConfigureAwait<T>(this Task<T> task, TaskScheduler ContinuationScheduler) => new(ContinuationScheduler, task);
 
+    /// <summary>Формирует ожидание с продолжением в указанном контексте синхронизации</summary>
+    /// <param name="task">Задача</param>
+    /// <param name="Context">Контекст синхронизации</param>
+    /// <returns>Ожидание</returns>
     public static SynchronizationContextAwaitable<T> ConfigureAwait<T>(this Task<T> task, SynchronizationContext Context) => new(Context, task);
 
     /// <summary>Переход в асинхронную область - в новый поток из пула потоков</summary>
     public static YieldAsyncAwaitable YieldAsync() => new();
 
+    /// <summary>Преобразует значение в завершённую задачу</summary>
+    /// <param name="value">Значение</param>
+    /// <returns>Завершённая задача с результатом</returns>
     public static Task<T> ToTask<T>(this T value) => Task.FromResult(value);
 
+    /// <summary>Связывает результат задачи с селектором, возвращающим новую задачу</summary>
+    /// <param name="task">Исходная задача</param>
+    /// <param name="Selector">Селектор результата</param>
+    /// <returns>Задача результата</returns>
     public static async Task<TResult> Bind<T, TResult>(this Task<T> task, Func<T, Task<TResult>> Selector) => await Selector(await task).ConfigureAwait(false);
 
     //public static Task<TResult> SelectMany<T, TValue, TResult>(
@@ -71,17 +104,42 @@ public static class TaskEx
     /// <param name="scheduler">Планировщик потоков, распределяющий процессы выполнения задач</param>
     public static TaskSchedulerAwaitable SwitchContext(this TaskScheduler scheduler) => new(scheduler);
 
+    /// <summary>Формирует ожидание с переключением в указанный контекст синхронизации</summary>
+    /// <param name="context">Контекст синхронизации</param>
+    /// <returns>Ожидание</returns>
     public static SynchronizationContextAwaitable SwitchContext(this SynchronizationContext context) => new(context);
 
+    /// <summary>Возвращает задачу, завершающуюся первой из переданных</summary>
+    /// <param name="tasks">Последовательность задач</param>
+    /// <returns>Задача, завершившаяся первой</returns>
     public static Task<Task> WhenAny(this IEnumerable<Task> tasks) => Task.WhenAny(tasks);
+    /// <summary>Возвращает задачу, завершающуюся первой из переданных</summary>
+    /// <param name="tasks">Последовательность задач</param>
+    /// <returns>Задача, завершившаяся первой</returns>
     public static Task<Task<T>> WhenAny<T>(this IEnumerable<Task<T>> tasks) => Task.WhenAny(tasks);
 
+    /// <summary>Возвращает задачу, завершающуюся по завершении всех переданных</summary>
+    /// <param name="tasks">Последовательность задач</param>
+    /// <returns>Задача завершения всех задач</returns>
     public static Task WhenAll(this IEnumerable<Task> tasks) => Task.WhenAll(tasks);
+    /// <summary>Возвращает задачу с массивами результатов всех переданных задач</summary>
+    /// <param name="tasks">Последовательность задач</param>
+    /// <returns>Задача с массивом результатов</returns>
     public static Task<T[]> WhenAll<T>(this IEnumerable<Task<T>> tasks) => Task.WhenAll(tasks);
 
+    /// <summary>Запускает задачу и игнорирует результат, при необходимости обрабатывая исключение</summary>
+    /// <param name="task">Задача</param>
+    /// <param name="OnException">Обработчик исключения</param>
     public static void AndForget<T>(this Task<T> task, Action<AggregateException>? OnException = null) => task.ContinueWith(t => OnException?.Invoke(t.Exception!), TaskContinuationOptions.OnlyOnFaulted);
+    /// <summary>Запускает задачу и игнорирует результат, при необходимости обрабатывая исключение</summary>
+    /// <param name="task">Задача</param>
+    /// <param name="OnException">Обработчик исключения</param>
     public static void AndForget(this Task task, Action<AggregateException>? OnException = null) => task.ContinueWith(t => OnException?.Invoke(t.Exception!), TaskContinuationOptions.OnlyOnFaulted);
 
+    /// <summary>Запускает задачу и игнорирует результат, обрабатывая исключение заданного типа</summary>
+    /// <typeparam name="TException">Тип обрабатываемого исключения</typeparam>
+    /// <param name="task">Задача</param>
+    /// <param name="OnException">Обработчик исключения</param>
     public static async void AndForgetException<TException>(this Task task, Action<TException>? OnException = null) where TException : Exception
     {
         try
@@ -94,6 +152,9 @@ public static class TaskEx
         }
     }
 
+    /// <summary>Запускает задачу, игнорируя отмену, при необходимости вызывая обработчик</summary>
+    /// <param name="task">Задача</param>
+    /// <param name="OnCancelled">Обработчик отмены</param>
     public static async void ForgetCancellation(this Task task, Action? OnCancelled = null)
     {
         try
@@ -106,6 +167,10 @@ public static class TaskEx
         }
     }
 
+    /// <summary>Запускает задачу, игнорируя отмену текущим токеном, при необходимости вызывая обработчик</summary>
+    /// <param name="task">Задача</param>
+    /// <param name="Cancel">Токен отмены</param>
+    /// <param name="OnCancelled">Обработчик отмены</param>
     public static async void ForgetCancellation(this Task task, CancellationToken Cancel, Action? OnCancelled = null)
     {
         try
@@ -118,6 +183,10 @@ public static class TaskEx
         }
     }
 
+    /// <summary>Ожидает завершения задачи с учётом токена отмены</summary>
+    /// <param name="task">Задача</param>
+    /// <param name="cancel">Токен отмены</param>
+    /// <returns>Результат задачи либо отменённая задача</returns>
     public static Task<T> WithCancellation<T>(this Task<T> task, CancellationToken cancel) =>
         task.IsCompleted || !cancel.CanBeCanceled
             ? task
@@ -139,16 +208,38 @@ public static class TaskEx
         return await task.ConfigureAwait(false);
     }
 
+    /// <summary>Выполняет обработку исключений задачи при её сбое</summary>
+    /// <param name="task">Задача</param>
+    /// <param name="ProcessExceptions">Обработчик исключений</param>
+    /// <returns>Задача продолжения</returns>
     public static Task Catch<T>(this Task<T> task, Action<AggregateException> ProcessExceptions) => task.ContinueWith(t => ProcessExceptions(t.Exception!), TaskContinuationOptions.OnlyOnFaulted);
+    /// <summary>Выполняет обработку исключений задачи при её сбое</summary>
+    /// <param name="task">Задача</param>
+    /// <param name="ProcessExceptions">Обработчик исключений</param>
+    /// <returns>Задача продолжения</returns>
     public static Task Catch(this Task task, Action<AggregateException> ProcessExceptions) => task.ContinueWith(t => ProcessExceptions(t.Exception!), TaskContinuationOptions.OnlyOnFaulted);
 
+    /// <summary>Выполняет действие по завершении задачи</summary>
+    /// <param name="task">Задача</param>
+    /// <param name="OnTaskCompleted">Действие по завершении</param>
+    /// <returns>Задача продолжения</returns>
     public static Task Finally<T>(this Task<T> task, Action OnTaskCompleted) => task.ContinueWith(_ => OnTaskCompleted(), TaskContinuationOptions.None);
+    /// <summary>Выполняет действие по завершении задачи</summary>
+    /// <param name="task">Задача</param>
+    /// <param name="OnTaskCompleted">Действие по завершении</param>
+    /// <returns>Задача продолжения</returns>
     public static Task Finally(this Task task, Action OnTaskCompleted) => task.ContinueWith(_ => OnTaskCompleted(), TaskContinuationOptions.None);
 
     // ReSharper disable once InconsistentNaming
     private const TaskContinuationOptions not_on_cancel = TaskContinuationOptions.NotOnCanceled;
 
     /// https://blogs.msdn.microsoft.com/pfxteam/2010/04/04/a-tour-of-parallelextensionsextras/
+    /// <summary>Применяет проекцию к результату задачи</summary>
+    /// <typeparam name="TSource">Тип результата источника</typeparam>
+    /// <typeparam name="TResult">Тип результата проекции</typeparam>
+    /// <param name="source">Исходная задача</param>
+    /// <param name="selector">Селектор</param>
+    /// <returns>Задача с результатом проекции</returns>
     public static Task<TResult> Select<TSource, TResult>(this Task<TSource> source, Func<TSource, TResult> selector)
     {
         if (source is null) throw new ArgumentNullException(nameof(source));
@@ -157,6 +248,12 @@ public static class TaskEx
         return source.ContinueWith(t => selector(t.Result), not_on_cancel);
     }
 
+    /// <summary>Связывает результат задачи с селектором задачи</summary>
+    /// <typeparam name="TSource">Тип результата источника</typeparam>
+    /// <typeparam name="TResult">Тип результата</typeparam>
+    /// <param name="source">Исходная задача</param>
+    /// <param name="selector">Селектор задачи</param>
+    /// <returns>Распакованная задача результата</returns>
     public static Task<TResult> SelectMany<TSource, TResult>(this Task<TSource> source, Func<TSource, Task<TResult>> selector)
     {
         if (source is null) throw new ArgumentNullException(nameof(source));
@@ -165,6 +262,14 @@ public static class TaskEx
         return source.ContinueWith(t => selector(t.Result), not_on_cancel).Unwrap();
     }
 
+    /// <summary>Связывает результаты двух задач и применяет проекцию</summary>
+    /// <typeparam name="TSource">Тип результата источника</typeparam>
+    /// <typeparam name="TCollection">Тип промежуточного результата</typeparam>
+    /// <typeparam name="TResult">Тип результата</typeparam>
+    /// <param name="source">Исходная задача</param>
+    /// <param name="GetCollection">Селектор промежуточной задачи</param>
+    /// <param name="GetResult">Проекция результата</param>
+    /// <returns>Задача результата</returns>
     public static Task<TResult?> SelectMany<TSource, TCollection, TResult>
     (
         this Task<TSource> source,
@@ -182,6 +287,11 @@ public static class TaskEx
            .Unwrap()!;
     }
 
+    /// <summary>Фильтрует результат задачи по предикату</summary>
+    /// <typeparam name="TSource">Тип результата</typeparam>
+    /// <param name="source">Исходная задача</param>
+    /// <param name="predicate">Предикат</param>
+    /// <returns>Задача результата либо отменённая, если предикат вернул false</returns>
     public static Task<TSource?> Where<TSource>(this Task<TSource> source, Func<TSource, bool> predicate)
     {
         // Validate arguments
@@ -199,6 +309,17 @@ public static class TaskEx
         }, cts.Token, not_on_cancel, TaskScheduler.Default)!;
     }
 
+    /// <summary>Соединяет результаты двух задач по ключу</summary>
+    /// <typeparam name="TOuter">Тип внешнего результата</typeparam>
+    /// <typeparam name="TInner">Тип внутреннего результата</typeparam>
+    /// <typeparam name="TKey">Тип ключа</typeparam>
+    /// <typeparam name="TResult">Тип результата</typeparam>
+    /// <param name="Outer">Внешняя задача</param>
+    /// <param name="Inner">Внутренняя задача</param>
+    /// <param name="OuterKeySelector">Селектор внешнего ключа</param>
+    /// <param name="InnerKeySelector">Селектор внутреннего ключа</param>
+    /// <param name="ResultSelector">Проекция результата</param>
+    /// <returns>Задача результата</returns>
     public static Task<TResult> Join<TOuter, TInner, TKey, TResult>
     (
         this Task<TOuter> Outer,
@@ -214,6 +335,18 @@ public static class TaskEx
         ResultSelector: ResultSelector,
         Comparer: EqualityComparer<TKey>.Default);
 
+    /// <summary>Соединяет результаты двух задач по ключу с заданным компаратором</summary>
+    /// <typeparam name="TOuter">Тип внешнего результата</typeparam>
+    /// <typeparam name="TInner">Тип внутреннего результата</typeparam>
+    /// <typeparam name="TKey">Тип ключа</typeparam>
+    /// <typeparam name="TResult">Тип результата</typeparam>
+    /// <param name="Outer">Внешняя задача</param>
+    /// <param name="Inner">Внутренняя задача</param>
+    /// <param name="OuterKeySelector">Селектор внешнего ключа</param>
+    /// <param name="InnerKeySelector">Селектор внутреннего ключа</param>
+    /// <param name="ResultSelector">Проекция результата</param>
+    /// <param name="Comparer">Компаратор ключей</param>
+    /// <returns>Задача результата</returns>
     public static Task<TResult> Join<TOuter, TInner, TKey, TResult>
     (
         this Task<TOuter> Outer,
@@ -251,6 +384,17 @@ public static class TaskEx
         }, not_on_cancel).Unwrap();
     }
 
+    /// <summary>Групповое соединение результатов двух задач по ключу</summary>
+    /// <typeparam name="TOuter">Тип внешнего результата</typeparam>
+    /// <typeparam name="TInner">Тип внутреннего результата</typeparam>
+    /// <typeparam name="TKey">Тип ключа</typeparam>
+    /// <typeparam name="TResult">Тип результата</typeparam>
+    /// <param name="outer">Внешняя задача</param>
+    /// <param name="inner">Внутренняя задача</param>
+    /// <param name="OuterKeySelector">Селектор внешнего ключа</param>
+    /// <param name="InnerKeySelector">Селектор внутреннего ключа</param>
+    /// <param name="ResultSelector">Проекция результата</param>
+    /// <returns>Задача результата</returns>
     public static Task<TResult> GroupJoin<TOuter, TInner, TKey, TResult>
     (
         this Task<TOuter> outer,
@@ -266,6 +410,18 @@ public static class TaskEx
         ResultSelector: ResultSelector,
         Comparer: EqualityComparer<TKey>.Default);
 
+    /// <summary>Групповое соединение результатов двух задач по ключу с заданным компаратором</summary>
+    /// <typeparam name="TOuter">Тип внешнего результата</typeparam>
+    /// <typeparam name="TInner">Тип внутреннего результата</typeparam>
+    /// <typeparam name="TKey">Тип ключа</typeparam>
+    /// <typeparam name="TResult">Тип результата</typeparam>
+    /// <param name="outer">Внешняя задача</param>
+    /// <param name="inner">Внутренняя задача</param>
+    /// <param name="OuterKeySelector">Селектор внешнего ключа</param>
+    /// <param name="InnerKeySelector">Селектор внутреннего ключа</param>
+    /// <param name="ResultSelector">Проекция результата</param>
+    /// <param name="Comparer">Компаратор ключей</param>
+    /// <returns>Задача результата</returns>
     public static Task<TResult> GroupJoin<TOuter, TInner, TKey, TResult>
     (
         this Task<TOuter> outer,
@@ -303,6 +459,14 @@ public static class TaskEx
         }, not_on_cancel).Unwrap();
     }
 
+    /// <summary>Группирует результат задачи в группу из одного элемента</summary>
+    /// <typeparam name="TSource">Тип результата источника</typeparam>
+    /// <typeparam name="TKey">Тип ключа</typeparam>
+    /// <typeparam name="TElement">Тип элемента</typeparam>
+    /// <param name="source">Исходная задача</param>
+    /// <param name="KeySelector">Селектор ключа</param>
+    /// <param name="ElementSelector">Селектор элемента</param>
+    /// <returns>Задача с группировкой</returns>
     public static Task<IGrouping<TKey, TElement>> GroupBy<TSource, TKey, TElement>
     (
         this Task<TSource> source,
@@ -325,17 +489,28 @@ public static class TaskEx
         }, not_on_cancel);
     }
 
-    /// <summary>Represents a grouping of one element.</summary>
-    /// <typeparam name="TKey">The type of the key for the element.</typeparam>
-    /// <typeparam name="TElement">The type of the element.</typeparam>
+    /// <summary>Группировка из одного элемента</summary>
+    /// <typeparam name="TKey">Тип ключа</typeparam>
+    /// <typeparam name="TElement">Тип элемента</typeparam>
     private class OneElementGrouping<TKey, TElement> : IGrouping<TKey, TElement>
     {
+        /// <summary>Ключ группировки</summary>
         public TKey Key { get; internal init; } = default!;
+        /// <summary>Элемент группировки</summary>
         internal TElement Element { get; init; } = default!;
+        /// <summary>Перечислитель единственного элемента</summary>
+        /// <returns>Перечислитель</returns>
         public IEnumerator<TElement> GetEnumerator() { yield return Element; }
+        /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
+    /// <summary>Возвращает исходную задачу (один элемент уже отсортирован)</summary>
+    /// <typeparam name="TSource">Тип результата</typeparam>
+    /// <typeparam name="TKey">Тип ключа</typeparam>
+    /// <param name="source">Исходная задача</param>
+    /// <param name="KeySelector">Селектор ключа</param>
+    /// <returns>Исходная задача</returns>
     public static Task<TSource> OrderBy<TSource, TKey>(this Task<TSource> source, Func<TSource, TKey> KeySelector)
     {
         if (source is null) throw new ArgumentNullException(nameof(source));
@@ -344,6 +519,12 @@ public static class TaskEx
         return source;
     }
 
+    /// <summary>Возвращает исходную задачу (один элемент уже отсортирован)</summary>
+    /// <typeparam name="TSource">Тип результата</typeparam>
+    /// <typeparam name="TKey">Тип ключа</typeparam>
+    /// <param name="source">Исходная задача</param>
+    /// <param name="KeySelector">Селектор ключа</param>
+    /// <returns>Исходная задача</returns>
     public static Task<TSource> OrderByDescending<TSource, TKey>(this Task<TSource> source, Func<TSource, TKey>? KeySelector)
     {
         if (source is null) throw new ArgumentNullException(nameof(source));
@@ -352,6 +533,12 @@ public static class TaskEx
         return source;
     }
 
+    /// <summary>Возвращает исходную задачу (один элемент уже отсортирован)</summary>
+    /// <typeparam name="TSource">Тип результата</typeparam>
+    /// <typeparam name="TKey">Тип ключа</typeparam>
+    /// <param name="source">Исходная задача</param>
+    /// <param name="KeySelector">Селектор ключа</param>
+    /// <returns>Исходная задача</returns>
     public static Task<TSource> ThenBy<TSource, TKey>(this Task<TSource> source, Func<TSource, TKey>? KeySelector)
     {
         if (source is null) throw new ArgumentNullException(nameof(source));
@@ -360,6 +547,12 @@ public static class TaskEx
         return source;
     }
 
+    /// <summary>Возвращает исходную задачу (один элемент уже отсортирован)</summary>
+    /// <typeparam name="TSource">Тип результата</typeparam>
+    /// <typeparam name="TKey">Тип ключа</typeparam>
+    /// <param name="source">Исходная задача</param>
+    /// <param name="KeySelector">Селектор ключа</param>
+    /// <returns>Исходная задача</returns>
     public static Task<TSource> ThenByDescending<TSource, TKey>(this Task<TSource> source, Func<TSource, TKey>? KeySelector)
     {
         if (source is null) throw new ArgumentNullException(nameof(source));
@@ -368,6 +561,11 @@ public static class TaskEx
         return source;
     }
 
+    /// <summary>Ожидает завершения задачи с тайм-аутом, возвращая отменённую задачу по истечении времени</summary>
+    /// <typeparam name="TResult">Тип результата</typeparam>
+    /// <param name="task">Исходная задача</param>
+    /// <param name="timeout">Тайм-аут</param>
+    /// <returns>Задача результата либо отменённая задача</returns>
     public static Task<TResult> WithTimeout<TResult>(this Task<TResult> task, in TimeSpan timeout)
     {
         var result = new TaskCompletionSource<TResult>(task.AsyncState);
@@ -380,6 +578,11 @@ public static class TaskEx
         return result.Task;
     }
 
+    /// <summary>Привязывает задачу к асинхронному колбэку</summary>
+    /// <param name="task">Исходная задача</param>
+    /// <param name="callback">Асинхронный колбэк</param>
+    /// <param name="state">Состояние</param>
+    /// <returns>Задача, представляющая завершение</returns>
     public static Task WithAsyncCallback(this Task task, AsyncCallback? callback, object? state)
     {
         var tcs = new TaskCompletionSource<object?>(state);
@@ -391,6 +594,12 @@ public static class TaskEx
         return tcs.Task;
     }
 
+    /// <summary>Привязывает задачу к асинхронному колбэку</summary>
+    /// <typeparam name="TResult">Тип результата</typeparam>
+    /// <param name="task">Исходная задача</param>
+    /// <param name="callback">Асинхронный колбэк</param>
+    /// <param name="state">Состояние</param>
+    /// <returns>Задача, представляющая завершение</returns>
     public static Task<TResult> WithAsyncCallback<TResult>(this Task<TResult> task, AsyncCallback? callback, object? state)
     {
         var tcs = new TaskCompletionSource<TResult>(state);
@@ -496,6 +705,10 @@ public static class TaskEx
         return task;
     }
 
+    /// <summary>Записывает информацию об исключении задачи в трассировку</summary>
+    /// <param name="task">Задача</param>
+    /// <param name="Message">Дополнительное сообщение</param>
+    /// <returns>Исходная задача</returns>
     public static Task TraceExceptions(this Task task, string? Message = null)
     {
         task.ContinueWith(t => Trace.TraceWarning("{0}: {1}", string.IsNullOrWhiteSpace(Message) ? $"Exception in task id{t.Id}" : $"{Message}", t.Exception),
@@ -529,6 +742,9 @@ public static class TaskEx
 
     /// <summary>Propagates any exceptions that occurred on the specified task.</summary>
     /// <param name="task">The Task whose exceptions are to be propagated.</param>
+    /// <summary>Распространяет исключения, возникшие в задаче</summary>
+    /// <param name="task">Задача</param>
+    /// <exception cref="InvalidOperationException">Задача не завершена</exception>
     public static void PropagateExceptions(this Task task)
     {
         if (!task.IsCompleted) throw new InvalidOperationException("The task has not completed.");
@@ -537,6 +753,11 @@ public static class TaskEx
 
     /// <summary>Propagates any exceptions that occurred on the specified tasks.</summary>
     /// <param name="tasks">The Task whose exceptions are to be propagated.</param>
+    /// <summary>Распространяет исключения, возникшие в задачах</summary>
+    /// <param name="tasks">Массив задач</param>
+    /// <exception cref="ArgumentNullException">Массив задач равен null</exception>
+    /// <exception cref="ArgumentException">Массив содержит null</exception>
+    /// <exception cref="InvalidOperationException">Одна из задач не завершена</exception>
     public static void PropagateExceptions(this Task[] tasks)
     {
         if (tasks is null) throw new ArgumentNullException(nameof(tasks));

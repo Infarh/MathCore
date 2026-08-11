@@ -12,6 +12,7 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
 
     private static volatile ServiceManager? __Default;
 
+    /// <summary>Менеджер сервисов по умолчанию</summary>
     public static ServiceManager Default
     {
         get
@@ -23,15 +24,20 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
         }
     }
 
+    /// <summary>Аргументы события ненайденной регистрации</summary>
     public class RegistrationNotFoundEventArgs(Type ServiceType, object[] Parameters) : EventArgs
     {
+        /// <summary>Тип сервиса</summary>
         public Type ServiceType { get; } = ServiceType;
 
+        /// <summary>Параметры создания</summary>
         public IReadOnlyCollection<object> Parameters { get; } = Parameters;
 
+        /// <summary>Экземпляр сервиса</summary>
         public object? ServiceInstance { get; set; }
     }
 
+    /// <summary>Событие возникновения ненайденной регистрации</summary>
     public event EventHandler<RegistrationNotFoundEventArgs>? RegistrationNotFound;
 
     private bool InvokeRegistrationNotFound(Type ServiceType, object[] parameters, out object? ServiceInstance)
@@ -56,37 +62,60 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
     private readonly object _SyncRoot = new(); 
 #endif
 
+    /// <summary>Регистрации сервисов</summary>
     public IServiceRegistrations ServiceRegistrations => this;
 
+    /// <summary>Вызывать исключение при ненайденном сервисе</summary>
     public bool ThrowIfNotFound { get; set; } = true;
 
     private List<IServiceManager>? _MergedServiceManagers;
 
+    /// <summary>Объединённые менеджеры сервисов</summary>
     public ICollection<IServiceManager> MergedServiceManagers => _MergedServiceManagers ??= [];
 
+    /// <summary>Получение экземпляра сервиса по типу</summary>
+    /// <param name="ServiceType">Тип сервиса</param>
+    /// <returns>Экземпляр сервиса или null</returns>
     public object? this[Type ServiceType] => Get(ServiceType);
 
     ServiceRegistration? IServiceRegistrations.this[Type ServiceType] => _Services.TryGetValue(ServiceType, out var registration)
         ? registration
         : null;
 
+    /// <summary>Конструктор менеджера сервисов</summary>
     public ServiceManager()
     {
         RegisterSingleton<IServiceManager>(this);
         Map<IServiceManager, ServiceManager>();
     }
 
+    /// <summary>Зарегистрирован ли сервис указанного типа</summary>
+    /// <typeparam name="TService">Тип сервиса</typeparam>
+    /// <returns>Истина, если сервис зарегистрирован</returns>
     public bool ServiceRegistered<TService>() => ServiceRegistered(typeof(TService));
 
+    /// <summary>Зарегистрирован ли сервис указанного типа</summary>
+    /// <param name="ServiceType">Тип сервиса</param>
+    /// <returns>Истина, если сервис зарегистрирован</returns>
     public bool ServiceRegistered(Type ServiceType) =>
         _Services.ContainsKey(ServiceType)
         || _Services.Values.Any(s => s.AllowInheritance && ServiceType.IsAssignableFrom(s.ServiceType));
 
+    /// <summary>Получение экземпляра сервиса указанного типа</summary>
+    /// <typeparam name="TServiceInterface">Тип сервиса</typeparam>
+    /// <returns>Экземпляр сервиса или null</returns>
     public TServiceInterface? Get<TServiceInterface>() where TServiceInterface : class => Get(typeof(TServiceInterface)) as TServiceInterface;
 
+    /// <summary>Получение экземпляра сервиса указанного типа с параметрами</summary>
+    /// <typeparam name="TServiceInterface">Тип сервиса</typeparam>
+    /// <param name="parameters">Параметры создания</param>
+    /// <returns>Экземпляр сервиса</returns>
     [NotImplemented]
     public TServiceInterface Get<TServiceInterface>(params object[] parameters) where TServiceInterface : class => throw new NotImplementedException();
 
+    /// <summary>Получение экземпляра сервиса по типу</summary>
+    /// <param name="ServiceType">Тип сервиса</param>
+    /// <returns>Экземпляр сервиса или null</returns>
     public object? Get(Type ServiceType)
     {
         lock (_SyncRoot)
@@ -114,6 +143,11 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
         }
     }
 
+    /// <summary>Получение экземпляра сервиса по типу с параметрами</summary>
+    /// <param name="ServiceType">Тип сервиса</param>
+    /// <param name="parameters">Параметры создания</param>
+    /// <returns>Экземпляр сервиса или null</returns>
+    /// <exception cref="ServiceRegistrationNotFoundException">Сервис не найден и свойство <see cref="ThrowIfNotFound"/> установлено</exception>
     public object? Get(Type ServiceType, params object[] parameters)
     {
         lock (_SyncRoot)
@@ -145,12 +179,20 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
         }
     }
 
+    /// <summary>Создаёт экземпляр объекта указанного типа</summary>
+    /// <typeparam name="TObject">Тип создаваемого объекта</typeparam>
+    /// <param name="parameters">Параметры создания</param>
+    /// <returns>Созданный объект</returns>
     public TObject? Create<TObject>(params object[] parameters) where TObject : class =>
         ServiceRegistered<TObject>()
             ? Get<TObject>()
             ?? throw new InvalidOperationException("Менеджер сервисов вернул пустую ссылку на зарегистрированный сервис")
             : (TObject?)new SingleCallServiceRegistration<TObject>(this, typeof(TObject)).GetService(parameters);
 
+    /// <summary>Создаёт экземпляр объекта указанного типа</summary>
+    /// <param name="ObjectType">Тип создаваемого объекта</param>
+    /// <param name="parameters">Параметры создания</param>
+    /// <returns>Созданный объект</returns>
     public object? Create(Type ObjectType, params object[] parameters) =>
         ServiceRegistered(ObjectType)
             ? Get(ObjectType)
@@ -166,8 +208,17 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
         return null;
     }
 
+    /// <summary>Возвращает доступ к сервису указанного типа</summary>
+    /// <typeparam name="TService">Тип сервиса</typeparam>
+    /// <returns>Объект доступа к сервису</returns>
     public ServiceManagerAccessor<TService> ServiceAccessor<TService>() where TService : class => new(this);
 
+    /// <summary>Выполняет метод объекта, параметры которого известны менеджеру сервисов</summary>
+    /// <param name="Instance">Объект, метод которого выполняется</param>
+    /// <param name="MethodName">Имя вызываемого метода</param>
+    /// <returns>Результат вызова метода</returns>
+    /// <exception cref="ArgumentNullException">Объект равен null</exception>
+    /// <exception cref="InvalidOperationException">Метод не указан или не найден</exception>
     public object? Run(object Instance, string MethodName)
     {
         if (Instance is null) throw new ArgumentNullException(nameof(Instance));

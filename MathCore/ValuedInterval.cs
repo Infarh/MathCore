@@ -58,8 +58,10 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
     /// <summary>Середина интервала</summary>
     public double Middle => (_Min + _Max) / 2;
 
+    /// <summary>Значение интервала</summary>
     public T Value => _Value;
 
+    /// <summary>Интервал без значения</summary>
     public Interval Interval => new(_Min, _MinInclude, _Max, _MaxInclude);
 
     #endregion
@@ -111,16 +113,46 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
 
     #region Интервальные функции
 
+    /// <summary>Версия интервала с указанным состоянием включения верхней границы</summary>
+    /// <param name="Include">Включать ли верхнюю границу</param>
+    /// <returns>Новый интервал</returns>
     public ValuedInterval<T> IncludeMax(bool Include) => new(_Min, _MinInclude, _Max, Include, _Value);
+    /// <summary>Версия интервала с указанным состоянием включения нижней границы</summary>
+    /// <param name="Include">Включать ли нижнюю границу</param>
+    /// <returns>Новый интервал</returns>
     public ValuedInterval<T> IncludeMin(bool Include) => new(_Min, Include, _Max, _MaxInclude, _Value);
+    /// <summary>Версия интервала с указанными состояниями включения границ</summary>
+    /// <param name="IncludeMin">Включать ли нижнюю границу</param>
+    /// <param name="IncludeMax">Включать ли верхнюю границу</param>
+    /// <returns>Новый интервал</returns>
     public ValuedInterval<T> Include(bool IncludeMin, bool IncludeMax) => new(_Min, IncludeMin, _Max, IncludeMax, _Value);
+    /// <summary>Версия интервала с указанным состоянием включения обеих границ</summary>
+    /// <param name="Include">Включать ли границы</param>
+    /// <returns>Новый интервал</returns>
     public ValuedInterval<T> Include(bool Include) => new(_Min, Include, _Max, Include, _Value);
 
+    /// <summary>Версия интервала с указанной нижней границей</summary>
+    /// <param name="value">Новая нижняя граница</param>
+    /// <returns>Новый интервал</returns>
     public ValuedInterval<T> SetMin(double value) => new(value, _MinInclude, _Max, _MaxInclude, _Value);
+    /// <summary>Версия интервала с указанной нижней границей и её включением</summary>
+    /// <param name="value">Новая нижняя граница</param>
+    /// <param name="IncludeMin">Включать ли нижнюю границу</param>
+    /// <returns>Новый интервал</returns>
     public ValuedInterval<T> SetMin(double value, bool IncludeMin) => new(value, IncludeMin, _Max, _MaxInclude, _Value);
+    /// <summary>Версия интервала с указанной верхней границей</summary>
+    /// <param name="value">Новая верхняя граница</param>
+    /// <returns>Новый интервал</returns>
     public ValuedInterval<T> SetMax(double value) => new(_Min, _MinInclude, value, _MaxInclude, _Value);
+    /// <summary>Версия интервала с указанной верхней границей и её включением</summary>
+    /// <param name="value">Новая верхняя граница</param>
+    /// <param name="IncludeMax">Включать ли верхнюю границу</param>
+    /// <returns>Новый интервал</returns>
     public ValuedInterval<T> SetMax(double value, bool IncludeMax) => new(_Min, _MinInclude, value, IncludeMax, _Value);
 
+    /// <summary>Версия интервала с указанным значением</summary>
+    /// <param name="value">Новое значение</param>
+    /// <returns>Новый интервал</returns>
     public ValuedInterval<T> SetValue(T value) => new(_Min, _MinInclude, _Max, _MaxInclude, value);
 
     /// <summary>Разбирает интервал на его границы</summary>
@@ -133,6 +165,10 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
     }
 
 
+    /// <summary>Разбирает интервал на границы и значение</summary>
+    /// <param name="min">Нижняя граница</param>
+    /// <param name="max">Верхняя граница</param>
+    /// <param name="value">Значение</param>
     public void Deconstruct(out double min, out double max, out T value)
 
     {
@@ -142,6 +178,12 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
     }
 
 
+    /// <summary>Разбирает интервал на границы, их включения и значение</summary>
+    /// <param name="min">Нижняя граница</param>
+    /// <param name="IncludeMin">Включена ли нижняя граница</param>
+    /// <param name="max">Верхняя граница</param>
+    /// <param name="IncludeMax">Включена ли верхняя граница</param>
+    /// <param name="value">Значение</param>
     public void Deconstruct(out double min, out bool IncludeMin, out double max, out bool IncludeMax, out T value)
     {
         min = _Min;
@@ -161,6 +203,11 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
     //        || (X > Min && X < Max);
     //}
 
+    /// <summary>Проверка вхождения значения в интервал с учётом смещений границ</summary>
+    /// <param name="X">Проверяемое значение</param>
+    /// <param name="MinOffset">Смещение нижней границы</param>
+    /// <param name="MaxOffset">Смещение верхней границы</param>
+    /// <returns>Истина, если значение входит в интервал</returns>
     public bool Check(double X, double MinOffset, double MaxOffset)
     {
         var min = _Min + MinOffset;
@@ -180,11 +227,27 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
         (_MaxInclude && _Max.CompareTo(value) == 0) ||
         (value.CompareTo(_Min) > 0 && value.CompareTo(_Max) < 0);
 
+    /// <summary>Проверка вхождения значения в интервал с учётом смещения границ</summary>
+    /// <param name="X">Проверяемое значение</param>
+    /// <param name="Offset">Смещение границ</param>
+    /// <returns>Истина, если значение входит в интервал</returns>
     public bool Check(double X, double Offset) => Check(X, Offset, -Offset);
 
+    /// <summary>Проверка, что интервал не входит полностью в текущий</summary>
+    /// <param name="I">Проверяемый интервал</param>
+    /// <returns>Истина, если интервал не входит полностью</returns>
     public bool IsExclude(ValuedInterval<T> I) => !IsInclude(I);
+    /// <summary>Проверка, что интервал не входит полностью в текущий</summary>
+    /// <param name="I">Проверяемый интервал</param>
+    /// <returns>Истина, если интервал не входит полностью</returns>
     public bool IsExclude((double Min, double Max) I) => !IsInclude(I);
+    /// <summary>Проверка, что интервал не входит полностью в текущий</summary>
+    /// <param name="I">Проверяемый интервал</param>
+    /// <returns>Истина, если интервал не входит полностью</returns>
     public bool IsExclude((int Min, double Max) I) => !IsInclude(I);
+    /// <summary>Проверка, что интервал не входит полностью в текущий</summary>
+    /// <param name="I">Проверяемый интервал</param>
+    /// <returns>Истина, если интервал не входит полностью</returns>
     public bool IsExclude((double Min, int Max) I) => !IsInclude(I);
 
     /// <summary>Проверка на вхождение интервала в интервал</summary>
@@ -194,20 +257,32 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
         Check(I._MinInclude ? I._Min : I._Min + double.Epsilon) &&
         Check(I._MaxInclude ? I._Max : I._Max - double.Epsilon);
 
+    /// <summary>Проверка вхождения интервала в интервал</summary>
+    /// <param name="I">Проверяемый интервал (кортеж границ double, double)</param>
+    /// <returns>Истина, если интервал входит полностью</returns>
     public bool IsInclude((double Min, double Max) I) =>
         Check(I.Min) &&
         Check(I.Max);
 
+    /// <summary>Проверка вхождения интервала в интервал</summary>
+    /// <param name="I">Проверяемый интервал (кортеж границ int, double)</param>
+    /// <returns>Истина, если интервал входит полностью</returns>
     public bool IsInclude((int Min, double Max) I) =>
         Check(I.Min) &&
         Check(I.Max);
 
+    /// <summary>Проверка вхождения интервала в интервал</summary>
+    /// <param name="I">Проверяемый интервал (кортеж границ double, int)</param>
+    /// <returns>Истина, если интервал входит полностью</returns>
     public bool IsInclude((double Min, int Max) I) =>
         Check(I.Min) &&
         Check(I.Max);
 
 
 
+    /// <summary>Проверка пересечения текущего интервала с указанным</summary>
+    /// <param name="I">Проверяемый интервал</param>
+    /// <returns>Истина, если интервалы пересекаются</returns>
     public bool IsIntersect(ValuedInterval<T> I)
     {
         if (Abs(I.Min - Min) < double.Epsilon && Abs(I._Max - _Max) < double.Epsilon) return true;
@@ -218,6 +293,9 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
         return min_include || max_include;
     }
 
+    /// <summary>Проверка пересечения текущего интервала с кортежем границ</summary>
+    /// <param name="I">Кортеж границ</param>
+    /// <returns>Истина, если интервалы пересекаются</returns>
     public bool IsIntersect((double Min, double Max) I)
     {
         if (Abs(I.Min - Min) < double.Epsilon && Abs(I.Max - _Max) < double.Epsilon) return true;
@@ -337,6 +415,8 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
             yield return min + i * dx;
     }
 
+    /// <summary>Возвращает инвертированный интервал (границы меняются местами)</summary>
+    /// <returns>Инвертированный интервал</returns>
     public ValuedInterval<T> GetInvertedInterval() => new(_Max, _MaxInclude, _Min, _MinInclude, _Value);
 
     /// <summary>Возвращает перечисление значений интервала с заданным шагом <paramref name="Step" /></summary>
@@ -447,16 +527,22 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
 
     /* ------------------------------------------------------------------------------------------ */
 
+    /// <summary>Неявное преобразование интервала в его длину</summary>
     public static implicit operator double(ValuedInterval<T> I) => I.Length;
 
+    /// <summary>Явное преобразование значения в интервал от нуля до значения</summary>
     public static explicit operator ValuedInterval<T>(double V) => new(0, true, V, true, default!);
 
+    /// <summary>Сдвиг интервала на заданную величину</summary>
     public static ValuedInterval<T> operator +(ValuedInterval<T> I, double x) => new(I._Min + x, I._MinInclude, I._Max + x, I._MaxInclude, I._Value);
 
+    /// <summary>Сдвиг интервала на заданную величину в отрицательную сторону</summary>
     public static ValuedInterval<T> operator -(ValuedInterval<T> I, double x) => new(I._Min - x, I._MinInclude, I._Max - x, I._MaxInclude, I._Value);
 
+    /// <summary>Масштабирование интервала на заданный коэффициент</summary>
     public static ValuedInterval<T> operator *(ValuedInterval<T> I, double x) => new(I._Min * x, I._MinInclude, I._Max * x, I._MaxInclude, I._Value);
 
+    /// <summary>Деление границ интервала на заданный коэффициент</summary>
     public static ValuedInterval<T> operator /(ValuedInterval<T> I, double x) => new(I._Min / x, I._MinInclude, I._Max / x, I._MaxInclude, I._Value);
 
     /* ------------------------------------------------------------------------------------------ */

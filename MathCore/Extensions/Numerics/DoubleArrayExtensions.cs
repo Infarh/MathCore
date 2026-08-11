@@ -49,6 +49,12 @@ public static class DoubleArrayExtensions
         return array;
     }
 
+    /// <summary>Добавить к элементам массива произведение элементов другого массива с коэффициентом и добавкой</summary>
+    /// <param name="array">Целевой массив</param>
+    /// <param name="values">Массив-множитель</param>
+    /// <param name="Multiplier">Коэффициент при умножении</param>
+    /// <param name="Addition">Добавляемая константа</param>
+    [DST]
     public static double[] AddMultiplyItself(this double[] array, IReadOnlyList<double> values, double Multiplier = 1, double Addition = 0)
     {
         if (array is null) throw new ArgumentNullException(nameof(array));
@@ -63,6 +69,9 @@ public static class DoubleArrayExtensions
         return array;
     }
 
+    /// <summary>Вычесть значение из всех элементов массива</summary>
+    /// <param name="array">Массив</param>
+    /// <param name="value">Вычитаемое значение</param>
     [DST]
     public static double[] SubtractItself(this double[] array, double value)
     {
@@ -76,6 +85,9 @@ public static class DoubleArrayExtensions
         return array;
     }
 
+    /// <summary>Поэлементно вычесть второй массив из первого</summary>
+    /// <param name="array">Уменьшаемый массив</param>
+    /// <param name="values">Вычитаемый массив</param>
     [DST]
     public static double[] SubtractItself(this double[] array, double[] values)
     {
@@ -91,6 +103,9 @@ public static class DoubleArrayExtensions
         return array;
     }
 
+    /// <summary>Заменить элементы массива разностью значения и текущего элемента</summary>
+    /// <param name="array">Массив</param>
+    /// <param name="value">Уменьшаемое значение</param>
     [DST]
     public static double[] SubtractReversedItself(this double[] array, double value)
     {
@@ -104,6 +119,9 @@ public static class DoubleArrayExtensions
         return array;
     }
 
+    /// <summary>Заменить элементы массива поэлементной разностью второго массива и текущего</summary>
+    /// <param name="array">Массив</param>
+    /// <param name="values">Уменьшаемый массив</param>
     [DST]
     public static double[] SubtractReversedItself(this double[] array, double[] values)
     {
@@ -119,6 +137,9 @@ public static class DoubleArrayExtensions
         return array;
     }
 
+    /// <summary>Умножить все элементы массива на значение</summary>
+    /// <param name="array">Массив</param>
+    /// <param name="value">Множитель</param>
     [DST]
     public static double[] MultiplyItself(this double[] array, double value)
     {
@@ -132,6 +153,9 @@ public static class DoubleArrayExtensions
         return array;
     }
 
+    /// <summary>Поэлементно умножить массив на другой массив</summary>
+    /// <param name="array">Массив</param>
+    /// <param name="values">Массив-множитель</param>
     [DST]
     public static double[] MultiplyItself(this double[] array, double[] values)
     {
@@ -147,6 +171,9 @@ public static class DoubleArrayExtensions
         return array;
     }
 
+    /// <summary>Разделить все элементы массива на значение</summary>
+    /// <param name="array">Массив</param>
+    /// <param name="value">Делитель</param>
     [DST]
     public static double[] DivideItself(this double[] array, double value)
     {
@@ -160,6 +187,9 @@ public static class DoubleArrayExtensions
         return array;
     }
 
+    /// <summary>Поэлементно разделить массив на другой массив</summary>
+    /// <param name="array">Делимое - массив</param>
+    /// <param name="values">Делитель - массив</param>
     [DST]
     public static double[] DivideItself(this double[] array, double[] values)
     {
@@ -175,6 +205,9 @@ public static class DoubleArrayExtensions
         return array;
     }
 
+    /// <summary>Заменить элементы массива отношением значения к текущему элементу</summary>
+    /// <param name="array">Массив</param>
+    /// <param name="value">Делимое значение</param>
     [DST]
     public static double[] DivideReversedItself(this double[] array, double value)
     {
@@ -188,6 +221,9 @@ public static class DoubleArrayExtensions
         return array;
     }
 
+    /// <summary>Заменить элементы массива поэлементным отношением второго массива к текущему</summary>
+    /// <param name="array">Массив</param>
+    /// <param name="values">Массив-делимое</param>
     [DST]
     public static double[] DivideReversedItself(this double[] array, double[] values)
     {
@@ -214,6 +250,9 @@ public static class DoubleArrayExtensions
         _ => array.ToArray(a => a?.Average() ?? double.NaN)
     };
 
+    /// <summary>Средние значения по строкам (для каждого столбца) двумерного массива</summary>
+    /// <param name="array">Двумерный массив</param>
+    /// <returns>Массив средних значений по строкам</returns>
     [DST]
     public static double[] AverageByRows(this double[,] array)
     {
@@ -232,6 +271,9 @@ public static class DoubleArrayExtensions
         return col_average;
     }
 
+    /// <summary>Средние значения по столбцам (для каждой строки) двумерного массива</summary>
+    /// <param name="array">Двумерный массив</param>
+    /// <returns>Массив средних значений по столбцам</returns>
     [DST]
     public static double[] AverageByCols(this double[,] array)
     {
@@ -276,6 +318,9 @@ public static class DoubleArrayExtensions
         return (average2 - average * average / length) / length;
     }
 
+    /// <summary>Рассчитать дисперсию элементов каждого массива набора</summary>
+    /// <param name="array">Набор массивов</param>
+    /// <returns>Массив дисперсий</returns>
     [DST]
     public static double[] Dispersion(this double[][] array)
     {
@@ -288,6 +333,9 @@ public static class DoubleArrayExtensions
         return result;
     }
 
+    /// <summary>Рассчитать дисперсию по столбцам двумерного массива</summary>
+    /// <param name="array">Двумерный массив</param>
+    /// <returns>Массив дисперсий по столбцам</returns>
     [DST]
     public static double[] Dispersion(this double[,] array)
     {
@@ -313,6 +361,9 @@ public static class DoubleArrayExtensions
         return average;
     }
 
+    /// <summary>Средний квадрат значений массива</summary>
+    /// <param name="array">Массив</param>
+    /// <returns>Средний квадрат значений</returns>
     [DST]
     public static double Dispersion_Power(this double[] array)
     {
@@ -328,6 +379,9 @@ public static class DoubleArrayExtensions
         return result / length;
     }
 
+    /// <summary>Средний квадрат значений по столбцам набора массивов</summary>
+    /// <param name="array">Набор массивов</param>
+    /// <returns>Массив средних квадратов по столбцам</returns>
     [DST]
     public static double[] Dispersion_Power(this double[][] array)
     {
@@ -349,6 +403,9 @@ public static class DoubleArrayExtensions
         return result;
     }
 
+    /// <summary>Средний квадрат значений по столбцам двумерного массива</summary>
+    /// <param name="array">Двумерный массив</param>
+    /// <returns>Массив средних квадратов по столбцам</returns>
     [DST]
     public static double[] Dispersion_Power(this double[,] array)
     {
@@ -370,6 +427,9 @@ public static class DoubleArrayExtensions
         return result;
     }
 
+    /// <summary>Автокорреляционная функция последовательности</summary>
+    /// <param name="array">Массив значений</param>
+    /// <returns>Массив значений автокорреляционной функции</returns>
     [DST]
     public static double[] GetAKF(this double[] array)
     {
@@ -378,6 +438,10 @@ public static class DoubleArrayExtensions
         return array.GetConvolution(array.GetReversed());
     }
 
+    /// <summary>Свёртка двух последовательностей</summary>
+    /// <param name="s">Первая последовательность</param>
+    /// <param name="h">Вторая последовательность</param>
+    /// <returns>Массив свёртки</returns>
     [DST]
     public static double[] GetConvolution(this double[] s, double[] h)
     {
@@ -391,6 +455,10 @@ public static class DoubleArrayExtensions
         return k;
     }
 
+    /// <summary>Кубический сплайн по точкам (Y;X)</summary>
+    /// <param name="Y">Массив значений</param>
+    /// <param name="X">Массив аргументов</param>
+    /// <returns>Кубический сплайн</returns>
     [DST]
     public static CubicSpline GetCubicSpline(this double[] Y, double[] X)
     {
@@ -400,6 +468,11 @@ public static class DoubleArrayExtensions
         return new(X, Y);
     }
 
+    /// <summary>Кубический сплайн по точкам с равномерным шагом</summary>
+    /// <param name="Y">Массив значений</param>
+    /// <param name="dx">Шаг аргумента</param>
+    /// <param name="x0">Начальное смещение аргумента</param>
+    /// <returns>Кубический сплайн</returns>
     [DST]
     public static CubicSpline GetCubicSpline(this double[] Y, double dx, double x0 = 0.0)
     {
@@ -413,6 +486,10 @@ public static class DoubleArrayExtensions
         return result.GetCubicSpline(Y);
     }
 
+    /// <summary>Гистограмма распределения значений массива</summary>
+    /// <param name="X">Массив значений</param>
+    /// <param name="IntervalsCount">Количество интервалов</param>
+    /// <returns>Гистограмма</returns>
     [DST]
     public static Histogram GetHistogram(this double[] X, int IntervalsCount)
     {
@@ -469,6 +546,11 @@ public static class DoubleArrayExtensions
         return s;
     }
 
+    /// <summary>Интегрирование с весовым ядром по массивам аргумента и значения</summary>
+    /// <param name="Y">Массив значений функции</param>
+    /// <param name="Core">Ядро интегрирования</param>
+    /// <param name="X">Массив аргументов</param>
+    /// <returns>Площадь с весовым ядром</returns>
     [DST]
     public static double GetIntegral(this double[] Y, Func<double, double, double> Core, double[] X)
     {
@@ -491,6 +573,12 @@ public static class DoubleArrayExtensions
         return 0.5 * s;
     }
 
+    /// <summary>Интегрирование с весовым ядром и равномерным шагом</summary>
+    /// <param name="Y">Массив значений функции</param>
+    /// <param name="Core">Ядро интегрирования</param>
+    /// <param name="dx">Шаг аргумента</param>
+    /// <param name="x0">Начальное смещение аргумента</param>
+    /// <returns>Площадь с весовым ядром</returns>
     [DST]
     public static double GetIntegral(this double[] Y, Func<double, double, double> Core, double dx, double x0 = 0.0)
     {
@@ -543,6 +631,9 @@ public static class DoubleArrayExtensions
         return Y.GetMNKInterp(m, xx);
     }
 
+    /// <summary>Нормализация массива делением на его максимальное значение</summary>
+    /// <param name="array">Массив</param>
+    /// <returns>Нормализованный массив</returns>
     [DST]
     public static double[] GetNormalized(this double[] array) => array switch
     {
@@ -551,6 +642,10 @@ public static class DoubleArrayExtensions
         _ => array.GetDivided(array.Max())
     };
 
+    /// <summary>Новый массив, где ко всем элементам прибавлено значение</summary>
+    /// <param name="array">Исходный массив</param>
+    /// <param name="value">Прибавляемое значение</param>
+    /// <returns>Новый массив</returns>
     [DST]
     public static double[] GetSum(this double[] array, double value)
     {
@@ -564,6 +659,10 @@ public static class DoubleArrayExtensions
         return result;
     }
 
+    /// <summary>Новый массив, где из элементов вычтено значение</summary>
+    /// <param name="array">Исходный массив</param>
+    /// <param name="value">Вычитаемое значение</param>
+    /// <returns>Новый массив</returns>
     [DST]
     public static double[] GetSubtract(this double[] array, double value)
     {
@@ -577,6 +676,10 @@ public static class DoubleArrayExtensions
         return result;
     }
 
+    /// <summary>Новый массив, где элементы заменены разностью значения и элемента</summary>
+    /// <param name="array">Исходный массив</param>
+    /// <param name="value">Уменьшаемое значение</param>
+    /// <returns>Новый массив</returns>
     [DST]
     public static double[] GetSubtractReverse(this double[] array, double value)
     {
@@ -590,6 +693,10 @@ public static class DoubleArrayExtensions
         return result;
     }
 
+    /// <summary>Новый массив, где элементы умножены на значение</summary>
+    /// <param name="array">Исходный массив</param>
+    /// <param name="value">Множитель</param>
+    /// <returns>Новый массив</returns>
     [DST]
     public static double[] GetMultiplied(this double[] array, double value)
     {
@@ -603,6 +710,10 @@ public static class DoubleArrayExtensions
         return result;
     }
 
+    /// <summary>Новый массив, где элементы разделены на значение</summary>
+    /// <param name="array">Исходный массив</param>
+    /// <param name="value">Делитель</param>
+    /// <returns>Новый массив</returns>
     [DST]
     public static double[] GetDivided(this double[] array, double value)
     {
@@ -616,6 +727,10 @@ public static class DoubleArrayExtensions
         return result;
     }
 
+    /// <summary>Новый массив, где элементы заменены отношением значения к элементу</summary>
+    /// <param name="array">Исходный массив</param>
+    /// <param name="value">Делимое значение</param>
+    /// <returns>Новый массив</returns>
     [DST]
     public static double[] GetDividedReversed(this double[] array, double value)
     {
@@ -629,6 +744,9 @@ public static class DoubleArrayExtensions
         return result;
     }
 
+    /// <summary>Новый массив с обратными значениями элементов</summary>
+    /// <param name="array">Исходный массив</param>
+    /// <returns>Новый массив обратных значений</returns>
     [DST]
     public static double[] GetInverse(this double[] array)
     {
@@ -642,6 +760,10 @@ public static class DoubleArrayExtensions
         return result;
     }
 
+    /// <summary>Поэлементная сумма двух массивов</summary>
+    /// <param name="a">Первый массив</param>
+    /// <param name="b">Второй массив</param>
+    /// <returns>Новый массив суммы</returns>
     [DST]
     public static double[] GetSum(this double[] a, double[] b)
     {
@@ -657,6 +779,10 @@ public static class DoubleArrayExtensions
         return result;
     }
 
+    /// <summary>Поэлементная разность двух массивов</summary>
+    /// <param name="a">Уменьшаемый массив</param>
+    /// <param name="b">Вычитаемый массив</param>
+    /// <returns>Новый массив разности</returns>
     [DST]
     public static double[] GetSubtract(this double[] a, double[] b)
     {
@@ -672,6 +798,10 @@ public static class DoubleArrayExtensions
         return result;
     }
 
+    /// <summary>Поэлементная разность двух массивов (второй минус первый)</summary>
+    /// <param name="a">Вычитаемый массив</param>
+    /// <param name="b">Уменьшаемый массив</param>
+    /// <returns>Новый массив разности</returns>
     [DST]
     public static double[] GetSubtractReverse(this double[] a, double[] b)
     {
@@ -687,6 +817,10 @@ public static class DoubleArrayExtensions
         return result;
     }
 
+    /// <summary>Поэлементное произведение двух массивов</summary>
+    /// <param name="a">Первый массив</param>
+    /// <param name="b">Второй массив</param>
+    /// <returns>Новый массив произведения</returns>
     [DST]
     public static double[] GetMultiplied(this double[] a, double[] b)
     {
@@ -702,6 +836,10 @@ public static class DoubleArrayExtensions
         return result;
     }
 
+    /// <summary>Поэлементное частное двух массивов</summary>
+    /// <param name="a">Делимое - массив</param>
+    /// <param name="b">Делитель - массив</param>
+    /// <returns>Новый массив частного</returns>
     [DST]
     public static double[] GetDivided(this double[] a, double[] b)
     {
@@ -717,6 +855,10 @@ public static class DoubleArrayExtensions
         return result;
     }
 
+    /// <summary>Поэлементное частное двух массивов (второй разделён на первый)</summary>
+    /// <param name="a">Делитель - массив</param>
+    /// <param name="b">Делимое - массив</param>
+    /// <returns>Новый массив частного</returns>
     [DST]
     public static double[] GetDividedReversed(this double[] a, double[] b)
     {
@@ -731,6 +873,9 @@ public static class DoubleArrayExtensions
         return result;
     }
 
+    /// <summary>Максимальное значение массива</summary>
+    /// <param name="array">Массив</param>
+    /// <returns>Максимальное значение или NaN для пустого массива</returns>
     [DST]
     public static double Max(this double[] array)
     {
@@ -744,6 +889,10 @@ public static class DoubleArrayExtensions
         return max;
     }
 
+    /// <summary>Максимальное значение массива и его позиция</summary>
+    /// <param name="array">Массив</param>
+    /// <param name="MaxPos">Позиция максимального значения</param>
+    /// <returns>Максимальное значение или NaN для пустого массива</returns>
     [DST]
     public static double Max(this double[] array, out int MaxPos)
     {
@@ -767,6 +916,9 @@ public static class DoubleArrayExtensions
         return max;
     }
 
+    /// <summary>Минимальное значение массива</summary>
+    /// <param name="array">Массив</param>
+    /// <returns>Минимальное значение или NaN для пустого массива</returns>
     [DST]
     public static double Min(this double[] array)
     {
@@ -780,6 +932,10 @@ public static class DoubleArrayExtensions
         return min;
     }
 
+    /// <summary>Минимальное значение массива и его позиция</summary>
+    /// <param name="array">Массив</param>
+    /// <param name="MinPos">Позиция минимального значения</param>
+    /// <returns>Минимальное значение или NaN для пустого массива</returns>
     [DST]
     public static double Min(this double[] array, out int MinPos)
     {
@@ -803,6 +959,8 @@ public static class DoubleArrayExtensions
         return min;
     }
 
+    /// <summary>Нормализация массива делением на максимальное значение (изменяет массив)</summary>
+    /// <param name="array">Массив</param>
     [DST]
     public static void NormalizeItself(this double[] array)
     {
@@ -812,6 +970,9 @@ public static class DoubleArrayExtensions
         array.DivideItself(array.Max());
     }
 
+    /// <summary>Индекс максимального значения массива</summary>
+    /// <param name="array">Массив</param>
+    /// <returns>Индекс максимального значения или -1</returns>
     public static int GetMaxIndex(this double[] array)
     {
         if (array is null) throw new ArgumentNullException(nameof(array));
@@ -831,6 +992,9 @@ public static class DoubleArrayExtensions
         return max_index;
     }
 
+    /// <summary>Индекс минимального значения массива</summary>
+    /// <param name="array">Массив</param>
+    /// <returns>Индекс минимального значения или -1</returns>
     public static int GetMinIndex(this double[] array)
     {
         if (array is null) throw new ArgumentNullException(nameof(array));
@@ -850,6 +1014,9 @@ public static class DoubleArrayExtensions
         return min_index;
     }
 
+    /// <summary>Прямое дискретное вейвлет-преобразование Хаара</summary>
+    /// <param name="source">Исходный массив</param>
+    /// <returns>Массив коэффициентов вейвлет-преобразования</returns>
     public static double[] WaveletDirectTransform(this double[] source)
     {
         var length = source.Length;
@@ -878,6 +1045,9 @@ public static class DoubleArrayExtensions
         }
     }
 
+    /// <summary>Обратное дискретное вейвлет-преобразование Хаара</summary>
+    /// <param name="source">Массив коэффициентов</param>
+    /// <returns>Восстановленный массив</returns>
     public static double[] WaveletInverseTransform(this double[] source)
     {
         var length = source.Length;

@@ -8,6 +8,7 @@
 
 - **Всего предупреждений CS1591:** 6290
 - **Файлов с недостающими комментариями:** 382
+- **Документировано в последнем коммите:** 28 файлов (строки 1–27, 29)
 - **Методика:** сборка с генерацией XML-документации; предупреждение CS1591 выдаётся на каждый публичный тип/член без XML-комментария
 
 ## Условные обозначения статуса
@@ -20,35 +21,35 @@
 
 | # | Файл | Кол-во CS1591 | Статус |
 |---|------|:---:|------|
-| 1 | MathCore/Expressions/Complex/ComplexExpression.cs | 182 | ⬜ Нужно добавить |
-| 2 | MathCore/Interval.cs | 142 | ⬜ Нужно добавить |
-| 3 | MathCore/Extensions/AsyncAwait/TaskEx.cs | 138 | ⬜ Нужно добавить |
-| 4 | MathCore/Statistic/RandomNumbers/PolyformRandomGenerator.cs | 106 | ⬜ Нужно добавить |
-| 5 | MathCore/Extensions/Numerics/DoubleArrayExtensions.cs | 96 | ⬜ Нужно добавить |
-| 6 | MathCore/Extensions/Numerics/DoubleExtensions.cs | 92 | ⬜ Нужно добавить |
-| 7 | MathCore/PE/Headers/NT.ImageOptionalHeader.cs | 72 | ⬜ Нужно добавить |
-| 8 | MathCore/PE/Headers/DOS.cs | 66 | ⬜ Нужно добавить |
-| 9 | MathCore/Graphs/TreeListNode.cs | 66 | ⬜ Нужно добавить |
-| 10 | MathCore/ValuedInterval.cs | 62 | ⬜ Нужно добавить |
-| 11 | MathCore/Matrix.float.cs | 58 | ⬜ Нужно добавить |
-| 12 | MathCore/Extensions/Linq/Linq2XmlExtensions.cs | 58 | ⬜ Нужно добавить |
-| 13 | MathCore/Matrix.decimal.cs | 58 | ⬜ Нужно добавить |
-| 14 | MathCore/Matrix.complex.cs | 58 | ⬜ Нужно добавить |
-| 15 | MathCore/Matrix.int.cs | 56 | ⬜ Нужно добавить |
-| 16 | MathCore/Extensions/AsyncAwait/PerformActionAwaitable.cs | 56 | ⬜ Нужно добавить |
-| 17 | MathCore/Extensions/Expressions/MathExpression.cs | 54 | ⬜ Нужно добавить |
-| 18 | MathCore/Extensions/String/StringExtensions.cs | 52 | ⬜ Нужно добавить |
-| 19 | MathCore/Extensions/Numerics/DecimalExtensions.cs | 50 | ⬜ Нужно добавить |
-| 20 | MathCore/ProgressMonitor.cs | 50 | ⬜ Нужно добавить |
-| 21 | MathCore/Extensions/AsyncAwait/IDisposableAsyncExtensions.cs | 50 | ⬜ Нужно добавить |
-| 22 | MathCore/Matrix.long.cs | 50 | ⬜ Нужно добавить |
-| 23 | MathCore/Expressions/ExpressionVisitorEx.cs | 48 | ⬜ Нужно добавить |
-| 24 | MathCore/IoC/ServiceManager.cs | 48 | ⬜ Нужно добавить |
-| 25 | MathCore/Statistic/Histogram.cs | 46 | ⬜ Нужно добавить |
-| 26 | MathCore/Logging/Log.cs | 46 | ⬜ Нужно добавить |
-| 27 | MathCore/EventHandlerRef.cs | 44 | ⬜ Нужно добавить |
+| 1 | MathCore/Expressions/Complex/ComplexExpression.cs | 182 | ✅ Готово |
+| 2 | MathCore/Interval.cs | 142 | ✅ Готово |
+| 3 | MathCore/Extensions/AsyncAwait/TaskEx.cs | 138 | ✅ Готово |
+| 4 | MathCore/Statistic/RandomNumbers/PolyformRandomGenerator.cs | 106 | ✅ Готово |
+| 5 | MathCore/Extensions/Numerics/DoubleArrayExtensions.cs | 96 | ✅ Готово |
+| 6 | MathCore/Extensions/Numerics/DoubleExtensions.cs | 92 | ✅ Готово |
+| 7 | MathCore/PE/Headers/NT.ImageOptionalHeader.cs | 72 | ✅ Готово |
+| 8 | MathCore/PE/Headers/DOS.cs | 66 | ✅ Готово |
+| 9 | MathCore/Graphs/TreeListNode.cs | 66 | ✅ Готово |
+| 10 | MathCore/ValuedInterval.cs | 62 | ✅ Готово |
+| 11 | MathCore/Matrix.float.cs | 58 | ✅ Готово |
+| 12 | MathCore/Extensions/Linq/Linq2XmlExtensions.cs | 58 | ✅ Готово |
+| 13 | MathCore/Matrix.decimal.cs | 58 | ✅ Готово |
+| 14 | MathCore/Matrix.complex.cs | 58 | ✅ Готово |
+| 15 | MathCore/Matrix.int.cs | 56 | ✅ Готово |
+| 16 | MathCore/Extensions/AsyncAwait/PerformActionAwaitable.cs | 56 | ✅ Готово |
+| 17 | MathCore/Extensions/Expressions/MathExpression.cs | 54 | ✅ Готово |
+| 18 | MathCore/Extensions/String/StringExtensions.cs | 52 | ✅ Готово |
+| 19 | MathCore/Extensions/Numerics/DecimalExtensions.cs | 50 | ✅ Готово |
+| 20 | MathCore/ProgressMonitor.cs | 50 | ✅ Готово |
+| 21 | MathCore/Extensions/AsyncAwait/IDisposableAsyncExtensions.cs | 50 | ✅ Готово |
+| 22 | MathCore/Matrix.long.cs | 50 | ✅ Готово |
+| 23 | MathCore/Expressions/ExpressionVisitorEx.cs | 48 | ✅ Готово |
+| 24 | MathCore/IoC/ServiceManager.cs | 48 | ✅ Готово |
+| 25 | MathCore/Statistic/Histogram.cs | 46 | ✅ Готово |
+| 26 | MathCore/Logging/Log.cs | 46 | ✅ Готово |
+| 27 | MathCore/EventHandlerRef.cs | 44 | ✅ Готово |
 | 28 | MathCore/Expressions/ExpressionRebuilder.cs | 44 | ⬜ Нужно добавить |
-| 29 | MathCore/Functions/Differentiable/Function.cs | 44 | ⬜ Нужно добавить |
+| 29 | MathCore/Functions/Differentiable/Function.cs | 44 | ✅ Готово |
 | 30 | MathCore/Extensions/Delegates/DelegateExtensions.cs | 42 | ⬜ Нужно добавить |
 | 31 | MathCore/Geolocation/GPS.cs | 42 | ⬜ Нужно добавить |
 | 32 | MathCore/Vectors/VectorND_double.cs | 42 | ⬜ Нужно добавить |

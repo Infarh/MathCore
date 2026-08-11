@@ -28,18 +28,28 @@ public sealed class Histogram : IEnumerable<HistogramValue>
         /// <summary>Нормированная частота</summary>
         public double NormalValue { get; init; }
 
+        /// <summary>Количество значений с накоплением</summary>
         public int IntegralCount { get; init; }
 
+        /// <summary>Значение частоты с накоплением</summary>
         public double IntegralValue { get; init; }
 
+        /// <summary>Количество значений в интервале</summary>
         public int Count { get; init; }
 
+        /// <inheritdoc />
         public override string ToString() => $"{Interval}:{Value}({Count}):{NormalValue}";
 
+        /// <summary>Строковое представление с заданным форматом</summary>
+        /// <param name="Format">Формат чисел</param>
+        /// <returns>Строковое представление</returns>
         public string ToString(string Format) => $"{Interval.ToString(Format)}:{Value.ToString(Format)}({Count}):{NormalValue.ToString(Format)}";
 
+        /// <summary>Деконструкция на интервал и количество</summary>
         public void Deconstruct(out Interval Interval, out int Count) => (Interval, Count) = (this.Interval, this.Count);
+        /// <summary>Деконструкция на интервал, количество и частоту</summary>
         public void Deconstruct(out Interval Interval, out int Count, out double Value) => (Interval, Count, Value) = (this.Interval, this.Count, this.Value);
+        /// <summary>Деконструкция на интервал, количество и частоты</summary>
         public void Deconstruct(out Interval Interval, out int Count, out double Value, out double NormalValue) => (Interval, Count, Value, NormalValue) = (this.Interval, this.Count, this.Value, this.NormalValue);
     }
 
@@ -61,24 +71,36 @@ public sealed class Histogram : IEnumerable<HistogramValue>
 
     private readonly double _Variance;
 
+    /// <summary>Количество интервалов гистограммы</summary>
     public int IntervalsCount => _IntervalsCount;
 
+    /// <summary>Диапазон значений гистограммы</summary>
     public Interval Interval => _Interval;
 
+    /// <summary>Шаг интервала</summary>
     public double dx => _dx;
 
+    /// <summary>Общее количество значений</summary>
     public int TotalValuesCount { get; }
 
+    /// <summary>Среднее значение</summary>
     public double Mean => _Mean;
 
+    /// <summary>Дисперсия</summary>
     public double Variance => _Variance;
 
+    /// <summary>Среднеквадратичное отклонение</summary>
     public double StdDev => _Variance.Sqrt();
 
+    /// <summary>Стандартная ошибка среднего</summary>
     public double StdErr => StdDev / Math.Sqrt(TotalValuesCount);
 
+    /// <summary>Частоты интервалов</summary>
     public IReadOnlyList<double> Frequencies => _Frequencies;
 
+    /// <summary>Значение гистограммы по номеру интервала</summary>
+    /// <param name="i">Номер интервала</param>
+    /// <returns>Значение гистограммы</returns>
     public HistogramValue this[int i]
     {
         get
@@ -105,6 +127,8 @@ public sealed class Histogram : IEnumerable<HistogramValue>
         }
     }
 
+    /// <summary>Конструктор гистограммы с автоматическим определением числа интервалов</summary>
+    /// <param name="X">Коллекция значений</param>
     public Histogram(IReadOnlyCollection<double> X) : this(X, (int)Math.Floor(1 + Math.Log(X.Count, 2))) { }
 
     /// <summary>Инициализация гистограммы</summary>
@@ -236,8 +260,11 @@ public sealed class Histogram : IEnumerable<HistogramValue>
         }
     }
 
+    /// <summary>Перечислитель значений гистограммы</summary>
+    /// <returns>Перечислитель значений</returns>
     public IEnumerator<HistogramValue> GetEnumerator() => GetEnumerable().GetEnumerator();
 
+    /// <inheritdoc />
     public override string ToString() => string.Join(" ", GetEnumerable());
 
     /// <summary>Выводит текстовое представление гистограммы в указанный поток</summary>

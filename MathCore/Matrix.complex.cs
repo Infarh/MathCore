@@ -348,8 +348,15 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
 
     [DST] public static MatrixComplex operator -(MatrixComplex M, Complex x) => new(Subtract(M._Data, x));
 
+    /// <summary>Унарный минус (смена знака всех элементов)</summary>
+    /// <param name="M">Матрица</param>
+    /// <returns>Матрица с изменёнными знаками элементов</returns>
     [DST] public static MatrixComplex operator -(MatrixComplex M) => new(new Complex[M._N, M._M].Initialize(M._Data, (i, j, data) => -data![i, j]));
 
+    /// <summary>Вычитание элементов матрицы из числа</summary>
+    /// <param name="x">Уменьшаемое число</param>
+    /// <param name="M">Матрица</param>
+    /// <returns>Новая матрица</returns>
     [DST] public static MatrixComplex operator -(Complex x, MatrixComplex M) => new(Subtract(x, M._Data));
 
     [DST] public static MatrixComplex operator *(MatrixComplex M, Complex x) => new(Multiply(M._Data, x));
@@ -366,6 +373,10 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
 
     [DST] public static MatrixComplex operator /(MatrixComplex M, Complex x) => new(Divide(M._Data, x));
 
+    /// <summary>Деление числа на матрицу (через обратную матрицу)</summary>
+    /// <param name="x">Делимое число</param>
+    /// <param name="M">Матрица</param>
+    /// <returns>Новая матрица</returns>
     [DST] public static MatrixComplex operator /(Complex x, MatrixComplex M) => new(Divide(x, M._Data));
 
     /// <summary>Возведение квадратной матрицы в целую степень</summary>
@@ -430,14 +441,25 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
 
     #region IEquatable Members
 
+    /// <summary>Проверка равенства матрицы и двумерного массива</summary>
+    /// <param name="other">Сравниваемый массив</param>
+    /// <returns>Истина, если элементы равны</returns>
     [DST] public bool Equals(Complex[,]? other) => other != null && Array.AreEquals(_Data, other);
 
+    /// <summary>Проверка равенства матриц</summary>
+    /// <param name="other">Сравниваемая матрица</param>
+    /// <returns>Истина, если матрицы равны</returns>
     [DST] public bool Equals(MatrixComplex? other) => other is not null && (ReferenceEquals(this, other) || Array.AreEquals(_Data, other._Data));
 
     #endregion
 
+    /// <summary>Проверка равенства объекта матрице</summary>
+    /// <param name="obj">Сравниваемый объект</param>
+    /// <returns>Истина, если объект равен матрице</returns>
     [DST] public override bool Equals(object? obj) => obj != null && (ReferenceEquals(this, obj) || Equals(obj as MatrixComplex) || Equals(obj as Complex[,]));
 
+    /// <summary>Хэш-код матрицы</summary>
+    /// <returns>Хэш-код</returns>
     [DST]
     public override int GetHashCode()
     {

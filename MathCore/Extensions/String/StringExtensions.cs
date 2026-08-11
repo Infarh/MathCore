@@ -813,34 +813,61 @@ public static partial class StringExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EndWithInvariantIgnoreCase(this string str, string other) => str.EndsWith(other, StringComparison.InvariantCultureIgnoreCase);
 
+    /// <summary>Проверка окончания строки с порядковым сравнением</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="other">Окончание для проверки</param>
+    /// <returns>Истина, если строка заканчивается указанной подстрокой</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EndWithOrdinal(this string str, string other) => str.EndsWith(other, StringComparison.Ordinal);
 
+    /// <summary>Проверка окончания строки с порядковым сравнением без учёта регистра</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="other">Окончание для проверки</param>
+    /// <returns>Истина, если строка заканчивается указанной подстрокой</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EndWithOrdinalIgnoreCase(this string str, string other) => str.EndsWith(other, StringComparison.OrdinalIgnoreCase);
 
+    /// <summary>Перечисляет сегменты строки заданной длины</summary>
+    /// <param name="s">Исходная строка</param>
+    /// <param name="SegmentLength">Длина сегмента</param>
+    /// <returns>Перечисление сегментов строки</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringSegmentsEnumerable EnumerateSegments(this string s, int SegmentLength) => new(s, SegmentLength);
 
+    /// <summary>Делегат преобразования сегмента строки</summary>
+    /// <param name="ptr">Указатель на сегмент</param>
+    /// <returns>Преобразованный сегмент</returns>
     public delegate StringPtr StringPtrSelector(StringPtr ptr);
 
+    /// <summary>Делегат проверки сегмента строки</summary>
+    /// <param name="ptr">Указатель на сегмент</param>
+    /// <returns>Истина, если сегмент удовлетворяет условию</returns>
     public delegate bool StringPtrWhereChecker(StringPtr ptr);
 
+    /// <summary>Перечисление сегментов строки</summary>
     public readonly struct StringSegmentsEnumerable(string Str, int SegmentLength, StringPtrSelector? Selector = null, StringPtrWhereChecker? Checker = null)
     {
+        /// <summary>Исходная строка</summary>
         public string SourceString => Str;
 
+        /// <summary>Длина сегмента</summary>
         public int SegmentLength { get; } = SegmentLength;
 
+        /// <summary>Возвращает перечислитель сегментов</summary>
+        /// <returns>Перечислитель сегментов</returns>
         public StringSegmentEnumerator GetEnumerator() => new(Str, SegmentLength, Selector, Checker);
 
+        /// <summary>Перечислитель сегментов строки</summary>
         public ref struct StringSegmentEnumerator(string Str, int SegmentLength, StringPtrSelector? Selector, StringPtrWhereChecker? Checker)
         {
             private int _Offset;
             private readonly int _Length = Str.Length;
 
+            /// <summary>Текущий сегмент</summary>
             public StringPtr Current { get; private set; }
 
+            /// <summary>Переход к следующему сегменту</summary>
+            /// <returns>Истина, если есть следующий сегмент</returns>
             public bool MoveNext()
             {
                 do
@@ -857,6 +884,10 @@ public static partial class StringExtensions
         }
     }
 
+    /// <summary>Объединяет сегменты строки указанным символом-разделителем</summary>
+    /// <param name="strings">Сегменты строки</param>
+    /// <param name="Separator">Символ-разделитель</param>
+    /// <returns>Объединённая строка</returns>
     public static string JoinStrings(this StringSegmentsEnumerable strings, char Separator)
     {
         var result = new StringBuilder(strings.SourceString.Length + strings.SourceString.Length / strings.SegmentLength);
@@ -877,6 +908,10 @@ public static partial class StringExtensions
     public static StringSegmentsEnumerable Select(this StringSegmentsEnumerable strings, StringPtrSelector Selector) =>
         new(strings.SourceString, strings.SegmentLength, Selector);
 
+    /// <summary>Преобразует строку в поток байт</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="encoding">Кодировка (по умолчанию UTF-8)</param>
+    /// <returns>Поток байт строки</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Stream ToByteStream(this string str, Encoding? encoding = null) => new StringByteStream(str, encoding ?? Encoding.UTF8);
 

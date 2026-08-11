@@ -14,26 +14,48 @@ namespace MathCore.Statistic.RandomNumbers;
 
 // ReSharper disable once StringLiteralTypo
 [Copyright("Александр Самарин - Генераторы непрерывно распределенных случайных величин", url = "http://habrahabr.ru/post/263993/")]
+/// <summary>Генератор непрерывно распределённых случайных величин с различными законами распределения</summary>
 public class PolyformRandomGenerator
 {
     //todo: http://habrahabr.ru/post/265321/
     private readonly Random _RND = new();
     private ulong _LastRND;
+    /// <summary>Максимальное значение базового генератора</summary>
     public const ulong RandMax = ulong.MaxValue;
+    /// <summary>Инициализирует новый экземпляр генератора</summary>
     public PolyformRandomGenerator() => _LastRND = (ulong)_RND.Next();
 
+    /// <summary>Базовый синхронизированный генератор случайных 32-разрядных значений</summary>
+    /// <returns>Случайное значение</returns>
     [MethodImpl(MethodImplOptions.Synchronized)]
     public ulong BasicRandGenerator() => (_LastRND << 32) & (_LastRND = (ulong)_RND.Next());
 
     #region Uniform
 
+    /// <summary>Равномерная функция распределения плотности вероятности</summary>
+    /// <param name="x">Аргумент</param>
+    /// <param name="a">Нижняя граница</param>
+    /// <param name="b">Верхняя граница</param>
+    /// <returns>Значение плотности</returns>
     public static double UniformDistribution(double x, double a, double b) => x >= a && x <= b ? 1 / (b - a) : 0;
 
+    /// <summary>Возвращает функцию плотности равномерного распределения</summary>
+    /// <param name="a">Нижняя граница</param>
+    /// <param name="b">Верхняя граница</param>
+    /// <returns>Функция плотности</returns>
     public static Func<double, double> GetUniformDistribution(double a, double b)
         => x => x >= a && x <= b ? 1 / (b - a) : 0;
+    /// <summary>Возвращает выражение плотности равномерного распределения</summary>
+    /// <param name="a">Нижняя граница</param>
+    /// <param name="b">Верхняя граница</param>
+    /// <returns>Выражение плотности</returns>
     public static Expression<Func<double, double>> GetUniformDistributionExpression(double a, double b)
         => x => x >= a && x <= b ? 1 / (b - a) : 0;
 
+    /// <summary>Формирует случайную величину с равномерным распределением в [a;b]</summary>
+    /// <param name="a">Нижняя граница</param>
+    /// <param name="b">Верхняя граница</param>
+    /// <returns>Случайная величина</returns>
     public double Uniform(double a, double b) => a + (double)BasicRandGenerator() / RandMax * (b - a);
 
     #endregion
@@ -41,9 +63,22 @@ public class PolyformRandomGenerator
 
     #region Normal
 
+    /// <summary>Функция плотности нормального распределения</summary>
+    /// <param name="x">Аргумент</param>
+    /// <param name="m">Математическое ожидание</param>
+    /// <param name="s">Среднеквадратичное отклонение</param>
+    /// <returns>Значение плотности</returns>
     public static double NormalDistribution(double x, double m, double s) => 1 / s / Sqrt(Consts.pi2) * Exp(-(x - m) * (x - m) / 2 / s / s);
+    /// <summary>Возвращает функцию плотности нормального распределения</summary>
+    /// <param name="m">Математическое ожидание</param>
+    /// <param name="s">Среднеквадратичное отклонение</param>
+    /// <returns>Функция плотности</returns>
     public static Func<double, double> GetNormalDistribution(double m, double s) => x => 1 / s / Sqrt(Consts.pi2) * Exp(-(x - m) * (x - m) / 2 / s / s);
 
+    /// <summary>Возвращает выражение плотности нормального распределения</summary>
+    /// <param name="m">Математическое ожидание</param>
+    /// <param name="s">Среднеквадратичное отклонение</param>
+    /// <returns>Выражение плотности</returns>
     public static Expression<Func<double, double>> GetNormalDistributionExpression(double m, double s)
     {
         var X = Expression.Parameter(typeof(double), "x");
@@ -130,6 +165,10 @@ public class PolyformRandomGenerator
         throw new CalculationsException();
     }
 
+    /// <summary>Формирует случайную величину с нормальным распределением</summary>
+    /// <param name="mu">Математическое ожидание</param>
+    /// <param name="sigma">Среднеквадратичное отклонение</param>
+    /// <returns>Случайная величина</returns>
     public double Normal(double mu, double sigma) =>
         __NormalInitialized || InitializeNormal()
             ? mu + NormalZiggurat() * sigma
@@ -139,9 +178,22 @@ public class PolyformRandomGenerator
 
     #region Exponential
 
+    /// <summary>Функция плотности экспоненциального распределения</summary>
+    /// <param name="x">Аргумент</param>
+    /// <param name="l">Интенсивность</param>
+    /// <param name="_">Неиспользуемый параметр</param>
+    /// <returns>Значение плотности</returns>
     public static double ExponentialDistribution(double x, double l, double _) => l * Exp(-l * x);
+    /// <summary>Возвращает функцию плотности экспоненциального распределения</summary>
+    /// <param name="l">Интенсивность</param>
+    /// <param name="_">Неиспользуемый параметр</param>
+    /// <returns>Функция плотности</returns>
     public static Func<double, double> GetExponentialDistribution(double l, double _) => x => l * Exp(-l * x);
 
+    /// <summary>Возвращает выражение плотности экспоненциального распределения</summary>
+    /// <param name="l">Интенсивность</param>
+    /// <param name="_">Неиспользуемый параметр</param>
+    /// <returns>Выражение плотности</returns>
     public static Expression<Func<double, double>> GetExponentialDistributionExpression(double l, double _)
     {
         var x = Expression.Parameter(typeof(double), "x");
@@ -200,16 +252,32 @@ public class PolyformRandomGenerator
         throw new CalculationsException();
     }
 
+    /// <summary>Формирует случайную величину с экспоненциальным распределением</summary>
+    /// <param name="rate">Интенсивность</param>
+    /// <returns>Случайная величина</returns>
     public double Exponential(double rate) => ExpZiggurat() / rate;
 
     #endregion
 
     #region Gamma
 
+    /// <summary>Функция плотности гамма-распределения</summary>
+    /// <param name="x">Аргумент</param>
+    /// <param name="k">Параметр формы</param>
+    /// <param name="th">Параметр масштаба</param>
+    /// <returns>Значение плотности</returns>
     public static double GammaDistribution(double x, double k, double th)
         => Pow(x, k - 1) * Exp(-x / th) / (SpecialFunctions.Gamma.G(k) * Pow(th, k));
+    /// <summary>Возвращает функцию плотности гамма-распределения</summary>
+    /// <param name="k">Параметр формы</param>
+    /// <param name="th">Параметр масштаба</param>
+    /// <returns>Функция плотности</returns>
     public static Func<double, double> GetGammaDistribution(double k, double th) => x => Pow(x, k - 1) * Exp(-x / th) / (SpecialFunctions.Gamma.G(k) * Pow(th, k));
 
+    /// <summary>Возвращает выражение плотности гамма-распределения</summary>
+    /// <param name="k">Параметр формы</param>
+    /// <param name="th">Параметр масштаба</param>
+    /// <returns>Выражение плотности</returns>
     public static Expression<Func<double, double>> GetGammaDistributionExpression(double k, double th)
     {
         var X = Expression.Parameter(typeof(double), "x");
@@ -220,6 +288,9 @@ public class PolyformRandomGenerator
         return Expression.Lambda<Func<double, double>>(body, X);
     }
 
+    /// <summary>Случайная величина с гамма-распределением для целочисленного параметра формы (сумма экспоненциальных)</summary>
+    /// <param name="k">Параметр формы (целый)</param>
+    /// <returns>Случайная величина</returns>
     public double GA1(int k)
     {
         double x = 0;
@@ -228,6 +299,9 @@ public class PolyformRandomGenerator
         return x;
     }
 
+    /// <summary>Случайная величина с гамма-распределением для полуцелого параметра формы</summary>
+    /// <param name="k">Параметр формы</param>
+    /// <returns>Случайная величина</returns>
     public double GA2(double k)
     {
         var x = Normal(0, 1);
@@ -237,6 +311,9 @@ public class PolyformRandomGenerator
         return x;
     }
 
+    /// <summary>Случайная величина с гамма-распределением для параметра формы меньше единицы</summary>
+    /// <param name="k">Параметр формы (k &lt; 1)</param>
+    /// <returns>Случайная величина</returns>
     public double GS(double k)
     {
         // Assume that k < 1
@@ -263,6 +340,9 @@ public class PolyformRandomGenerator
         throw new CalculationsException();
     }
 
+    /// <summary>Случайная величина с гамма-распределением для параметра формы в диапазоне (1;3)</summary>
+    /// <param name="k">Параметр формы (1 &lt; k &lt; 3)</param>
+    /// <returns>Случайная величина</returns>
     public double GF(double k)
     {
         // Assume that 1 < k < 3
@@ -275,6 +355,9 @@ public class PolyformRandomGenerator
         return k * e1;
     }
 
+    /// <summary>Случайная величина с гамма-распределением для параметра формы больше трёх</summary>
+    /// <param name="k">Параметр формы (k &gt; 3)</param>
+    /// <returns>Случайная величина</returns>
     private double GO(double k)
     {
         // Assume that k > 3
@@ -328,11 +411,24 @@ public class PolyformRandomGenerator
 
     #region Cauchy
 
+    /// <summary>Функция плотности распределения Коши</summary>
+    /// <param name="x">Аргумент</param>
+    /// <param name="x0">Параметр сдвига</param>
+    /// <param name="g">Параметр масштаба</param>
+    /// <returns>Значение плотности</returns>
     public static double CauchyDistribution(double x, double x0, double g)
         => g / (Consts.pi * (g * g + (x - x0).Pow(2)));
+    /// <summary>Возвращает функцию плотности распределения Коши</summary>
+    /// <param name="x0">Параметр сдвига</param>
+    /// <param name="g">Параметр масштаба</param>
+    /// <returns>Функция плотности</returns>
     public static Func<double, double> GetCauchyDistribution(double x0, double g) =>
         x => g / (Consts.pi * (g * g + (x - x0).Pow(2)));
 
+    /// <summary>Возвращает выражение плотности распределения Коши</summary>
+    /// <param name="x0">Параметр сдвига</param>
+    /// <param name="g">Параметр масштаба</param>
+    /// <returns>Выражение плотности</returns>
     public static Expression<Func<double, double>> GetCauchyDistributionExpression(double x0, double g)
     {
         var X = Expression.Parameter(typeof(double), "x");
@@ -361,11 +457,24 @@ public class PolyformRandomGenerator
 
     #region Laplace
 
+    /// <summary>Функция плотности распределения Лапласа</summary>
+    /// <param name="x">Аргумент</param>
+    /// <param name="m">Параметр сдвига</param>
+    /// <param name="b">Параметр масштаба</param>
+    /// <returns>Значение плотности</returns>
     public static double LaplaceDistribution(double x, double m, double b)
         => Exp(-Abs(x - m) / b) / (2 * b);
+    /// <summary>Возвращает функцию плотности распределения Лапласа</summary>
+    /// <param name="m">Параметр сдвига</param>
+    /// <param name="b">Параметр масштаба</param>
+    /// <returns>Функция плотности</returns>
     public static Func<double, double> GetLaplaceDistribution(double m, double b) =>
         x => Exp(-Abs(x - m) / b) / (2 * b);
 
+    /// <summary>Возвращает выражение плотности распределения Лапласа</summary>
+    /// <param name="m">Параметр сдвига</param>
+    /// <param name="b">Параметр масштаба</param>
+    /// <returns>Выражение плотности</returns>
     public static Expression<Func<double, double>> GetLaplaceDistributionExpression(double m, double b)
     {
         var X = Expression.Parameter(typeof(double), "x");
@@ -375,17 +484,34 @@ public class PolyformRandomGenerator
         return Expression.Lambda<Func<double, double>>(body, X);
     }
 
+    /// <summary>Формирует случайную величину с распределением Лапласа</summary>
+    /// <param name="mu">Параметр сдвига</param>
+    /// <param name="b">Параметр масштаба</param>
+    /// <returns>Случайная величина</returns>
     public double Laplace(double mu, double b) => mu + ((long)BasicRandGenerator() > 0 ? Exponential(1.0 / b) : -Exponential(1.0 / b));
 
     #endregion
 
     #region Levy
 
+    /// <summary>Функция плотности распределения Леви</summary>
+    /// <param name="x">Аргумент</param>
+    /// <param name="m">Параметр сдвига</param>
+    /// <param name="c">Параметр масштаба</param>
+    /// <returns>Значение плотности</returns>
     public static double LevyDistribution(double x, double m, double c)
         => Sqrt(c * Exp(c / (m - x)) / (Consts.pi2 * (x - m).Pow(3)));
+    /// <summary>Возвращает функцию плотности распределения Леви</summary>
+    /// <param name="m">Параметр сдвига</param>
+    /// <param name="c">Параметр масштаба</param>
+    /// <returns>Функция плотности</returns>
     public static Func<double, double> GetLevyDistribution(double m, double c) =>
         x => Sqrt(c * Exp(c / (m - x)) / (Consts.pi2 * (x - m).Pow(3)));
 
+    /// <summary>Возвращает выражение плотности распределения Леви</summary>
+    /// <param name="m">Параметр сдвига</param>
+    /// <param name="c">Параметр масштаба</param>
+    /// <returns>Выражение плотности</returns>
     public static Expression<Func<double, double>> GetLevyDistributionExpression(double m, double c)
     {
         var X = Expression.Parameter(typeof(double), "x");
@@ -396,6 +522,10 @@ public class PolyformRandomGenerator
         return Expression.Lambda<Func<double, double>>(body, X);
     }
 
+    /// <summary>Формирует случайную величину с распределением Леви</summary>
+    /// <param name="mu">Параметр сдвига</param>
+    /// <param name="c">Параметр масштаба</param>
+    /// <returns>Случайная величина</returns>
     public double Levy(double mu, double c)
     {
         var n = Normal(mu, 1.0 / c);
@@ -406,11 +536,21 @@ public class PolyformRandomGenerator
 
     #region ChiSquared
 
+    /// <summary>Функция плотности распределения хи-квадрат</summary>
+    /// <param name="x">Аргумент</param>
+    /// <param name="k">Число степеней свободы</param>
+    /// <returns>Значение плотности</returns>
     public static double ChiSquaredDistribution(double x, double k)
         => Pow(x, k / 2 - 1) * Exp(-x / 2) / Pow(2, k / 2) / SpecialFunctions.Gamma.G(k / 2);
+    /// <summary>Возвращает функцию плотности распределения хи-квадрат</summary>
+    /// <param name="k">Число степеней свободы</param>
+    /// <returns>Функция плотности</returns>
     public static Func<double, double> GetChiSquaredDistribution(double k) =>
         x => Pow(x, k / 2 - 1) * Exp(-x / 2) / Pow(2, k / 2) / SpecialFunctions.Gamma.G(k / 2);
 
+    /// <summary>Возвращает выражение плотности распределения хи-квадрат</summary>
+    /// <param name="k">Число степеней свободы</param>
+    /// <returns>Выражение плотности</returns>
     public static Expression<Func<double, double>> GetChiSquaredDistributionExpression(double k)
     {
         var X = Expression.Parameter(typeof(double), "x");
@@ -420,6 +560,9 @@ public class PolyformRandomGenerator
         return Expression.Lambda<Func<double, double>>(body, X);
     }
 
+    /// <summary>Формирует случайную величину с распределением хи-квадрат</summary>
+    /// <param name="k">Число степеней свободы</param>
+    /// <returns>Случайная величина</returns>
     public double ChiSquared(int k)
     {
         // ~ Gamma(k / 2, 2)
@@ -433,12 +576,25 @@ public class PolyformRandomGenerator
 
     #region LogNormal
 
+    /// <summary>Функция плотности логнормального распределения</summary>
+    /// <param name="x">Аргумент</param>
+    /// <param name="m">Параметр сдвига</param>
+    /// <param name="s">Параметр масштаба</param>
+    /// <returns>Значение плотности</returns>
     public static double LogNormalDistribution(double x, double m, double s)
         => Exp(Log(x - m).Pow(2) / (2 * s * s)) / (x * s * Consts.sqrt_pi2);
 
+    /// <summary>Возвращает функцию плотности логнормального распределения</summary>
+    /// <param name="m">Параметр сдвига</param>
+    /// <param name="s">Параметр масштаба</param>
+    /// <returns>Функция плотности</returns>
     public static Func<double, double> GetLogNormalDistribution(double m, double s) =>
         x => Exp(Log(x - m).Pow(2) / (2 * s * s)) / (x * s * Consts.sqrt_pi2);
 
+    /// <summary>Возвращает выражение плотности логнормального распределения</summary>
+    /// <param name="m">Параметр сдвига</param>
+    /// <param name="s">Параметр масштаба</param>
+    /// <returns>Выражение плотности</returns>
     public static Expression<Func<double, double>> GetLogNormalDistributionExpression(double m, double s)
     {
         var X = Expression.Parameter(typeof(double), "x");
@@ -451,18 +607,35 @@ public class PolyformRandomGenerator
         return Expression.Lambda<Func<double, double>>(body, X);
     }
 
+    /// <summary>Формирует случайную величину с логнормальным распределением</summary>
+    /// <param name="mu">Параметр сдвига</param>
+    /// <param name="sigma">Параметр масштаба</param>
+    /// <returns>Случайная величина</returns>
     public double LogNormal(double mu, double sigma) => Exp(Normal(mu, sigma));
 
     #endregion
 
     #region Logistic
 
+    /// <summary>Функция плотности логистического распределения</summary>
+    /// <param name="x">Аргумент</param>
+    /// <param name="m">Параметр сдвига</param>
+    /// <param name="s">Параметр масштаба</param>
+    /// <returns>Значение плотности</returns>
     public static double LogisticDistribution(double x, double m, double s)
         => Exp(-(x - m) / s) / s / (1 + Exp(-(x - m) / s)).Pow(2);
 
+    /// <summary>Возвращает функцию плотности логистического распределения</summary>
+    /// <param name="m">Параметр сдвига</param>
+    /// <param name="s">Параметр масштаба</param>
+    /// <returns>Функция плотности</returns>
     public static Func<double, double> GetLogisticDistribution(double m, double s) =>
         x => Exp(-(x - m) / s) / s / (1 + Exp(-(x - m) / s)).Pow(2);
 
+    /// <summary>Возвращает выражение плотности логистического распределения</summary>
+    /// <param name="M">Параметр сдвига</param>
+    /// <param name="S">Параметр масштаба</param>
+    /// <returns>Выражение плотности</returns>
     public static Expression<Func<double, double>> GetLogisticDistributionExpression(double M, double S)
     {
         var x = Expression.Parameter(typeof(double), "x");
@@ -473,21 +646,47 @@ public class PolyformRandomGenerator
         return Expression.Lambda<Func<double, double>>(body, x);
     }
 
+    /// <summary>Формирует случайную величину с логистическим распределением</summary>
+    /// <param name="mu">Параметр сдвига</param>
+    /// <param name="s">Параметр масштаба</param>
+    /// <returns>Случайная величина</returns>
     public double Logistic(double mu, double s) => mu + s * Log(1.0 / Uniform(0, 1) - 1);
 
     #endregion
 
+    /// <summary>Формирует случайную величину с распределением Эрланга</summary>
+    /// <param name="k">Параметр формы</param>
+    /// <param name="l">Параметр интенсивности</param>
+    /// <returns>Случайная величина</returns>
     public double Erlang(int k, double l) => GA1(k) / l;
 
+    /// <summary>Формирует случайную величину с распределением Вейбулла</summary>
+    /// <param name="l">Параметр масштаба</param>
+    /// <param name="k">Параметр формы</param>
+    /// <returns>Случайная величина</returns>
     // ReSharper disable once IdentifierTypo
     public double Weibull(double l, double k) => l * Pow(Exponential(1), 1 / k);
 
+    /// <summary>Формирует случайную величину с распределением Рэлея</summary>
+    /// <param name="sigma">Параметр масштаба</param>
+    /// <returns>Случайная величина</returns>
     public double Rayleigh(double sigma) => sigma * Sqrt(Exponential(0.5));
 
+    /// <summary>Формирует случайную величину с распределением Парето</summary>
+    /// <param name="xm">Минимальное значение</param>
+    /// <param name="alpha">Параметр формы</param>
+    /// <returns>Случайная величина</returns>
     public double Pareto(double xm, double alpha) => xm / Pow(Uniform(0, 1), 1 / alpha);
 
+    /// <summary>Формирует случайную величину с распределением Стьюдента</summary>
+    /// <param name="v">Число степеней свободы</param>
+    /// <returns>Случайная величина</returns>
     public double StudentT(int v) => v == 1 ? Cauchy(0, 1) : Normal(0, 1) / Sqrt(ChiSquared(v) / v);
 
+    /// <summary>Формирует случайную величину с распределением Фишера-Снедекора</summary>
+    /// <param name="d1">Первое число степеней свободы</param>
+    /// <param name="d2">Второе число степеней свободы</param>
+    /// <returns>Случайная величина</returns>
     // ReSharper disable once IdentifierTypo
     public double FisherSnedecor(int d1, int d2)
     {
@@ -496,6 +695,10 @@ public class PolyformRandomGenerator
         return numerator / denominator;
     }
 
+    /// <summary>Формирует случайную величину с бета-распределением</summary>
+    /// <param name="a">Первый параметр формы</param>
+    /// <param name="b">Второй параметр формы</param>
+    /// <returns>Случайная величина</returns>
     public double Beta(double a, double b)
     {
         var x = GA2(a);

@@ -30,6 +30,7 @@ public readonly partial struct NT
         /// <summary>Номер версии компоновщика</summary>
         public VersionValueByte LinkerVersion { get; init; } // 2
 
+        /// <summary>Версия в байтах (старшая и младшая)</summary>
         [StructLayout(LayoutKind.Explicit)]
         public readonly struct VersionValueByte // 2
         {
@@ -38,13 +39,18 @@ public readonly partial struct NT
 
             [FieldOffset(0)] private readonly ushort _Version;
 
+            /// <summary>Старший байт версии</summary>
             public byte Major => _Major;
+            /// <summary>Младший байт версии</summary>
             public byte Minor => _Minor;
 
+            /// <summary>Версия как 16-разрядное значение</summary>
             public ushort Version { get => _Version; init => _Version = value; }
 
+            /// <inheritdoc />
             public override string ToString() => $"Major:{_Major} Minor:{_Minor}";
 
+            /// <summary>Неявное преобразование 16-разрядного значения в версию</summary>
             public static implicit operator VersionValueByte(ushort Version) => new() { Version = Version };
         }
 
@@ -97,6 +103,7 @@ public readonly partial struct NT
         /// </remarks>
         public uint FileAlignment { get; init; } // 4
 
+        /// <summary>Версия из четырёх байт (старшая и младшая части)</summary>
         [StructLayout(LayoutKind.Explicit)]
         public readonly struct VersionValueShort // 4
         {
@@ -105,13 +112,18 @@ public readonly partial struct NT
 
             [FieldOffset(0)] private readonly uint _Version;
 
+            /// <summary>Старшая часть версии</summary>
             public short Major => _Major;
+            /// <summary>Младшая часть версии</summary>
             public short Minor => _Minor;
 
+            /// <summary>Версия как 32-разрядное значение</summary>
             public uint Version { get => _Version; init => _Version = value; }
 
+            /// <inheritdoc />
             public override string ToString() => $"Major:{_Major} Minor:{_Minor}";
 
+            /// <summary>Неявное преобразование 32-разрядного значения в версию</summary>
             public static implicit operator VersionValueShort(uint Version) => new() { Version = Version };
         }
 
@@ -257,6 +269,7 @@ public readonly partial struct NT
         /// </remarks>
         public SizeOf SizeOfStack { get; init; } // 16
 
+        /// <summary>Размер в байтах (зарезервировано и зафиксировано)</summary>
         [StructLayout(LayoutKind.Sequential)]
         public readonly struct SizeOf // 16
         {
@@ -266,6 +279,7 @@ public readonly partial struct NT
             /// <summary>Количество байт для фиксации</summary>
             public ulong Commit { get; init; } // 8
 
+            /// <inheritdoc />
             public override string ToString() => $"Reserve:{Reserve} Commit:{Commit}";
         }
 
@@ -307,15 +321,21 @@ public readonly partial struct NT
             public ImageDataDirectoryValue Debug { get; init; } // 6
             /// <summary>Строки описания</summary>
             public ImageDataDirectoryValue Copyright { get; init; } // 7
+            /// <summary>Глобальный указатель</summary>
             public ImageDataDirectoryValue GlobalPtr { get; init; } // 8
             /// <summary>Каталог TLS (Thread local storage - локальная память потоков)</summary>
             public ImageDataDirectoryValue TLS { get; init; } // 9
+            /// <summary>Каталог конфигурации загрузки</summary>
             public ImageDataDirectoryValue LoadConfig { get; init; } // 10
+            /// <summary>Каталог привязанных импортов</summary>
             public ImageDataDirectoryValue BoundImport { get; init; } // 11
+            /// <summary>Таблица адресов импорта</summary>
             public ImageDataDirectoryValue IAT { get; init; } // 12
+            /// <summary>Каталог отложенных импортов</summary>
             public ImageDataDirectoryValue DelayImport { get; init; } // 13
             /// <summary>Информация COM-объектов</summary>
             public ImageDataDirectoryValue Descriptor { get; init; } // 14
+            /// <summary>Зарезервированный каталог</summary>
             public ImageDataDirectoryValue Reserved { get; init; } // 15
 
             public IEnumerable<ImageDataDirectoryValue> Values
@@ -353,12 +373,15 @@ public readonly partial struct NT
                 /// <summary>Размер таблицы в байтах</summary>
                 public uint Size { get; init; } // 4
 
+                /// <inheritdoc />
                 public override string ToString() => $"VirtualAddress:{VirtualAddress}; Size:{Size}";
 
             }
 
+            /// <summary>Перечислитель элементов каталога данных</summary>
             public IEnumerator<ImageDataDirectoryValue> GetEnumerator() => Values.GetEnumerator();
 
+            /// <inheritdoc />
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
     }

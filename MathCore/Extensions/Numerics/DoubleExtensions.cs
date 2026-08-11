@@ -10,6 +10,11 @@ namespace System;
 /// <summary>Расширения для чисел двойной точности</summary>
 public static class DoubleExtensions
 {
+    /// <summary>Проверка равенства двух чисел с заданной точностью</summary>
+    /// <param name="x">Первое число</param>
+    /// <param name="y">Второе число</param>
+    /// <param name="Accuracy">Точность сравнения</param>
+    /// <returns>Истина, если числа равны с указанной точностью</returns>
     public static bool EqualWithAccuracy(this double x, double y, double Accuracy = 1.1102230246251565E-15) => x.Check(y, x - y, Accuracy);
 
     private static bool Check(this double x, double y, double delta, double Accuracy = 1.1102230246251565E-15) => 
@@ -21,14 +26,35 @@ public static class DoubleExtensions
     /// <param name="x">Действительное вещественное число</param>
     /// <returns>Модуль числа</returns>
     [DST] public static double Abs(this double x) => x is double.NaN ? double.NaN : Math.Abs(x);
+    /// <summary>Модуль числа с плавающей запятой</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Модуль числа</returns>
     [DST] public static float Abs(this float x) => x is float.NaN ? float.NaN : Math.Abs(x);
+    /// <summary>Модуль десятичного числа</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Модуль числа</returns>
     [DST] public static decimal Abs(this decimal x) => Math.Abs(x);
 
+    /// <summary>Модуль целого числа</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Модуль числа</returns>
     [DST] public static int Abs(this int x) => Math.Abs(x);
+    /// <summary>Модуль длинного целого числа</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Модуль числа</returns>
     [DST] public static long Abs(this long x) => Math.Abs(x);
+    /// <summary>Модуль короткого целого числа</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Модуль числа</returns>
     [DST] public static short Abs(this short x) => Math.Abs(x);
+    /// <summary>Модуль знакового байта</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Модуль числа</returns>
     [DST] public static sbyte Abs(this sbyte x) => Math.Abs(x);
 
+    /// <summary>Модуль комплексного числа</summary>
+    /// <param name="x">Комплексное число</param>
+    /// <returns>Модуль числа</returns>
     [DST] public static double Abs(this Complex x) => x.Abs;
 
     /// <summary>Число по модулю</summary>
@@ -38,16 +64,46 @@ public static class DoubleExtensions
     [DST] public static double AbsMod(this double x, double mod) => x % mod + (x < 0 ? mod : 0);
 
 
+    /// <summary>Знак числа двойной точности</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Знак числа</returns>
     [DST] public static double Sign(this double x) => x is double.NaN ? double.NaN : Math.Sign(x);
+    /// <summary>Округление числа двойной точности</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Округлённое число</returns>
     [DST] public static double Round(this double x) => x is double.NaN ? double.NaN : Math.Round(x);
+    /// <summary>Округление вниз числа двойной точности</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Число, округлённое вниз</returns>
     [DST] public static double Floor(this double x) => x is double.NaN ? double.NaN : Math.Floor(x);
+    /// <summary>Отбрасывание дробной части числа двойной точности</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Целая часть числа</returns>
     [DST] public static double Truncate(this double x) => x is double.NaN ? double.NaN : Math.Truncate(x);
+    /// <summary>Округление вверх числа двойной точности</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Число, округлённое вверх</returns>
     [DST] public static double Ceiling(this double x) => x is double.NaN ? double.NaN : Math.Ceiling(x);
 
+    /// <summary>Знак числа с плавающей запятой</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Знак числа</returns>
     [DST] public static float Sign(this float x) => x is float.NaN ? float.NaN : Math.Sign(x);
+    /// <summary>Округление числа с плавающей запятой</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Округлённое число</returns>
     [DST] public static float Round(this float x) => x is float.NaN ? float.NaN : (float)Math.Round(x);
+    /// <summary>Округление вниз числа с плавающей запятой</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Число, округлённое вниз</returns>
     [DST] public static float Floor(this float x) => x is float.NaN ? float.NaN : (float)Math.Floor(x);
+    /// <summary>Отбрасывание дробной части числа с плавающей запятой</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Целая часть числа</returns>
     [DST] public static float Truncate(this float x) => x is float.NaN ? float.NaN : (float)Math.Truncate(x);
+    /// <summary>Округление вверх числа с плавающей запятой</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Число, округлённое вверх</returns>
     [DST] public static float Ceiling(this float x) => x is float.NaN ? float.NaN : (float)Math.Ceiling(x);
 
     //[DST]
@@ -88,6 +144,10 @@ public static class DoubleExtensions
     //    }
     //}
 
+    /// <summary>Возведение числа двойной точности в целочисленную степень</summary>
+    /// <param name="x">Основание</param>
+    /// <param name="p">Показатель степени</param>
+    /// <returns>Значение x^p</returns>
     public static double Pow(this double x, int p)
     {
         switch (x)
@@ -165,6 +225,10 @@ public static class DoubleExtensions
     //    }
     //}
 
+    /// <summary>Возведение числа с плавающей запятой в целочисленную степень</summary>
+    /// <param name="x">Основание</param>
+    /// <param name="p">Показатель степени</param>
+    /// <returns>Значение x^p</returns>
     public static float Pow(this float x, int p)
     {
         switch (x)
@@ -218,6 +282,10 @@ public static class DoubleExtensions
         return result;
     }
 
+    /// <summary>Возведение комплексного числа в целочисленную степень</summary>
+    /// <param name="x">Основание</param>
+    /// <param name="p">Показатель степени</param>
+    /// <returns>Значение x^p</returns>
     public static Complex Pow(this Complex x, int p)
     {
         if (x == Complex.Zero) return Complex.Zero;
@@ -264,6 +332,10 @@ public static class DoubleExtensions
         return result;
     }
 
+    /// <summary>Возведение комплексного числа в действительную степень</summary>
+    /// <param name="x">Основание</param>
+    /// <param name="p">Показатель степени</param>
+    /// <returns>Значение x^p</returns>
     [DST]
     public static Complex Pow(this Complex x, double p) =>
         x.Re is double.NaN || x.Im is double.NaN
@@ -278,6 +350,10 @@ public static class DoubleExtensions
                 _          => x ^ p
             };
 
+    /// <summary>Возведение числа двойной точности в действительную степень</summary>
+    /// <param name="x">Основание</param>
+    /// <param name="p">Показатель степени</param>
+    /// <returns>Значение x^p</returns>
     [DST] public static double Pow(this double x, double p) => x is double.NaN || p is double.NaN ? double.NaN : Math.Pow(x, p);
 
     /// <summary>Возведение числа в комплексную степень</summary>
@@ -285,17 +361,50 @@ public static class DoubleExtensions
     /// <returns>Значение x^z, где x - действительное, z - комплексное</returns>
     [DST] public static Complex Pow(this double x, Complex z) => x ^ z;
 
+    /// <summary>Квадрат числа двойной точности</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Квадрат числа</returns>
     [DST] public static double Pow2(this double x) => x * x;
+    /// <summary>Квадрат числа с плавающей запятой</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Квадрат числа</returns>
     [DST] public static float Pow2(this float x) => x * x;
+    /// <summary>Квадрат целого числа</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Квадрат числа</returns>
     [DST] public static int Pow2(this int x) => x * x;
+    /// <summary>Квадрат беззнакового целого числа</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Квадрат числа</returns>
     [DST] public static uint Pow2(this uint x) => x * x;
+    /// <summary>Квадрат длинного целого числа</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Квадрат числа</returns>
     [DST] public static long Pow2(this long x) => x * x;
+    /// <summary>Квадрат беззнакового длинного целого числа</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Квадрат числа</returns>
     [DST] public static ulong Pow2(this ulong x) => x * x;
+    /// <summary>Квадрат короткого целого числа</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Квадрат числа</returns>
     [DST] public static short Pow2(this short x) => (short)(x * x);
+    /// <summary>Квадрат беззнакового короткого целого числа</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Квадрат числа</returns>
     [DST] public static ushort Pow2(this ushort x) => (ushort)(x * x);
+    /// <summary>Квадрат байта</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Квадрат числа</returns>
     [DST] public static byte Pow2(this byte x) => (byte)(x * x);
+    /// <summary>Квадрат знакового байта</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Квадрат числа</returns>
     [DST] public static byte Pow2(this sbyte x) => (byte)(x * x);
 
+    /// <summary>Квадрат комплексного числа</summary>
+    /// <param name="z">Комплексное число</param>
+    /// <returns>Квадрат числа</returns>
     [DST]
     public static Complex Pow2(this Complex z)
     {
@@ -319,6 +428,9 @@ public static class DoubleExtensions
 
     private const long __InvSqrtDoubleMagik = 0x5FE6EB50C7B537A9;
 
+    /// <summary>Быстрое приближённое вычисление обратного квадратного корня (1 итерация)</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Приближённое значение 1/sqrt(x)</returns>
     public static double SqrtInvFast(this double x)
     {
         var i = new DoubleToLongBytesConverter(x).Long;
@@ -329,6 +441,9 @@ public static class DoubleExtensions
         return y;
     }
 
+    /// <summary>Быстрое приближённое вычисление обратного квадратного корня (2 итерации)</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Приближённое значение 1/sqrt(x)</returns>
     public static double SqrtInvFast2(this double x)
     {
         var i = new DoubleToLongBytesConverter(x).Long;
@@ -340,6 +455,9 @@ public static class DoubleExtensions
         return y;
     }
 
+    /// <summary>Быстрое приближённое вычисление обратного квадратного корня (3 итерации)</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Приближённое значение 1/sqrt(x)</returns>
     public static double SqrtInvFast3(this double x)
     {
         var i = new DoubleToLongBytesConverter(x).Long;
@@ -354,6 +472,10 @@ public static class DoubleExtensions
         return y;
     }
 
+    /// <summary>Быстрое приближённое вычисление обратного квадратного корня с заданным числом итераций</summary>
+    /// <param name="x">Число</param>
+    /// <param name="n">Количество итераций Ньютона</param>
+    /// <returns>Приближённое значение 1/sqrt(x)</returns>
     public static double SqrtInvFast(this double x, int n)
     {
         var i = new DoubleToLongBytesConverter(x).Long;
@@ -382,6 +504,9 @@ public static class DoubleExtensions
 
     private const int __InvSqrtFloatMagik = 0x5f3759df;
 
+    /// <summary>Быстрое приближённое вычисление обратного квадратного корня числа с плавающей запятой (1 итерация)</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Приближённое значение 1/sqrt(x)</returns>
     public static double SqrtInvFast(this float x)
     {
         var i = new FloatToIntBytesConverter(x).Int;
@@ -392,6 +517,9 @@ public static class DoubleExtensions
         return y;
     }
 
+    /// <summary>Быстрое приближённое вычисление обратного квадратного корня числа с плавающей запятой (2 итерации)</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Приближённое значение 1/sqrt(x)</returns>
     public static double SqrtInvFast2(this float x)
     {
         var i = new FloatToIntBytesConverter(x).Int;
@@ -403,6 +531,9 @@ public static class DoubleExtensions
         return y;
     }
 
+    /// <summary>Быстрое приближённое вычисление обратного квадратного корня числа с плавающей запятой (3 итерации)</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Приближённое значение 1/sqrt(x)</returns>
     public static double SqrtInvFast3(this float x)
     {
         var i = new FloatToIntBytesConverter(x).Int;
@@ -416,6 +547,10 @@ public static class DoubleExtensions
         return y;
     }
 
+    /// <summary>Быстрое приближённое вычисление обратного квадратного корня числа с плавающей запятой с заданным числом итераций</summary>
+    /// <param name="x">Число</param>
+    /// <param name="n">Количество итераций Ньютона</param>
+    /// <returns>Приближённое значение 1/sqrt(x)</returns>
     public static double SqrtInvFast(this float x, int n)
     {
         var i = new FloatToIntBytesConverter(x).Int;
@@ -431,6 +566,9 @@ public static class DoubleExtensions
 
     private const int __SqrtFloatFast = 0x1fbd1df5;
 
+    /// <summary>Быстрое приближённое вычисление квадратного корня числа с плавающей запятой</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Приближённое значение sqrt(x)</returns>
     public static double SqrtFast(this float x)
     {
         var i = new FloatToIntBytesConverter(x).Int;
@@ -442,6 +580,10 @@ public static class DoubleExtensions
         return y;
     }
 
+    /// <summary>Быстрое приближённое возведение числа с плавающей запятой в степень</summary>
+    /// <param name="x">Основание</param>
+    /// <param name="p">Показатель степени</param>
+    /// <returns>Приближённое значение x^p</returns>
     // https://habr.com/ru/companies/infopulse/articles/336110/
     public static double PowFast(this float x, double p)
     {
@@ -624,6 +766,12 @@ public static class DoubleExtensions
     /// <returns>Значение в градусах</returns>
     [DST] public static float ToDeg(this float rad) => (float) (rad * Consts.Geometry.ToDeg);
 
+    /// <summary>Преобразование числа двойной точности в битовое представление</summary>
+    /// <param name="x">Число</param>
+    /// <returns>Битовое представление в виде 64-разрядного числа</returns>
     public static long ToIntBits(this double x) => BitConverter.DoubleToInt64Bits(x);
+    /// <summary>Преобразование битового представления в число двойной точности</summary>
+    /// <param name="x">Битовое представление</param>
+    /// <returns>Число двойной точности</returns>
     public static double ToDoubleBits(this long x) => BitConverter.Int64BitsToDouble(x);
 }
