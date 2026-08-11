@@ -26,9 +26,11 @@ public class PrecisionTimer : IDisposable
 
     public static PrecisionTimerCaps Capabilities => __Caps;
 
+    /// <summary>Запущен ли таймер</summary>
     [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), Bindable(false)]
     public bool IsRunning { get; private set; }
 
+    /// <summary>Режим работы таймера</summary>
     [DefaultValue(typeof(PrecisionTimerMode), "Periodic")]
     public PrecisionTimerMode Mode
     {
@@ -47,6 +49,7 @@ public class PrecisionTimer : IDisposable
         }
     }
 
+    /// <summary>Период таймера в миллисекундах</summary>
     public int Period
     {
         get
@@ -66,6 +69,7 @@ public class PrecisionTimer : IDisposable
         }
     }
 
+    /// <summary>Разрешение таймера в миллисекундах</summary>
     public int Resolution
     {
         get
@@ -85,6 +89,7 @@ public class PrecisionTimer : IDisposable
         }
     }
 
+    /// <summary>Объект синхронизации для вызова обработчиков событий в потоке UI</summary>
     public ISynchronizeInvoke? SynchronizingObject
     {
         get
@@ -99,10 +104,13 @@ public class PrecisionTimer : IDisposable
         }
     }
 
+    /// <summary>Событие запуска таймера</summary>
     public event EventHandler? Started = null!;
 
+    /// <summary>Событие остановки таймера</summary>
     public event EventHandler? Stopped = null!;
 
+    /// <summary>Событие тика таймера</summary>
     public event EventHandler? Tick = null!;
 
     /// <inheritdoc />
@@ -256,22 +264,31 @@ public class PrecisionTimer : IDisposable
 }
 
 [Serializable, StructLayout(LayoutKind.Sequential)]
+/// <summary>Характеристики таймера высокой точности</summary>
 public struct PrecisionTimerCaps { public int PeriodMin, PeriodMax; }
 
 [Serializable]
+/// <summary>Режим работы таймера высокой точности</summary>
 public enum PrecisionTimerMode : byte { OneShot = 0, Periodic = 1 }
 
 [Serializable]
+/// <summary>Исключение, возникающее при работе с таймером высокой точности</summary>
 public class TimerException : ApplicationException
 {
     // Methods
+    /// <summary>Конструктор</summary>
     public TimerException() { }
 
+    /// <summary>Конструктор</summary>
+    /// <param name="message">Сообщение об ошибке</param>
     public TimerException(string message) : base(message) { }
 
 #if !NET8_0_OR_GREATER
     protected TimerException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { } 
 #endif
 
+    /// <summary>Конструктор</summary>
+    /// <param name="message">Сообщение об ошибке</param>
+    /// <param name="inner">Внутреннее исключение</param>
     public TimerException(string message, Exception inner) : base(message, inner) { }
 }

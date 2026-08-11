@@ -85,7 +85,7 @@ public static class GPS
 
     public static double Degree(int degrees, int minutes, double seconds = 0d) => degrees + minutes / 60d + seconds / 3600d;
 
-    /// <summary>Вычисление расстояния между двумя точками на поверхности земли, заданными своими координатами</summary>
+    /// <summary>Вычисление расстояния между двумя точками на поверхности земли (метод Винсенти) заданными своими координатами</summary>
     /// <param name="latitude1">Широта первой точки в градусах</param>
     /// <param name="longitude1">Долгота первой точки в градусах</param>
     /// <param name="latitude2">Широта второй точки в градусах</param>
@@ -111,6 +111,12 @@ public static class GPS
         return 2 * Atan2(Sqrt(a), Sqrt(1 - a)) * Consts.EarthRadius;
     }
 
+    /// <summary>Вычисление расстояния между двумя точками на поверхности земли (метод Винсенти) заданными своими координатами</summary>
+    /// <param name="latitude1">Широта первой точки в градусах</param>
+    /// <param name="longitude1">Долгота первой точки в градусах</param>
+    /// <param name="latitude2">Широта второй точки в градусах</param>
+    /// <param name="longitude2">Долгота второй точки в градусах</param>
+    /// <returns>Расстояние в метрах</returns>
     public static double VincentyDistance(double latitude1, double longitude1, double latitude2, double longitude2)
     {
         const double a = 6378137; // Большая полуось WGS-84
@@ -215,6 +221,12 @@ public static class GPS
 
     }
 
+    /// <summary>Вычисление расстояния между двумя точками на поверхности земли (сферический закон косинусов), заданными своими координатами</summary>
+    /// <param name="latitude1">Широта первой точки в градусах</param>
+    /// <param name="longitude1">Долгота первой точки в градусах</param>
+    /// <param name="latitude2">Широта второй точки в градусах</param>
+    /// <param name="longitude2">Долгота второй точки в градусах</param>
+    /// <returns>Расстояние между двумя точками</returns>
     public static double SphericalLawOfCosines_LengthBetween(double latitude1, double longitude1, double latitude2, double longitude2)
     {
         if (double.IsNaN(latitude1) || double.IsNaN(longitude1) || double.IsNaN(latitude2) || double.IsNaN(longitude2))
