@@ -1,4 +1,4 @@
-﻿name: Publish NuGet.org
+name: Publish NuGet.org
 
 on:
   push:
@@ -68,7 +68,7 @@ jobs:
     
     steps:
       - name: Get artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         id: download
         with:
             name: Release
@@ -94,7 +94,7 @@ jobs:
     
     steps:
       - name: Get artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         id: download
         with:
             name: Release
